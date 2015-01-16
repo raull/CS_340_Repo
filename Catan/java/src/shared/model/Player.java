@@ -13,13 +13,14 @@ public class Player {
 	private CatanColor color;
 	private String name;
 	private ArrayList<DevCardType> cards;
+	private int points;
 	
 	public Player(String name, CatanColor color) {
 		this.name = name;
 		this.color = color;
 	}
 	
-	//Getters and Setters
+	//Getters
 	
 	public String getName() {
 		return this.name;
@@ -31,6 +32,10 @@ public class Player {
 	
 	public Collection<DevCardType> getDevCards() {
 		return Collections.unmodifiableCollection(this.cards);
+	}
+	
+	public int getPoints() {
+		return this.points;
 	}
 	
 }
