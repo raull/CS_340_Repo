@@ -2,6 +2,11 @@ package shared.model.cards;
 
 import shared.model.User;;
 
+/**
+ * Manages the administration of game resources (cards, buildings, etc.)
+ * @author thyer
+ *
+ */
 public class Bank {
 	private DevCardDeck devCardDeck;
 	private ResourceCardDeck resourceCardDeck;
