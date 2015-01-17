@@ -10,9 +10,9 @@ import java.util.ArrayList;
  *
  */
 public class UserManager {
-	private ArrayList <Player> players;
+	private ArrayList <User> players;
 	private int currentPlayerIndex;
-	private Player currentPlayer;
+	private User currentPlayer;
 	
 	public UserManager(){
 	}
@@ -21,7 +21,7 @@ public class UserManager {
 	 * Calls canAddUser, if that returns true, adds the new user to the player list
 	 * @param newPlayer the player to be added
 	 */
-	public void addUser(Player newPlayer){
+	public void addUser(User newPlayer){
 		players.add(newPlayer);
 		//TODO: throw exception if player can't be added
 	}
@@ -31,7 +31,7 @@ public class UserManager {
 	 * @param newPlayer
 	 * @return true if the player can be added, false otherwise
 	 */
-	public boolean canAddUser(Player newPlayer){
+	public boolean canAddUser(User newPlayer){
 		return true;
 	}
 	
@@ -43,15 +43,15 @@ public class UserManager {
 		
 	}
 	
-	public Player getCurrentPlayer(){
-		return new Player(null, null);
+	public User getCurrentPlayer(){
+		return new User(null, null, null);
 	}
 	
 	/**
 	 * Removes a given player from the list (not sure if we'd need this)
 	 * @param toBeRemovedPlayer
 	 */
-	public void removePlayer(Player toBeRemovedPlayer){
+	public void removePlayer(User toBeRemovedPlayer){
 		
 	}
 
