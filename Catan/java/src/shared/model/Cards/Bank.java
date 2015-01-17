@@ -1,4 +1,4 @@
-package shared.model.Cards;
+package shared.model.cards;
 
 import shared.model.Player;
 
@@ -7,8 +7,8 @@ public class Bank {
 	private ResourceCardDeck resourceCardDeck;
 	
 	public Bank(){
-		devCardDeck = new devCardDeck(/*some parameter to include all cards*/);
-		resourceCardDeck = new resourceCardDeck(/*same thing*/);
+		devCardDeck = new DevCardDeck(true);
+		resourceCardDeck = new ResourceCardDeck(true);
 	}
 	
 	/**
@@ -18,6 +18,7 @@ public class Bank {
 	 * @return a randomly drawn DevCard pulled from the deck
 	 */
 	public DevCard buyDevCard(Player purchaser){
+		return null;
 		
 	}
 	
@@ -27,6 +28,7 @@ public class Bank {
 	 * @return true if possible, false if impossible
 	 */
 	public boolean canBuyDevCard(Player purchaser){
+		return false;
 		
 	}
 	
@@ -35,6 +37,7 @@ public class Bank {
 	 * @return the top card from the deck
 	 */
 	private DevCard drawDevCard(){
+		return null;
 		
 	}
 	
@@ -45,6 +48,7 @@ public class Bank {
 	 * @return the desired ResourceCard if available
 	 */
 	public ResourceCard getResourceCard(ResourceCard type){
+		return null;
 		//throw exception if none are left
 		//calls draw method on ResourceCardDeck
 	}
@@ -56,6 +60,7 @@ public class Bank {
 	 * @return true if possible, false if impossible
 	 */
 	public boolean canDrawResourceCard(ResourceCard type){
+		return false;
 		
 	}
 	
