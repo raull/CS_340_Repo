@@ -1,4 +1,4 @@
-package shared.model;
+package shared.model.board;
 
 import java.util.ArrayList;
 import java.util.Collection;
