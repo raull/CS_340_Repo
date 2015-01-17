@@ -1,6 +1,6 @@
 package shared.model.cards;
 
-import shared.model.Player;
+import shared.model.User;;
 
 public class Bank {
 	private DevCardDeck devCardDeck;
@@ -17,7 +17,7 @@ public class Bank {
 	 * @param purchaser the Player buying the DevCard
 	 * @return a randomly drawn DevCard pulled from the deck
 	 */
-	public DevCard buyDevCard(Player purchaser){
+	public DevCard buyDevCard(User purchaser){
 		return null;
 		
 	}
@@ -27,7 +27,7 @@ public class Bank {
 	 * @param purchaser the Player buying the DevCard
 	 * @return true if possible, false if impossible
 	 */
-	public boolean canBuyDevCard(Player purchaser){
+	public boolean canBuyDevCard(User purchaser){
 		return false;
 		
 	}
@@ -76,7 +76,7 @@ public class Bank {
 	 * @param player the Player to be awarded a card
 	 * @param card the Card that the user is being given)
 	 */
-	public void giveCardToUser(Player player, Card card){
+	public void giveCardToUser(User player, Card card){
 		
 	}
 
