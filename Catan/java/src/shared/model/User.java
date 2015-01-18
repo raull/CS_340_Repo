@@ -7,6 +7,8 @@ import java.util.Collections;
 
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
+import shared.model.board.piece.Piece;
+import shared.model.cards.Hand;
 
 /**
  * This class represent a user for playing games and authenticating as well
@@ -28,9 +30,10 @@ public class User {
 	 */
 	private String password;
 	/**
-	 * A <code>List</code> representing the cards of the <code>User</code>
+	 * A {@link Hand} representing the cards of the <code>User</code>
 	 */
-	private ArrayList<DevCardType> cards;
+	private Hand hand;
+	private ArrayList<Piece> pieces;
 	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
@@ -53,8 +56,8 @@ public class User {
 		return color.getJavaColor();
 	}
 	
-	public Collection<DevCardType> getDevCards() {
-		return Collections.unmodifiableCollection(this.cards);
+	public Hand getDevCards() {
+		return this.hand;
 	}
 
 	public String getPassword() {
