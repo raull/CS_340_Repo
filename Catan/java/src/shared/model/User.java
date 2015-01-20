@@ -90,6 +90,8 @@ public class User {
 	 * @throws InvalidMoveException if the Bank is out of DevCards
 	 */
 	public void purchaseDevCard() throws InvalidMoveException{
+	
+	}
 		
 	public ArrayList<Piece> getPieces() {
 		return pieces;
