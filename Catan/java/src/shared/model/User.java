@@ -70,6 +70,10 @@ public class User {
 		return password;
 	}
 	
+	public Hand getHand(){
+		return hand;
+	}
+	
 	/**
 	 * simulates a user rolling the dice
 	 * @return a random number 1-6
