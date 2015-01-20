@@ -1,6 +1,8 @@
 package shared.model.cards;
 
-import shared.model.User;;
+import shared.definitions.PieceType;
+import shared.model.User;
+import shared.model.board.piece.Piece;
 
 /**
  * Manages the administration of game resources (cards, buildings, etc.)
@@ -79,10 +81,29 @@ public class Bank {
 	/**
 	 * Awards the specified card to the specified Player
 	 * @param player the Player to be awarded a card
-	 * @param card the Card that the user is being given)
+	 * @param card the Card that the user is being given
 	 */
 	public void giveCardToUser(User player, Card card){
 		
+	}
+	
+	/**
+	 * Awards the specified piece to the user
+	 * @param player the Player to be awarded a piece
+	 * @param piece the Piece that the user is being given
+	 */
+	public void givePieceToUser(User player, Piece piece){
+		
+	}
+	
+	/**
+	 * Determines whether the given User can purchase the given Piece
+	 * @param player the player attempting to purchase a piece
+	 * @param type the type of Piece desired
+	 * @return false if the User has insufficient resource cards or the Piece cannot otherwise be awarded
+	 */
+	public boolean canPieceBeAwarded(User player, PieceType type){
+		return false;
 	}
 
 }
