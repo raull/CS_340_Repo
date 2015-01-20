@@ -2,11 +2,8 @@ package shared.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import shared.definitions.CatanColor;
-import shared.definitions.DevCardType;
 import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -94,6 +91,8 @@ public class User {
 	 */
 	public void purchaseDevCard() throws InvalidMoveException{
 		
+	public ArrayList<Piece> getPieces() {
+		return pieces;
 	}
 	
 }
