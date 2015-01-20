@@ -8,7 +8,11 @@ import java.util.Collections;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.model.board.piece.Piece;
+import shared.model.cards.DevCard;
+import shared.model.cards.DevCardDeck;
 import shared.model.cards.Hand;
+import shared.model.cards.ResourceCardDeck;
+import shared.model.exception.InvalidMoveException;
 
 /**
  * This class represent a user for playing games and authenticating as well
@@ -56,13 +60,40 @@ public class User {
 		return color.getJavaColor();
 	}
 	
-	public Hand getDevCards() {
-		return this.hand;
+	public ArrayList<DevCard> getDevCards() {
+		return this.hand.getAllDevCards();
+	}
+	
+	public ResourceCardDeck getResourceCards(){
+		return this.hand.getResourceCards();
 	}
 
 	public String getPassword() {
 		return password;
 	}
+	
+	/**
+	 * simulates a user rolling the dice
+	 * @return a random number 1-6
+	 */
+	public int rollDice(){
+		return 0;
+	}
 
+	/**
+	 * Determines whether a user can purchase a DevCard from the bank
+	 * @return true if the user has sufficient resource cards, else false
+	 */
+	public boolean canBuyDevCard(){
+		return false;
+	}
+	
+	/**
+	 * Notifies the bank that the user would like to purchase a DevCard
+	 * @throws InvalidMoveException if the Bank is out of DevCards
+	 */
+	public void purchaseDevCard() throws InvalidMoveException{
+		
+	}
 	
 }
