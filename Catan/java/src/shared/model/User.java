@@ -59,7 +59,7 @@ public class User {
 	}
 	
 	public ArrayList<DevCard> getDevCards() {
-		return this.hand.getAllDevCards();
+		return this.hand.getDevCards().getAllCards();
 	}
 	
 	public ResourceCardDeck getResourceCards(){
