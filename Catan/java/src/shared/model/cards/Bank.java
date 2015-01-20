@@ -1,8 +1,8 @@
 package shared.model.cards;
 
 import shared.definitions.PieceType;
-import shared.model.User;
 import shared.model.board.piece.Piece;
+import shared.model.game.User;
 
 /**
  * Manages the administration of game resources (cards, buildings, etc.)

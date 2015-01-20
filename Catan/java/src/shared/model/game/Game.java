@@ -1,4 +1,4 @@
-package shared.model;
+package shared.model.game;
 
 import shared.model.board.Map;
 import shared.model.cards.Bank;
@@ -37,7 +37,7 @@ public class Game {
 	 * Get the {@link Bank} from the Game singleton
 	 * @return The Game's Bank
 	 */
-	public static Bank banck() {
+	public static Bank bank() {
 		return Game.singleton().bank;
 	}
 	

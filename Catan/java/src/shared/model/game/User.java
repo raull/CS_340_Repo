@@ -1,4 +1,4 @@
-package shared.model;
+package shared.model.game;
 
 import java.awt.Color;
 import java.util.ArrayList;

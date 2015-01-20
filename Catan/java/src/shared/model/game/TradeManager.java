@@ -1,4 +1,4 @@
-package shared.model;
+package shared.model.game;
 
 import shared.model.board.Port;
 import shared.model.exception.InvalidMoveException;

@@ -1,4 +1,4 @@
-package shared.model;
+package shared.model.game;
 
 public enum TurnPhase {
 	
