@@ -3,6 +3,9 @@ package shared.model.cards;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import shared.definitions.DevCardType;
+import shared.model.exception.InvalidMoveException;
+
 public class DevCardDeck {
 	private ArrayList<DevCard> cards;
 	
@@ -53,6 +56,24 @@ public class DevCardDeck {
 	 */
 	public ArrayList<DevCard> getAllCards(){
 		return (ArrayList<DevCard>) Collections.unmodifiableList(cards);
+	}
+	
+	/**
+	 * Gets the count of cards in the deck of the given type
+	 * @param type the Type of DevCard in question
+	 * @return the count of DevCards of that type in the Deck
+	 */
+	public int getCountByType(DevCardType type){
+		return 0;
+	}
+	
+	/**
+	 * Removes a DevCard of the given DevCardType from the deck
+	 * @param type the DevCardType to be removed
+	 * @throws InvalidMoveException if no DevCard of the type exists in the Deck
+	 */
+	public void removeCardByType(DevCardType type) throws InvalidMoveException{
+		
 	}
 
 }

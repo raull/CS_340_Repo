@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import shared.definitions.CatanColor;
+import shared.definitions.PieceType;
 import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -78,8 +79,8 @@ public class User {
 	}
 
 	/**
-	 * Determines whether a user can purchase a DevCard from the bank
-	 * @return true if the user has sufficient resource cards, else false
+	 * Determines whether a user can purchase a DevCard from the Bank
+	 * @return true if the user has sufficient ResourceCards, else false
 	 */
 	public boolean canBuyDevCard(){
 		return false;
@@ -90,7 +91,24 @@ public class User {
 	 * @throws InvalidMoveException if the Bank is out of DevCards
 	 */
 	public void purchaseDevCard() throws InvalidMoveException{
+		
+	}
 	
+	/**
+	 * Determines whether a user can purchase a given Piece from the Bank
+	 * @param type the desired type of Piece
+	 * @return true if the user has sufficient ResourceCards, else false
+	 */
+	public boolean canBuyPiece(PieceType type){
+		return false;
+	}
+	
+	/**
+	 * Notifies the Bank that the user would like to purchase a Piece
+	 * @throws InvalidMoveException if the piece cannot be purchased
+	 */
+	public void purchasePiece() throws InvalidMoveException{
+		
 	}
 		
 	public ArrayList<Piece> getPieces() {
