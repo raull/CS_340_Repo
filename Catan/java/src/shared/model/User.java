@@ -2,11 +2,8 @@ package shared.model;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import shared.definitions.CatanColor;
-import shared.definitions.DevCardType;
 import shared.model.board.piece.Piece;
 import shared.model.cards.Hand;
 
@@ -63,6 +60,9 @@ public class User {
 	public String getPassword() {
 		return password;
 	}
-
+	
+	public ArrayList<Piece> getPieces() {
+		return pieces;
+	}
 	
 }
