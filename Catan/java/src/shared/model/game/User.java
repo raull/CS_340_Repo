@@ -126,8 +126,5 @@ public class User {
 		
 	}
 		
-	public ArrayList<Piece> getPieces() {
-		return pieces;
-	}
 	
 }

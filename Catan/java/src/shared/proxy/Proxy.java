@@ -63,7 +63,6 @@ public class Proxy {
 	public void load(LoadGameRequest LoadRequest){
 		//CODE
 	}
-<<<<<<< HEAD
 	/**
 	 * Sends a chat message coupled with the sender to the server
 	 * @param sendchat
@@ -138,7 +137,4 @@ public class Proxy {
 	public Model Monopoly(Monopoly_ monopoly){
 		return null;
 	}
-=======
-	
->>>>>>> origin/master
 }
