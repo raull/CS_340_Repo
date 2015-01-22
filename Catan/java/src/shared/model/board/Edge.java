@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
+import shared.model.board.piece.Road;
 
 /** This class provides the representation of an Edge on a game Map
  * 
@@ -24,6 +25,10 @@ public class Edge {
 	 * The list of {@link HexTile} that the edge relates to
 	 */
 	private ArrayList<HexTile> hexTiles;
+	/**
+	 * The {@link Road} that the edge has on it, is initially null
+	 */
+	private Road road;
 	
 	//Constructors
 	
@@ -48,6 +53,9 @@ public class Edge {
 	}
 	public ArrayList<HexTile> getHexTiles() {
 		return hexTiles;
+	}
+	public Road getRoad(){
+		return road;
 	}
 
 	

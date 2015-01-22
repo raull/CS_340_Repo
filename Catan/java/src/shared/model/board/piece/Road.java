@@ -10,11 +10,6 @@ import shared.model.board.Edge;
  *
  */
 public class Road extends Piece{
-	
-	/**
-	 * The {@link Edge} where the <code>Road</code> belongs to
-	 */
-	private Edge edge;
 
 	@Override
 	public PieceType getType() {
@@ -22,7 +17,4 @@ public class Road extends Piece{
 		return PieceType.ROAD;
 	}
 
-	public Edge getEdge() {
-		return edge;
-	}
 }
