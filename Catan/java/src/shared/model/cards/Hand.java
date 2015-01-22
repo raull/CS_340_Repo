@@ -35,7 +35,7 @@ public class Hand {
 		return resourceCardDeck;
 	}
 	
-	public DevCardDeck getUsableDevCard(){
+	public DevCardDeck getUsableDevCards(){
 		return devCardDeck;
 	}
 	

@@ -74,8 +74,12 @@ public class User {
 		return color.getJavaColor();
 	}
 	
-	public ArrayList<DevCard> getDevCards() {
-		return this.hand.getDevCards().getAllCards();
+	public ArrayList<DevCard> getUsableDevCards() {
+		return this.hand.getUsableDevCards().getAllCards();
+	}
+	
+	public ArrayList<DevCard> getNewDevCards(){
+		return this.hand.getNewDevCards().getAllCards();
 	}
 	
 	public ResourceCardDeck getResourceCards(){
