@@ -1,4 +1,4 @@
-package shared.proxy.game;
+package shared.proxy.moves;
 /**
  * Used to offer trades
  * @author Kent

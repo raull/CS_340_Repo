@@ -5,6 +5,7 @@ package shared.proxy.games;
  * @author Kent
  *
  */
-public class EmptyPlayer {
+public class EmptyPlayer
+{
 
 }

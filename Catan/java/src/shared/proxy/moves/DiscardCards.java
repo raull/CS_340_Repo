@@ -1,6 +1,5 @@
 package shared.proxy.moves;
 
-import shared.proxy.game.ResourceList;
 
 /**
  * Used to discard specified resource cards
