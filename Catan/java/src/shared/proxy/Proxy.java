@@ -1,12 +1,12 @@
 package shared.proxy;
 
 import java.util.List;
-<<<<<<< HEAD
+
 import shared.model.*;
-=======
+
 
 import shared.model.Model;
->>>>>>> origin/master
+
 import shared.proxy.communication.*;
 /**
  * Used by the Client to connect to the Server and perform
@@ -51,7 +51,6 @@ public interface Proxy {
 	 * Requests that a game be loaded from a saved file
 	 * @param LoadRequest
 	 */
-<<<<<<< HEAD
 	public void load(LoadGameRequest LoadRequest);
 	/**
 	 * Returns the current state of the game in JSON format, if the client's version
@@ -78,11 +77,7 @@ public interface Proxy {
 	 * @return
 	 */
 	public List<String> getCommands();
-=======
-	public void load(LoadGameRequest LoadRequest){
-		//CODE
-	}
->>>>>>> origin/master
+
 	/**
 	 * Sends a chat message coupled with the sender to the server
 	 * @param sendchat
@@ -138,7 +133,7 @@ public interface Proxy {
 	 * @param monopoly
 	 * @return
 	 */
-<<<<<<< HEAD
+
 	public Model Monopoly(Monopoly_ monopoly);
 	/**
 	 * Plays a "Monument" card from your hand to give you a victory point.
@@ -188,9 +183,7 @@ public interface Proxy {
 	 * @return
 	 */
 	public Model discardCards(DiscardCards discard);
-=======
-	public Model Monopoly(Monopoly_ monopoly){
-		return null;
-	}
->>>>>>> origin/master
 }
+
+
+
