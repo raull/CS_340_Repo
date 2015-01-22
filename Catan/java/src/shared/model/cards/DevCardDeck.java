@@ -6,6 +6,11 @@ import java.util.Collections;
 import shared.definitions.DevCardType;
 import shared.model.exception.InvalidMoveException;
 
+/**
+ * A collection of Development cards
+ * @author Raul Lopez
+ *
+ */
 public class DevCardDeck {
 	private ArrayList<DevCard> cards;
 	

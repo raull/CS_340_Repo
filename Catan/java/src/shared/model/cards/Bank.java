@@ -10,7 +10,14 @@ import shared.model.game.User;
  *
  */
 public class Bank {
+	
+	/**
+	 * The collection of {@link DevCard} that the <code>Bank</code> contains
+	 */
 	private DevCardDeck devCardDeck;
+	/**
+	 * The collection of {@link ResourceCard} that the <code>Bank</code> contains
+	 */
 	private ResourceCardDeck resourceCardDeck;
 	
 	public Bank(){

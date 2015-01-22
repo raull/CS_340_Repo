@@ -11,7 +11,14 @@ import shared.model.exception.ModelException;
  *
  */
 public class Hand {
+	
+	/**
+	 * The development cards deck
+	 */
 	private DevCardDeck devCardDeck;
+	/**
+	 * The resource cards deck
+	 */
 	private ResourceCardDeck resourceCardDeck;
 	
 	public Hand (){

@@ -19,6 +19,11 @@ public class HexTile {
 	 */
 	private HexLocation location;
 	
+	/**
+	 * The number of the hex for rolling the dice purposes
+	 */
+	private int number;
+	
 	
 	//Constructors
 	
@@ -26,10 +31,12 @@ public class HexTile {
 	 * Constructor to instantiate a new <code>HexTile</code> with a provided location and type
 	 * @param type Type described by the enumeration in {@link HexType}
 	 * @param location Location described by the enumeration in {@link HexLocation}
+	 * @param number The number that represents the hex tile when rolling the dice
 	 */
-	public HexTile(HexType type, HexLocation location) {
+	public HexTile(HexType type, HexLocation location, int number) {
 		this.type = type;
 		this.location = location;
+		this.number = number;
 	}
 	
 	
@@ -41,6 +48,10 @@ public class HexTile {
 
 	public HexLocation getLocation() {
 		return location;
+	}
+	
+	public int getNumber() {
+		return number;
 	}
 
 }

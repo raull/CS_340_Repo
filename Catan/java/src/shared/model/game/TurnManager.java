@@ -2,10 +2,21 @@ package shared.model.game;
 
 import java.util.ArrayList;
 
+/**
+ * The manager that keeps track of the user's turn
+ * @author Raul Lopez
+ *
+ */
 public class TurnManager {
 	
 	private ArrayList<User> users;
+	/**
+	 * The turn's current user
+	 */
 	private User currentUser;
+	/**
+	 * The phase of the current user's turn
+	 */
 	private TurnPhase currentPhase;
 	
 	

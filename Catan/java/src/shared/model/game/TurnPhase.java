@@ -1,7 +1,18 @@
 package shared.model.game;
 
+/**
+ * The phase of the turn represented by the enumeration: 
+ * ROLLING, 
+ * ROBBING, 
+ * PLAYING, 
+ * DISCARTING,
+ * FIRSTROUND, 
+ * SECONDROUND
+ * @author Raul Lopez
+ *
+ */
 public enum TurnPhase {
 	
-	DICE_PHASE, RESOURCE_PHASE, TRADE_PHASE
+	ROLLING, ROBBING, PLAYING, DISCARTING, FIRSTROUND, SECONDROUND
 	
 }

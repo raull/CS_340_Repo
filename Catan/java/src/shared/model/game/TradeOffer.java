@@ -1,6 +1,6 @@
 package shared.model.game;
 
-import shared.definitions.ResourceType;
+import shared.model.cards.ResourceCardDeck;
 
 /**
  * This class represents a trade offer
@@ -9,20 +9,29 @@ import shared.definitions.ResourceType;
  */
 public class TradeOffer {
 
+	/**
+	 * The offer rate in which the resources will be traded
+	 */
 	private int rate;
-	private ResourceType buy;
-	private ResourceType sell;
+	/**
+	 * The {@link ResourceCardDeck} with the receiving resource cards
+	 */
+	private ResourceCardDeck receiveDeck;
+	/**
+	 * The {@link ResourceCardDeck} with the sending resource cards
+	 */
+	private ResourceCardDeck sendDeck;
 	
 	/**
 	 * Create a new TradeOfferClass
 	 * @param offerRate The rate in which the offer will be performed
-	 * @param sellResource The resource that will be given
-	 * @param buyResource The resource that will be received
+	 * @param receiveDeck The resource deck that will be received
+	 * @param sendDeck The resource deck that will be given
 	 */
-	public TradeOffer(int offerRate, ResourceType sellResource, ResourceType buyResource) {
+	public TradeOffer(int offerRate, ResourceCardDeck receiveDeck, ResourceCardDeck sendDeck) {
 		this.rate = offerRate;
-		this.sell = sellResource;
-		this.buy = buyResource;
+		this.receiveDeck = receiveDeck;
+		this.sendDeck = sendDeck;
 	}
 
 	public int getRate() {
@@ -33,20 +42,20 @@ public class TradeOffer {
 		this.rate = rate;
 	}
 
-	public ResourceType getBuy() {
-		return buy;
+	public ResourceCardDeck getReceiveDeck() {
+		return receiveDeck;
 	}
 
-	public void setBuy(ResourceType buy) {
-		this.buy = buy;
+	public void setReceiveDeck(ResourceCardDeck receivingDeck) {
+		this.receiveDeck = receivingDeck;
 	}
 
-	public ResourceType getSell() {
-		return sell;
+	public ResourceCardDeck getSendDeck() {
+		return sendDeck;
 	}
 
-	public void setSell(ResourceType sell) {
-		this.sell = sell;
+	public void setSendDeck(ResourceCardDeck sendingDeck) {
+		this.sendDeck = sendingDeck;
 	}
 	
 }

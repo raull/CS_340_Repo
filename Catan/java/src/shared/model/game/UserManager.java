@@ -11,8 +11,6 @@ import java.util.ArrayList;
  */
 public class UserManager {
 	private ArrayList <User> players;
-	private int currentPlayerIndex;
-	private User currentPlayer;
 	
 	public UserManager(){
 	}
@@ -41,10 +39,6 @@ public class UserManager {
 	 */
 	public void cycleTurn(){
 		
-	}
-	
-	public User getCurrentPlayer(){
-		return new User(null, null, null);
 	}
 	
 	/**
