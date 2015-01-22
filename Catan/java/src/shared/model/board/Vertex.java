@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
+import shared.model.board.piece.Building;
 
 /**
  * Class that represents an intersection between more than one {@link HexTile}
@@ -28,6 +29,10 @@ public class Vertex {
 	 * The port that the <code>Vertex</code> owns
 	 */
 	private Port port;
+	/**
+	 * A {@link Building} that occupies the <code>Vertex</code>
+	 */
+	private Building building;
 	
 	//Constructor
 
@@ -56,6 +61,24 @@ public class Vertex {
 	public Port getPort() {
 		return port;
 	}
+	public Building getBuilding(){
+		return building;
+	}
 
+	//Logic
+	/**
+	 * Helps determine whether a piece can be played on a vertex by asking if adjacent vertices are occupied
+	 * @return true if any adjacent vertices have buildings on them, otherwise false
+	 */
+	public boolean hasAdjacentBuilding(){
+		return false;
+	}
 	
+	/**
+	 * Determines whether the <code>Vertex</code> is already occupied
+	 * @return false if the Building is null, else true
+	 */
+	public boolean isOccupied(){
+		return false;
+	}
 }

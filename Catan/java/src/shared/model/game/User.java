@@ -26,13 +26,13 @@ public class User {
 	 */
 	private CatanColor color;
 	/**
-	 * A {@link String} representing the name of the <code>User</code>
+	 * A {@link playerName} representing the name of the <code>User</code>
 	 */
-	private String name;
+	private playerName name;
 	/**
-	 * A {@link String} representing the password of the <code>User</code>
+	 * A {@link playerPassword} representing the password of the <code>User</code>
 	 */
-	private String password;
+	private Password password;
 	/**
 	 * A {@link Hand} representing the cards of the <code>User</code>
 	 */
@@ -49,20 +49,25 @@ public class User {
 	private ArrayList<Vertex> occupiedVertices;
 	
 	/**
+	 * An int representing the unique ID of the player. Used in login/cookie functionality
+	 */
+	private int playerID;
+	
+	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
 	 * @param A {@link String} representing the name of the <code>User</code>
 	 * @param A {@link String} representing the password of the <code>User</code>
 	 * @param A {@link CatanColor} representing the color of the <code>User</code>
 	 */
 	public User(String name, String password, CatanColor color) {
-		this.name = name;
+		this.name = new playerName(name);
 		this.color = color;
 	}
 	
 	//Getters
 	
 	public String getName() {
-		return this.name;
+		return this.name.getName();
 	}
 	
 	public Color getColor() {
@@ -78,7 +83,7 @@ public class User {
 	}
 
 	public String getPassword() {
-		return password;
+		return password.getPassword();
 	}
 	
 	public Hand getHand(){
@@ -123,6 +128,13 @@ public class User {
 	 * @throws InvalidMoveException if the piece cannot be purchased
 	 */
 	public void purchasePiece() throws InvalidMoveException{
+		
+	}
+	
+	/**
+	 * Adds the given piece to the <code>User</code>'s inventory
+	 */
+	public void addPiece(Piece piece){
 		
 	}
 		

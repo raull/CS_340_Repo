@@ -23,6 +23,10 @@ public class HexTile {
 	 * The number of the hex for rolling the dice purposes
 	 */
 	private int number;
+	/**
+	 * A boolean indicating whether the Hex is currently occupied by the Robber
+	 */
+	private boolean robber;
 	
 	
 	//Constructors
@@ -53,5 +57,19 @@ public class HexTile {
 	public int getNumber() {
 		return number;
 	}
+	
+	public boolean hasRobber(){
+		return robber;
+	}
+	
+	//Logic
+	/**
+	 * Determines whether the robber could be moved to this Hex location
+	 * @return true if the robber is not already here, otherwise false
+	 */
+	public boolean canMoveRobberHere(){
+		return !robber;
+	}
+
 
 }

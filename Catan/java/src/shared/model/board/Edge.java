@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.model.board.piece.Road;
+import shared.model.game.User;
 
 /** This class provides the representation of an Edge on a game Map
  * 
@@ -56,6 +57,22 @@ public class Edge {
 	}
 	public Road getRoad(){
 		return road;
+	}
+	/**
+	 * Determines whether the edge is currently occupied by a Road
+	 * @return true if the Edge's road object is not null, false otherwise
+	 */
+	public boolean isOccupiedByRoad(){
+		return false;
+	}
+	
+	/**
+	 * Determines whether the User has an adjoining Piece on this edge
+	 * @param user the given User
+	 * @return true if a building or road is adjoining to the current edge, false otherwise
+	 */
+	public boolean hasAdjoiningPiece(User user){
+		return false;
 	}
 
 	

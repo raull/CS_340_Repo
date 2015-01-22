@@ -19,17 +19,17 @@ public class UserManager {
 	 * Calls canAddUser, if that returns true, adds the new user to the player list
 	 * @param newPlayer the player to be added
 	 */
-	public void addUser(User newPlayer){
+	public void addUserToGame(User newPlayer){
 		players.add(newPlayer);
 		//TODO: throw exception if player can't be added
 	}
 	
 	/**
-	 * Checks to see if the Player looks okay and if the list is sufficiently small. 
+	 * Checks to see if the Player is logged in and if the list is sufficiently small.
 	 * @param newPlayer
 	 * @return true if the player can be added, false otherwise
 	 */
-	public boolean canAddUser(User newPlayer){
+	public boolean canUserJoinGame(User newPlayer){
 		return true;
 	}
 	
@@ -48,5 +48,6 @@ public class UserManager {
 	public void removePlayer(User toBeRemovedPlayer){
 		
 	}
+	
 
 }
