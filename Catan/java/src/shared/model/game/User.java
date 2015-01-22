@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.model.board.Edge;
+import shared.model.board.Vertex;
 import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -35,7 +37,16 @@ public class User {
 	 * A {@link Hand} representing the cards of the <code>User</code>
 	 */
 	private Hand hand;
-	private ArrayList<Piece> pieces;
+	
+	/**
+	 * An ArrayList of {@link Edge}s representing the edges that the <code>User</code> occupies
+	 */
+	private ArrayList<Edge> occupiedEdges;
+	
+	/**
+	 * An ArrayList of {@link Vertex}es representing the edges that the <code>User</code> occupies
+	 */
+	private ArrayList<Vertex> occupiedVertices;
 	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
