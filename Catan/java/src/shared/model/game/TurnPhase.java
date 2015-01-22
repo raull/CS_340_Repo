@@ -5,7 +5,7 @@ package shared.model.game;
  * ROLLING, 
  * ROBBING, 
  * PLAYING, 
- * DISCARTING,
+ * DISCARDING,
  * FIRSTROUND, 
  * SECONDROUND
  * @author Raul Lopez
@@ -13,6 +13,6 @@ package shared.model.game;
  */
 public enum TurnPhase {
 	
-	ROLLING, ROBBING, PLAYING, DISCARTING, FIRSTROUND, SECONDROUND
+	ROLLING, ROBBING, PLAYING, DISCARDING, FIRSTROUND, SECONDROUND
 	
 }

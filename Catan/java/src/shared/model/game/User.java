@@ -137,6 +137,15 @@ public class User {
 	public void addPiece(Piece piece){
 		
 	}
+	
+	/**
+	 * Determines whether this player can play the given DevCard
+	 * @param devCard the DevCard desired to be played
+	 * @return true if the user owns the card and it can be played, else false
+	 */
+	public boolean canPlayDevCard(DevCard devCard){
+		return false;
+	}
 		
 	
 }

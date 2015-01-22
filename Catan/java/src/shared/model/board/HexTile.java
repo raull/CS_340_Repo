@@ -49,7 +49,6 @@ public class HexTile {
 		return this.type;
 	}
 
-
 	public HexLocation getLocation() {
 		return location;
 	}
