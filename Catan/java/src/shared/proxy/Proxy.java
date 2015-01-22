@@ -2,6 +2,7 @@ package shared.proxy;
 
 import java.util.List;
 
+import shared.model.Model;
 import shared.proxy.communication.*;
 /**
  * Used by the Client to connect to the Server and perform
