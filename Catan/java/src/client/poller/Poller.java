@@ -17,7 +17,7 @@ public class Poller {
 	}
 	
 	/**
-	 * Polls server for a JSON response 
+	 * Polls server for a JSON response of current model state
 	 */
 	public JsonObject pollServer() {
 		return null;

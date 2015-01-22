@@ -11,7 +11,7 @@ public class ModelFacade {
 	//canDo functions
 	//get pieces from models
 	//will eventually have to talk to controllers
-	Proxy serverProxy; //has a pointer to the server proxy to see if methods that user has called is valid
+	private Proxy serverProxy; //has a pointer to the server proxy to see if methods that user has called is valid
 	
 	/**
 	 * Determines if user can buy a road

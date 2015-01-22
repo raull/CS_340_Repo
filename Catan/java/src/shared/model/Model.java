@@ -15,7 +15,7 @@ public class Model {
 	public ResourceCardDeck bank; //cards available to be distributed to the players
 	public MessageList chat; //all chat messages
 	public MessageList log; //all log messages
-	public Map map;
+	public Map map; //game map
 	public UserManager users; //list of users
 	public TradeOffer tradeOffer; //current trade offer, if there is one
 	public TurnManager turnManager; //the turntracker -- tracks who's turn it is
