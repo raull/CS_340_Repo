@@ -2,9 +2,9 @@ package shared.model.model_facade;
 
 import shared.model.board.Map;
 import shared.model.cards.DevCardDeck;
-import shared.model.cards.Hand;
 import shared.model.game.ScoreKeeper;
 import shared.model.game.TurnManager;
+import shared.model.game.User;
 import shared.proxy.Proxy;
 
 public class ModelFacade {
@@ -16,10 +16,10 @@ public class ModelFacade {
 	/**
 	 * Determines if user can buy a road
 	 * @param turnManager if it is user's turn
-	 * @param userHand if user has the proper resources
+	 * @param user get user and see if user has proper resources
 	 * @return boolean, whether user can buy road
 	 */
-	public Boolean canBuyRoad(TurnManager turnManager, Hand userHand) {
+	public Boolean canBuyRoad(TurnManager turnManager, User user) {
 		return null;
 	}
 	
@@ -37,10 +37,10 @@ public class ModelFacade {
 	/**
 	 * If user can buy a building (settlement or city)
 	 * @param turnManager if it is user's turn
-	 * @param userHand if user has the proper resources
+	 * @param user get user and see if user has proper resources
 	 * @return
 	 */
-	public Boolean canBuyBuilding(TurnManager turnManager, Hand userHand) {
+	public Boolean canBuyBuilding(TurnManager turnManager, User user) {
 		return null;
 	}
 	
@@ -57,41 +57,70 @@ public class ModelFacade {
 	/**
 	 * If user can buy a dev card
 	 * @param turnManager if it is user's turn
-	 * @param userHand if user has proper resources
+	 * @param user get user and see if user has proper resources
 	 * @param devCardDeck if there are dev cards to buy
 	 * @return
 	 */
-	public Boolean canBuyDevCard(TurnManager turnManager, Hand userHand, DevCardDeck devCardDeck) {
+	public Boolean canBuyDevCard(TurnManager turnManager, User user, DevCardDeck devCardDeck) {
 		return null;
 	}
 	
 	/**
 	 * If user can play the dev card
 	 * @param turnManager if it is user's turn
-	 * @param userHand if user has the card
+	 * @param user get user and see if user has the card
 	 * @return
 	 */
-	public Boolean canPlayDevCard(TurnManager turnManager, Hand userHand) {
+	public Boolean canPlayDevCard(TurnManager turnManager, User user) {
+		return null;
+	}
+	
+	/**
+	 * If the robber can be placed/moved
+	 * @param turnManager check if dice rolled is 7
+	 * @return
+	 */
+	public Boolean canPlaceRobber(TurnManager turnManager) {
+		return null;
+	}
+	
+	/**
+	 * If currUser can steal card from victim
+	 * @param turnManager if it is currUser's turn, and if they can steal
+	 * @param currUser 
+	 * @param victimUser victimUser's deck, and what can be stolen
+	 * @return
+	 */
+	public Boolean canRobPlayer(TurnManager turnManager, User currUser, User victimUser) {
 		return null;
 	}
 	
 	/**
 	 * If user can offer trade
 	 * @param turnManager can only trade on user's turn 
-	 * @param userHand if user has the card(s) offered
+	 * @param user if user has the card(s) offered
 	 * @return
 	 */
-	public Boolean canOfferTrade(TurnManager turnManager, Hand userHand) {
+	public Boolean canOfferTrade(TurnManager turnManager, User user) {
 		return null;
 	}
 	
 	/**
 	 * If user can accept a trade
-	 * @param userHand if user has the card(s) required to accept trade
+	 * @param user if user has the card(s) required to accept trade
 	 * @return
 	 */
-	public Boolean canAcceptTrade(Hand userHand) {
+	public Boolean canAcceptTrade(User user) {
 		return null;	
+	}
+	
+	/**
+	 * If user can end the turn
+	 * @param turnManager check phase -- if all done, can end
+	 * @return
+	 */
+	public Boolean canFinishTurn(TurnManager turnManager) {
+		return null;
 	}
 	
 	/**
