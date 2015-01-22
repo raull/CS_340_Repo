@@ -5,17 +5,16 @@ import java.util.List;
 import shared.model.Model;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
+import shared.proxy.moves.*;
 import shared.proxy.user.*;
 import shared.proxy.util.*;
-import shared.proxy.moves.*;
+
 /**
- * A Mock Proxy, or "Moxy", used primarily for unit testing when 
- * not connected to a server. Returns hardcoded results for the typical 
- * Proxy functions rather than connecting to a server.
+ * Proxy used by the client to send commands to the server
  * @author Kent
  *
  */
-public class Moxy implements Proxy{
+public class ServerProxy implements Proxy{
 
 	@Override
 	public void login(Credentials cred) {

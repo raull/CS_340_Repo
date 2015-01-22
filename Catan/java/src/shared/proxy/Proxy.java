@@ -3,13 +3,13 @@ package shared.proxy;
 import java.util.List;
 
 import shared.model.*;
-
-
-import shared.model.Model;
-
-import shared.proxy.communication.*;
+import shared.proxy.game.*;
+import shared.proxy.games.*;
+import shared.proxy.moves.*;
+import shared.proxy.user.*;
+import shared.proxy.util.*;
 /**
- * Used by the Client to connect to the Server and perform
+ * Interface used by the Client to connect to the Server and perform
  * necessary functions upon it.
  * @author Kent
  *
@@ -183,6 +183,21 @@ public interface Proxy {
 	 * @return
 	 */
 	public Model discardCards(DiscardCards discard);
+	/**
+	 * Set's the server's log level.
+	 * @param cllr
+	 */
+	public void changeLogLevel(ChangeLogLevelRequest cllr);
+	/**
+	 * Adds an AI player to the current game
+	 * @param addAIreq
+	 */
+	public void addAI(AddAIRequest addAIreq);
+	/**
+	 * Returns a list of the supported AI types.
+	 * @return
+	 */
+	public List<String> listAI();
 }
 
 
