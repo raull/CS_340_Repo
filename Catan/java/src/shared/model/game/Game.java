@@ -10,13 +10,33 @@ import shared.model.cards.Bank;
  */
 public class Game {
 	
+	/**
+	 * The games's {@link ScoreKeeper} class to keep track of the score
+	 */
 	private ScoreKeeper score;
+	/**
+	 * The games's {@link TradeManager} class to keep track of all user's trading
+	 */
 	private TradeManager tradeManager;
+	/**
+	 * The games's {@link TurnManager} class to keep track of all user's turns
+	 */
 	private TurnManager turnManager;
+	/**
+	 * The games's {@link UserManager} class to keep track of all users
+	 */
 	private UserManager userManager;
+	/**
+	 * The games's {@link Map}
+	 */
 	private Map map;
+	/**
+	 * The games's {@link Bank} class to keep track of the game's decks
+	 */
 	private Bank bank;
-	
+	/**
+	 * Singleton instance of the game
+	 */
 	private static Game instance = null;
 	
 	/**

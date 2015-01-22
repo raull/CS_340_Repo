@@ -7,6 +7,11 @@ import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.model.exception.InvalidMoveException;
 
+/**
+ * Represents a collection of {@link ResourceCard}
+ * @author Raul Lopez
+ *
+ */
 public class ResourceCardDeck {
 	private ArrayList<ResourceCard> cards;
 

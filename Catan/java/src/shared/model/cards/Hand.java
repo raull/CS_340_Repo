@@ -11,11 +11,23 @@ import shared.model.exception.ModelException;
  *
  */
 public class Hand {
+	
+	/**
+	 * The development cards deck
+	 */
 	private DevCardDeck devCardDeck;
+	/**
+	 * The newly added development cards
+	 */
+	private DevCardDeck newDevCardDeck;
+	/**
+	 * The resource cards deck
+	 */
 	private ResourceCardDeck resourceCardDeck;
 	
 	public Hand (){
 		devCardDeck = new DevCardDeck(false);
+		newDevCardDeck = new DevCardDeck(false);
 		resourceCardDeck = new ResourceCardDeck(false);
 	}
 	
@@ -23,8 +35,12 @@ public class Hand {
 		return resourceCardDeck;
 	}
 	
-	public DevCardDeck getDevCards(){
+	public DevCardDeck getUsableDevCards(){
 		return devCardDeck;
+	}
+	
+	public DevCardDeck getNewDevCards(){
+		return newDevCardDeck;
 	}
 	
 	/**

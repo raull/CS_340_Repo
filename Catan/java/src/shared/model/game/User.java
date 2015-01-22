@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.model.board.Edge;
+import shared.model.board.Vertex;
 import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -24,18 +26,32 @@ public class User {
 	 */
 	private CatanColor color;
 	/**
-	 * A {@link String} representing the name of the <code>User</code>
+	 * A {@link playerName} representing the name of the <code>User</code>
 	 */
-	private String name;
+	private playerName name;
 	/**
-	 * A {@link String} representing the password of the <code>User</code>
+	 * A {@link playerPassword} representing the password of the <code>User</code>
 	 */
-	private String password;
+	private Password password;
 	/**
 	 * A {@link Hand} representing the cards of the <code>User</code>
 	 */
 	private Hand hand;
-	private ArrayList<Piece> pieces;
+	
+	/**
+	 * An ArrayList of {@link Edge}s representing the edges that the <code>User</code> occupies
+	 */
+	private ArrayList<Edge> occupiedEdges;
+	
+	/**
+	 * An ArrayList of {@link Vertex}es representing the edges that the <code>User</code> occupies
+	 */
+	private ArrayList<Vertex> occupiedVertices;
+	
+	/**
+	 * An int representing the unique ID of the player. Used in login/cookie functionality
+	 */
+	private int playerID;
 	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
@@ -44,22 +60,26 @@ public class User {
 	 * @param A {@link CatanColor} representing the color of the <code>User</code>
 	 */
 	public User(String name, String password, CatanColor color) {
-		this.name = name;
+		this.name = new playerName(name);
 		this.color = color;
 	}
 	
 	//Getters
 	
 	public String getName() {
-		return this.name;
+		return this.name.getName();
 	}
 	
 	public Color getColor() {
 		return color.getJavaColor();
 	}
 	
-	public ArrayList<DevCard> getDevCards() {
-		return this.hand.getDevCards().getAllCards();
+	public ArrayList<DevCard> getUsableDevCards() {
+		return this.hand.getUsableDevCards().getAllCards();
+	}
+	
+	public ArrayList<DevCard> getNewDevCards(){
+		return this.hand.getNewDevCards().getAllCards();
 	}
 	
 	public ResourceCardDeck getResourceCards(){
@@ -67,7 +87,7 @@ public class User {
 	}
 
 	public String getPassword() {
-		return password;
+		return password.getPassword();
 	}
 	
 	public Hand getHand(){
@@ -114,9 +134,22 @@ public class User {
 	public void purchasePiece() throws InvalidMoveException{
 		
 	}
+	
+	/**
+	 * Adds the given piece to the <code>User</code>'s inventory
+	 */
+	public void addPiece(Piece piece){
 		
-	public ArrayList<Piece> getPieces() {
-		return pieces;
 	}
+	
+	/**
+	 * Determines whether this player can play the given DevCard
+	 * @param devCard the DevCard desired to be played
+	 * @return true if the user owns the card and it can be played, else false
+	 */
+	public boolean canPlayDevCard(DevCard devCard){
+		return false;
+	}
+		
 	
 }
