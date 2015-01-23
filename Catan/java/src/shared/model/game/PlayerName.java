@@ -1,9 +1,9 @@
 package shared.model.game;
 
-public class playerName {
+public class PlayerName {
 	private String name;
 	
-	public playerName(String name){
+	public PlayerName(String name){
 		this.name = name;
 	}
 
