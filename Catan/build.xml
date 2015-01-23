@@ -60,7 +60,7 @@
     <target name="make-java-doc" description="Generate the Java docs">
         <echo> Making Java documentation </echo>
         <delete dir="${javadoc.dir}"/>
-		<javadoc destdir="${javadoc.dir}" Package="true">
+		<javadoc destdir="${javadoc.dir}" Private="true">
 			<classpath refid="java.lib.classpath" />
 			<packageset dir="${java.src.dir}">
 				<include name="client/**"/>
