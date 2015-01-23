@@ -26,9 +26,9 @@ public class User {
 	 */
 	private CatanColor color;
 	/**
-	 * A {@link playerName} representing the name of the <code>User</code>
+	 * A {@link PlayerName} representing the name of the <code>User</code>
 	 */
-	private playerName name;
+	private PlayerName name;
 	/**
 	 * A {@link playerPassword} representing the password of the <code>User</code>
 	 */
@@ -60,7 +60,7 @@ public class User {
 	 * @param A {@link CatanColor} representing the color of the <code>User</code>
 	 */
 	public User(String name, String password, CatanColor color) {
-		this.name = new playerName(name);
+		this.name = new PlayerName(name);
 		this.color = color;
 	}
 	
