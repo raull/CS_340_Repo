@@ -2,6 +2,7 @@ package shared.model.model_facade;
 
 import com.google.gson.JsonObject;
 
+import shared.model.Model;
 import shared.model.board.Map;
 import shared.model.cards.DevCardDeck;
 import shared.model.game.ScoreKeeper;
@@ -14,6 +15,7 @@ public class ModelFacade {
 	//get pieces from models
 	//will eventually have to talk to controllers
 	private Proxy serverProxy; //has a pointer to the server proxy to see if methods that user has called is valid
+	public Model model;
 	
 	/**
 	 * updates the model class with the JSON response
