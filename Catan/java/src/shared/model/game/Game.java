@@ -23,10 +23,6 @@ public class Game {
 	 */
 	private TurnManager turnManager;
 	/**
-	 * The games's {@link UserManager} class to keep track of all users
-	 */
-	private UserManager userManager;
-	/**
 	 * The games's {@link Map}
 	 */
 	private Map map;
@@ -91,14 +87,6 @@ public class Game {
 	 */
 	public static TradeManager tradeManager() {
 		return Game.singleton().tradeManager;
-	}
-	
-	/**
-	 * Get the {@link UserManager} from the Game singleton
-	 * @return The Game's UserManager
-	 */
-	public static UserManager userManager() {
-		return Game.singleton().userManager;
 	}
 	
 }

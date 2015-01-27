@@ -34,14 +34,6 @@ public class UserManager {
 	}
 	
 	/**
-	 * Changes the current player to the next one in the list (or the first player if the end is reached).
-	 * Updates the currentPlayer and currentPlayerIndex
-	 */
-	public void cycleTurn(){
-		
-	}
-	
-	/**
 	 * Removes a given player from the list (not sure if we'd need this)
 	 * @param toBeRemovedPlayer
 	 */
