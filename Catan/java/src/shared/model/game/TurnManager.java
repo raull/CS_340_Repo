@@ -20,7 +20,7 @@ public class TurnManager {
 	private TurnPhase currentPhase;
 	
 	
-	//Contructor
+	//Constructor
 	
 	/**
 	 * Constructor that takes an arrayList of users to manage whose turn is it
@@ -45,13 +45,6 @@ public class TurnManager {
 	 */
 	public TurnPhase currentTurnPhase() {
 		return currentPhase;
-	}
-	
-	/**
-	 * End the turn of the current user and start the next user's turn
-	 */
-	public void endTurn() {
-		
 	}
 	
 }
