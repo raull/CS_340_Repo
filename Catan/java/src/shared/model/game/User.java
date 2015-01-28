@@ -54,6 +54,11 @@ public class User {
 	private int playerID;
 	
 	/**
+	 * An int representing the index of the turn for the game
+	 */
+	private int turnIndex;
+	
+	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
 	 * @param A {@link String} representing the name of the <code>User</code>
 	 * @param A {@link String} representing the password of the <code>User</code>
@@ -149,6 +154,12 @@ public class User {
 	 */
 	public boolean canPlayDevCard(DevCard devCard){
 		return false;
+	}
+	
+	//Getters
+	
+	public int getTurnIndex() {
+		return turnIndex;
 	}
 		
 	

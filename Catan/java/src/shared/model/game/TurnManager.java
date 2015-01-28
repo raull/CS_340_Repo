@@ -14,6 +14,12 @@ public class TurnManager {
 	 * The turn's current user
 	 */
 	private User currentUser;
+	
+	/**
+	 * The index of the user whose current turn is
+	 */
+	private int currentTurn;
+	
 	/**
 	 * The phase of the current user's turn
 	 */
@@ -27,10 +33,27 @@ public class TurnManager {
 	 * @param users The list of users to manage
 	 */
 	public TurnManager(ArrayList<User> users) {
-		
+		this.users = users;
 	}
 	
+	//Helper Methods
 	
+	/**
+	 * Returns the user for the provided turn index
+	 * @param turnIndex The number of the turn
+	 * @return Returns the user corresponding the turn index. If there was no user with that index, then it returns null.
+	 */
+	public User getUser(int turnIndex) {
+		for (User user : users) {
+			if (user.getTurnIndex() == turnIndex) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
+	//Getters and Setters
 	/**
 	 * Get the user with the current turn
 	 * @return A {@link User} object that currently hold the turn of the game
@@ -38,6 +61,15 @@ public class TurnManager {
 	public User currentUser() {
 		return currentUser;
 	}
+	
+	/**
+	 * Get the user with the current turn
+	 * @return An int representing the current turn index
+	 */
+	public int currentTurn() {
+		return currentTurn;
+	}
+	
 	
 	/**
 	 * Get the current phase of the current turn
