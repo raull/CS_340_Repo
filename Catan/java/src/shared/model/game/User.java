@@ -99,6 +99,14 @@ public class User {
 		return hand;
 	}
 	
+	public int getPlayerID() {
+		return playerID;
+	}
+
+	public void setPlayerID(int playerID) {
+		this.playerID = playerID;
+	}
+
 	/**
 	 * simulates a user rolling the dice
 	 * @return a random number 1-6

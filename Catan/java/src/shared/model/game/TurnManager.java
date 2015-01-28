@@ -43,9 +43,24 @@ public class TurnManager {
 	 * @param turnIndex The number of the turn
 	 * @return Returns the user corresponding the turn index. If there was no user with that index, then it returns null.
 	 */
-	public User getUser(int turnIndex) {
+	public User getUserFromIndex(int turnIndex) {
 		for (User user : users) {
 			if (user.getTurnIndex() == turnIndex) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns the user for the provided turn index
+	 * @param turnIndex The number of the turn
+	 * @return Returns the user corresponding the turn index. If there was no user with that index, then it returns null.
+	 */
+	public User getUser(int id) {
+		for (User user : users) {
+			if (user.getPlayerID() == id) {
 				return user;
 			}
 		}
