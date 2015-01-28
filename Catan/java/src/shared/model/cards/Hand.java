@@ -26,9 +26,9 @@ public class Hand {
 	private ResourceCardDeck resourceCardDeck;
 	
 	public Hand (){
-		devCardDeck = new DevCardDeck(false);
-		newDevCardDeck = new DevCardDeck(false);
-		resourceCardDeck = new ResourceCardDeck(false);
+		devCardDeck = new DevCardDeck();
+		newDevCardDeck = new DevCardDeck();
+		resourceCardDeck = new ResourceCardDeck();
 	}
 	
 	public ResourceCardDeck getResourceCards(){
@@ -49,18 +49,18 @@ public class Hand {
 	 * @return false if the card does not exist, otherwise true
 	 */
 	public boolean canRemoveCard(Card type){
-		return false;
-	}
-	
-	/**
-	 * Removes a card of a given type from the hand
-	 * @param type the type of card being removed
-	 * @throws InvalidMoveException if there are no such cards in the hand
-	 * @throws ModelException if the Card type was formatted incorrectly
-	 */
-	public void removeCard(Card type) throws InvalidMoveException, ModelException{
-		if (type.getClass() == new DevCard(null).getClass()){
-			devCardDeck.removeCardByType(((DevCard) type).getType());
+		DevCard tempDevCard = new DevCard(null);
+		ResourceCard tempResourceCard = new ResourceCard(null);
+		
+		/*Determines whether the card is DevCard or ResourceCard*/
+		if(type.getClass()==tempDevCard.getClass()){
+			return (devCardDeck.getCountByType(((DevCard)type).getType())>0); //gets count by type from usable cards
+		}
+		else if(type.getClass()==tempResourceCard.getClass()){
+			return (resourceCardDeck.getCountByType(((ResourceCard)type).getType())>0); //gets count by type
+		}
+		else{
+			return false;		//idiot-proofing, prevents incorrect inputs
 		}
 	}
 }

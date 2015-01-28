@@ -16,10 +16,9 @@ public class ResourceCardDeck {
 	private ArrayList<ResourceCard> cards;
 
 	/**
-	 * Constructor for the deck. Initializes with all the cards if owned by the bank
-	 * @param b whether the bank owns this Deck
+	 * Constructor for the deck.
 	 */
-	public ResourceCardDeck(boolean b) {
+	public ResourceCardDeck() {
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -29,20 +28,12 @@ public class ResourceCardDeck {
 	 * @return true if available, false if not
 	 */
 	public boolean checkIfExists(ResourceType type){
-		return false;
-	}
-	
-	/**
-	 * Iterates through the deck for a card of the desired type and removes the card before returning it
-	 * @param type
-	 * @return the desired ResourceCard
-	 * @throws InvalidMoveException if no card of the desired type is available.
-	 */
-	public ResourceCard getCard (ResourceType type) throws InvalidMoveException{
-		if(!checkIfExists(type)){
-			//throw exception
+		for(ResourceCard card : cards){
+			if(card.getType()==type){
+				return true;
+			}
 		}
-		return null;
+		return false;
 	}
 	
 	/**
@@ -51,7 +42,13 @@ public class ResourceCardDeck {
 	 * @return the count of ResourceCards of that type in the Deck
 	 */
 	public int getCountByType(ResourceType type){
-		return 0;
+		int output = 0;
+		for(ResourceCard card : cards){
+			if(card.getType()==type){
+				++output;
+			}
+		}
+		return output;
 	}
 	
 	/**
