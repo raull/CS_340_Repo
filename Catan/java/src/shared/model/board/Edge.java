@@ -43,6 +43,7 @@ public class Edge {
 		this.direction = direction;
 		this.location = location;
 		this.hexTiles = hexTiles;
+		road = null;
 	}
 	
 	//Getters
@@ -63,7 +64,7 @@ public class Edge {
 	 * @return true if the Edge's road object is not null, false otherwise
 	 */
 	public boolean isOccupiedByRoad(){
-		return false;
+		return (road!=null);
 	}
 	
 	/**
@@ -72,7 +73,7 @@ public class Edge {
 	 * @return true if a building or road is adjoining to the current edge, false otherwise
 	 */
 	public boolean hasAdjoiningPiece(User user){
-		return false;
+		return false; //need to think more about this
 	}
 
 	

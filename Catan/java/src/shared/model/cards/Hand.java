@@ -55,6 +55,7 @@ public class Hand {
 		/*Determines whether the card is DevCard or ResourceCard*/
 		if(type.getClass()==tempDevCard.getClass()){
 			return (devCardDeck.getCountByType(((DevCard)type).getType())>0); //gets count by type from usable cards
+			//if a card is in newDevCards but not the playable deck, it'll return false
 		}
 		else if(type.getClass()==tempResourceCard.getClass()){
 			return (resourceCardDeck.getCountByType(((ResourceCard)type).getType())>0); //gets count by type
