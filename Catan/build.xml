@@ -150,6 +150,17 @@
 			</assertions>
 		</java>
 	</target>
+
+	<target name="test" depends="compile" description="compiles, packages, and runs the JUnit tests for the project">
+		<java classname="Tester" fork="yes">
+			<classpath>
+				<path/> <!-- still need to figure out what the path is here -->
+			</classpath>
+			<assertions>
+				<enable/>
+			</assertions>		
+		</java>
+	</target>
     
     <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />
