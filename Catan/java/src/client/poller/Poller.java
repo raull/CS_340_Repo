@@ -2,7 +2,7 @@ package client.poller;
 
 import com.google.gson.JsonObject;
 
-import shared.model.model_facade.ModelFacade;
+import shared.model.facade.ModelFacade;
 import shared.proxy.Proxy;
 
 public class Poller {

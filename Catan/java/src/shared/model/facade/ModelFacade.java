@@ -1,4 +1,4 @@
-package shared.model.model_facade;
+package shared.model.facade;
 
 import com.google.gson.JsonObject;
 
