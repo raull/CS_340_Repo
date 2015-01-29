@@ -22,7 +22,7 @@ public class OfferTrade {
 	private int receiver;
 	
 	/**
-	 * Constructor to instantiate the OfferTrade object
+	 * Constructor to instantiate the OfferTrade object	
 	 * @param playerIndex
 	 * @param offer
 	 * @param receiver
