@@ -1,7 +1,9 @@
 package shared.model.game;
 
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.board.Port;
+import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.exception.InvalidMoveException;
 
@@ -60,5 +62,49 @@ public class TradeManager {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Returns the price for the specified {@link PieceType}.
+	 * @param type The piece type to get the price
+	 * @return Returns a deck specifying the price. Returns null for <code>ROBBER</code> type
+	 */
+	public static ResourceCardDeck priceForPiece(PieceType type) {
+		
+		ResourceCardDeck priceDeck = new ResourceCardDeck();
+		
+		switch (type) {
+		case ROAD:
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.BRICK));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.WOOD));
+			break;
+		case CITY:
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
+			break;
+		case SETTLEMENT:
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.BRICK));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.WOOD));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.SHEEP));
+			priceDeck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
+			break;
+		default:
+			return null;
+		}
+		
+		return priceDeck;
+	}
+	
+	public static ResourceCardDeck priceForDevCard() {
+		
+		ResourceCardDeck priceDeck = new ResourceCardDeck();
+		priceDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
+		priceDeck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
+		priceDeck.addResourceCard(new ResourceCard(ResourceType.SHEEP));
+		
+		return priceDeck;
 	}
 }
