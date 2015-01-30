@@ -5,16 +5,11 @@ import java.util.ArrayList;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
-import shared.definitions.ResourceType;
 import shared.model.board.Edge;
 import shared.model.board.Vertex;
-import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
-import shared.model.cards.DevCardDeck;
 import shared.model.cards.Hand;
-import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
-import shared.model.exception.InvalidMoveException;
 
 /**
  * This class represent a user for playing games and authenticating as well

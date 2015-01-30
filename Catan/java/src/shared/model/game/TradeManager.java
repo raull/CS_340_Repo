@@ -2,10 +2,8 @@ package shared.model.game;
 
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
-import shared.model.board.Port;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
-import shared.model.exception.InvalidMoveException;
 
 /**
  * This class manages the trades between user-user and user-port
