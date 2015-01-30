@@ -3,9 +3,7 @@ package shared.model.cards;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
-import shared.model.exception.InvalidMoveException;
 
 /**
  * Represents a collection of {@link ResourceCard}
@@ -57,6 +55,24 @@ public class ResourceCardDeck {
 	 */
 	public ArrayList<ResourceCard> getAllResourceCards(){
 		return (ArrayList<ResourceCard>) Collections.unmodifiableCollection(cards);
+	}
+	
+	/**
+	 * Add Resource card to the deck
+	 * @param card The {@link ResourceCard} to be added
+	 */
+	public void addResourceCard(ResourceCard card) {
+		this.cards.add(card);
+	}
+	
+	/**
+	 * Add the array of {@link ResourceType} to the deck. This will make new {@link ResourceCard} objects.
+	 * @param resources
+	 */
+	public void addResources(ArrayList<ResourceType> resources) {
+		for (ResourceType resourceType : resources) {
+			this.cards.add(new ResourceCard(resourceType));
+		}
 	}
 
 }

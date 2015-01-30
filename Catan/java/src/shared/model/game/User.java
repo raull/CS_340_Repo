@@ -5,12 +5,14 @@ import java.util.ArrayList;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.definitions.ResourceType;
 import shared.model.board.Edge;
 import shared.model.board.Vertex;
 import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.Hand;
+import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.exception.InvalidMoveException;
 
@@ -120,15 +122,12 @@ public class User {
 	 * @return true if the user has sufficient ResourceCards, else false
 	 */
 	public boolean canBuyDevCard(){
-		return false;
-	}
-	
-	/**
-	 * Notifies the bank that the user would like to purchase a DevCard
-	 * @throws InvalidMoveException if the Bank is out of DevCards
-	 */
-	public void purchaseDevCard() throws InvalidMoveException{
 		
+		if (TradeManager.hasEnoughResources(this.hand.getResourceCards(), TradeManager.priceForDevCard())) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
@@ -137,22 +136,26 @@ public class User {
 	 * @return true if the user has sufficient ResourceCards, else false
 	 */
 	public boolean canBuyPiece(PieceType type){
+		
+		if (TradeManager.hasEnoughResources(this.hand.getResourceCards(), TradeManager.priceForPiece(type))) {
+			return true;
+		}
+		
 		return false;
 	}
 	
 	/**
-	 * Notifies the Bank that the user would like to purchase a Piece
-	 * @throws InvalidMoveException if the piece cannot be purchased
+	 * Adds the given edge to the <code>User</code>'s inventory
 	 */
-	public void purchasePiece() throws InvalidMoveException{
-		
+	public void addOccupiedEdge(Edge edge){
+		this.occupiedEdges.add(edge);
 	}
 	
 	/**
-	 * Adds the given piece to the <code>User</code>'s inventory
+	 * Adds the given vertex to the <code>User</code>'s inventory
 	 */
-	public void addPiece(Piece piece){
-		
+	public void addOccupiedVertex(Vertex vertex){
+		this.occupiedVertices.add(vertex);
 	}
 	
 	/**
@@ -161,6 +164,11 @@ public class User {
 	 * @return true if the user owns the card and it can be played, else false
 	 */
 	public boolean canPlayDevCard(DevCard devCard){
+		
+		if (this.hand.getUsableDevCards().getCountByType(devCard.type) > 0) {
+			return true;
+		}
+		
 		return false;
 	}
 	
