@@ -2,6 +2,7 @@ package shared.model.facade;
 
 import com.google.gson.JsonObject;
 
+import shared.definitions.PieceType;
 import shared.model.Model;
 import shared.model.board.Map;
 import shared.model.cards.Bank;
@@ -44,18 +45,30 @@ public class ModelFacade {
 	 * updates the model class with the JSON response
 	 * @param jsonResponse
 	 */
-	public void updateModel(JsonObject jsonResponse) {
+	public void updateModel(Model jsonResponse) {
 		
+	}
+	/**
+	 * gets the current model
+	 * @return
+	 */
+	public Model getModel() {
+		return model;
 	}
 	
 	/**
-	 * Determines if user can buy a road
+	 * Determines if user can buy a piece (road, settlement, city)
 	 * @param turnManager if it is user's turn
 	 * @param user get user and see if user has proper resources
-	 * @return boolean, whether user can buy road
+	 * @return boolean, whether user can buy a piece
 	 */
-	public Boolean canBuyRoad(TurnManager turnManager, User user) {
-		return null;
+	public Boolean canBuyPiece(TurnManager turnManager, User user, PieceType pieceType) {
+		if(user != turnManager.currentUser() || !user.canBuyPiece(pieceType)) {
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	/**
@@ -66,16 +79,6 @@ public class ModelFacade {
 	 */
 	
 	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Map map) {
-		return null;
-	}
-	
-	/**
-	 * If user can buy a building (settlement or city)
-	 * @param turnManager if it is user's turn
-	 * @param user get user and see if user has proper resources
-	 * @return
-	 */
-	public Boolean canBuyBuilding(TurnManager turnManager, User user) {
 		return null;
 	}
 	
@@ -97,7 +100,13 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canBuyDevCard(TurnManager turnManager, User user, DevCardDeck devCardDeck) {
-		return null;
+		//if it's not user's turn, or dev card deck is empty, or if user canont buy dev card
+		if(user != turnManager.currentUser() || devCardDeck.getAllCards().size() == 0 || !user.canBuyDevCard()) {
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	/**
