@@ -66,19 +66,12 @@ public class Vertex {
 	}
 
 	//Logic
-	/**
-	 * Helps determine whether a piece can be played on a vertex by asking if adjacent vertices are occupied
-	 * @return true if any adjacent vertices have buildings on them, otherwise false
-	 */
-	public boolean hasAdjacentBuilding(){
-		return false;
-	}
 	
 	/**
 	 * Determines whether the <code>Vertex</code> is already occupied
 	 * @return false if the Building is null, else true
 	 */
 	public boolean isOccupied(){
-		return false;
+		return (building!=null);
 	}
 }
