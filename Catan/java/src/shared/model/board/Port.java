@@ -18,7 +18,7 @@ public class Port {
 	 * An integer representing the offer rate for the resource that it provides, must be either 2 or 3
 	 */
 	private int offerRate;
-	
+		
 	//Constructors
 	/**
 	 * Port Constructor for type and offerRate.
