@@ -1,5 +1,6 @@
 package shared.proxy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import shared.model.Model;
@@ -31,14 +32,26 @@ public class Moxy implements Proxy{
 
 	@Override
 	public List<Game> list() {
-		// TODO Auto-generated method stub
-		return null;
+		Player jake = new Player("Jake", "red", 0);
+		Player sara = new Player("Sara", "blue", 1);
+		Player taylor = new Player("Taylor", "green", 2);
+		Player[] players = new Player[3];
+		players[0] = jake;
+		players[1] = sara;
+		players[2] = taylor;
+		Game game1 = new Game("Easy Game", 1, players);
+		Game game2 = new Game("Hard Game", 2, players);
+		List<Game> gamelist = new ArrayList<Game>();
+		gamelist.add(game1);
+		gamelist.add(game2);
+		return gamelist;
 	}
 
 	@Override
 	public NewGame create(CreateGameRequest CreateRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		EmptyPlayer[] players = new EmptyPlayer[3];
+		NewGame nugame = new NewGame(CreateRequest.getName(), 3, players);
+		return nugame;
 	}
 
 	@Override
