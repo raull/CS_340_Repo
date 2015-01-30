@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.locations.EdgeLocation;
+import shared.locations.VertexLocation;
 import shared.model.board.Edge;
 import shared.model.board.Vertex;
 import shared.model.board.piece.Piece;
@@ -170,5 +172,32 @@ public class User {
 		return turnIndex;
 	}
 		
+	/**
+	 * Determines whether the user currently occupies a vertex with a given VertexLocation
+	 * @param location the VertexLocation being searched for
+	 * @return true if the User occupies the Vertex, false otherwise
+	 */
+	public boolean occupiesVertex(VertexLocation location){
+		for (Vertex vertex : occupiedVertices){
+			if(vertex.getLocation().getNormalizedLocation().equals(location.getNormalizedLocation())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Determines whether the user currently occupies an Edge with a given EdgeLocation
+	 * @param location the EdgeLocation being searched for
+	 * @return true if the User occupies the Edge, false otherwise
+	 */
+	public boolean occupiesEdge(EdgeLocation location){
+		for (Edge edge : occupiedEdges){
+			if(edge.getLocation().getNormalizedLocation().equals(location.getNormalizedLocation())){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }
