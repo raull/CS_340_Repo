@@ -1,6 +1,7 @@
 package shared.model.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * The manager that keeps track of the user's turn
@@ -92,6 +93,14 @@ public class TurnManager {
 	 */
 	public TurnPhase currentTurnPhase() {
 		return currentPhase;
+	}
+	
+	/**
+	 * Get a read-only list of users
+	 * @return The list of users
+	 */
+	public ArrayList<User> getUsers() {
+		return (ArrayList<User>) Collections.unmodifiableCollection(this.users);
 	}
 	
 }

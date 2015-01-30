@@ -14,24 +14,24 @@ public class TradeOffer {
 	 */
 	private int rate;
 	/**
-	 * The {@link ResourceCardDeck} with the receiving resource cards
-	 */
-	private ResourceCardDeck receiveDeck;
-	/**
 	 * The {@link ResourceCardDeck} with the sending resource cards
 	 */
-	private ResourceCardDeck sendDeck;
+	private ResourceCardDeck buyDeck;
+	/**
+	 * The {@link ResourceCardDeck} with the receiving resource cards
+	 */
+	private ResourceCardDeck sellDeck;
 	
 	/**
 	 * Create a new TradeOfferClass
 	 * @param offerRate The rate in which the offer will be performed
-	 * @param receiveDeck The resource deck that will be received
-	 * @param sendDeck The resource deck that will be given
+	 * @param sellDeck The resource deck that will be received
+	 * @param buyDeck The resource deck that will be given
 	 */
-	public TradeOffer(int offerRate, ResourceCardDeck receiveDeck, ResourceCardDeck sendDeck) {
+	public TradeOffer(int offerRate, ResourceCardDeck sellDeck, ResourceCardDeck buyDeck) {
 		this.rate = offerRate;
-		this.receiveDeck = receiveDeck;
-		this.sendDeck = sendDeck;
+		this.sellDeck = sellDeck;
+		this.buyDeck = buyDeck;
 	}
 
 	public int getRate() {
@@ -42,20 +42,20 @@ public class TradeOffer {
 		this.rate = rate;
 	}
 
-	public ResourceCardDeck getReceiveDeck() {
-		return receiveDeck;
+	public ResourceCardDeck getSellDeck() {
+		return sellDeck;
 	}
 
-	public void setReceiveDeck(ResourceCardDeck receivingDeck) {
-		this.receiveDeck = receivingDeck;
+	public void setSelleck(ResourceCardDeck sellDeck) {
+		this.sellDeck = sellDeck;
 	}
 
-	public ResourceCardDeck getSendDeck() {
-		return sendDeck;
+	public ResourceCardDeck getBuyDeck() {
+		return buyDeck;
 	}
 
-	public void setSendDeck(ResourceCardDeck sendingDeck) {
-		this.sendDeck = sendingDeck;
+	public void setBuyDeck(ResourceCardDeck sendingDeck) {
+		this.buyDeck = sendingDeck;
 	}
 	
 }
