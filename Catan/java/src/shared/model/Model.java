@@ -24,6 +24,21 @@ public class Model {
 	
 	
 	
+	public Model(ResourceCardDeck bank, MessageList chat, MessageList log,
+			Map map, UserManager users, TradeOffer tradeOffer,
+			TurnManager turnManager, int version, int winner) {
+		super();
+		this.bank = bank;
+		this.chat = chat;
+		this.log = log;
+		this.map = map;
+		this.users = users;
+		this.tradeOffer = tradeOffer;
+		this.turnManager = turnManager;
+		this.version = version;
+		this.winner = winner;
+	}
+
 	public ResourceCardDeck getBank() {
 		return bank;
 	}
