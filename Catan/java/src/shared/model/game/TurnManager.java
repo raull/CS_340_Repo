@@ -22,6 +22,11 @@ public class TurnManager {
 	private int currentTurn;
 	
 	/**
+	 * The number of the last rolled dice
+	 */
+	private int rolledNumber;
+	
+	/**
 	 * The phase of the current user's turn
 	 */
 	private TurnPhase currentPhase;
@@ -101,6 +106,14 @@ public class TurnManager {
 	 */
 	public ArrayList<User> getUsers() {
 		return (ArrayList<User>) Collections.unmodifiableCollection(this.users);
+	}
+
+	public int getRolledNumber() {
+		return rolledNumber;
+	}
+
+	public void setRolledNumber(int rolledNumber) {
+		this.rolledNumber = rolledNumber;
 	}
 	
 }

@@ -1,7 +1,9 @@
 package shared.model.game;
 
 import java.awt.Color;
+import java.awt.List;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
@@ -9,6 +11,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.definitions.ResourceType;
 import shared.model.board.Edge;
+import shared.model.board.Port;
 import shared.model.board.Vertex;
 import shared.model.cards.DevCard;
 import shared.model.cards.Hand;
@@ -202,6 +205,19 @@ public class User {
 			}
 		}
 		return false;
+	}
+	
+	public Collection<Port> ports() {
+		
+		ArrayList<Port> ports = new ArrayList<Port>();
+		
+		for (Vertex vertex : occupiedVertices) {
+			if (vertex.getPort() != null) {
+				ports.add(vertex.getPort());
+			}
+		}
+		
+		return ports;
 	}
 	
 }
