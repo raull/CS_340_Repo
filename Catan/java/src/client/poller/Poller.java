@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import shared.model.Model;
 import shared.model.facade.ModelFacade;
 import shared.proxy.Proxy;
+import shared.proxy.ProxyException;
 
 public class Poller {
 	
@@ -34,7 +35,13 @@ public class Poller {
 	 */
 	public void pollServer() {
 		Model currModel = modelFacade.getModel();
-		Model response = proxy.model(currModel.getVersion());
+		Model response = null;
+		try {
+			response = proxy.model(currModel.getVersion());
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		modelFacade.updateModel(response);
 	}
 	

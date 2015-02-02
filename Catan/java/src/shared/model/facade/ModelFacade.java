@@ -1,12 +1,18 @@
 package shared.model.facade;
 
-import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import shared.definitions.PieceType;
 import shared.model.Model;
+import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.cards.Bank;
+import shared.model.cards.Card;
+import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
+import shared.model.cards.Hand;
+import shared.model.cards.ResourceCard;
 import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeManager;
 import shared.model.game.TurnManager;
@@ -46,7 +52,7 @@ public class ModelFacade {
 	 * @param jsonResponse
 	 */
 	public void updateModel(Model jsonResponse) {
-		
+		model.deserialize(jsonResponse);
 	}
 	/**
 	 * gets the current model
@@ -54,6 +60,29 @@ public class ModelFacade {
 	 */
 	public Model getModel() {
 		return model;
+	}
+	
+	/**
+	 * Determines if a user can discard cards (robber)
+	 * @param turnManager
+	 * @param user - current user
+	 * @param cards - array list of cards to be discarded
+	 * @return
+	 */
+	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<Card> cards) {
+		if(user != turnManager.currentUser()) return false;
+		Hand currHand = user.getHand();
+		for(Card card : cards) {
+			if(!currHand.canRemoveCard(card)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	//not really sure what this is asking
+	public Boolean canRollNumber(TurnManager turnManager, User user) {
+		return false;
 	}
 	
 	/**
@@ -78,7 +107,7 @@ public class ModelFacade {
 	 * @return
 	 */
 	
-	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Map map) {
+	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Map map, User user) {
 		return null;
 	}
 	
@@ -115,17 +144,27 @@ public class ModelFacade {
 	 * @param user get user and see if user has the card
 	 * @return
 	 */
-	public Boolean canPlayDevCard(TurnManager turnManager, User user) {
-		return null;
+	public Boolean canPlayDevCard(TurnManager turnManager, User user, DevCard devCard) {
+		if(user != turnManager.currentUser() || !user.canPlayDevCard(devCard)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	/**
-	 * If the robber can be placed/moved
-	 * @param turnManager check if dice rolled is 7
+	 * If the robber can be placed/moved to a location
+	 * @param hexTile tile that the robber will be moved to
 	 * @return
 	 */
-	public Boolean canPlaceRobber(TurnManager turnManager) {
-		return null;
+	public Boolean canPlaceRobber(HexTile hexTile) {
+		if(hexTile.hasRobber()) {
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	/**
@@ -136,26 +175,53 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canRobPlayer(TurnManager turnManager, User currUser, User victimUser) {
+		//not sure if needed
 		return null;
 	}
 	
 	/**
 	 * If user can offer trade
-	 * @param turnManager can only trade on user's turn 
+	 * @param turnManager can only trade on user's turn
+	 * @param offeredCards the cards offered 
 	 * @param user if user has the card(s) offered
 	 * @return
 	 */
-	public Boolean canOfferTrade(TurnManager turnManager, User user) {
-		return null;
+	public Boolean canOfferTrade(TurnManager turnManager, User user, ArrayList<ResourceCard> offeredCards) {
+		if(user != turnManager.currentUser()) {
+			return false;
+		}
+		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
+		if(!userCards.containsAll(offeredCards)) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**
 	 * If user can accept a trade
 	 * @param user if user has the card(s) required to accept trade
+	 * @param reqCards the cards required to accept the trade
 	 * @return
 	 */
-	public Boolean canAcceptTrade(User user) {
-		return null;	
+	public Boolean canAcceptTrade(User user, ArrayList<ResourceCard> reqCards) {
+		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
+		if(!userCards.containsAll(reqCards)) {
+			return false;
+		}
+		else{
+			return true;
+		}	
+	}
+	
+	/**
+	 * if user can maritime trade
+	 * @param bank - if bank has resources
+	 * @param user - if user has resources
+	 * @param map - if user has port so resources change
+	 * @return
+	 */
+	public Boolean canMaritimeTrade(Bank bank, User user, Map map){
+		return false;
 	}
 	
 	/**
@@ -164,6 +230,9 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canFinishTurn(TurnManager turnManager) {
+//		if(turnManager.currentTurnPhase() ) {
+//			
+//		}
 		return null;
 	}
 	
@@ -212,7 +281,7 @@ public class ModelFacade {
 	}
 	
 	/**
-	 * Get the {@link TradeManager} from the Game singleton
+	 * Get the {@link TradeManager} from the Game 
 	 * @return The Game's TradeManager
 	 */
 	public TradeManager tradeManager() {

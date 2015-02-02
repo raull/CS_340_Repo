@@ -124,7 +124,7 @@ public class Model {
 	 * @param jsonModel
 	 */
 	
-	public void deserialize(JsonObject jsonModel) {
+	public void deserialize(Model jsonModel) {
 		
 	}
 }
