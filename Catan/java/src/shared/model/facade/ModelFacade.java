@@ -4,17 +4,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import shared.definitions.PieceType;
+import shared.locations.EdgeLocation;
+import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
+import shared.model.board.Port;
+import shared.model.board.Vertex;
 import shared.model.cards.Bank;
 import shared.model.cards.Card;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.Hand;
 import shared.model.cards.ResourceCard;
+import shared.model.cards.ResourceCardDeck;
 import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeManager;
+import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.Proxy;
@@ -103,21 +110,41 @@ public class ModelFacade {
 	/**
 	 * If user can place a road at location
 	 * @param turnManager if it is user's turn
-	 * @param map if the location is valid 
+	 * @param location if the location is valid
+	 * @param user if user has a road 
 	 * @return
 	 */
 	
-	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Map map, User user) {
-		return null;
+	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Edge location, User user) {
+		//if it's not user's turn and the edge is already occupied, return false
+		if(user != turnManager.currentUser() || location.isOccupiedByRoad()) {
+			return false;
+		}
+		//check that user has a road/building connecting to new location
+		//suggestion for implementing hasAdjoiningPiece...perhaps have an array of edges/vertex that the user occupies?
+			//then given edge or vertex, just compare the ones near it with user's occupied ones
+			//or, have each edge stores what user occupies it, if at all, etc
+		if(!location.hasAdjoiningPiece(user)){
+			return false;
+		}
+		return true;
 	}
 	
 	/**
 	 * If user can place a building (settlement or city) at a certain location
 	 * @param turnManager if it is user's turn
-	 * @param map if the location is valid
+	 * @param location if the location is valid
+	 * @param user if user has building
+	 * @param PieceType type of building
 	 * @return
 	 */
-	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, Map map) {
+	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, Vertex location, User user, PieceType building) {
+		
+		if(user != turnManager.currentUser() || location.isOccupied()) {
+			return false;
+		}
+		//check if user has at least one adjoining road
+		
 		return null;
 	}
 	
@@ -180,47 +207,87 @@ public class ModelFacade {
 	}
 	
 	/**
-	 * If user can offer trade
-	 * @param turnManager can only trade on user's turn
-	 * @param offeredCards the cards offered 
-	 * @param user if user has the card(s) offered
+	 * if user can make a trade
+	 * @param turnManager
+	 * @param offeringUser - user making the offer
+	 * @param receivingUser - user accepting the offer
+	 * @param tradeOffer
 	 * @return
 	 */
-	public Boolean canOfferTrade(TurnManager turnManager, User user, ArrayList<ResourceCard> offeredCards) {
-		if(user != turnManager.currentUser()) {
+	//combines both offer and accept trade
+	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
+		if(offeringUser != turnManager.currentUser()) {
 			return false;
 		}
-		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
-		if(!userCards.containsAll(offeredCards)) {
+		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards();
+		ArrayList<ResourceCard> offeredCards = tradeOffer.getBuyDeck().getAllResourceCards();
+		if(!offeringUserCards.containsAll(offeredCards)) {
+			return false;
+		}
+		ArrayList<ResourceCard> receivingUserCards = receivingUser.getHand().getResourceCards().getAllResourceCards();
+		ArrayList<ResourceCard> neededCards = tradeOffer.getSellDeck().getAllResourceCards();
+		if(!receivingUserCards.containsAll(neededCards)) {
 			return false;
 		}
 		return true;
 	}
 	
-	/**
-	 * If user can accept a trade
-	 * @param user if user has the card(s) required to accept trade
-	 * @param reqCards the cards required to accept the trade
-	 * @return
-	 */
-	public Boolean canAcceptTrade(User user, ArrayList<ResourceCard> reqCards) {
-		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
-		if(!userCards.containsAll(reqCards)) {
-			return false;
-		}
-		else{
-			return true;
-		}	
-	}
+//	/**
+//	 * If user can offer trade
+//	 * @param turnManager can only trade on user's turn
+//	 * @param offeredCards the cards offered 
+//	 * @param user if user has the card(s) offered
+//	 * @return
+//	 */
+//	public Boolean canOfferTrade(TurnManager turnManager, User user, ArrayList<ResourceCard> offeredCards) {
+//		if(user != turnManager.currentUser()) {
+//			return false;
+//		}
+//		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
+//		if(!userCards.containsAll(offeredCards)) {
+//			return false;
+//		}
+//		return true;
+//	}
+//	
+//	/**
+//	 * If user can accept a trade
+//	 * @param user if user has the card(s) required to accept trade
+//	 * @param reqCards the cards required to accept the trade
+//	 * @return
+//	 */
+//	public Boolean canAcceptTrade(User user, ArrayList<ResourceCard> reqCards) {
+//		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
+//		if(!userCards.containsAll(reqCards)) {
+//			return false;
+//		}
+//		else{
+//			return true;
+//		}	
+//	}
 	
 	/**
 	 * if user can maritime trade
 	 * @param bank - if bank has resources
 	 * @param user - if user has resources
-	 * @param map - if user has port so resources change
+	 * @param tradeOffer information about the offer (offeredCards, acceptedCards)
 	 * @return
 	 */
-	public Boolean canMaritimeTrade(Bank bank, User user, Map map){
+	public Boolean canMaritimeTrade(TurnManager turnManager, Bank bank, User user,  TradeOffer tradeOffer){
+		if(user != turnManager.currentUser()) {
+			return false;
+		}
+		//check if bank has cards user wants available
+		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
+		ResourceCardDeck userCards = user.getHand().getResourceCards();
+		ArrayList<ResourceCard> cardsWanted = tradeOffer.getBuyDeck().getAllResourceCards();
+		ArrayList<ResourceCard> cardsOffered = tradeOffer.getSellDeck().getAllResourceCards();
+		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
+		if(!availableCards.getAllResourceCards().containsAll(cardsWanted) || !userCards.getAllResourceCards().containsAll(cardsOffered)) {
+			return false;
+		}
+		Collection<Port> userPorts = user.ports();
+		//still need to implement rates
 		return false;
 	}
 	
@@ -230,10 +297,13 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canFinishTurn(TurnManager turnManager) {
-//		if(turnManager.currentTurnPhase() ) {
-//			
-//		}
-		return null;
+		//not sure how to check for this..currently saying when turn phase is not anything, then user can end?
+		if(turnManager.currentTurnPhase() != null) {
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 	
 	/**
