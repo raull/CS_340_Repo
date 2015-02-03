@@ -3,7 +3,7 @@ package shared.model.facade;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import shared.definitions.PieceType;
+import shared.definitions.*;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
@@ -23,14 +23,17 @@ import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeManager;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
+import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.Proxy;
+import shared.proxy.ProxyException;
+import shared.proxy.moves.*;
 
 public class ModelFacade {
 	//canDo functions
 	//get pieces from models
 	//will eventually have to talk to controllers
-	private Proxy serverProxy; //has a pointer to the server proxy to see if methods that user has called is valid
+	private Proxy proxy; //has a pointer to the server proxy to see if methods that user has called is valid
 	public Model model;
 	
 	/**
@@ -76,20 +79,73 @@ public class ModelFacade {
 	 * @param cards - array list of cards to be discarded
 	 * @return
 	 */
-	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<Card> cards) {
-		if(user != turnManager.currentUser()) return false;
+	public Model canDiscardCards(TurnManager turnManager, User user, ArrayList<ResourceCard> cards) {
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
+			return null;
+		}
 		Hand currHand = user.getHand();
-		for(Card card : cards) {
+		for(ResourceCard card : cards) {
 			if(!currHand.canRemoveCard(card)) {
-				return false;
+				return null;
 			}
 		}
-		return true;
+		
+		int brick = 0;
+		int ore = 0;
+		int sheep = 0;
+		int wheat = 0;
+		int wood = 0;
+		
+		for(ResourceCard card : cards) {
+			switch(card.getType()) {
+				case BRICK:
+					brick++;
+					break;
+				case ORE:
+					ore++;
+					break;
+				case SHEEP:
+					sheep++;
+					break;
+				case WHEAT:
+					wheat++;
+					break;
+				case WOOD:
+					wood++;
+					break;
+			}
+		}
+		
+		ResourceList resourceList = new ResourceList(brick, ore, sheep, wheat, wood);
+		DiscardCards toDiscard = new DiscardCards(user.getPlayerID(), null);
+		try {
+			return proxy.discardCards(toDiscard);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
-	//not really sure what this is asking
-	public Boolean canRollNumber(TurnManager turnManager, User user) {
-		return false;
+	/**
+	 * determine if user can roll dice
+	 * @param turnManager
+	 * @param user
+	 * @return
+	 */
+	public Model canRollNumber(TurnManager turnManager, User user) {
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.ROLLING) {
+			return null;
+		}
+		else {
+			try {
+				return proxy.rollNumber(new RollNumber(user.getPlayerID(), turnManager.getRolledNumber()));
+			} catch (ProxyException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+		}
 	}
 	
 	/**
@@ -195,18 +251,6 @@ public class ModelFacade {
 	}
 	
 	/**
-	 * If currUser can steal card from victim
-	 * @param turnManager if it is currUser's turn, and if they can steal
-	 * @param currUser 
-	 * @param victimUser victimUser's deck, and what can be stolen
-	 * @return
-	 */
-	public Boolean canRobPlayer(TurnManager turnManager, User currUser, User victimUser) {
-		//not sure if needed
-		return null;
-	}
-	
-	/**
 	 * if user can make a trade
 	 * @param turnManager
 	 * @param offeringUser - user making the offer
@@ -232,40 +276,6 @@ public class ModelFacade {
 		return true;
 	}
 	
-//	/**
-//	 * If user can offer trade
-//	 * @param turnManager can only trade on user's turn
-//	 * @param offeredCards the cards offered 
-//	 * @param user if user has the card(s) offered
-//	 * @return
-//	 */
-//	public Boolean canOfferTrade(TurnManager turnManager, User user, ArrayList<ResourceCard> offeredCards) {
-//		if(user != turnManager.currentUser()) {
-//			return false;
-//		}
-//		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
-//		if(!userCards.containsAll(offeredCards)) {
-//			return false;
-//		}
-//		return true;
-//	}
-//	
-//	/**
-//	 * If user can accept a trade
-//	 * @param user if user has the card(s) required to accept trade
-//	 * @param reqCards the cards required to accept the trade
-//	 * @return
-//	 */
-//	public Boolean canAcceptTrade(User user, ArrayList<ResourceCard> reqCards) {
-//		ArrayList<ResourceCard> userCards  = user.getHand().getResourceCards().getAllResourceCards();
-//		if(!userCards.containsAll(reqCards)) {
-//			return false;
-//		}
-//		else{
-//			return true;
-//		}	
-//	}
-	
 	/**
 	 * if user can maritime trade
 	 * @param bank - if bank has resources
@@ -281,14 +291,30 @@ public class ModelFacade {
 		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
 		ArrayList<ResourceCard> cardsWanted = tradeOffer.getBuyDeck().getAllResourceCards();
+		
+		//this is assuming that tradeOffer has already calculated what is needed, etc
 		ArrayList<ResourceCard> cardsOffered = tradeOffer.getSellDeck().getAllResourceCards();
 		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
 		if(!availableCards.getAllResourceCards().containsAll(cardsWanted) || !userCards.getAllResourceCards().containsAll(cardsOffered)) {
 			return false;
 		}
-		Collection<Port> userPorts = user.ports();
-		//still need to implement rates
-		return false;
+		
+		//assuming that tradeOffer does not have rate calculated.. still need to finish implementing
+//		ArrayList<ResourceCard> cardsNeeded = new ArrayList<ResourceCard>();
+//		Collection<Port> userPorts = user.ports();
+//		for(Port port : userPorts) {
+//			for(ResourceCard card: cardsWanted) {
+//				if(port.getType().equals(card.getType())) { //not sure if this will work because portType and cardType are different enums
+//					int rate = port.getOfferRate();
+//					//need rate number of cards for 1 wanted card
+//				}
+//			}
+//		}
+//		
+		
+		
+		
+		return true;
 	}
 	
 	/**
@@ -304,16 +330,6 @@ public class ModelFacade {
 		else{
 			return true;
 		}
-	}
-	
-	/**
-	 * If user can end the game/If user has won
-	 * @param turnManager user can only end game on their turn
-	 * @param scoreKeeper if user has the proper score
-	 * @return
-	 */
-	public Boolean canEndGame(TurnManager turnManager, ScoreKeeper scoreKeeper) {
-		return null;
 	}
 	
 	
