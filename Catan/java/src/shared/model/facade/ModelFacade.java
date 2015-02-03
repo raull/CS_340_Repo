@@ -26,13 +26,13 @@ import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.Proxy;
-import shared.proxy.moves;
 
 public class ModelFacade {
 	//canDo functions
 	//get pieces from models
 	//will eventually have to talk to controllers
 	private Proxy proxy; //has a pointer to the server proxy to see if methods that user has called is valid
+	//need separate "do" functions, canDos return booleans
 	public Model model;
 	
 	/**
