@@ -35,6 +35,11 @@
 		</fileset>
 	</path>
 
+	<path id="all-classpath">
+		<path refid="java.lib.classpath"/>
+		<pathelement location="${java.build}"/>
+	</path>
+
 	<!-- TARGETS -->
 	<!-- ******* -->
      
@@ -104,6 +109,12 @@
 		</javac>
 	</target>
 	
+	<target name="compile-test" depends="init" description="compile the source " >
+		<javac srcdir="${java.test}" destdir="${java.build}" debug="true" includeantruntime="true">
+			<classpath refid="java.lib.classpath" />
+		</javac>
+	</target>
+	
 	<target name="package" depends="compile" description="package the jar file" >
 		<mkdir dir="${java.dist}/lib"/>
 		<copy todir="${java.dist}/lib">
@@ -151,10 +162,11 @@
 		</java>
 	</target>
 
-	<target name="test" depends="compile" description="compiles, packages, and runs the JUnit tests for the project">
-		<java classname="Tester" fork="yes">
+	<target name="test" depends="compile-test, compile" description="compiles, packages, and runs the JUnit tests for the project">
+		<java classname="test.Tester" fork="yes">
+			
 			<classpath>
-				<path/> <!-- still need to figure out what the path is here -->
+				<path refid="all-classpath"/> <!-- still need to figure out what the path is here -->
 			</classpath>
 			<assertions>
 				<enable/>
