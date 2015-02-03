@@ -3,7 +3,7 @@ package shared.model.facade;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import shared.definitions.*;
+import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
@@ -26,8 +26,7 @@ import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.Proxy;
-import shared.proxy.ProxyException;
-import shared.proxy.moves.*;
+import shared.proxy.moves;
 
 public class ModelFacade {
 	//canDo functions
@@ -79,52 +78,18 @@ public class ModelFacade {
 	 * @param cards - array list of cards to be discarded
 	 * @return
 	 */
-	public Model canDiscardCards(TurnManager turnManager, User user, ArrayList<ResourceCard> cards) {
+	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<Card> cards) {
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
-			return null;
+			return false;
 		}
 		Hand currHand = user.getHand();
-		for(ResourceCard card : cards) {
+		for(Card card : cards) {
 			if(!currHand.canRemoveCard(card)) {
-				return null;
+				return false;
 			}
 		}
 		
-		int brick = 0;
-		int ore = 0;
-		int sheep = 0;
-		int wheat = 0;
-		int wood = 0;
-		
-		for(ResourceCard card : cards) {
-			switch(card.getType()) {
-				case BRICK:
-					brick++;
-					break;
-				case ORE:
-					ore++;
-					break;
-				case SHEEP:
-					sheep++;
-					break;
-				case WHEAT:
-					wheat++;
-					break;
-				case WOOD:
-					wood++;
-					break;
-			}
-		}
-		
-		ResourceList resourceList = new ResourceList(brick, ore, sheep, wheat, wood);
-		DiscardCards toDiscard = new DiscardCards(user.getPlayerID(), null);
-		try {
-			return proxy.discardCards(toDiscard);
-		} catch (ProxyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+		return true;
 	}
 	
 	/**
@@ -133,18 +98,12 @@ public class ModelFacade {
 	 * @param user
 	 * @return
 	 */
-	public Model canRollNumber(TurnManager turnManager, User user) {
+	public Boolean canRollNumber(TurnManager turnManager, User user) {
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.ROLLING) {
-			return null;
+			return false;
 		}
 		else {
-			try {
-				return proxy.rollNumber(new RollNumber(user.getPlayerID(), turnManager.getRolledNumber()));
-			} catch (ProxyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return null;
-			}
+			return true;
 		}
 	}
 	
