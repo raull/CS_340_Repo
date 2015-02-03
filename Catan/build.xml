@@ -91,6 +91,7 @@
 	<property name="java.build" location="${java.dir}/build"/>
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
+	<property name="java.test" location="test"/>
  
 	<target name="init" description="create build directories">
 		<tstamp/>
