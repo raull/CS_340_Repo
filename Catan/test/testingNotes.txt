@@ -1,13 +1,15 @@
 Write some JUnit tests for the “can do?” methods in your model.
 Write some JUnit tests verifying that you can successfully initialize your model from
-the JSON model data returned by the server.
-
-Write some JUnit tests to verify that your Server Poller is working properly. Use the
-“mock” Server Proxy instead of the “real” one so you can run these tests without
-needing to run the server. (The tests for your Catan model should already contain
-some code to verify that the model can properly initialize itself from JSON data. You
-should be able to reuse that code here to ensure that the model has been properly
-updated by the poller.)
+the JSON model data returned by the server.
+
+Model Tests
+Test initializing model from server JSON
+Test can do methods
+canDiscardCards
+	wrong turn phase
+	
+
+
 
 Proxy Tests
 Tests are needed for all of the following functions. 
@@ -50,3 +52,5 @@ listAI
 
 Poller Tests
 Tests to verify that the Poller can update the Model
+Should really only need a few tests.
+Perhaps one where the model has not changed and one where it has.
