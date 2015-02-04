@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import shared.definitions.CatanColor;
+import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
-import shared.definitions.PortType;
-import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
@@ -60,6 +59,8 @@ public class User {
 	 * An int representing the index of the turn for the game
 	 */
 	private int turnIndex;
+	
+	private Boolean hasPlayedDevCard = false;
 	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
@@ -166,11 +167,11 @@ public class User {
 	 */
 	public boolean canPlayDevCard(DevCard devCard){
 		
-		if (this.hand.getUsableDevCards().getCountByType(devCard.type) > 0) {
-			return true;
+		if ((this.hasPlayedDevCard && devCard.type != DevCardType.MONUMENT) || this.hand.getUsableDevCards().getCountByType(devCard.type) <= 0) {
+			return false;
 		}
 		
-		return false;
+		return true;
 	}
 	
 	//Getters
@@ -222,6 +223,14 @@ public class User {
 		}
 		
 		return ports;
+	}
+
+	public Boolean getHasPlayedDevCard() {
+		return hasPlayedDevCard;
+	}
+
+	public void setHasPlayedDevCard(Boolean hasPlayedDevCard) {
+		this.hasPlayedDevCard = hasPlayedDevCard;
 	}
 	
 	
