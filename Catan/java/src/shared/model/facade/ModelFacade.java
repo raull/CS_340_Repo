@@ -236,6 +236,7 @@ public class ModelFacade {
 	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
 		return (canBuyRoad(turnManager, user, free) && canPlaceRoadAtLoc(turnManager, location, user));
 	}
+	
 	/**
 	 * if user can build a settlement at given location
 	 * @param turnManager -- if it is user's turn, and phase is on playing
@@ -244,68 +245,70 @@ public class ModelFacade {
 	 * @param free -- if it is set up round
 	 * @return
 	 */
-	public Boolean canBuildSettlement(TurnManager turnManager, Vertex location, User user, boolean free) {
+	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, VertexLocation location, User user, PieceType type) {
 		//if it isn't user's turn or if model status is not on playing
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
-		//if settlement location isn't open
-		if(location.isOccupied()) {
-			return false;
+		if(type == PieceType.SETTLEMENT){
+			//if the location is already occupied
+			for(User u : turnManager.getUsers()){
+				if(u.occupiesVertex(location)){
+					return false;
+				}
+			}
 		}
-		//if settlement is placed adjacent to another settlement
-//		if(location.) {
-//			return false;
-//		}
-		if(free) { //if it is set up round, user given settlement for free
-			//settlemnet doesn't have to be connected to road
-		}
-		else{ //not set up round
-			//if user doesn't have resources to get a settlement
-			if(!user.canBuyPiece(PieceType.SETTLEMENT)) {
+		else if(type == PieceType.CITY){
+			//user must own a settlement at this location already
+			if(!user.occupiesVertex(location)){
 				return false;
 			}
-			//settlement has to be connected to a road user already owns
-			
 		}
+		else{
+			assert(false); //means the method was called incorrectly
+		}
+
+		//building cannot be placed adjacent to other buildings
+		location = location.getNormalizedLocation();
+		VertexLocation vLoc1 = null;
+		VertexLocation vLoc2 = null;
+		VertexLocation vLoc3 = null;
+
+		if(location.getDir() == VertexDirection.NorthEast){
+			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
+			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.West);
+		}
+		else if(location.getDir() == VertexDirection.NorthWest){
+			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
+			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.East);
+		}
+		else{
+			assert(false); //means the normalization broke and all is lost
+		}
+		
+		for(User u : turnManager.getUsers()){
+			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
+				return false;
+			}
+		}
+
 		
 		return true;
 	}
 	
-	public Boolean canBuildCity(TurnManager turnManager, Vertex location, User user) {
+	public Boolean canBuyBuilding(TurnManager turnManager, User user, PieceType type, boolean free) {
 		//if it isn't user's turn or if model status is not on playing
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
-		//if user does not already have a settlement at the location
-		if(!user.occupiesVertex(location.getLocation())) { //currently only checking that user occupies the vertex, not necessarily if it's a settlement
-			return false;
+		//user must have enough resources (or the piece must be free)
+		else if(free || user.canBuyPiece(type)) {
+			return true;
 		}
-		//if user doesn't have enough resources
-		if(!user.canBuyPiece(PieceType.CITY)) {
-			return false;
-		}
-		
-		return true;
+		return false;
 	}
-	
-//	/**
-//	 * If user can place a building (settlement or city) at a certain location
-//	 * @param turnManager if it is user's turn
-//	 * @param location if the location is valid
-//	 * @param user if user has building
-//	 * @param PieceType type of building
-//	 * @return
-//	 */
-//	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, Vertex location, User user, PieceType building) {
-//		
-//		if(user != turnManager.currentUser() || location.isOccupied()) {
-//			return false;
-//		}
-//		//check if user has at least one adjoining road
-//		
-//		return null;
-//	}
 	
 	/**
 	 * If user can buy a dev card
