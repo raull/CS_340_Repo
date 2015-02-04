@@ -168,13 +168,13 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public void login(Credentials cred) throws ProxyException {
-		doPost("/user/login", cred);
+		doLogin("/user/login", cred);
 		
 	}
 
 	@Override
 	public void register(Credentials cred) throws ProxyException {
-		doPost("/user/register", cred);
+		doLogin("/user/register", cred);
 		
 	}
 
@@ -190,7 +190,7 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public void join(JoinGameRequest JoinRequest) throws ProxyException {
-		doPost("/games/join", JoinRequest);
+		doJoin("/games/join", JoinRequest);
 		
 	}
 
