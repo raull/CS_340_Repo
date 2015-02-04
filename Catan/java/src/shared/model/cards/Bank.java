@@ -63,4 +63,8 @@ public class Bank {
 		return true; //assuming unlimited supply of Pieces to award
 	}
 
+	public ResourceCardDeck getResourceDeck() {
+		return resourceCardDeck;
+	}
+
 }
