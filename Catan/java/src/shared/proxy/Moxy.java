@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import shared.model.Model;
+import shared.model.cards.*;
+import shared.model.game.*;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
 import shared.proxy.user.*;
@@ -17,6 +19,21 @@ import shared.proxy.moves.*;
  *
  */
 public class Moxy implements Proxy{
+
+	private Model model;
+	
+	public Moxy() {
+		Bank bank = new Bank();
+		MessageList msglist = new MessageList();
+		MessageList log = new MessageList();
+		
+		model = new 
+	}
+	
+	public Moxy(Model model) {
+		super();
+		this.model = model;
+	}
 
 	@Override
 	public void login(Credentials cred) {
@@ -74,7 +91,7 @@ public class Moxy implements Proxy{
 
 	@Override
 	public Model model(int version) {
-		// TODO Auto-generated method stub
+		// No functioning Model constructor 
 		return null;
 	}
 

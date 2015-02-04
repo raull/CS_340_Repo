@@ -17,6 +17,13 @@ public class Map {
 		return Collections.unmodifiableCollection(this.hexTiles);
 	}
 	
+	
+	
+	public Map(ArrayList<HexTile> hexTiles) {
+		super();
+		this.hexTiles = hexTiles;
+	}
+
 	/**
 	 * Searches the available HexTile objects to see if any match the specified location. 
 	 * @param location The location of the desired HexTile

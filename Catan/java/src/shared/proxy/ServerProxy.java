@@ -27,6 +27,8 @@ public class ServerProxy implements Proxy{
 	private static String URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 	private static final String HTTP_GET = "GET";
 	private static final String HTTP_POST = "POST";
+	private String usercookie;
+	private String gameID;
 	
 	private XStream jsonStream;
 	/** Default Constructor*/
@@ -69,6 +71,7 @@ public class ServerProxy implements Proxy{
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
+			connection.setRequestProperty("Cookie", "catan.user="+ usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			jsonStream.toXML(postData, connection.getOutputStream());
 			connection.getOutputStream().close();
@@ -85,6 +88,84 @@ public class ServerProxy implements Proxy{
 			throw new ProxyException(String.format("doPost failed: %s", e.getMessage()), e);
 		}
 	}
+	
+	private Object doLogin(String urlPath, Object postData) throws ProxyException{
+		try{
+			URL url = new URL(URL_PREFIX + urlPath);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod(HTTP_POST);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.addRequestProperty("Accept", "text/html");
+			connection.connect();
+			jsonStream.toXML(postData, connection.getOutputStream());
+			connection.getOutputStream().close();
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+				String cookieheader = connection.getHeaderField("Set-cookie");
+				StringBuilder sb = new StringBuilder(cookieheader);
+				sb.delete(0, 10);
+				int length = sb.length();
+				sb.delete(length-8, length-1);
+				setUsercookie(sb.toString());
+				Object result = jsonStream.fromXML(connection.getInputStream());
+				return result;
+			}
+			else{
+				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
+						urlPath, connection.getResponseCode()));
+			}
+		}
+		catch (IOException e) {
+			throw new ProxyException(String.format("doPost failed: %s", e.getMessage()), e);
+		}
+	}
+	
+	private Object doJoin(String urlPath, Object postData) throws ProxyException{
+		try{
+			URL url = new URL(URL_PREFIX + urlPath);
+			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+			connection.setRequestMethod(HTTP_POST);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.addRequestProperty("Accept", "text/html");
+			connection.setRequestProperty("Cookie", usercookie);
+			connection.connect();
+			jsonStream.toXML(postData, connection.getOutputStream());
+			connection.getOutputStream().close();
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+				String cookieheader = connection.getHeaderField("Set-cookie");
+				StringBuilder sb = new StringBuilder(cookieheader);
+				sb.substring(11, 12);
+				setGameID(sb.toString());
+				Object result = jsonStream.fromXML(connection.getInputStream());
+				return result;
+			}
+			else{
+				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
+						urlPath, connection.getResponseCode()));
+			}
+		}
+		catch (IOException e) {
+			throw new ProxyException(String.format("doPost failed: %s", e.getMessage()), e);
+		}
+	}
+	
+	public String getUsercookie() {
+		return usercookie;
+	}
+
+	public void setUsercookie(String usercookie) {
+		this.usercookie = usercookie;
+	}
+
+	public String getGameID() {
+		return gameID;
+	}
+
+	public void setGameID(String gameID) {
+		this.gameID = gameID;
+	}
+
 	@Override
 	public void login(Credentials cred) throws ProxyException {
 		doPost("/user/login", cred);
