@@ -22,7 +22,7 @@ public class Model {
 	public int version; //version of the model, to see if up to date
 	public int winner; //-1 when nobody won yet. when someone wins, it's their order index
 	
-	
+	public Model(){}
 	
 	public Model(ResourceCardDeck bank, MessageList chat, MessageList log,
 			Map map, UserManager users, TradeOffer tradeOffer,

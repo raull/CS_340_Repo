@@ -1,10 +1,19 @@
 package shared.proxy;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import shared.model.Model;
@@ -29,7 +38,7 @@ public class Moxy implements Proxy{
 	
 	
 	public Moxy() {
-		JSONModel = new JsonObject();
+		/*JSONModel = new JsonObject();
 		JsonReader jsonReader = Json.createReader(new StringReader("[{\"title\": \"Default Game\","
     +"\"id\": 0, \"players\": [ {\"color\": \"orange\", \"name\": \"Sam\", \"id\": 0},"
     +"  { \"color\": \"blue\",\"name\": \"Brooke\",\"id\": 1},{ \"color\": \"red\", \"name\": \"Pete\","
@@ -86,6 +95,33 @@ public class Moxy implements Proxy{
 		MessageList log = new MessageList();
 		
 		model = new */
+		
+		
+		this.model = getModel("model.json");
+	}
+	
+	public Model getModel(String filepath){
+		JsonObject json = new JsonObject();
+		JsonParser parser = new JsonParser();
+		JsonElement jsonElement;
+		
+		Model model = new Model();
+		
+		try {
+			jsonElement = parser.parse(new FileReader(filepath));
+			Gson gson = new GsonBuilder().create();
+			model = gson.fromJson(jsonElement, Model.class);
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return model;
 	}
 	
 	public Moxy(Model model) {
@@ -107,7 +143,7 @@ public class Moxy implements Proxy{
 
 	@Override
 	public List<Game> list() {
-		Player jake = new Player("Jake", "red", 0);
+		/*Player jake = new Player("Jake", "red", 0);
 		Player sara = new Player("Sara", "blue", 1);
 		Player taylor = new Player("Taylor", "green", 2);
 		Player[] players = new Player[3];
@@ -118,7 +154,27 @@ public class Moxy implements Proxy{
 		Game game2 = new Game("Hard Game", 2, players);
 		List<Game> gamelist = new ArrayList<Game>();
 		gamelist.add(game1);
-		gamelist.add(game2);
+		gamelist.add(game2);*/
+		
+		JsonObject json = new JsonObject();
+		
+		JsonParser parser = new JsonParser();
+		JsonElement jsonElement;
+		List<Game> gamelist = new ArrayList<Game>();
+		try {
+			jsonElement = parser.parse(new FileReader("gamelist.json"));
+			Gson gson = new GsonBuilder().create();
+			gamelist = gson.fromJson(jsonElement, new TypeToken<List<Game>>(){}.getType());
+		} catch (JsonIOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonSyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return gamelist;
 	}
 
@@ -149,14 +205,12 @@ public class Moxy implements Proxy{
 
 	@Override
 	public Model model(int version) {
-		// No functioning Model constructor 
-		return null;
+		return model;
 	}
 
 	@Override
 	public Model reset() {
-		// TODO Auto-generated method stub
-		return null;
+		return model;
 	}
 
 	@Override
@@ -173,8 +227,7 @@ public class Moxy implements Proxy{
 
 	@Override
 	public Model sendChat(SendChat sendchat) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("chatmodel.json");
 	}
 
 	@Override
@@ -197,14 +250,12 @@ public class Moxy implements Proxy{
 
 	@Override
 	public Model buyDevCard(BuyDevCard buydev) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("buydev.json");
 	}
 
 	@Override
 	public Model Year_of_Plenty(Year_of_Plenty_ yop) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("yop.json");
 	}
 
 	@Override
@@ -227,26 +278,22 @@ public class Moxy implements Proxy{
 
 	@Override
 	public Model Monument(Monument_ monument) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("monument.json");
 	}
 
 	@Override
 	public Model buildRoad(BuildRoad buildroad) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("bldrd.json");
 	}
 
 	@Override
 	public Model buildSettlement(BuildSettlement buildsettlement) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("bldsetl.json");
 	}
 
 	@Override
 	public Model buildCity(BuildCity buildcity) {
-		// TODO Auto-generated method stub
-		return null;
+		return getModel("bldcty.json");
 	}
 
 	@Override
