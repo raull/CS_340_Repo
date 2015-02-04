@@ -2,14 +2,10 @@ package shared.model.facade;
 
 import java.util.ArrayList;
 import java.util.Collection;
-
 import shared.definitions.PieceType;
-<<<<<<< HEAD
 import shared.locations.EdgeDirection;
-=======
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
->>>>>>> FETCH_HEAD
 import shared.locations.EdgeLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
@@ -137,38 +133,14 @@ public class ModelFacade {
 		}
 	}
 	
-//	/**
-//	 * If user can place a road at location
-//	 * @param turnManager if it is user's turn
-//	 * @param location if the location is valid
-//	 * @param user if user has a road 
-//	 * @return
-//	 */
-//	
-//	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Edge location, User user) {
-//		//if it's not user's turn and the edge is already occupied, return false
-//		if(user != turnManager.currentUser() || location.isOccupiedByRoad()) {
-//			return false;
-//		}
-//		//check that user has a road/building connecting to new location
-//		//suggestion for implementing hasAdjoiningPiece...perhaps have an array of edges/vertex that the user occupies?
-//			//then given edge or vertex, just compare the ones near it with user's occupied ones
-//			//or, have each edge stores what user occupies it, if at all, etc
-//		if(!location.hasAdjoiningPiece(user)){
-//			return false;
-//		}
-//		return true;
-//	}
-	
 	/**
-	 * if user can build a road at given location
+	 * Checks to see whether the location is valid for road placement - i.e. is it adjacent to other roads or buidlings
+	 * owned by the user, is the location unoccupied, etc.
 	 * @param turnManager -- if it is user's turn and if model is at 'Playing'
 	 * @param location -- where the road will be placed
-	 * @param user
-	 * @param free -- if it is set up round
-	 * @return
+	 * @param user -- the user desiring to place the road
+	 * @return true if the user can place the road at the given location, false otherwise
 	 */
-<<<<<<< HEAD
 	
 	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, EdgeLocation location, User user) {
 		//if it's not user's turn, return false
@@ -236,35 +208,34 @@ public class ModelFacade {
 		}
 		
 		return false;
-=======
-	public Boolean canBuildRoad(TurnManager turnManager, Edge location, User user, boolean free) {
+	}
+	
+	/**
+	 * Determines whether or not the user can purchase the road given his or her resources and current status
+	 * @param turnManager Helps determine whether or not it's the user's turn
+	 * @param user The User desiring to purchase the road
+	 * @param free Whether or not the piece is free
+	 * @return True if the user can purchase the road, false otherwise
+	 */
+	public Boolean canBuyRoad(TurnManager turnManager, User user, boolean free) {
 		//if it isn't user's turn or if model status is not on playing
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
-		//if road location is not open
-		if(location.isOccupiedByRoad()) {
-			return false;
+		else if(free) { 							//is set up round, user given road for free
+			return true;
 		}
-		if(free) { //is set up round, user given road for free
-			//road must be placed by settlement owned by player with no adjacent road
-			
+		else if (user.canBuyPiece(PieceType.ROAD)){ //if user has the required resources to buy a road
+			return true;
 		}
 		else{
-			//if user doesn't have the required resources to buy a road
-			if(!user.canBuyPiece(PieceType.ROAD)) {
-				return false;
-			}
-			//if the location doesn't have another road owned by the player
-			if(!location.hasAdjoiningPiece(user)) {
-				return false;
-			}
+			return false;
 		}
-		
-		return true;
->>>>>>> FETCH_HEAD
 	}
 	
+	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
+		return (canBuyRoad(turnManager, user, free) && canPlaceRoadAtLoc(turnManager, location, user));
+	}
 	/**
 	 * if user can build a settlement at given location
 	 * @param turnManager -- if it is user's turn, and phase is on playing
