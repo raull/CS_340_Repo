@@ -1,7 +1,11 @@
 package shared.proxy;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 
 import shared.model.Model;
 import shared.model.cards.*;
@@ -21,13 +25,67 @@ import shared.proxy.moves.*;
 public class Moxy implements Proxy{
 
 	private Model model;
+	private JsonObject JSONModel;
+	
 	
 	public Moxy() {
+		JSONModel = new JsonObject();
+		JsonReader jsonReader = Json.createReader(new StringReader("[{\"title\": \"Default Game\","
+    +"\"id\": 0, \"players\": [ {\"color\": \"orange\", \"name\": \"Sam\", \"id\": 0},"
+    +"  { \"color\": \"blue\",\"name\": \"Brooke\",\"id\": 1},{ \"color\": \"red\", \"name\": \"Pete\","
+    +" \"id\": 10},{\"color\": \"green\",\"name\": \"Mark\",\"id\": 11}]},{\"title\": \"AI Game\","
+    +" \"id\": 1,\"players\": [{\"color\": \"orange\", \"name\": \"Pete\",\"id\": 10},"
+    +"  {\"color\": \"puce\",\"name\": \"Steve\",\"id\": -2 },{\"color\": \"red\",\"name\": \"Ken\","
+    +" \"id\": -3}, { \"color\": \"blue\", \"name\": \"Miguel\",\"id\": -4}]},{\"title\": \"Empty Game\",
+    "id": 2,
+    "players": [
+      {
+        "color": "orange",
+        "name": "Sam",
+        "id": 0
+      },
+      {
+        "color": "blue",
+        "name": "Brooke",
+        "id": 1
+      },
+      {
+        "color": "red",
+        "name": "Pete",
+        "id": 10
+      },
+      {
+        "color": "green",
+        "name": "Mark",
+        "id": 11
+      }
+    ]
+  },
+  {
+    "title": "Sweet Game",
+    "id": 3,
+    "players": [
+      {
+        "color": "red",
+        "name": "tiger",
+        "id": 12
+      },
+      {
+        "color": "yellow",
+        "name": "Sam",
+        "id": 0
+      },
+      {},
+      {}
+    ]
+  }
+]'
+		/*
 		Bank bank = new Bank();
 		MessageList msglist = new MessageList();
 		MessageList log = new MessageList();
 		
-		model = new 
+		model = new */
 	}
 	
 	public Moxy(Model model) {
