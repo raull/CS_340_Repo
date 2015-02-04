@@ -2,11 +2,14 @@ package shared.model.facade;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
+import shared.definitions.DevCardType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
@@ -328,22 +331,6 @@ public class ModelFacade {
 	}
 	
 	/**
-	 * If user can play the dev card
-	 * @param turnManager if it is user's turn
-	 * @param user get user and see if user has the card
-	 * @return
-	 */
-	public Boolean canPlayDevCard(TurnManager turnManager, User user, DevCard devCard) {
-		if(user != turnManager.currentUser() || !user.canPlayDevCard(devCard)) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-	//may need to implement specific dev cards
-	
-	/**
 	 * whether or not the current user can rob someone
 	 * @param hexTile -- new robber location
 	 * @param currUser
@@ -528,6 +515,132 @@ public class ModelFacade {
 		return true;
 	}
 	
+	/**
+	 * If user can play the dev card
+	 * @param turnManager if it is user's turn
+	 * @param user get user and see if user has the card
+	 * @return
+	 */
+	public Boolean canPlayDevCard(TurnManager turnManager, User user, DevCard devCard) {
+		if(user != turnManager.currentUser() || !user.canPlayDevCard(devCard)) {
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	
+	//playing dev cards:
+	//general pre conditions:
+	//it is your turn
+	//client model status is PLAYING
+	//you have the specific card
+	//you have not played a dev card this turn yet (excluding monument)
+	
+	/**
+	 * if user can play soldier dev card
+	 * soldier card moves the robber and allows user to rob someone
+	 * @param turnManager -- tracks user's turns
+	 * @param user -- user playing the dev card
+	 * @param victim -- user that will be the victim of the dev card
+	 * @param newRobberLoc -- dev card will move robber
+	 * @return
+	 */
+	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, HexTile newRobberLoc) {
+		DevCard soldierCard = new DevCard(DevCardType.SOLDIER);
+		//if it isn't user's turn or if model status is not on playing or if user does not have soldier card
+		//need to also check that user has already played a dev card this turn
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(soldierCard)) {
+			return false;
+		}
+		return canRobPlayer(newRobberLoc, user, victim);
+	}
+	
+	/**
+	 * if user can play year of plenty dev card 
+	 * allows user to take two resource cards (any type) from bank
+	 * @param turnManager
+	 * @param user
+	 * @param bank if bank has resources wanted available
+	 * @param card1 the first wanted card
+	 * @param card2 the second wanted card
+	 * @return
+	 */
+	public Boolean canPlayYearofPlenty(TurnManager turnManager, User user, Bank bank, ResourceCard card1, ResourceCard card2) {
+		DevCard yopCard = new DevCard(DevCardType.YEAR_OF_PLENTY);
+		//if it isn't user's turn or if model status is not on playing or if user does not have year of plenty card
+		//need to also check that user has already played a dev card this turn
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard)) {
+			return false;
+		}
+		ResourceCardDeck availableCards = bank.getResourceDeck();
+		//if bank  does not have resource cards wanted
+		if(!availableCards.getAllResourceCards().contains(card1) || !availableCards.getAllResourceCards().contains(card2)) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * if user can play road building dev card
+	 * allows user to place two roads on the board as if they had just built them
+	 * @param turnManager
+	 * @param user
+	 * @param spot1
+	 * @param spot2
+	 * @return
+	 */
+	
+	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user, EdgeLocation spot1, EdgeLocation spot2) {
+		DevCard roadCard = new DevCard(DevCardType.ROAD_BUILD);
+		//if it isn't user's turn or if model status is not on playing or if user does not have road build card
+		//need to also check that user has already played a dev card this turn
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard)) {
+			return false;
+		}
+		//if the location is not connected to an existing road/settlement owned by user
+		if(canPlaceRoadAtLoc(turnManager, spot1, user) || canPlaceRoadAtLoc(turnManager, spot2, user)) {
+			return false;
+		}
+		//if user does not have at least 2 un-used roads
+		//return false
+		
+		return true;
+	}
+	
+	/**
+	 * if a user can play monopoly dev card
+	 * takes all the cards of a certain resource from all players
+	 * @param turnManager
+	 * @param user
+	 * @param resourceType the type of resource to be taken from other players
+	 * @return
+	 */
+	public Boolean canPlayMonopoly(TurnManager turnManager, User user, ResourceType resourceType) {
+		DevCard monopolyCard = new DevCard(DevCardType.MONOPOLY);
+		//if it isn't user's turn or if model status is not on playing or if user does not have monopoly card
+		//need to also check that user has already played a dev card this turn
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(monopolyCard)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * if user can play monument dev card
+	 * @param turnManager
+	 * @param user
+	 * @return
+	 */
+	public Boolean canPlayMonument(TurnManager turnManager, User user) {
+		DevCard monumentCard = new DevCard(DevCardType.MONUMENT);
+		//if it isn't user's turn or if model status is not on playing or if user does not have monument card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(monumentCard)) {
+			return false;
+		}
+		return true;
+	}
 	
 	//Getters and Setters
 	/**
