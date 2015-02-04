@@ -6,6 +6,8 @@ import java.util.Collection;
 
 import shared.definitions.CatanColor;
 import shared.definitions.PieceType;
+import shared.definitions.PortType;
+import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
@@ -205,6 +207,10 @@ public class User {
 		return false;
 	}
 	
+	/**
+	 * Return all the ports related to the user
+	 * @return A Collection of ports
+	 */
 	public Collection<Port> ports() {
 		
 		ArrayList<Port> ports = new ArrayList<Port>();
@@ -217,5 +223,6 @@ public class User {
 		
 		return ports;
 	}
+	
 	
 }

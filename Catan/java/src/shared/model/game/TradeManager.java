@@ -22,18 +22,18 @@ public class TradeManager {
 	public static boolean canMakeOffer(User buyer, User seller, TradeOffer offer) {
 		
 		//First, check that buyer has the resources
-		ResourceCardDeck buyOfferDeck = offer.getBuyDeck();
-		ResourceCardDeck sendingDeck = buyer.getHand().getResourceCards();
+		ResourceCardDeck sendOfferDeck = offer.getSendingDeck();
+		ResourceCardDeck senderDeck = buyer.getHand().getResourceCards();
 		
-		if (!hasEnoughResources(sendingDeck, buyOfferDeck)) {
+		if (!hasEnoughResources(senderDeck, sendOfferDeck)) {
 			return false;
 		}
 		
 		//Second, check that seller has the resources
-		ResourceCardDeck sellOfferDeck = offer.getSellDeck();
-		ResourceCardDeck receiveDeck = seller.getHand().getResourceCards();		
+		ResourceCardDeck receiveOfferDeck = offer.getReceivingDeck();
+		ResourceCardDeck receiverDeck = seller.getHand().getResourceCards();		
 		
-		if (!hasEnoughResources(receiveDeck, sellOfferDeck)) {
+		if (!hasEnoughResources(receiverDeck, receiveOfferDeck)) {
 			return false;
 		}
 		
@@ -44,15 +44,15 @@ public class TradeManager {
 	
 	/**
 	 * Check if the Deck trying to buy has enough resources that the offer Deck specifies
-	 * @param buyDeck
-	 * @param offerDeck
-	 * @return true if the buyDEck has enough resources, false if it doesn't
+	 * @param buyerDeck The Deck to check if it has enough resources
+	 * @param compareDeck The Deck with the resources to compare
+	 * @return true if the buyerDeck has enough resources specified by compareDeck, false if it doesn't
 	 */
-	public static boolean hasEnoughResources(ResourceCardDeck buyDeck, ResourceCardDeck offerDeck) {
+	public static boolean hasEnoughResources(ResourceCardDeck buyerDeck, ResourceCardDeck compareDeck) {
 		//Check that deck has enough the resources
 		for (ResourceType resourceType : ResourceType.values()) {
-			int offerResourceCount = offerDeck.getCountByType(resourceType);
-			int sendingResourceCount = buyDeck.getCountByType(resourceType);
+			int offerResourceCount = compareDeck.getCountByType(resourceType);
+			int sendingResourceCount = buyerDeck.getCountByType(resourceType);
 			
 			if (sendingResourceCount < offerResourceCount) {
 				return false;

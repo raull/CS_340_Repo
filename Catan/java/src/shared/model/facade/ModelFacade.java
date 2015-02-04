@@ -409,7 +409,7 @@ public class ModelFacade {
 		}
 		//if user does not have the resources they are offering
 		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards(); //all of the offeringUser's cards
-		ArrayList<ResourceCard> offeredCards = tradeOffer.getBuyDeck().getAllResourceCards(); //all of the cards offeringUser is offering
+		ArrayList<ResourceCard> offeredCards = tradeOffer.getSendingDeck().getAllResourceCards(); //all of the cards offeringUser is offering
 		if(!offeringUserCards.containsAll(offeredCards)) {
 			return false;
 		}
@@ -428,7 +428,7 @@ public class ModelFacade {
 			return false;
 		}
 		ArrayList<ResourceCard> userCards = user.getHand().getResourceCards().getAllResourceCards();
-		ArrayList<ResourceCard> neededCards = tradeOffer.getSellDeck().getAllResourceCards();
+		ArrayList<ResourceCard> neededCards = tradeOffer.getReceivingDeck().getAllResourceCards();
 		//if user doesn't have all the required resources to accept offered trade
 		if(!userCards.containsAll(neededCards)) {
 			return false;
@@ -463,8 +463,8 @@ public class ModelFacade {
 		//check if bank has cards user wants available
 		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
-		ArrayList<ResourceCard> cardsWanted = tradeOffer.getBuyDeck().getAllResourceCards();
-		ArrayList<ResourceCard> cardsOffered = tradeOffer.getSellDeck().getAllResourceCards();
+		ArrayList<ResourceCard> cardsWanted = tradeOffer.getSendingDeck().getAllResourceCards();
+		ArrayList<ResourceCard> cardsOffered = tradeOffer.getReceivingDeck().getAllResourceCards();
 		
 		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
 		if(!availableCards.getAllResourceCards().containsAll(cardsWanted) || !userCards.getAllResourceCards().containsAll(cardsOffered)) {

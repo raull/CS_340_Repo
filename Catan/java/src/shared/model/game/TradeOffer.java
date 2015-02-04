@@ -1,5 +1,6 @@
 package shared.model.game;
 
+import shared.definitions.PortType;
 import shared.model.cards.ResourceCardDeck;
 
 /**
@@ -16,22 +17,27 @@ public class TradeOffer {
 	/**
 	 * The {@link ResourceCardDeck} with the sending resource cards
 	 */
-	private ResourceCardDeck buyDeck;
+	private ResourceCardDeck sendingDeck;
 	/**
 	 * The {@link ResourceCardDeck} with the receiving resource cards
 	 */
-	private ResourceCardDeck sellDeck;
+	private ResourceCardDeck receivingDeck;
+	
+	/**
+	 * The PortType in case the trade is maritime
+	 */
+	private PortType portType;
 	
 	/**
 	 * Create a new TradeOfferClass
 	 * @param offerRate The rate in which the offer will be performed
-	 * @param sellDeck The resource deck that will be received
-	 * @param buyDeck The resource deck that will be given
+	 * @param receivingDeck The resource deck that will be received
+	 * @param sendingDeck The resource deck that will be given
 	 */
-	public TradeOffer(int offerRate, ResourceCardDeck sellDeck, ResourceCardDeck buyDeck) {
+	public TradeOffer(int offerRate, ResourceCardDeck receivingDeck, ResourceCardDeck sendingDeck) {
 		this.rate = offerRate;
-		this.sellDeck = sellDeck;
-		this.buyDeck = buyDeck;
+		this.receivingDeck = receivingDeck;
+		this.sendingDeck = sendingDeck;
 	}
 
 	public int getRate() {
@@ -42,20 +48,28 @@ public class TradeOffer {
 		this.rate = rate;
 	}
 
-	public ResourceCardDeck getSellDeck() {
-		return sellDeck;
+	public ResourceCardDeck getReceivingDeck() {
+		return receivingDeck;
 	}
 
-	public void setSelleck(ResourceCardDeck sellDeck) {
-		this.sellDeck = sellDeck;
+	public void setReceivingDeck(ResourceCardDeck receivingDeck) {
+		this.receivingDeck = receivingDeck;
 	}
 
-	public ResourceCardDeck getBuyDeck() {
-		return buyDeck;
+	public ResourceCardDeck getSendingDeck() {
+		return sendingDeck;
 	}
 
-	public void setBuyDeck(ResourceCardDeck sendingDeck) {
-		this.buyDeck = sendingDeck;
+	public void setSendingDeck(ResourceCardDeck sendingDeck) {
+		this.sendingDeck = sendingDeck;
+	}
+
+	public PortType getPortType() {
+		return portType;
+	}
+
+	public void setPortType(PortType portType) {
+		this.portType = portType;
 	}
 	
 }
