@@ -4,7 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import shared.definitions.PieceType;
+<<<<<<< HEAD
 import shared.locations.EdgeDirection;
+=======
+import shared.definitions.PortType;
+import shared.definitions.ResourceType;
+>>>>>>> FETCH_HEAD
 import shared.locations.EdgeLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
@@ -74,21 +79,27 @@ public class ModelFacade {
 	}
 	
 	/**
-	 * Determines if a user can discard cards (robber)
+	 * Determines if a user can discard cards 
 	 * @param turnManager
 	 * @param user - current user
-	 * @param cards - array list of cards to be discarded
+	 * @param cardsToRemove - array list of cards to be discarded
 	 * @return
 	 */
-	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<Card> cards) {
+	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<ResourceCard> cardsToRemove) {
+		//if it isn't the user's turn and the status of model is not discarding
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
 			return false;
 		}
-		Hand currHand = user.getHand();
-		for(Card card : cards) {
-			if(!currHand.canRemoveCard(card)) {
-				return false;
-			}
+		ArrayList<ResourceCard> userCards = user.getHand().getResourceCards().getAllResourceCards();
+		
+		//if user doesn't have over 7 cards
+		if(!(userCards.size() > 7)) {
+			return false;
+		}
+		
+		//if user doesn't have all the cards they are choosing to remove
+		if(!userCards.containsAll(cardsToRemove)) {
+			return false;
 		}
 		
 		return true;
@@ -101,6 +112,7 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canRollNumber(TurnManager turnManager, User user) {
+		//if it isn't the user's turn or the model isn't in the rolling status
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.ROLLING) {
 			return false;
 		}
@@ -116,6 +128,7 @@ public class ModelFacade {
 	 * @return boolean, whether user can buy a piece
 	 */
 	public Boolean canBuyPiece(TurnManager turnManager, User user, PieceType pieceType) {
+		//if it's not user's turn or if user can't buy piece
 		if(user != turnManager.currentUser() || !user.canBuyPiece(pieceType)) {
 			return false;
 		}
@@ -124,13 +137,38 @@ public class ModelFacade {
 		}
 	}
 	
+//	/**
+//	 * If user can place a road at location
+//	 * @param turnManager if it is user's turn
+//	 * @param location if the location is valid
+//	 * @param user if user has a road 
+//	 * @return
+//	 */
+//	
+//	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Edge location, User user) {
+//		//if it's not user's turn and the edge is already occupied, return false
+//		if(user != turnManager.currentUser() || location.isOccupiedByRoad()) {
+//			return false;
+//		}
+//		//check that user has a road/building connecting to new location
+//		//suggestion for implementing hasAdjoiningPiece...perhaps have an array of edges/vertex that the user occupies?
+//			//then given edge or vertex, just compare the ones near it with user's occupied ones
+//			//or, have each edge stores what user occupies it, if at all, etc
+//		if(!location.hasAdjoiningPiece(user)){
+//			return false;
+//		}
+//		return true;
+//	}
+	
 	/**
-	 * If user can place a road at location
-	 * @param turnManager if it is user's turn
-	 * @param location if the location is valid
-	 * @param user if user has a road 
+	 * if user can build a road at given location
+	 * @param turnManager -- if it is user's turn and if model is at 'Playing'
+	 * @param location -- where the road will be placed
+	 * @param user
+	 * @param free -- if it is set up round
 	 * @return
 	 */
+<<<<<<< HEAD
 	
 	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, EdgeLocation location, User user) {
 		//if it's not user's turn, return false
@@ -198,25 +236,105 @@ public class ModelFacade {
 		}
 		
 		return false;
+=======
+	public Boolean canBuildRoad(TurnManager turnManager, Edge location, User user, boolean free) {
+		//if it isn't user's turn or if model status is not on playing
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			return false;
+		}
+		//if road location is not open
+		if(location.isOccupiedByRoad()) {
+			return false;
+		}
+		if(free) { //is set up round, user given road for free
+			//road must be placed by settlement owned by player with no adjacent road
+			
+		}
+		else{
+			//if user doesn't have the required resources to buy a road
+			if(!user.canBuyPiece(PieceType.ROAD)) {
+				return false;
+			}
+			//if the location doesn't have another road owned by the player
+			if(!location.hasAdjoiningPiece(user)) {
+				return false;
+			}
+		}
+		
+		return true;
+>>>>>>> FETCH_HEAD
 	}
 	
 	/**
-	 * If user can place a building (settlement or city) at a certain location
-	 * @param turnManager if it is user's turn
-	 * @param location if the location is valid
-	 * @param user if user has building
-	 * @param PieceType type of building
+	 * if user can build a settlement at given location
+	 * @param turnManager -- if it is user's turn, and phase is on playing
+	 * @param location -- if location is valid
+	 * @param user 
+	 * @param free -- if it is set up round
 	 * @return
 	 */
-	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, Vertex location, User user, PieceType building) {
-		
-		if(user != turnManager.currentUser() || location.isOccupied()) {
+	public Boolean canBuildSettlement(TurnManager turnManager, Vertex location, User user, boolean free) {
+		//if it isn't user's turn or if model status is not on playing
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
-		//check if user has at least one adjoining road
+		//if settlement location isn't open
+		if(location.isOccupied()) {
+			return false;
+		}
+		//if settlement is placed adjacent to another settlement
+//		if(location.) {
+//			return false;
+//		}
+		if(free) { //if it is set up round, user given settlement for free
+			//settlemnet doesn't have to be connected to road
+		}
+		else{ //not set up round
+			//if user doesn't have resources to get a settlement
+			if(!user.canBuyPiece(PieceType.SETTLEMENT)) {
+				return false;
+			}
+			//settlement has to be connected to a road user already owns
+			
+		}
 		
-		return null;
+		return true;
 	}
+	
+	public Boolean canBuildCity(TurnManager turnManager, Vertex location, User user) {
+		//if it isn't user's turn or if model status is not on playing
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			return false;
+		}
+		//if user does not already have a settlement at the location
+		if(!user.occupiesVertex(location.getLocation())) { //currently only checking that user occupies the vertex, not necessarily if it's a settlement
+			return false;
+		}
+		//if user doesn't have enough resources
+		if(!user.canBuyPiece(PieceType.CITY)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+//	/**
+//	 * If user can place a building (settlement or city) at a certain location
+//	 * @param turnManager if it is user's turn
+//	 * @param location if the location is valid
+//	 * @param user if user has building
+//	 * @param PieceType type of building
+//	 * @return
+//	 */
+//	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, Vertex location, User user, PieceType building) {
+//		
+//		if(user != turnManager.currentUser() || location.isOccupied()) {
+//			return false;
+//		}
+//		//check if user has at least one adjoining road
+//		
+//		return null;
+//	}
 	
 	/**
 	 * If user can buy a dev card
@@ -226,8 +344,8 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canBuyDevCard(TurnManager turnManager, User user, DevCardDeck devCardDeck) {
-		//if it's not user's turn, or dev card deck is empty, or if user canont buy dev card
-		if(user != turnManager.currentUser() || devCardDeck.getAllCards().size() == 0 || !user.canBuyDevCard()) {
+		//if it's not user's turn, or if turn phase is not on playing, or dev card deck is empty, or if user canont buy dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || devCardDeck.getAllCards().size() == 0 || !user.canBuyDevCard()) {
 			return false;
 		}
 		else{
@@ -249,55 +367,135 @@ public class ModelFacade {
 			return true;
 		}
 	}
+	//may need to implement specific dev cards
 	
 	/**
-	 * If the robber can be placed/moved to a location
-	 * @param hexTile tile that the robber will be moved to
+	 * whether or not the current user can rob someone
+	 * @param hexTile -- new robber location
+	 * @param currUser
+	 * @param victim -- the victim to be robbed
 	 * @return
 	 */
-	public Boolean canPlaceRobber(HexTile hexTile) {
+	public Boolean canRobPlayer(HexTile hexTile,User currUser, User victim) {
+		//if it isn't user's turn or if model status is not on playing
+		if(currUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			return false;
+		}
+		//if new location already has robber, robber is being kept in the same location 
 		if(hexTile.hasRobber()) {
 			return false;
 		}
-		else{
-			return true;
+		//if the victim getting robbed has no resource cards
+		if(victim.getHand().getResourceCards().getAllResourceCards().size() == 0){
+			return false;
 		}
+		
+		return true;
 	}
+	
+//	/**
+//	 * If the robber can be placed/moved to a location
+//	 * @param hexTile tile that the robber will be moved to
+//	 * @return
+//	 */
+//	public Boolean canPlaceRobber(HexTile hexTile) {
+//		if(hexTile.hasRobber()) {
+//			return false;
+//		}
+//		else{
+//			return true;
+//		}
+//	}
+	
+//	/**
+//	 * if user can make a trade
+//	 * @param turnManager
+//	 * @param offeringUser - user making the offer
+//	 * @param receivingUser - user accepting the offer
+//	 * @param tradeOffer
+//	 * @return
+//	 */
+//	//combines both offer and accept trade
+//	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
+//		if(offeringUser != turnManager.currentUser()) {
+//			return false;
+//		}
+//		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards();
+//		ArrayList<ResourceCard> offeredCards = tradeOffer.getBuyDeck().getAllResourceCards();
+//		if(!offeringUserCards.containsAll(offeredCards)) {
+//			return false;
+//		}
+//		ArrayList<ResourceCard> receivingUserCards = receivingUser.getHand().getResourceCards().getAllResourceCards();
+//		ArrayList<ResourceCard> neededCards = tradeOffer.getSellDeck().getAllResourceCards();
+//		if(!receivingUserCards.containsAll(neededCards)) {
+//			return false;
+//		}
+//		return true;
+//	}
 	
 	/**
 	 * if user can make a trade
-	 * @param turnManager
+	 * @param turnManager - check that it is user's turn
 	 * @param offeringUser - user making the offer
 	 * @param receivingUser - user accepting the offer
-	 * @param tradeOffer
+	 * @param tradeOffer - contains details of offer
 	 * @return
 	 */
-	//combines both offer and accept trade
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
-		if(offeringUser != turnManager.currentUser()) {
+		//if it isn't user's turn or if model status is not on playing
+		if(offeringUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
-		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards();
-		ArrayList<ResourceCard> offeredCards = tradeOffer.getBuyDeck().getAllResourceCards();
+		//if user does not have the resources they are offering
+		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards(); //all of the offeringUser's cards
+		ArrayList<ResourceCard> offeredCards = tradeOffer.getBuyDeck().getAllResourceCards(); //all of the cards offeringUser is offering
 		if(!offeringUserCards.containsAll(offeredCards)) {
-			return false;
-		}
-		ArrayList<ResourceCard> receivingUserCards = receivingUser.getHand().getResourceCards().getAllResourceCards();
-		ArrayList<ResourceCard> neededCards = tradeOffer.getSellDeck().getAllResourceCards();
-		if(!receivingUserCards.containsAll(neededCards)) {
 			return false;
 		}
 		return true;
 	}
 	
 	/**
+	 * if user can accept a trade
+	 * @param user
+	 * @param tradeOffer
+	 * @return
+	 */
+	public Boolean canAcceptTrade(User user, TradeOffer tradeOffer) {
+		//user hasn't been offered a trade
+		if(tradeOffer == null) {
+			return false;
+		}
+		ArrayList<ResourceCard> userCards = user.getHand().getResourceCards().getAllResourceCards();
+		ArrayList<ResourceCard> neededCards = tradeOffer.getSellDeck().getAllResourceCards();
+		//if user doesn't have all the required resources to accept offered trade
+		if(!userCards.containsAll(neededCards)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//helper function to check if user has a certain port type
+	public Boolean checkUserHasPort(User user, PortType portType) {
+		Collection<Port> ports = user.ports();
+		for(Port port : ports) {
+			if(port.getType().equals(portType)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * if user can maritime trade
 	 * @param bank - if bank has resources
 	 * @param user - if user has resources
-	 * @param tradeOffer information about the offer (offeredCards, acceptedCards)
+	 * @param tradeOffer information about the offer (offeredCards, acceptedCards, ratio)
 	 * @return
 	 */
-	public Boolean canMaritimeTrade(TurnManager turnManager, Bank bank, User user,  TradeOffer tradeOffer){
+	public Boolean canMaritimeTrade(TurnManager turnManager, Bank bank, User user, TradeOffer tradeOffer) {
+		//one ResourceCard per trade, assumes that the cards user is offering is all of the same type 
 		if(user != turnManager.currentUser()) {
 			return false;
 		}
@@ -305,45 +503,55 @@ public class ModelFacade {
 		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
 		ArrayList<ResourceCard> cardsWanted = tradeOffer.getBuyDeck().getAllResourceCards();
-		
-		//this is assuming that tradeOffer has already calculated what is needed, etc
 		ArrayList<ResourceCard> cardsOffered = tradeOffer.getSellDeck().getAllResourceCards();
+		
 		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
 		if(!availableCards.getAllResourceCards().containsAll(cardsWanted) || !userCards.getAllResourceCards().containsAll(cardsOffered)) {
 			return false;
 		}
 		
-		//assuming that tradeOffer does not have rate calculated.. still need to finish implementing
-//		ArrayList<ResourceCard> cardsNeeded = new ArrayList<ResourceCard>();
-//		Collection<Port> userPorts = user.ports();
-//		for(Port port : userPorts) {
-//			for(ResourceCard card: cardsWanted) {
-//				if(port.getType().equals(card.getType())) { //not sure if this will work because portType and cardType are different enums
-//					int rate = port.getOfferRate();
-//					//need rate number of cards for 1 wanted card
-//				}
-//			}
-//		}
-//		
+		int ratio = tradeOffer.getRate();
+		ResourceType tradeType = cardsOffered.get(0).type;
+		//if ratio is 4, default ok
+		if(ratio == 4) {
+			return true;
+		}
+		else if(ratio == 3) {
+			//check that user has the THREE port
+			if(!checkUserHasPort(user, PortType.THREE)) {
+				return false;
+			}
+			else{
+				return true;
+			}
+			
+		}
+		else if (ratio == 2){ 
+			if(!checkUserHasPort(user, tradeType)) { //may have to convert resource type to port type?
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else{
+			return false; //ration shouldn't be anything besides 2-4 for maritime trade
+		}
 		
-		
-		
-		return true;
 	}
 	
 	/**
 	 * If user can end the turn
 	 * @param turnManager check phase -- if all done, can end
+	 * @param user -- user ending their turn
 	 * @return
 	 */
-	public Boolean canFinishTurn(TurnManager turnManager) {
-		//not sure how to check for this..currently saying when turn phase is not anything, then user can end?
-		if(turnManager.currentTurnPhase() != null) {
+	public Boolean canFinishTurn(TurnManager turnManager, User user) {
+		//if it isn't user's turn or if model status is not on playing
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
-		else{
-			return true;
-		}
+		return true;
 	}
 	
 	
