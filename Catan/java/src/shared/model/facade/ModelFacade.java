@@ -549,8 +549,8 @@ public class ModelFacade {
 	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, HexTile newRobberLoc) {
 		DevCard soldierCard = new DevCard(DevCardType.SOLDIER);
 		//if it isn't user's turn or if model status is not on playing or if user does not have soldier card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(soldierCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(soldierCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		return canRobPlayer(newRobberLoc, user, victim);
@@ -569,8 +569,8 @@ public class ModelFacade {
 	public Boolean canPlayYearofPlenty(TurnManager turnManager, User user, Bank bank, ResourceCard card1, ResourceCard card2) {
 		DevCard yopCard = new DevCard(DevCardType.YEAR_OF_PLENTY);
 		//if it isn't user's turn or if model status is not on playing or if user does not have year of plenty card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		ResourceCardDeck availableCards = bank.getResourceDeck();
@@ -594,8 +594,8 @@ public class ModelFacade {
 	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user, EdgeLocation spot1, EdgeLocation spot2) {
 		DevCard roadCard = new DevCard(DevCardType.ROAD_BUILD);
 		//if it isn't user's turn or if model status is not on playing or if user does not have road build card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		//if the location is not connected to an existing road/settlement owned by user
@@ -619,8 +619,8 @@ public class ModelFacade {
 	public Boolean canPlayMonopoly(TurnManager turnManager, User user, ResourceType resourceType) {
 		DevCard monopolyCard = new DevCard(DevCardType.MONOPOLY);
 		//if it isn't user's turn or if model status is not on playing or if user does not have monopoly card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(monopolyCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(monopolyCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		
