@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import shared.definitions.PieceType;
+import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
+import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.Edge;
@@ -130,19 +132,72 @@ public class ModelFacade {
 	 * @return
 	 */
 	
-	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, Edge location, User user) {
-		//if it's not user's turn and the edge is already occupied, return false
-		if(user != turnManager.currentUser() || location.isOccupiedByRoad()) {
+	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, EdgeLocation location, User user) {
+		//if it's not user's turn, return false
+		if(user != turnManager.currentUser()) {
 			return false;
 		}
-		//check that user has a road/building connecting to new location
-		//suggestion for implementing hasAdjoiningPiece...perhaps have an array of edges/vertex that the user occupies?
-			//then given edge or vertex, just compare the ones near it with user's occupied ones
-			//or, have each edge stores what user occupies it, if at all, etc
-		if(!location.hasAdjoiningPiece(user)){
-			return false;
+		//if edge is occupied, return false;
+		ArrayList<User> users = turnManager.getUsers();
+		for (User u : users){
+			if(u.occupiesEdge(location)){
+				return false;
+			}
 		}
-		return true;
+		
+		//check whether the user has a building connecting to new location
+		location = location.getNormalizedLocation(); //standardizes address
+		EdgeDirection direction = location.getDir();
+		VertexLocation loc1 = null;
+		VertexLocation loc2 = null;
+		if(direction == EdgeDirection.North){
+			loc1 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
+			loc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
+		}
+		else if(direction == EdgeDirection.NorthEast){
+			loc1 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
+			loc2 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
+		}
+		else if(direction == EdgeDirection.NorthWest){
+			loc1 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
+			loc2 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
+		}
+		else{
+			assert(false); //should never be reached
+		}
+		
+		if(user.occupiesVertex(loc1) || user.occupiesVertex(loc2)){
+			return true;
+		}
+		
+		//check whether the user has a road connecting to new location
+		EdgeLocation edgeLoc1 = null;
+		EdgeLocation edgeLoc2 = null;
+		EdgeLocation edgeLoc3 = null;
+		EdgeLocation edgeLoc4 = null;
+		if(direction == EdgeDirection.North){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.NorthEast);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.NorthWest);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthEast);
+			edgeLoc4 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthWest);
+		}
+		else if(direction == EdgeDirection.NorthEast){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.North);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.SouthEast);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), EdgeDirection.South);
+			edgeLoc4 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), EdgeDirection.NorthWest);
+		}
+		else if(direction == EdgeDirection.NorthWest){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.North);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.SouthWest);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), EdgeDirection.South);
+			edgeLoc4 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), EdgeDirection.NorthEast);		
+		}
+		if(user.occupiesEdge(edgeLoc1) || user.occupiesEdge(edgeLoc2) || user.occupiesEdge(edgeLoc3) || user.occupiesEdge(edgeLoc4)){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**
