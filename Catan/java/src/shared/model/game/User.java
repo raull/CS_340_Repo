@@ -13,6 +13,7 @@ import shared.locations.VertexLocation;
 import shared.model.board.Edge;
 import shared.model.board.Port;
 import shared.model.board.Vertex;
+import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
 import shared.model.cards.Hand;
 import shared.model.cards.ResourceCardDeck;
@@ -50,6 +51,11 @@ public class User {
 	 * An ArrayList of {@link Vertex}es representing the edges that the <code>User</code> occupies
 	 */
 	private ArrayList<Vertex> occupiedVertices;
+	
+	/**
+	 * An ArrayList of {@link Piece} representing the unplayed pieces of the user
+	 */
+	private ArrayList<Piece> unusedPieces;
 	
 	/**
 	 * An int representing the unique ID of the player. Used in login/cookie functionality
@@ -235,6 +241,14 @@ public class User {
 	}
 	
 	
+	public ArrayList<Piece> getUnusedPieces() {
+		return unusedPieces;
+	}
+
+	public void setUnusedPieces(ArrayList<Piece> unusedPieces) {
+		this.unusedPieces = unusedPieces;
+	}
+
 	/**
 	 * Check if user has a port with the specified port type
 	 * @param portType The port type to check on the user

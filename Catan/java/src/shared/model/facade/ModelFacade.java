@@ -9,20 +9,15 @@ import shared.definitions.DevCardType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
-import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
-import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
-import shared.model.board.Vertex;
 import shared.model.cards.Bank;
-import shared.model.cards.Card;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
-import shared.model.cards.Hand;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.ScoreKeeper;
@@ -472,7 +467,6 @@ public class ModelFacade {
 		}
 		
 		int ratio = tradeOffer.getRate();
-		ResourceType tradeType = cardsOffered.get(0).type;
 		//if ratio is 4, default ok
 		if(ratio == 4) {
 			return true;
