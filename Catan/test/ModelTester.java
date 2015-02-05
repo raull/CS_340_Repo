@@ -54,18 +54,24 @@ public class ModelTester
 		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), notCurrentUser, discard));
 		
 		//true test case
-		assertTrue(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, discard));
-		
-		
+		assertTrue(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, discard));	
 	}
 	
 	@Test
 	public void testCanRollNumber()
 	{
-		//not user's turn
 		//not in rolling phase
+		testModelFacade.updateModel(testMoxy.getModel("rollNumWrongPhase.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canRollNumber(turnManager, turnManager.currentUser()));
+		
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("rollNum.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canRollNumber(turnManager, turnManager.getUserFromIndex(1))); //in this JSON, the currentUser is index 0
 		
 		//true test case
+		assertTrue(testModelFacade.canRollNumber(turnManager, turnManager.currentUser()));
 	}
 	
 	@Test
