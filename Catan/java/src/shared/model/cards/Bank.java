@@ -67,4 +67,16 @@ public class Bank {
 		return resourceCardDeck;
 	}
 
+	public DevCardDeck getDevCardDeck() {
+		return devCardDeck;
+	}
+
+	public void setDevCardDeck(DevCardDeck devCardDeck) {
+		this.devCardDeck = devCardDeck;
+	}
+
+	public void setResourceCardDeck(ResourceCardDeck resourceCardDeck) {
+		this.resourceCardDeck = resourceCardDeck;
+	}
+
 }
