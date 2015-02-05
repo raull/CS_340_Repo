@@ -29,6 +29,12 @@ public class Poller {
 				public void run() { pollServer(); }
 			}, 0, 3000 ); //poll the server every 3000ms, or 3s
 	}
+
+	public Poller(Proxy proxy, ModelFacade facade)
+	{
+		this.proxy = proxy;
+		this.modelFacade = facade;
+	}
 	
 	public void run() {
 		pollerTimer.scheduleAtFixedRate( 
