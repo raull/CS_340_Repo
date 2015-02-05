@@ -33,7 +33,7 @@ import shared.proxy.moves.*;
  */
 public class Moxy implements Proxy{
 
-	private Model model;
+	private JsonObject model;
 	private JsonObject JSONModel;
 	
 	
@@ -100,17 +100,17 @@ public class Moxy implements Proxy{
 		this.model = getModel("model.json");
 	}
 	
-	public Model getModel(String filepath){
+	public JsonObject getModel(String filepath){
 		JsonObject json = new JsonObject();
 		JsonParser parser = new JsonParser();
 		JsonElement jsonElement;
 		
-		Model model = new Model();
+		JsonObject model = new JsonObject();
 		
 		try {
 			jsonElement = parser.parse(new FileReader(filepath));
 			Gson gson = new GsonBuilder().create();
-			model = gson.fromJson(jsonElement, Model.class);
+			model = gson.fromJson(jsonElement, JsonObject.class);
 		} catch (JsonIOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -124,7 +124,7 @@ public class Moxy implements Proxy{
 		return model;
 	}
 	
-	public Moxy(Model model) {
+	public Moxy(JsonObject model) {
 		super();
 		this.model = model;
 	}
@@ -156,7 +156,6 @@ public class Moxy implements Proxy{
 		gamelist.add(game1);
 		gamelist.add(game2);*/
 		
-		JsonObject json = new JsonObject();
 		
 		JsonParser parser = new JsonParser();
 		JsonElement jsonElement;
@@ -204,120 +203,109 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public Model model(int version) {
+	public JsonObject model(int version) {
 		return model;
 	}
 
 	@Override
-	public Model reset() {
+	public JsonObject reset() {
 		return model;
 	}
 
 	@Override
-	public Model postCommands(List<String> commandslist) {
+	public JsonObject postCommands(List<String> commandslist) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<String> getCommands() {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject getCommands() {
+		return getModel("getCommands.json");
 	}
 
 	@Override
-	public Model sendChat(SendChat sendchat) {
+	public JsonObject sendChat(SendChat sendchat) {
 		return getModel("chatmodel.json");
 	}
 
 	@Override
-	public Model rollNumber(RollNumber rollnum) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject rollNumber(RollNumber rollnum) {
+		return getModel("rollNum.json");
 	}
 
 	@Override
-	public Model robPlayer(RobPlayer robplayer) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject robPlayer(RobPlayer robplayer) {
+		return getModel("robPlayer.json");
 	}
 
 	@Override
-	public Model finishTurn(FinishMove finishmove) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject finishTurn(FinishMove finishmove) {
+		return getModel("finishTurn.json");
 	}
 
 	@Override
-	public Model buyDevCard(BuyDevCard buydev) {
+	public JsonObject buyDevCard(BuyDevCard buydev) {
 		return getModel("buydev.json");
 	}
 
 	@Override
-	public Model Year_of_Plenty(Year_of_Plenty_ yop) {
+	public JsonObject Year_of_Plenty(Year_of_Plenty_ yop) {
 		return getModel("yop.json");
 	}
 
 	@Override
-	public Model Road_Building(Road_Building_ roadbuild) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject Road_Building(Road_Building_ roadbuild) {
+		return getModel("roadBuilding.json");
 	}
 
 	@Override
-	public Model Soldier(Soldier_ soldier) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject Soldier(Soldier_ soldier) {
+		return getModel("soldier.json");
 	}
 
 	@Override
-	public Model Monopoly(Monopoly_ monopoly) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject Monopoly(Monopoly_ monopoly) {
+		return getModel("monopoly.json");
 	}
 
 	@Override
-	public Model Monument(Monument_ monument) {
+	public JsonObject Monument(Monument_ monument) {
 		return getModel("monument.json");
 	}
 
 	@Override
-	public Model buildRoad(BuildRoad buildroad) {
+	public JsonObject buildRoad(BuildRoad buildroad) {
 		return getModel("bldrd.json");
 	}
 
 	@Override
-	public Model buildSettlement(BuildSettlement buildsettlement) {
+	public JsonObject buildSettlement(BuildSettlement buildsettlement) {
 		return getModel("bldsetl.json");
 	}
 
 	@Override
-	public Model buildCity(BuildCity buildcity) {
+	public JsonObject buildCity(BuildCity buildcity) {
 		return getModel("bldcty.json");
 	}
 
 	@Override
-	public Model offerTrade(OfferTrade tradeOffer) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject offerTrade(OfferTrade tradeOffer) {
+		return getModel("offerTrade.json");
 	}
 
 	@Override
-	public Model acceptTrade(AcceptTrade tradeAccept) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject acceptTrade(AcceptTrade tradeAccept) {
+		return getModel("acceptTrade.json");
 	}
 
 	@Override
-	public Model maritimeTrade(MaritimeTrade tradeMaritime) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject maritimeTrade(MaritimeTrade tradeMaritime) {
+		return getModel("maritime.json");
 	}
 
 	@Override
-	public Model discardCards(DiscardCards discard) {
-		// TODO Auto-generated method stub
-		return null;
+	public JsonObject discardCards(DiscardCards discard) {
+		return getModel("discard.json");
 	}
 
 	@Override
@@ -334,8 +322,10 @@ public class Moxy implements Proxy{
 
 	@Override
 	public List<String> listAI() {
-		// TODO Auto-generated method stub
-		return null;
+		String type = "LARGEST_ARMY";
+		List list = new ArrayList<String>();
+		list.add(type);
+		return list;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import com.google.gson.JsonObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
 
@@ -206,108 +207,108 @@ public class ServerProxy implements Proxy{
 	}
 
 	@Override
-	public Model model(int version) throws ProxyException {
-		return (Model)doGet("/game/model");
+	public JsonObject model(int version) throws ProxyException {
+		return (JsonObject)doGet("/game/model");
 	}
 
 	@Override
-	public Model reset() throws ProxyException {
-		return (Model)doGet("/game/reset");
+	public JsonObject reset() throws ProxyException {
+		return (JsonObject)doGet("/game/reset");
 	}
 
 	@Override
-	public Model postCommands(List<String> commandslist) throws ProxyException {
-		return (Model)doPost("/game/commands", commandslist);
+	public JsonObject postCommands(List<String> commandslist) throws ProxyException {
+		return (JsonObject)doPost("/game/commands", commandslist);
 	}
 
 	@Override
-	public List<String> getCommands() throws ProxyException {
-		return (List<String>)doGet("/game/commands");
+	public JsonObject getCommands() throws ProxyException {
+		return (JsonObject)doGet("/game/commands");
 	}
 
 	@Override
-	public Model sendChat(SendChat sendchat) throws ProxyException {
-		return (Model)doPost("/moves/sendChat", sendchat);
+	public JsonObject sendChat(SendChat sendchat) throws ProxyException {
+		return (JsonObject)doPost("/moves/sendChat", sendchat);
 	}
 
 	@Override
-	public Model rollNumber(RollNumber rollnum) throws ProxyException {
-		return (Model)doPost("/moves/rollNumber", rollnum);
+	public JsonObject rollNumber(RollNumber rollnum) throws ProxyException {
+		return (JsonObject)doPost("/moves/rollNumber", rollnum);
 	}
 
 	@Override
-	public Model robPlayer(RobPlayer robplayer) throws ProxyException {
-		return (Model)doPost("/moves/robPlayer", robplayer);
+	public JsonObject robPlayer(RobPlayer robplayer) throws ProxyException {
+		return (JsonObject)doPost("/moves/robPlayer", robplayer);
 	}
 
 	@Override
-	public Model finishTurn(FinishMove finishmove) throws ProxyException {
-		return (Model)doPost("/moves/finishTurn", finishmove);
+	public JsonObject finishTurn(FinishMove finishmove) throws ProxyException {
+		return (JsonObject)doPost("/moves/finishTurn", finishmove);
 	}
 
 	@Override
-	public Model buyDevCard(BuyDevCard buydev) throws ProxyException {
-		return (Model)doPost("/moves/buyDevCard", buydev);
+	public JsonObject buyDevCard(BuyDevCard buydev) throws ProxyException {
+		return (JsonObject)doPost("/moves/buyDevCard", buydev);
 	}
 
 	@Override
-	public Model Year_of_Plenty(Year_of_Plenty_ yop) throws ProxyException {
-		return (Model)doPost("/moves/Year_of_Plenty", yop);
+	public JsonObject Year_of_Plenty(Year_of_Plenty_ yop) throws ProxyException {
+		return (JsonObject)doPost("/moves/Year_of_Plenty", yop);
 	}
 
 	@Override
-	public Model Road_Building(Road_Building_ roadbuild) throws ProxyException {
-		return (Model)doPost("/moves/Road_Building", roadbuild);
+	public JsonObject Road_Building(Road_Building_ roadbuild) throws ProxyException {
+		return (JsonObject)doPost("/moves/Road_Building", roadbuild);
 	}
 
 	@Override
-	public Model Soldier(Soldier_ soldier) throws ProxyException {
-		return (Model)doPost("/moves/Soldier", soldier);
+	public JsonObject Soldier(Soldier_ soldier) throws ProxyException {
+		return (JsonObject)doPost("/moves/Soldier", soldier);
 	}
 
 	@Override
-	public Model Monopoly(Monopoly_ monopoly) throws ProxyException {
-		return (Model)doPost("/moves/Monopoly", monopoly);
+	public JsonObject Monopoly(Monopoly_ monopoly) throws ProxyException {
+		return (JsonObject)doPost("/moves/Monopoly", monopoly);
 	}
 
 	@Override
-	public Model Monument(Monument_ monument) throws ProxyException {
-		return (Model)doPost("/moves/Monument", monument);
+	public JsonObject Monument(Monument_ monument) throws ProxyException {
+		return (JsonObject)doPost("/moves/Monument", monument);
 	}
 
 	@Override
-	public Model buildRoad(BuildRoad buildroad) throws ProxyException {
-		return (Model)doPost("/moves/buildRoad", buildroad);
+	public JsonObject buildRoad(BuildRoad buildroad) throws ProxyException {
+		return (JsonObject)doPost("/moves/buildRoad", buildroad);
 	}
 
 	@Override
-	public Model buildSettlement(BuildSettlement buildsettlement) throws ProxyException {
-		return (Model)doPost("/moves/buildSettlement", buildsettlement);
+	public JsonObject buildSettlement(BuildSettlement buildsettlement) throws ProxyException {
+		return (JsonObject)doPost("/moves/buildSettlement", buildsettlement);
 	}
 
 	@Override
-	public Model buildCity(BuildCity buildcity) throws ProxyException {
-		return (Model)doPost("/moves/buildCity", buildcity);
+	public JsonObject buildCity(BuildCity buildcity) throws ProxyException {
+		return (JsonObject)doPost("/moves/buildCity", buildcity);
 	}
 
 	@Override
-	public Model offerTrade(OfferTrade tradeOffer) throws ProxyException {
-		return (Model)doPost("/moves/offerTrade", tradeOffer);
+	public JsonObject offerTrade(OfferTrade tradeOffer) throws ProxyException {
+		return (JsonObject)doPost("/moves/offerTrade", tradeOffer);
 	}
 
 	@Override
-	public Model acceptTrade(AcceptTrade tradeAccept) throws ProxyException {
-		return (Model)doPost("/moves/acceptTrade", tradeAccept);
+	public JsonObject acceptTrade(AcceptTrade tradeAccept) throws ProxyException {
+		return (JsonObject)doPost("/moves/acceptTrade", tradeAccept);
 	}
 
 	@Override
-	public Model maritimeTrade(MaritimeTrade tradeMaritime) throws ProxyException {
-		return (Model)doPost("/moves/maritimeTrade", tradeMaritime);
+	public JsonObject maritimeTrade(MaritimeTrade tradeMaritime) throws ProxyException {
+		return (JsonObject)doPost("/moves/maritimeTrade", tradeMaritime);
 	}
 
 	@Override
-	public Model discardCards(DiscardCards discard) throws ProxyException {
-		return (Model)doPost("/moves/discardCards", discard);
+	public JsonObject discardCards(DiscardCards discard) throws ProxyException {
+		return (JsonObject)doPost("/moves/discardCards", discard);
 	}
 
 	@Override

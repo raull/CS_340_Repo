@@ -2,6 +2,8 @@ package shared.proxy;
 
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
 import shared.model.*;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
@@ -58,75 +60,75 @@ public interface Proxy {
 	 * @param version
 	 * @return
 	 */
-	public Model model(int version)throws ProxyException;
+	public JsonObject model(int version)throws ProxyException;
 	/**
 	 * Clears out the command history of the current game, resetting it to the beginning
 	 * for user created games, and to just after the initial placement round for 
 	 * server created games.
 	 * @return
 	 */
-	public Model reset()throws ProxyException; 
+	public JsonObject reset()throws ProxyException; 
 	/**
 	 * Executes the list of given commands
 	 * @param commandslist
 	 * @return
 	 */
-	public Model postCommands(List<String> commandslist)throws ProxyException;
+	public JsonObject postCommands(List<String> commandslist)throws ProxyException;
 	/**
 	 * Returns a list of all the commands that have been given in this game.
 	 * @return
 	 */
-	public List<String> getCommands()throws ProxyException;
+	public JsonObject getCommands()throws ProxyException;
 
 	/**
 	 * Sends a chat message coupled with the sender to the server
 	 * @param sendchat
 	 * @return
 	 */
-	public Model sendChat(SendChat sendchat)throws ProxyException;
+	public JsonObject sendChat(SendChat sendchat)throws ProxyException;
 	/**
 	 * Lets the server know that a specific player has rolled a specific number.
 	 * @param rollnum
 	 * @return
 	 */
-	public Model rollNumber(RollNumber rollnum)throws ProxyException;
+	public JsonObject rollNumber(RollNumber rollnum)throws ProxyException;
 	/**
 	 * Robs a player and moves the robber
 	 * @param robplayer
 	 * @return
 	 */
-	public Model robPlayer(RobPlayer robplayer)throws ProxyException;
+	public JsonObject robPlayer(RobPlayer robplayer)throws ProxyException;
 	/**
 	 * Ends a player's turn
 	 * @param finishmove
 	 * @return
 	 */
-	public Model finishTurn(FinishMove finishmove)throws ProxyException;
+	public JsonObject finishTurn(FinishMove finishmove)throws ProxyException;
 	/**
 	 * Used to buy a development card	
 	 * @param buydev
 	 * @return
 	 */
-	public Model buyDevCard(BuyDevCard buydev)throws ProxyException;
+	public JsonObject buyDevCard(BuyDevCard buydev)throws ProxyException;
 	/**
 	 * Plays a "Year of Plenty" card from the hand 
 	 * @param yop
 	 * @return
 	 */
-	public Model Year_of_Plenty(Year_of_Plenty_ yop)throws ProxyException;
+	public JsonObject Year_of_Plenty(Year_of_Plenty_ yop)throws ProxyException;
 	/**
 	 * Plays a "Road Building" card from the hand
 	 * @param roadbuild
 	 * @return
 	 */
-	public Model Road_Building(Road_Building_ roadbuild)throws ProxyException;
+	public JsonObject Road_Building(Road_Building_ roadbuild)throws ProxyException;
 	/**
 	 * Plays a "Soldier" card from your hand, selecting a new robber position
 	 * and a player to rob.
 	 * @param soldier
 	 * @return
 	 */
-	public Model Soldier(Soldier_ soldier)throws ProxyException;
+	public JsonObject Soldier(Soldier_ soldier)throws ProxyException;
 	/**
 	 * Plays a "Monopoly" card from your hand to monopolize the specified
 	 * resource.
@@ -134,55 +136,55 @@ public interface Proxy {
 	 * @return
 	 */
 
-	public Model Monopoly(Monopoly_ monopoly)throws ProxyException;
+	public JsonObject Monopoly(Monopoly_ monopoly)throws ProxyException;
 	/**
 	 * Plays a "Monument" card from your hand to give you a victory point.
 	 * @param monument
 	 * @return
 	 */
-	public Model Monument(Monument_ monument)throws ProxyException;
+	public JsonObject Monument(Monument_ monument)throws ProxyException;
 	/**
 	 * Builds a road at a specified location.
 	 * @param buildroad
 	 * @return
 	 */
-	public Model buildRoad(BuildRoad buildroad)throws ProxyException;
+	public JsonObject buildRoad(BuildRoad buildroad)throws ProxyException;
 	/**
 	 * Builds a settlement at the specified location.
 	 * @param buildsettlement
 	 * @return
 	 */
-	public Model buildSettlement(BuildSettlement buildsettlement)throws ProxyException;
+	public JsonObject buildSettlement(BuildSettlement buildsettlement)throws ProxyException;
 	/**
 	 * Builds a city at the specified location.
 	 * @param buildcity
 	 * @return
 	 */
-	public Model buildCity(BuildCity buildcity)throws ProxyException;
+	public JsonObject buildCity(BuildCity buildcity)throws ProxyException;
 	/**
 	 * Offers a domestic trade to another player
 	 * @param tradeOffer
 	 * @return
 	 */
-	public Model offerTrade(OfferTrade tradeOffer)throws ProxyException;
+	public JsonObject offerTrade(OfferTrade tradeOffer)throws ProxyException;
 	/**
 	 * Used to accept or decline a trade offered to you
 	 * @param tradeAccept
 	 * @return
 	 */
-	public Model acceptTrade(AcceptTrade tradeAccept)throws ProxyException;
+	public JsonObject acceptTrade(AcceptTrade tradeAccept)throws ProxyException;
 	/**
 	 * Executes a Maritime trade
 	 * @param tradeMaritime
 	 * @return
 	 */
-	public Model maritimeTrade(MaritimeTrade tradeMaritime)throws ProxyException;
+	public JsonObject maritimeTrade(MaritimeTrade tradeMaritime)throws ProxyException;
 	/**
 	 * Discards the specified resource cards
 	 * @param discard
 	 * @return
 	 */
-	public Model discardCards(DiscardCards discard)throws ProxyException;
+	public JsonObject discardCards(DiscardCards discard)throws ProxyException;
 	/**
 	 * Set's the server's log level.
 	 * @param cllr
