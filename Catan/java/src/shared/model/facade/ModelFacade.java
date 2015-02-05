@@ -149,6 +149,9 @@ public class ModelFacade {
 		if(user != turnManager.currentUser()) {
 			return false;
 		}
+		
+		//if trying to build road on water, return false
+		
 		//if edge is occupied, return false;
 		ArrayList<User> users = turnManager.getUsers();
 		for (User u : users){
@@ -252,6 +255,9 @@ public class ModelFacade {
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
+		
+		//if trying to build something on water, return false
+		
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
 			for(User u : turnManager.getUsers()){
@@ -352,46 +358,6 @@ public class ModelFacade {
 		
 		return true;
 	}
-	
-//	/**
-//	 * If the robber can be placed/moved to a location
-//	 * @param hexTile tile that the robber will be moved to
-//	 * @return
-//	 */
-//	public Boolean canPlaceRobber(HexTile hexTile) {
-//		if(hexTile.hasRobber()) {
-//			return false;
-//		}
-//		else{
-//			return true;
-//		}
-//	}
-	
-//	/**
-//	 * if user can make a trade
-//	 * @param turnManager
-//	 * @param offeringUser - user making the offer
-//	 * @param receivingUser - user accepting the offer
-//	 * @param tradeOffer
-//	 * @return
-//	 */
-//	//combines both offer and accept trade
-//	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
-//		if(offeringUser != turnManager.currentUser()) {
-//			return false;
-//		}
-//		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards();
-//		ArrayList<ResourceCard> offeredCards = tradeOffer.getBuyDeck().getAllResourceCards();
-//		if(!offeringUserCards.containsAll(offeredCards)) {
-//			return false;
-//		}
-//		ArrayList<ResourceCard> receivingUserCards = receivingUser.getHand().getResourceCards().getAllResourceCards();
-//		ArrayList<ResourceCard> neededCards = tradeOffer.getSellDeck().getAllResourceCards();
-//		if(!receivingUserCards.containsAll(neededCards)) {
-//			return false;
-//		}
-//		return true;
-//	}
 	
 	/**
 	 * if user can make a trade
@@ -583,7 +549,9 @@ public class ModelFacade {
 			return false;
 		}
 		//if user does not have at least 2 un-used roads
-		//return false
+		if(user.getUnusedPieces().size() < 2) {
+			return false;
+		}
 		
 		return true;
 	}
