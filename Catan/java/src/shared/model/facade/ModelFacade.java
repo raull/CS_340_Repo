@@ -9,20 +9,15 @@ import shared.definitions.DevCardType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
-import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
-import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
-import shared.model.board.Vertex;
 import shared.model.cards.Bank;
-import shared.model.cards.Card;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
-import shared.model.cards.Hand;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.ScoreKeeper;
@@ -404,15 +399,10 @@ public class ModelFacade {
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
 		//if it isn't user's turn or if model status is not on playing
-		if(offeringUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		if(offeringUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
 			return false;
 		}
-		//if user does not have the resources they are offering
-		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards(); //all of the offeringUser's cards
-		ArrayList<ResourceCard> offeredCards = tradeOffer.getSendingDeck().getAllResourceCards(); //all of the cards offeringUser is offering
-		if(!offeringUserCards.containsAll(offeredCards)) {
-			return false;
-		}
+
 		return true;
 	}
 	
@@ -427,25 +417,14 @@ public class ModelFacade {
 		if(tradeOffer == null) {
 			return false;
 		}
-		ArrayList<ResourceCard> userCards = user.getHand().getResourceCards().getAllResourceCards();
-		ArrayList<ResourceCard> neededCards = tradeOffer.getReceivingDeck().getAllResourceCards();
+		ResourceCardDeck userCards = user.getHand().getResourceCards();
+		ResourceCardDeck neededCards = tradeOffer.getReceivingDeck();
 		//if user doesn't have all the required resources to accept offered trade
-		if(!userCards.containsAll(neededCards)) {
+		if(TradeManager.hasEnoughResources(userCards, neededCards)) {
 			return false;
 		}
 		
 		return true;
-	}
-	
-	//helper function to check if user has a certain port type
-	public Boolean checkUserHasPort(User user, PortType portType) {
-		Collection<Port> ports = user.ports();
-		for(Port port : ports) {
-			if(port.getType().equals(portType)) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
@@ -463,23 +442,20 @@ public class ModelFacade {
 		//check if bank has cards user wants available
 		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
-		ArrayList<ResourceCard> cardsWanted = tradeOffer.getSendingDeck().getAllResourceCards();
-		ArrayList<ResourceCard> cardsOffered = tradeOffer.getReceivingDeck().getAllResourceCards();
 		
 		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
-		if(!availableCards.getAllResourceCards().containsAll(cardsWanted) || !userCards.getAllResourceCards().containsAll(cardsOffered)) {
+		if(!TradeManager.hasEnoughResources(availableCards, tradeOffer.getReceivingDeck()) || !TradeManager.hasEnoughResources(userCards, tradeOffer.getSendingDeck())) {
 			return false;
 		}
 		
 		int ratio = tradeOffer.getRate();
-		ResourceType tradeType = cardsOffered.get(0).type;
 		//if ratio is 4, default ok
 		if(ratio == 4) {
 			return true;
 		}
 		else if(ratio == 3) {
 			//check that user has the THREE port
-			if(!checkUserHasPort(user, PortType.THREE)) {
+			if(!user.hasPort(PortType.THREE)) {
 				return false;
 			}
 			else{
@@ -488,7 +464,7 @@ public class ModelFacade {
 			
 		}
 		else if (ratio == 2){ 
-			if(!checkUserHasPort(user, tradeType)) { //may have to convert resource type to port type?
+			if(!user.hasPort(tradeOffer.getPortType())) { 
 				return false;
 			}
 			else {
@@ -549,8 +525,8 @@ public class ModelFacade {
 	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, HexTile newRobberLoc) {
 		DevCard soldierCard = new DevCard(DevCardType.SOLDIER);
 		//if it isn't user's turn or if model status is not on playing or if user does not have soldier card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(soldierCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(soldierCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		return canRobPlayer(newRobberLoc, user, victim);
@@ -569,8 +545,8 @@ public class ModelFacade {
 	public Boolean canPlayYearofPlenty(TurnManager turnManager, User user, Bank bank, ResourceCard card1, ResourceCard card2) {
 		DevCard yopCard = new DevCard(DevCardType.YEAR_OF_PLENTY);
 		//if it isn't user's turn or if model status is not on playing or if user does not have year of plenty card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		ResourceCardDeck availableCards = bank.getResourceDeck();
@@ -594,8 +570,8 @@ public class ModelFacade {
 	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user, EdgeLocation spot1, EdgeLocation spot2) {
 		DevCard roadCard = new DevCard(DevCardType.ROAD_BUILD);
 		//if it isn't user's turn or if model status is not on playing or if user does not have road build card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		//if the location is not connected to an existing road/settlement owned by user
@@ -619,8 +595,8 @@ public class ModelFacade {
 	public Boolean canPlayMonopoly(TurnManager turnManager, User user, ResourceType resourceType) {
 		DevCard monopolyCard = new DevCard(DevCardType.MONOPOLY);
 		//if it isn't user's turn or if model status is not on playing or if user does not have monopoly card
-		//need to also check that user has already played a dev card this turn
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(monopolyCard)) {
+		//if user has already played dev card
+		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(monopolyCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
 		

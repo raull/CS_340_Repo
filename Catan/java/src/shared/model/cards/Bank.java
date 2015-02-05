@@ -1,7 +1,6 @@
 package shared.model.cards;
 
 import shared.definitions.PieceType;
-import shared.model.board.piece.Piece;
 import shared.model.game.User;
 
 /**
@@ -65,6 +64,18 @@ public class Bank {
 
 	public ResourceCardDeck getResourceDeck() {
 		return resourceCardDeck;
+	}
+
+	public DevCardDeck getDevCardDeck() {
+		return devCardDeck;
+	}
+
+	public void setDevCardDeck(DevCardDeck devCardDeck) {
+		this.devCardDeck = devCardDeck;
+	}
+
+	public void setResourceCardDeck(ResourceCardDeck resourceCardDeck) {
+		this.resourceCardDeck = resourceCardDeck;
 	}
 
 }
