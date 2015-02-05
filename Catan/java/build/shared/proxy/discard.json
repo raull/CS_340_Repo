@@ -391,9 +391,9 @@
     },
     {
       "resources": {
-        "brick": 0,
-        "wood": 0,
-        "sheep": -2,
+        "brick": 4,
+        "wood": 4,
+        "sheep": 4,
         "wheat": 0,
         "ore": 0
       },
@@ -602,7 +602,7 @@
     "ore": 24
   },
   "turnTracker": {
-    "status": "Robbing",
+    "status": "Discarding",
     "currentTurn": 1,
     "longestRoad": -1,
     "largestArmy": -1

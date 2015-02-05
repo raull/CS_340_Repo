@@ -61,6 +61,10 @@ public class HexTile {
 		return robber;
 	}
 	
+	public void setRobber(boolean hasRobber) {
+		this.robber = hasRobber;
+	}
+	
 	//Logic
 	/**
 	 * Determines whether the robber could be moved to this Hex location

@@ -13,9 +13,11 @@ import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
+import shared.locations.VertexLocation;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
+import shared.model.board.piece.Building;
 import shared.model.board.piece.Piece;
 import shared.model.board.piece.Road;
 import shared.model.cards.Bank;
@@ -365,6 +367,48 @@ public class Model {
 		//need to populate user's occupied vertices, etc
 		Road road = new Road();
 		return road;
+	}
+	
+	public ArrayList<Building> extractBuildings(JsonObject jsonMap, String buildingType) {
+		ArrayList<Building> buildings = new ArrayList<Building>();
+		
+		//building type is settlements or cities
+		JsonArray jsonBuildings = jsonMap.get(buildingType).getAsJsonArray();
+		
+		for(JsonElement jsonEleBuilding : jsonBuildings) {
+			Building building = extractBuilding(jsonEleBuilding.getAsJsonObject());
+			buildings.add(building);
+		}
+		
+		return buildings;
+	}
+	
+	public Building extractBuilding(JsonObject jsonBuilding) {
+		Gson gson = new Gson();
+		
+		int owner = jsonBuilding.get("owner").getAsInt();
+		
+		JsonObject jsonLocation = jsonBuilding.get("location").getAsJsonObject();
+		int x = jsonLocation.get("x").getAsInt();
+		int y = jsonLocation.get("y").getAsInt();
+		HexLocation hexLocation = new HexLocation(x, y);
+		VertexDirection direction = gson.fromJson(jsonLocation.get("direction"), VertexDirection.class);
+		
+		VertexLocation location = new VertexLocation(hexLocation, direction);
+		
+		Building building = new Building();
+		return building;
+	}
+	
+	public void extractRobber(JsonObject jsonMap, Map map) {
+		
+		JsonObject jsonLocation = jsonMap.get("robber").getAsJsonObject();
+		int x = jsonLocation.get("x").getAsInt();
+		int y = jsonLocation.get("y").getAsInt();
+		HexLocation hexLocation = new HexLocation(x, y);
+		
+		HexTile robberTile = map.getHexTileByLocation(hexLocation);
+		robberTile.setRobber(true);
 	}
 	
 	public ArrayList<User> extractUsers(JsonObject jsonModel) {

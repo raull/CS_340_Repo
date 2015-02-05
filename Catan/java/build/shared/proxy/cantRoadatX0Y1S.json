@@ -169,6 +169,14 @@
         }
       },
       {
+        "owner": 1,
+        "location": {
+          "direction": "S",
+          "x": 0,
+          "y": 1
+        }
+      },
+      {
         "owner": 0,
         "location": {
           "direction": "SW",
@@ -198,6 +206,14 @@
           "direction": "SW",
           "x": 2,
           "y": 0
+        }
+      },
+      {
+        "owner": 1,
+        "location": {
+          "direction": "S",
+          "x": 2,
+          "y": -1
         }
       }
     ],
@@ -333,8 +349,8 @@
       }
     ],
     "robber": {
-      "x": -2,
-      "y": 2
+      "x": 0,
+      "y": -1
     }
   },
   "players": [
@@ -344,7 +360,7 @@
         "wood": 0,
         "sheep": -1,
         "wheat": 0,
-        "ore": 0
+        "ore": -1
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
@@ -379,13 +395,13 @@
         "wood": 0,
         "sheep": -2,
         "wheat": 0,
-        "ore": 0
+        "ore": 1
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
         "monopoly": 0,
         "soldier": 0,
-        "roadBuilding": 0,
+        "roadBuilding": -1,
         "monument": 0
       },
       "newDevCards": {
@@ -395,13 +411,13 @@
         "roadBuilding": 0,
         "monument": 0
       },
-      "roads": 13,
+      "roads": 11,
       "cities": 4,
       "settlements": 3,
       "soldiers": 0,
       "victoryPoints": 2,
       "monuments": 0,
-      "playedDevCard": false,
+      "playedDevCard": true,
       "discarded": false,
       "playerID": 0,
       "playerIndex": 1,
@@ -536,6 +552,30 @@
       {
         "source": "tiger",
         "message": "tiger rolled a 8."
+      },
+      {
+        "source": "tiger",
+        "message": "tiger's turn just ended"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam rolled a 7."
+      },
+      {
+        "source": "Sam",
+        "message": "Sam moved the robber and robbed tiger."
+      },
+      {
+        "source": "Sam",
+        "message": "Sam built 2 roads"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam built a road"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam built a road"
       }
     ]
   },
@@ -550,11 +590,11 @@
     "ore": 24
   },
   "turnTracker": {
-    "status": "Rolling",
-    "currentTurn": 0,
+    "status": "Playing",
+    "currentTurn": 1,
     "longestRoad": -1,
     "largestArmy": -1
   },
   "winner": -1,
-  "version": 16
+  "version": 20
 }

@@ -169,6 +169,14 @@
         }
       },
       {
+        "owner": 1,
+        "location": {
+          "direction": "S",
+          "x": 0,
+          "y": 1
+        }
+      },
+      {
         "owner": 0,
         "location": {
           "direction": "SW",
@@ -198,6 +206,14 @@
           "direction": "SW",
           "x": 2,
           "y": 0
+        }
+      },
+      {
+        "owner": 1,
+        "location": {
+          "direction": "S",
+          "x": 2,
+          "y": -1
         }
       }
     ],
@@ -298,12 +314,11 @@
         }
       },
       {
-        "ratio": 2,
-        "resource": "sheep",
-        "direction": "NW",
+        "ratio": 3,
+        "direction": "NE",
         "location": {
-          "x": 2,
-          "y": 1
+          "x": -3,
+          "y": 2
         }
       },
       {
@@ -315,11 +330,12 @@
         }
       },
       {
-        "ratio": 3,
-        "direction": "NE",
+        "ratio": 2,
+        "resource": "sheep",
+        "direction": "NW",
         "location": {
-          "x": -3,
-          "y": 2
+          "x": 2,
+          "y": 1
         }
       },
       {
@@ -333,16 +349,16 @@
       }
     ],
     "robber": {
-      "x": -2,
-      "y": 2
+      "x": 1,
+      "y": 1
     }
   },
   "players": [
     {
       "resources": {
-        "brick": -1,
-        "wood": 0,
-        "sheep": -1,
+        "brick": 1,
+        "wood": 1,
+        "sheep": 0,
         "wheat": 0,
         "ore": 0
       },
@@ -375,9 +391,9 @@
     },
     {
       "resources": {
-        "brick": 3,
-        "wood": 0,
-        "sheep": -2,
+        "brick": 0,
+        "wood": -2,
+        "sheep": 0,
         "wheat": 0,
         "ore": 0
       },
@@ -385,7 +401,7 @@
         "yearOfPlenty": 0,
         "monopoly": 0,
         "soldier": 0,
-        "roadBuilding": 0,
+        "roadBuilding": -1,
         "monument": 0
       },
       "newDevCards": {
@@ -395,13 +411,13 @@
         "roadBuilding": 0,
         "monument": 0
       },
-      "roads": 13,
+      "roads": 11,
       "cities": 4,
       "settlements": 3,
       "soldiers": 0,
       "victoryPoints": 2,
       "monuments": 0,
-      "playedDevCard": false,
+      "playedDevCard": true,
       "discarded": false,
       "playerID": 0,
       "playerIndex": 1,
@@ -414,12 +430,12 @@
         "wood": 0,
         "sheep": 0,
         "wheat": 0,
-        "ore": 0
+        "ore": 1
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
         "monopoly": 0,
-        "soldier": 0,
+        "soldier": -1,
         "roadBuilding": 0,
         "monument": 0
       },
@@ -433,10 +449,10 @@
       "roads": 13,
       "cities": 4,
       "settlements": 3,
-      "soldiers": 0,
+      "soldiers": 1,
       "victoryPoints": 2,
       "monuments": 0,
-      "playedDevCard": false,
+      "playedDevCard": true,
       "discarded": false,
       "playerID": -2,
       "playerIndex": 2,
@@ -445,7 +461,7 @@
     },
     {
       "resources": {
-        "brick": 0,
+        "brick": 4,
         "wood": 0,
         "sheep": 0,
         "wheat": 0,
@@ -453,7 +469,7 @@
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
-        "monopoly": 0,
+        "monopoly": -1,
         "soldier": 0,
         "roadBuilding": 0,
         "monument": 0
@@ -471,8 +487,8 @@
       "soldiers": 0,
       "victoryPoints": 0,
       "monuments": 0,
-      "playedDevCard": false,
-      "discarded": false,
+      "playedDevCard": true,
+      "discarded": true,
       "playerID": -3,
       "playerIndex": 3,
       "name": "Steve",
@@ -536,6 +552,42 @@
       {
         "source": "tiger",
         "message": "tiger rolled a 8."
+      },
+      {
+        "source": "tiger",
+        "message": "tiger's turn just ended"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam rolled a 7."
+      },
+      {
+        "source": "Sam",
+        "message": "Sam moved the robber and robbed tiger."
+      },
+      {
+        "source": "Sam",
+        "message": "Sam built 2 roads"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam built a road"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam built a road"
+      },
+      {
+        "source": "Sam",
+        "message": "Sam used a soldier "
+      },
+      {
+        "source": "Sam",
+        "message": "Sam moved the robber and robbed Sam."
+      },
+      {
+        "source": "Steve",
+        "message": "Steve stole everyones brick"
       }
     ]
   },
@@ -543,7 +595,7 @@
     "lines": []
   },
   "bank": {
-    "brick": 22,
+    "brick": 20,
     "wood": 24,
     "sheep": 27,
     "wheat": 24,
@@ -556,5 +608,5 @@
     "largestArmy": -1
   },
   "winner": -1,
-  "version": 16
+  "version": 23
 }
