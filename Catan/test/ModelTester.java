@@ -88,6 +88,8 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.ROAD));
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.CITY));
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.SETTLEMENT));
+		
+		//wrong turn phase?
 
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("canBuyRoad.json"));

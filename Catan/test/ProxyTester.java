@@ -1,3 +1,7 @@
+//Need to add all the necessary imports
+
+
+
 /**
 	This class tests specifically the ServerProxy class.
  */
@@ -31,15 +35,27 @@ public class ProxyTester
 	@Test
 	public void testLogin()
 	{
-
-
-		//testProxy.login(urlPath, new Object());
+		try
+		{
+			testProxy.login(new Credentials());
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
 	}
 
 	@Test
 	public void testRegister()
 	{
-
+		try
+		{
+			testProxy.register(new Credentials());
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
 	}
 
 	@Test
@@ -73,7 +89,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.join(new JoinGameRequest()));
+			testProxy.join(new JoinGameRequest());
 		}
 		catch(ProxyException e)
 		{
@@ -84,13 +100,27 @@ public class ProxyTester
 	@Test
 	public void testSave()
 	{
-
+		try
+		{
+			testProxy.save(new SaveGameRequest());
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
 	}
 
 	@Test
 	public void testLoad()
 	{
-
+		try
+		{
+			testProxy.load(new LoadGameRequest());
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
 	}
 
 	@Test
@@ -343,13 +373,27 @@ public class ProxyTester
 	@Test
 	public void testChangeLogLevel()
 	{
-
+		try
+		{
+			testProxy.changeLogLevel(new ChangeLogLevelRequest());
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
 	}
 
 	@Test
 	public void testAddAI()
 	{
-
+		try
+		{
+			testProxy.addAI(new AddAIRequest());
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
 	}
 
 	@Test

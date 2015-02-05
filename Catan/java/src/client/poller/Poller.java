@@ -30,6 +30,13 @@ public class Poller {
 			}, 0, 3000 ); //poll the server every 3000ms, or 3s
 	}
 	
+	public void run() {
+		pollerTimer.scheduleAtFixedRate( 
+			new TimerTask() {
+				public void run() { pollServer(); }
+			}, 0, 3000 ); //poll the server every 3000ms, or 3s
+	}
+	
 	/**
 	 * Polls server for a possible updated version of model, which is sent to model facade to update
 	 */
