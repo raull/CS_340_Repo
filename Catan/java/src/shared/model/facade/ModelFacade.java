@@ -399,15 +399,10 @@ public class ModelFacade {
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
 		//if it isn't user's turn or if model status is not on playing
-		if(offeringUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		if(offeringUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
 			return false;
 		}
-		//if user does not have the resources they are offering
-		ArrayList<ResourceCard> offeringUserCards = offeringUser.getHand().getResourceCards().getAllResourceCards(); //all of the offeringUser's cards
-		ArrayList<ResourceCard> offeredCards = tradeOffer.getSendingDeck().getAllResourceCards(); //all of the cards offeringUser is offering
-		if(!offeringUserCards.containsAll(offeredCards)) {
-			return false;
-		}
+
 		return true;
 	}
 	
@@ -422,25 +417,14 @@ public class ModelFacade {
 		if(tradeOffer == null) {
 			return false;
 		}
-		ArrayList<ResourceCard> userCards = user.getHand().getResourceCards().getAllResourceCards();
-		ArrayList<ResourceCard> neededCards = tradeOffer.getReceivingDeck().getAllResourceCards();
+		ResourceCardDeck userCards = user.getHand().getResourceCards();
+		ResourceCardDeck neededCards = tradeOffer.getReceivingDeck();
 		//if user doesn't have all the required resources to accept offered trade
-		if(!userCards.containsAll(neededCards)) {
+		if(TradeManager.hasEnoughResources(userCards, neededCards)) {
 			return false;
 		}
 		
 		return true;
-	}
-	
-	//helper function to check if user has a certain port type
-	public Boolean checkUserHasPort(User user, PortType portType) {
-		Collection<Port> ports = user.ports();
-		for(Port port : ports) {
-			if(port.getType().equals(portType)) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
@@ -458,11 +442,9 @@ public class ModelFacade {
 		//check if bank has cards user wants available
 		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
-		ArrayList<ResourceCard> cardsWanted = tradeOffer.getSendingDeck().getAllResourceCards();
-		ArrayList<ResourceCard> cardsOffered = tradeOffer.getReceivingDeck().getAllResourceCards();
 		
 		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
-		if(!availableCards.getAllResourceCards().containsAll(cardsWanted) || !userCards.getAllResourceCards().containsAll(cardsOffered)) {
+		if(!TradeManager.hasEnoughResources(availableCards, tradeOffer.getReceivingDeck()) || !TradeManager.hasEnoughResources(userCards, tradeOffer.getSendingDeck())) {
 			return false;
 		}
 		
@@ -473,7 +455,7 @@ public class ModelFacade {
 		}
 		else if(ratio == 3) {
 			//check that user has the THREE port
-			if(!checkUserHasPort(user, PortType.THREE)) {
+			if(!user.hasPort(PortType.THREE)) {
 				return false;
 			}
 			else{
