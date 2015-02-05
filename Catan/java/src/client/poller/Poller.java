@@ -65,5 +65,15 @@ public class Poller {
 	public void updateClientModel(JsonObject jsonReponse) {
 		//don't really need anymore
 	}
+
+	public void setModelFacade(ModelFacade facade)
+	{
+		this.modelFacade = facade;
+	}
+
+	public ModelFacade getModelFacade()
+	{
+		return modelFacade;
+	}
 	
 }
