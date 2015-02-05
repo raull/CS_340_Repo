@@ -7,11 +7,17 @@ import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.HexType;
 import shared.definitions.PieceType;
+import shared.definitions.PortType;
 import shared.definitions.ResourceType;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
+import shared.model.board.Port;
 import shared.model.board.piece.Piece;
+import shared.model.board.piece.Road;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -293,6 +299,74 @@ public class Model {
 		return hexTile;
 	}
 	
+	public ArrayList<Port> extractPorts(JsonObject jsonMap) {
+		ArrayList<Port> portsOnMap = new ArrayList<Port>();
+		
+		JsonArray jsonPorts = jsonMap.get("ports").getAsJsonArray();
+		
+		for(JsonElement jsonElePort : jsonPorts) {
+			Port port = extractPort(jsonElePort.getAsJsonObject());
+			portsOnMap.add(port);
+		}
+		
+		return portsOnMap;
+	}
+	
+	public Port extractPort(JsonObject jsonPort) {
+		
+		Gson gson = new Gson();
+		PortType portType;
+		
+		if(jsonPort.get("resource") != null) {
+			portType = gson.fromJson(jsonPort.get("resource"), PortType.class);
+			ResourceType resourceType = gson.fromJson(jsonPort.get("resource"), ResourceType.class);
+		}
+		else{
+			portType = PortType.THREE;
+			//no resource type, could be any
+		}
+		
+		HexLocation portLocation = gson.fromJson(jsonPort.get("location"), HexLocation.class);
+		
+		VertexDirection portDirection = gson.fromJson(jsonPort.get("direction"), VertexDirection.class);
+		
+		int ratio = jsonPort.get("ratio").getAsInt();
+		
+		Port port = new Port(portType, ratio);
+		return port;
+	}
+	
+	public ArrayList<Road> extractRoads(JsonObject jsonMap) {
+		
+		ArrayList<Road> roads = new ArrayList<Road>();
+
+		JsonArray jsonRoads = jsonMap.get("roads").getAsJsonArray();
+
+		for(JsonElement jsonEleRoad : jsonRoads) {
+			Road road = extractRoad(jsonEleRoad.getAsJsonObject());
+			roads.add(road);
+		}
+		
+		return roads;
+	}
+	
+	public Road extractRoad(JsonObject jsonRoad) {
+		Gson gson = new Gson();
+		
+		int owner = jsonRoad.get("owner").getAsInt();
+		
+		JsonObject jsonLocation = jsonRoad.get("location").getAsJsonObject();
+		int x = jsonLocation.get("x").getAsInt();
+		int y = jsonLocation.get("y").getAsInt();
+		HexLocation hexLocation = new HexLocation(x, y);
+		EdgeDirection direction = gson.fromJson(jsonLocation.get("direction"), EdgeDirection.class);
+		
+		EdgeLocation location = new EdgeLocation(hexLocation, direction);
+		//need to populate user's occupied vertices, etc
+		Road road = new Road();
+		return road;
+	}
+	
 	public ArrayList<User> extractUsers(JsonObject jsonModel) {
 		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
 		
@@ -360,41 +434,21 @@ public class Model {
 		int wheatCount = jsonDeck.get("wheat").getAsInt();
 		int woodCount = jsonDeck.get("wood").getAsInt();
 		
-		if(brickCount < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, brickCount, ResourceType.BRICK);
+		addToCards(brickCount, ResourceType.BRICK, resourceCards1, resourceCards2);
+		addToCards(oreCount, ResourceType.ORE, resourceCards1, resourceCards2);
+		addToCards(sheepCount, ResourceType.SHEEP, resourceCards1, resourceCards2);
+		addToCards(wheatCount, ResourceType.WHEAT, resourceCards1, resourceCards2);
+		addToCards(woodCount, ResourceType.WOOD, resourceCards1, resourceCards2);
+		
+	}
+	
+	public void addToCards(int count, ResourceType resourceType, ArrayList<ResourceCard> resourceCards1, ArrayList<ResourceCard> resourceCards2) {
+		if(count < 0 && resourceCards2 != null) {
+			addResourceCardsByNum(resourceCards2, count, resourceType);
 		}
 		else{
-			addResourceCardsByNum(resourceCards1, brickCount, ResourceType.BRICK);
+			addResourceCardsByNum(resourceCards1, count, resourceType);
 		}
-		
-		if(oreCount < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, oreCount, ResourceType.ORE);
-		}
-		else {
-			addResourceCardsByNum(resourceCards1, oreCount, ResourceType.ORE);
-		}
-		
-		if(sheepCount < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, sheepCount, ResourceType.SHEEP);
-		}
-		else{
-			addResourceCardsByNum(resourceCards1, sheepCount, ResourceType.SHEEP);
-		}
-		
-		if(wheatCount < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, wheatCount, ResourceType.WHEAT);
-		}
-		else{
-			addResourceCardsByNum(resourceCards1, wheatCount, ResourceType.WHEAT);
-		}
-		
-		if(woodCount < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, woodCount, ResourceType.WOOD);
-		}
-		else{
-			addResourceCardsByNum(resourceCards1, woodCount, ResourceType.WOOD);
-		}
-		
 	}
 	
 	public void addResourceCardsByNum(ArrayList<ResourceCard> deckToAdd, int numTimes, ResourceType cardType) {
