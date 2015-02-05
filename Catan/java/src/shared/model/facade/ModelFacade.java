@@ -31,6 +31,8 @@ import shared.model.game.User;
 import shared.proxy.Proxy;
 
 public class ModelFacade {
+	
+
 	//canDo functions
 	//get pieces from models
 	//will eventually have to talk to controllers

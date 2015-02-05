@@ -1,4 +1,18 @@
+import static org.junit.Assert.*;
+
+import java.util.ArrayList;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import shared.definitions.ResourceType;
 import shared.model.*;
+import shared.model.cards.ResourceCard;
+import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
+import shared.model.game.TurnPhase;
+import shared.model.game.User;
+import shared.proxy.Moxy;
 
 /**
 	This class runs tests on the ModelFacade class.
@@ -10,18 +24,36 @@ public class ModelTester
 		
 	}
 	
-	private ModelFacade testModel;
+	private ModelFacade testModelFacade = new ModelFacade();
+	private Model testModel = new Model();
+	private Moxy testMoxy = new Moxy();
 	
-	//Test can initialize model from JSON from server
-	
+	//Test can initialize model from JSON from server	
 	@Test
 	public void testCanDiscardCards()
 	{
-		//incorrect turn phase
+		testModelFacade.updateModel(testMoxy.getModel("discard.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		User notCurrentUser = turnManager.getUserFromIndex((currentUser.getTurnIndex() +1)%turnManager.getUsers().size());
+		
+		//not the correct turn phase
+		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, new ArrayList<ResourceCard>()));
+		
 		//not their turn??
+		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), notCurrentUser, new ArrayList<ResourceCard>()));
+		
 		//doesn't have over seven card
+		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, new ArrayList<ResourceCard>()));
 		
 		//true test case
+		testModelFacade.updateModel(testMoxy.getModel("discard2.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		ArrayList<ResourceCard> discard = new ArrayList<ResourceCard>();
+		discard.add(new ResourceCard(ResourceType.BRICK));
+		assertTrue(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, discard));
+		
 		
 	}
 	
