@@ -32,26 +32,28 @@ public class ModelTester
 	@Test
 	public void testCanDiscardCards()
 	{
-		testModelFacade.updateModel(testMoxy.getModel("discard.json"));
+		//not the correct turn phase
+		testModelFacade.updateModel(testMoxy.getModel("discardWrongPhase.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		User currentUser = turnManager.currentUser();
-		User notCurrentUser = turnManager.getUserFromIndex((currentUser.getTurnIndex() +1)%turnManager.getUsers().size());
+		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, new ArrayList<ResourceCard>()));
 		
-		//not the correct turn phase
+		//doesn't have over seven cards
+		testModelFacade.updateModel(testMoxy.getModel("discardTooFewCards.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
 		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, new ArrayList<ResourceCard>()));
 		
 		//not their turn??
-		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), notCurrentUser, new ArrayList<ResourceCard>()));
-		
-		//doesn't have over seven card
-		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, new ArrayList<ResourceCard>()));
-		
-		//true test case
-		testModelFacade.updateModel(testMoxy.getModel("discard2.json"));
+		testModelFacade.updateModel(testMoxy.getModel("discard.json")); //correct JSON
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		User notCurrentUser = turnManager.getUserFromIndex((currentUser.getTurnIndex() +1)%turnManager.getUsers().size());
 		ArrayList<ResourceCard> discard = new ArrayList<ResourceCard>();
 		discard.add(new ResourceCard(ResourceType.BRICK));
+		assertFalse(testModelFacade.canDiscardCards(testModelFacade.turnManager(), notCurrentUser, discard));
+		
+		//true test case
 		assertTrue(testModelFacade.canDiscardCards(testModelFacade.turnManager(), currentUser, discard));
 		
 		
