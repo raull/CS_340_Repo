@@ -104,22 +104,18 @@ public class ModelTester
 		//not user's turn
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, EDGELOCATION, turnManager.getUserFromIndex(1)));
+		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest), turnManager.getUserFromIndex(1)));
 		
 		//location is occupied
-		testModelFacade.updateModel(testMoxy.getModel(""));
+		testModelFacade.updateModel(testMoxy.getModel("cantRoadatX0Y1S.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, EDGELOCATION, turnManager.getCurrentUser()));
+		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.South), turnManager.getCurrentUser()));
 		
 		//not connected to other pieces of the given player
-		testModelFacade.updateModel(testMoxy.getModel(""));
-		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManger, EDGELOCATION, turnManager.getCurrentUser()));
+		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManger, new EdgeDirection(new HexLocation(-1,-1), EdgeDirection.South), turnManager.getCurrentUser()));
 
 		//true test case
-		testModelFacade.updateModel(testMoxy.getModel(""));
-		turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, EDGELOCATION, turnManager.getCurrentUser()));
+		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeDirection(new HexLocation(0,1), EdgeDirection.SouthEast), turnManager.getCurrentUser()));
 	}
 
 	@Test
