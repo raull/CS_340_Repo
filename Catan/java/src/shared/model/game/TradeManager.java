@@ -1,5 +1,7 @@
 package shared.model.game;
 
+import java.util.ArrayList;
+
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.cards.ResourceCard;
@@ -69,7 +71,7 @@ public class TradeManager {
 	 */
 	public static ResourceCardDeck priceForPiece(PieceType type) {
 		
-		ResourceCardDeck priceDeck = new ResourceCardDeck();
+		ResourceCardDeck priceDeck = new ResourceCardDeck(new ArrayList<ResourceCard>());
 		
 		switch (type) {
 		case ROAD:
@@ -98,7 +100,7 @@ public class TradeManager {
 	
 	public static ResourceCardDeck priceForDevCard() {
 		
-		ResourceCardDeck priceDeck = new ResourceCardDeck();
+		ResourceCardDeck priceDeck = new ResourceCardDeck(new ArrayList<ResourceCard>());
 		priceDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
 		priceDeck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
 		priceDeck.addResourceCard(new ResourceCard(ResourceType.SHEEP));

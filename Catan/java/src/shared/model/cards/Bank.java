@@ -1,5 +1,7 @@
 package shared.model.cards;
 
+import java.util.ArrayList;
+
 import shared.definitions.PieceType;
 import shared.model.game.User;
 
@@ -19,9 +21,9 @@ public class Bank {
 	 */
 	private ResourceCardDeck resourceCardDeck;
 	
-	public Bank(){
-		devCardDeck = new DevCardDeck();
-		resourceCardDeck = new ResourceCardDeck();
+	public Bank(ArrayList<DevCard> initDevCards, ArrayList<ResourceCard> initResourceCards){
+		devCardDeck = new DevCardDeck(initDevCards);
+		resourceCardDeck = new ResourceCardDeck(initResourceCards);
 	}
 	
 	/**

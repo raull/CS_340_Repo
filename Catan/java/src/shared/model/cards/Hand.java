@@ -26,9 +26,9 @@ public class Hand {
 	private ResourceCardDeck resourceCardDeck;
 	
 	public Hand (){
-		devCardDeck = new DevCardDeck();
-		newDevCardDeck = new DevCardDeck();
-		resourceCardDeck = new ResourceCardDeck();
+		devCardDeck = new DevCardDeck(new ArrayList<DevCard>());
+		newDevCardDeck = new DevCardDeck(new ArrayList<DevCard>());
+		resourceCardDeck = new ResourceCardDeck(new ArrayList<ResourceCard>());
 	}
 	
 	public ResourceCardDeck getResourceCards(){

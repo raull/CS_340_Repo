@@ -16,8 +16,8 @@ public class ResourceCardDeck {
 	/**
 	 * Constructor for the deck.
 	 */
-	public ResourceCardDeck() {
-		// TODO Auto-generated constructor stub
+	public ResourceCardDeck(ArrayList<ResourceCard> initResourceCards) {
+		cards = initResourceCards;
 	}
 	
 	/**

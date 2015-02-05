@@ -17,8 +17,8 @@ public class DevCardDeck {
 	/**
 	 * Constructor for the deck
 	 */
-	public DevCardDeck(){
-		
+	public DevCardDeck(ArrayList<DevCard> initDevCards){
+		cards = initDevCards;
 	}
 	
 	/**

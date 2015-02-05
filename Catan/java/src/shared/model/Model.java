@@ -1,13 +1,21 @@
 package shared.model;
 
+import java.util.ArrayList;
+
+import shared.definitions.DevCardType;
 import shared.model.board.Map;
+import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.UserManager;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 public class Model {
 	
@@ -119,12 +127,52 @@ public class Model {
 		return null;
 	}
 	
+	
 	/**
 	 * deserialize the model from the JSON response
 	 * @param jsonModel
 	 */
 	
-	public void deserialize(Model jsonModel) {
-		
+	public void deserialize(JsonObject jsonModel) {
+		//would model be better as jsonelement?
+		if(jsonModel.isJsonObject()) {
+			Gson gson = new Gson();
+			
+			JsonObject jsonObject = jsonModel.getAsJsonObject();
+			
+			
+			
+			JsonArray tempArray = jsonObject.get("hexes").getAsJsonArray();
+			
+		}
 	}
+	
+	public ArrayList<DevCard> extractDeck(JsonObject jsonModel) {
+		
+		ArrayList<DevCard> bankDevCards = new ArrayList<DevCard>();
+		
+		JsonObject deckJSON = jsonModel.get("deck").getAsJsonObject();
+		
+		int yopCount = deckJSON.get("yearOfPlenty").getAsInt();
+		int monopolyCount = deckJSON.get("monopoly").getAsInt();
+		int soldierCount = deckJSON.get("soldier").getAsInt();
+		int roadBuildingCount = deckJSON.get("roadBuilding").getAsInt();
+		int monumentCount = deckJSON.get("monument").getAsInt();
+		
+		addDevCardsByNum(bankDevCards, yopCount, DevCardType.YEAR_OF_PLENTY);
+		addDevCardsByNum(bankDevCards, monopolyCount, DevCardType.MONOPOLY);
+		addDevCardsByNum(bankDevCards, soldierCount, DevCardType.SOLDIER);
+		addDevCardsByNum(bankDevCards, roadBuildingCount, DevCardType.ROAD_BUILD);
+		addDevCardsByNum(bankDevCards, monumentCount, DevCardType.MONUMENT);
+		
+		return bankDevCards;
+	}
+	
+	public void addDevCardsByNum(ArrayList<DevCard> deckToAdd, int numTimes, DevCardType cardType) {
+			for(int i = 0; i < numTimes; i++) {
+				deckToAdd.add(new DevCard(cardType));
+			}
+	}
+	
+	
 }

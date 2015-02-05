@@ -3,6 +3,8 @@ package shared.model.facade;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.google.gson.JsonObject;
+
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
 import shared.definitions.DevCardType;
@@ -61,7 +63,7 @@ public class ModelFacade {
 	 * updates the model class with the JSON response
 	 * @param jsonResponse
 	 */
-	public void updateModel(Model jsonResponse) {
+	public void updateModel(JsonObject jsonResponse) {
 		model.deserialize(jsonResponse);
 	}
 	/**

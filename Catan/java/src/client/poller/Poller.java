@@ -35,7 +35,7 @@ public class Poller {
 	 */
 	public void pollServer() {
 		Model currModel = modelFacade.getModel();
-		Model response = null;
+		JsonObject response = null;
 		try {
 			response = proxy.model(currModel.getVersion());
 		} catch (ProxyException e) {
