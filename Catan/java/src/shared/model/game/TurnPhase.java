@@ -1,5 +1,7 @@
 package shared.model.game;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * The phase of the turn represented by the enumeration: 
  * ROLLING, 
@@ -13,6 +15,17 @@ package shared.model.game;
  */
 public enum TurnPhase {
 	
-	ROLLING, ROBBING, PLAYING, DISCARDING, FIRSTROUND, SECONDROUND
+	@SerializedName("Rolling")
+	ROLLING,
+	@SerializedName("Robbing")
+	ROBBING,
+	@SerializedName("Playing")
+	PLAYING,
+	@SerializedName("Discarding")
+	DISCARDING,
+	@SerializedName("FirstRound")
+	FIRSTROUND,
+	@SerializedName("SecondROund")
+	SECONDROUND
 	
 }

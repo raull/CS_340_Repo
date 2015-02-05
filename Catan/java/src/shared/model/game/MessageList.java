@@ -6,18 +6,13 @@ import java.util.List;
 public class MessageList {
 	//list of messages for chat and log
 	
-	List<MessageLine> lines;
+	ArrayList<MessageLine> lines;
 	
 	public MessageList(){
 		lines = new ArrayList<MessageLine>();
 	}
-	public MessageList(List<MessageLine> messages){
+	public MessageList(ArrayList<MessageLine> messages){
 		lines = messages;
 	}
 	
-	
-	class MessageLine {
-		String message;
-		String source;
-	}
 }

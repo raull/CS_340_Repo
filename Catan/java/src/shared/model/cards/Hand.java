@@ -25,10 +25,10 @@ public class Hand {
 	 */
 	private ResourceCardDeck resourceCardDeck;
 	
-	public Hand (){
-		devCardDeck = new DevCardDeck(new ArrayList<DevCard>());
-		newDevCardDeck = new DevCardDeck(new ArrayList<DevCard>());
-		resourceCardDeck = new ResourceCardDeck(new ArrayList<ResourceCard>());
+	public Hand (DevCardDeck oldDevCards, DevCardDeck newDevCards, ResourceCardDeck resourceCards){
+		devCardDeck = oldDevCards; 
+		newDevCardDeck = newDevCards;
+		resourceCardDeck =resourceCards;
 	}
 	
 	public ResourceCardDeck getResourceCards(){
