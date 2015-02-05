@@ -488,7 +488,7 @@ public class ModelFacade {
 			
 		}
 		else if (ratio == 2){ 
-			if(!checkUserHasPort(user, tradeType)) { //may have to convert resource type to port type?
+			if(!user.hasPort(tradeOffer.getPortType())) { 
 				return false;
 			}
 			else {

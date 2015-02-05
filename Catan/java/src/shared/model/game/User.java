@@ -7,6 +7,7 @@ import java.util.Collection;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
+import shared.definitions.PortType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
@@ -60,7 +61,7 @@ public class User {
 	 */
 	private int turnIndex;
 	
-	private Boolean hasPlayedDevCard = false;
+	private boolean hasPlayedDevCard = false;
 	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
@@ -233,5 +234,22 @@ public class User {
 		this.hasPlayedDevCard = hasPlayedDevCard;
 	}
 	
+	
+	/**
+	 * Check if user has a port with the specified port type
+	 * @param portType The port type to check on the user
+	 * @return True if the user contains a port with the same port type. False, otherwise.
+	 */
+	public boolean hasPort(PortType portType) {
+				
+		for (Port port : this.ports()) {
+			if (port.getType() == portType) {
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
 	
 }
