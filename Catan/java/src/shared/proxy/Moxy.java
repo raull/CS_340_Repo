@@ -142,7 +142,7 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public List<Game> list() {
+	public JsonObject list() {
 		/*Player jake = new Player("Jake", "red", 0);
 		Player sara = new Player("Sara", "blue", 1);
 		Player taylor = new Player("Taylor", "green", 2);
@@ -157,7 +157,7 @@ public class Moxy implements Proxy{
 		gamelist.add(game2);*/
 		
 		
-		JsonParser parser = new JsonParser();
+		/*JsonParser parser = new JsonParser();
 		JsonElement jsonElement;
 		List<Game> gamelist = new ArrayList<Game>();
 		try {
@@ -174,7 +174,8 @@ public class Moxy implements Proxy{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return gamelist;
+		return gamelist;*/
+		return getModel("gamelist.json");
 	}
 
 	@Override
@@ -321,11 +322,8 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public List<String> listAI() {
-		String type = "LARGEST_ARMY";
-		List list = new ArrayList<String>();
-		list.add(type);
-		return list;
+	public JsonObject listAI() {
+		return getModel("ailist.json");
 	}
 
 }

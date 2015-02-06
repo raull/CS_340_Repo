@@ -147,9 +147,12 @@ public class PollerTester
 		assertEquals(tile.getNumber(), 11);
 		
 		//verify no roads, settlements, or cities on map
-		
+		assertEquals(map.getCitiesOnMap().size(), 0);
+		assertEquals(map.getRoadsOnMap().size(), 0);
+		assertEquals(map.getSettlementsOnMap().size(), 0);
 		
 		//verify port locations, types, and ratios
+		
 		
 		//verify robber on 0,1
 		HexTile shouldHaveRobber = map.getHexTileByLocation(new HexLocation(0,1));
