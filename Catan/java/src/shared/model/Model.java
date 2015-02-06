@@ -152,10 +152,7 @@ public class Model {
 			//update map/hexes
 			ArrayList<HexTile> mapHexTiles = extractHexes(jsonMap);
 			map.setHexTiles(mapHexTiles);
-			
-			//extract and update users
-			extractUsers(jsonObject);
-			
+		
 			//get roads and update users
 			map.setRoadsOnMap(extractRoads(jsonMap));
 				
@@ -167,6 +164,9 @@ public class Model {
 				
 			//get ports
 			map.setPortsOnMap(extractPorts(jsonMap));
+			
+			//extract and update users
+			extractUsers(jsonObject);
 			
 			//place robber
 			extractRobber(jsonMap);
@@ -316,9 +316,14 @@ public class Model {
 		
 		VertexDirection portDirection = gson.fromJson(jsonPort.get("direction"), VertexDirection.class);
 		
+		VertexLocation location = new VertexLocation(portLocation, portDirection);
+		
+		Vertex vertex = new Vertex(location);
+		
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
+		port.setLocation(vertex);
 		
 		return port;
 	}
@@ -421,9 +426,6 @@ public class Model {
 //		return currentPlayers;
 	}
 	
-	public void addPieceToList(ArrayList<Piece> userPieces, PieceType pieceType) {
-		
-	}
 	
 	public void updateUser(JsonObject jsonUser) {
 		Gson gson = new Gson();
@@ -478,8 +480,8 @@ public class Model {
 		
 		currUser.setUnusedCities(numCities);
 		currUser.setHasPlayedDevCard(playedDevCard);
-//		currUser.setDiscarded(discarded); 
-//		currUser.setMonuments(monumentsPlayed);
+//		currUser.setDiscarded(discarded); -- does it matter whether user has already discarded cards?
+//		currUser.setMonuments(monumentsPlayed); -- does user need to keep track of how many monuments are played? maybe in scorekeeper?
 		currUser.getHand().setNewDevCardDeck(newDevCardDeck);
 		currUser.getHand().setDevCardDeck(oldDevCardDeck);
 		currUser.getHand().setResourceCardDeck(resourceDeck);
@@ -490,6 +492,43 @@ public class Model {
 		//soldier
 		//victory points
 		
+	}
+	
+	public void updateUserPieces(User user) {
+		ArrayList<Road> roads = map.getRoadsOnMap();
+		
+		for(Road road : roads) {
+			//user owns the road
+			if(road.getOwner() == user.getTurnIndex()) {
+				user.addOccupiedEdge(road.getEdge());
+			}
+		}
+		
+		ArrayList<Building> settlements = map.getSettlementsOnMap();
+		
+		for(Building settlement : settlements) {
+			if(settlement.getOwner() == user.getTurnIndex()) {
+				user.addOccupiedVertex(settlement.getVertex());
+			}
+		}
+		
+		ArrayList<Building> cities = map.getCitiesOnMap();
+		
+		for(Building city: cities) {
+			if(city.getOwner() == user.getTurnIndex()) {
+				user.addOccupiedVertex(city.getVertex());
+			}
+		}
+		
+		//user owns port if they have settlement or city on that location
+		
+		ArrayList<Port> ports = map.getPortsOnMap();
+		
+		for(Port port: ports) {
+			if(user.occupiesVertex(port.getLocation().getLocation())) {
+				user.ports().add(port);
+			}
+		}
 	}
 	
 	//2nd array for when populating tradeOffer
