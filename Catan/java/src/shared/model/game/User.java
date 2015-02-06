@@ -45,7 +45,7 @@ public class User {
 	/**
 	 * An ArrayList of {@link Edge}s representing the edges that the <code>User</code> occupies
 	 */
-	private ArrayList<Edge> occupiedEdges;
+	private ArrayList<Edge> occupiedEdges = new ArrayList<Edge>();
 	
 	/**
 	 * An ArrayList of {@link Vertex}es representing the edges that the <code>User</code> occupies

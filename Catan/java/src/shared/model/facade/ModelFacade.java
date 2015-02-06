@@ -93,7 +93,7 @@ public class ModelFacade {
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
 			return false;
 		}
-		ArrayList<ResourceCard> userCards = user.getHand().getResourceCards().getAllResourceCards();
+		ArrayList<ResourceCard> userCards = new ArrayList<ResourceCard>(user.getHand().getResourceCards().getAllResourceCards()) ;
 		
 		//if user doesn't have over 7 cards
 		if(!(userCards.size() > 7)) {
@@ -158,7 +158,7 @@ public class ModelFacade {
 		//if trying to build road on water, return false
 		
 		//if edge is occupied, return false;
-		ArrayList<User> users = turnManager.getUsers();
+		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
 		for (User u : users){
 			if(u.occupiesEdge(location)){
 				return false;

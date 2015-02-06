@@ -2,6 +2,7 @@ package shared.model.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import shared.model.exception.ModelException;
 
@@ -117,8 +118,8 @@ public class TurnManager {
 	 * Get a read-only list of users
 	 * @return The list of users
 	 */
-	public ArrayList<User> getUsers() {
-		return (ArrayList<User>) Collections.unmodifiableCollection(this.users);
+	public List<User> getUsers() {
+		return Collections.unmodifiableList(this.users);
 	}
 	
 

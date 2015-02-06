@@ -1,7 +1,9 @@
 package shared.model.cards;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import shared.definitions.ResourceType;
 
@@ -53,8 +55,8 @@ public class ResourceCardDeck {
 	 * Gets a read-only list of the ResourceCards
 	 * @return an unmodifiable ArrayList with all ResourceCards in the deck
 	 */
-	public ArrayList<ResourceCard> getAllResourceCards(){
-		return (ArrayList<ResourceCard>) Collections.unmodifiableCollection(cards);
+	public List<ResourceCard> getAllResourceCards(){
+		return Collections.unmodifiableList(cards);
 	}
 	
 	/**
