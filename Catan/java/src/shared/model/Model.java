@@ -264,10 +264,16 @@ public class Model {
 	
 	public HexTile extractHexTile(JsonObject jsonHexTile) {
 		Gson gson = new Gson();
-	
+		
+		int number;
 		HexType hexType = gson.fromJson(jsonHexTile.get("resource"), HexType.class);
+		if (hexType == null) {
+			hexType = HexType.DESERT;
+			number = -1;
+		} else {
+			number = jsonHexTile.get("number").getAsInt();
+		}
 		HexLocation hexLocation = gson.fromJson(jsonHexTile.get("location"), HexLocation.class);
-		int number = jsonHexTile.get("number").getAsInt();
 		
 		HexTile hexTile = new HexTile(hexType, hexLocation, number); //hex type, hex location, hex number
 		
