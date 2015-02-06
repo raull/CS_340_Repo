@@ -12,7 +12,7 @@ import shared.proxy.Proxy;
 
 public class PollerTester
 {
-	Poller testPoller;
+	private Poller testPoller;
 	
 	public PollerTester()
 	{
@@ -39,6 +39,7 @@ public class PollerTester
 		testPoller.pollServer();
 		
 		//test that the model has indeed been initialized with the information from model.json
+		
 
 	}
 
