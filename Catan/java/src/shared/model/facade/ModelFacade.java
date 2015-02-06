@@ -369,7 +369,7 @@ public class ModelFacade {
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
 		ResourceCardDeck neededCards = tradeOffer.getReceivingDeck();
 		//if user doesn't have all the required resources to accept offered trade
-		if(TradeManager.hasEnoughResources(userCards, neededCards)) {
+		if(!TradeManager.hasEnoughResources(userCards, neededCards)) {
 			return false;
 		}
 		
