@@ -198,9 +198,9 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 
 		//true test case
-		testModelFacade.updateModel(testMoxy.getModel("canBldcty.json"));
+		testModelFacade.updateModel(testMoxy.getModel("buyCityValidBuy.json"));
 		turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
+		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 	}
 
 	@Test
