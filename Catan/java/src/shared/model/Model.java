@@ -426,12 +426,14 @@ public class Model {
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
 		System.out.println(jsonUserArray);
 		
-		for(JsonElement jsonEleUser : jsonUserArray) {
-			if(jsonEleUser == null) {
+//		for(JsonElement jsonEleUser : jsonUserArray) {
+		for(int i = 0; i < jsonUserArray.size(); i++) {
+			if(jsonUserArray.get(i) == null) {
 				continue;
 			}
+			JsonObject jsonUser = jsonUserArray.get(i).getAsJsonObject();
 
-			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
+//			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
 //			User user = extractUser(jsonUser);
 			updateUser(jsonUser);
 		}
