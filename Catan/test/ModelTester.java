@@ -29,7 +29,8 @@ public class ModelTester
 	private ModelFacade testModelFacade = new ModelFacade();
 	private Moxy testMoxy = new Moxy();
 
-	//Test can initialize model from JSON from server	
+	//Test can initialize model from JSON from server
+	
 	@Test
 	public void testCanDiscardCards()
 	{
@@ -277,16 +278,21 @@ public class ModelTester
 		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));		
 		
 		//victim has no resource cards
-		testModelFacade.updateModel(testMoxy.getModel("user3NoResources.json"));
+		testModelFacade.updateModel(testMoxy.getModel("user2NoResources.json"));
 		turnManager = testModelFacade.turnManager();
+		location = new HexLocation(-2,0);
 		tile =testModelFacade.map().getHexTileByLocation(location);
-		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(3)));
+		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(2)));
 		
-//		//victim must have city or settlement connected to tile robber is on
-//		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
-//
-//		//true test case		
-//		assertTrue(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
+		//victim must have city or settlement connected to tile robber is on
+		location = new HexLocation(0,2);
+		tile = testModelFacade.map().getHexTileByLocation(location);
+		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));
+
+		//true test case		
+		location = new HexLocation(1,1);
+		tile = testModelFacade.map().getHexTileByLocation(location);
+		assertTrue(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));
 	}
 //
 //	//	@Test

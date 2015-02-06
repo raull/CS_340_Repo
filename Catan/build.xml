@@ -167,7 +167,7 @@
 		<java classname="test.Tester" fork="yes">
 			
 			<classpath>
-				<path refid="all-classpath"/> <!-- still need to figure out what the path is here -->
+				<path refid="all-classpath"/> 
 			</classpath>
 			<assertions>
 				<enable/>
