@@ -238,7 +238,6 @@ public class ModelTester
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
 		assertTrue(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-
 	}
 
 	@Test
@@ -346,38 +345,38 @@ public class ModelTester
 	//		//true test case
 	//	}
 	//
-	//	@Test
-	//	public void testCanMaritimeTrade() 
-	//	{
-	//		//not user's turn
-	//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-	//		TurnManager turnManager = testModelFacade.turnManager();
-	//		Bank bank = testModelFacade.bank();
-	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getUserFromIndex(1), TRADEOFFER));
-	//
-	//		//wrong turn phase
-	//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-	//		turnManager = testModelFacade.turnManager();
-	//		bank = testModelFacade.bank();
-	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
-	//		
-	//		//user doesn't have necessary resources
-	//		testModelFacade.updateModel(testMoxy.getModel(""));
-	//		turnManager = testModelFacade.turnManager();
-	//		bank = testModelFacade.bank();
-	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
-	//
-	//		//bank doesn't have necessary resources
-	//		testModelFacade.updateModel(testMoxy.getModel(""));
-	//		turnManager = testModelFacade.turnManager();
-	//		bank = testModelFacade.bank();
-	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
-	//
-	//		//tests with different ratios
-	//
-	//
-	//	}
-	//
+//		@Test
+//		public void testCanMaritimeTrade() 
+//		{
+//			//not user's turn
+//			testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+//			TurnManager turnManager = testModelFacade.turnManager();
+//			Bank bank = testModelFacade.bank();
+//			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getUserFromIndex(1), TRADEOFFER));
+//	
+//			//wrong turn phase
+//			testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+//			turnManager = testModelFacade.turnManager();
+//			bank = testModelFacade.bank();
+//			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
+//			
+//			//user doesn't have necessary resources
+//			testModelFacade.updateModel(testMoxy.getModel(""));
+//			turnManager = testModelFacade.turnManager();
+//			bank = testModelFacade.bank();
+//			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
+//	
+//			//bank doesn't have necessary resources
+//			testModelFacade.updateModel(testMoxy.getModel(""));
+//			turnManager = testModelFacade.turnManager();
+//			bank = testModelFacade.bank();
+//			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
+//	
+//			//tests with different ratios
+//	
+//	
+//		}
+	
 	@Test
 	public void testCanFinishTurn() 
 	{

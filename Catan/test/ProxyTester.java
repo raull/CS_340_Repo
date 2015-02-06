@@ -3,6 +3,12 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import shared.definitions.ResourceType;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
+import shared.locations.VertexLocation;
 import shared.proxy.*;
 import shared.proxy.moves.*;
 import shared.proxy.game.*;
@@ -185,226 +191,235 @@ public class ProxyTester
 		}
 	}
 
-//	@Test
-//	public void testRobPlayer()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.robPlayer(new RobPlayer()));
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testFinishTurn()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.finishTurn(new FinishMove()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testBuyDevCard()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.buyDevCard(new BuyDevCard()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testYearOfPlenty()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.Year_of_Plenty(new Year_of_Plenty_()));
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testRoadBuilding()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.Road_Building(new Road_Building_()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testSoldier()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.Soldier(new Soldier_()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
+	@Test
+	public void testRobPlayer()
+	{
+		try
+		{
+			assertNotNull(testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0))));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
 
-//	@Test
-//	public void testMonopoly()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.Monopoly(new Monopoly_()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
+	@Test
+	public void testFinishTurn()
+	{
+		try
+		{
+			assertNotNull(testProxy.finishTurn(new FinishMove(0)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
 
-//	@Test
-//	public void testMonument()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.Monument(new Monument_()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testBuildRoad()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.buildRoad(new BuildRoad()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testBuildSettlement()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.buildSettlement(new BuildSettlement()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testBuildCity()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.buildCity(new BuildCity()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testOfferTrade()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.offerTrade(new OfferTrade()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testAcceptTrade()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.acceptTrade(new AcceptTrade()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testMaritimeTrade()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.maritimeTrade(new MaritimeTrade()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testDiscardCards()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.discardCards(new DiscardCards()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testChangeLogLevel()
-//	{
-//		try
-//		{
-//			testProxy.changeLogLevel(new ChangeLogLevelRequest());
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testAddAI()
-//	{
-//		try
-//		{
-//			testProxy.addAI(new AddAIRequest());
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
+	@Test
+	public void testBuyDevCard()
+	{
+		try
+		{
+			assertNotNull(testProxy.buyDevCard(new BuyDevCard(0)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testYearOfPlenty()
+	{
+		try
+		{
+			assertNotNull(testProxy.Year_of_Plenty(new Year_of_Plenty_(0, ResourceType.BRICK, ResourceType.WHEAT)));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testRoadBuilding()
+	{
+		try
+		{
+			HexLocation hex = new HexLocation(0,0);
+			EdgeLocation edge1 = new EdgeLocation(hex, EdgeDirection.North);
+			EdgeLocation edge2 = new EdgeLocation(hex, EdgeDirection.NorthEast);
+			assertNotNull(testProxy.Road_Building(new Road_Building_(0, edge1, edge2)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testSoldier()
+	{
+		try
+		{
+			assertNotNull(testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0))));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testMonopoly()
+	{
+		try
+		{
+			assertNotNull(testProxy.Monopoly(new Monopoly_(ResourceType.BRICK, 0)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testMonument()
+	{
+		try
+		{
+			assertNotNull(testProxy.Monument(new Monument_(0)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testBuildRoad()
+	{
+		try
+		{
+			HexLocation hex = new HexLocation(0,0);
+			EdgeLocation edge = new EdgeLocation(hex, EdgeDirection.North);
+			assertNotNull(testProxy.buildRoad(new BuildRoad(0, edge, false)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testBuildSettlement()
+	{
+		try
+		{
+			HexLocation hex = new HexLocation(0,0);
+			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
+			assertNotNull(testProxy.buildSettlement(new BuildSettlement(0, vertex, false)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testBuildCity()
+	{
+		try
+		{
+			HexLocation hex = new HexLocation(0,0);
+			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
+			assertNotNull(testProxy.buildCity(new BuildCity(0, vertex)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testOfferTrade()
+	{
+		try
+		{
+			assertNotNull(testProxy.offerTrade(new OfferTrade(0, new ResourceList(1,0,0,0,0),1)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testAcceptTrade()
+	{
+		try
+		{
+			assertNotNull(testProxy.acceptTrade(new AcceptTrade(1, false)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testMaritimeTrade()
+	{
+		try
+		{
+			assertNotNull(testProxy.maritimeTrade(new MaritimeTrade(0,0,0,0)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testDiscardCards()
+	{
+		try
+		{
+			assertNotNull(testProxy.discardCards(new DiscardCards(0, new ResourceList(1,0,0,0,0))));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testChangeLogLevel()
+	{
+		try
+		{
+			testProxy.changeLogLevel(new ChangeLogLevelRequest(LogLevel.ALL));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testAddAI()
+	{
+		try
+		{
+			testProxy.addAI(new AddAIRequest("good"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
 
 	@Test
 	public void testListAI()
