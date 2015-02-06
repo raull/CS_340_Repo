@@ -313,13 +313,6 @@ public class Model {
 		HexLocation portLocation = gson.fromJson(jsonPort.get("location"), HexLocation.class);
 		
 		VertexDirection portDirection = gson.fromJson(jsonPort.get("direction"), VertexDirection.class);
-		if(portDirection==null){
-			System.out.println("FALSE");
-			System.out.println(jsonPort.toString());
-		}
-		else{
-			System.out.println("portDirection: " + portDirection.toString());
-		}
 		
 		VertexLocation location = new VertexLocation(portLocation, portDirection);
 		
