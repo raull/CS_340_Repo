@@ -8,6 +8,7 @@ import org.junit.Test;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;
+import shared.model.cards.Bank;
 import shared.model.cards.ResourceCard;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
@@ -113,10 +114,10 @@ public class ModelTester
 		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.South), turnManager.currentUser()));
 		
 		//not connected to other pieces of the given player
-		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManger, new EdgeDirection(new HexLocation(-1,-1), EdgeDirection.South), turnManager.currentUser()));
+		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.South), turnManager.currentUser()));
 
 		//true test case
-		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeDirection(new HexLocation(0,1), EdgeDirection.SouthEast), turnManager.currentUser()));
+		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.SouthEast), turnManager.currentUser()));
 	}
 
 	@Test
@@ -130,23 +131,23 @@ public class ModelTester
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.getCurrentUser(), false));
+		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), false));
 		
 		//TODO THIS TEST I HAVE QUESTIONS ABOUT. TURN PHASE
 		//set up round
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canBuyRoad(turnManager, turnManager.getCurrentUser(), true));
+		assertTrue(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), true));
 		
 		//insufficient funds
 		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.getCurrentUser(), false));
+		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), false));
 
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("canBuyRoad.json"));
 		turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canBuyRoad(turnManager, turnManager.getCurrentUser(), false));
+		assertTrue(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), false));
 	}
 
 	@Test
@@ -160,21 +161,21 @@ public class ModelTester
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.getCurrentUser(), PieceType.SETTLEMENT));
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.SETTLEMENT));
 		
 		//set up round
 		
 		//invalid location (occupied, one away occupied)
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.getCurrentUser(), PieceType.SETTLEMENT));		
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.SETTLEMENT));		
 		
 		//test for city (must have settlement already)
-		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.getCurrentUser(), PieceType.CITY));
-		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.getCurrentUser(), PieceType.CITY));
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.CITY));
+		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.CITY));
 
 		//true test case
-		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.getCurrentUser(), PieceType.SETTLEMENT));
+		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.SETTLEMENT));
 	}
 
 	@Test
@@ -188,15 +189,15 @@ public class ModelTester
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.getCurrentUser(), PieceType.CITY, false));
+		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.currentUser(), PieceType.CITY, false));
 		
 		//insufficient funds
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.getCurrentUser(), PieceType.SETTLEMENT, false));
+		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT, false));
 
 		//true test case
-		assertTrue(testModelFacade.canBuyBuilding(turnManager, turnManager.getCurrentUser(), PieceType.CITY));
+		assertTrue(testModelFacade.canBuyBuilding(turnManager, turnManager.currentUser(), PieceType.CITY));
 	}
 
 	@Test
@@ -214,28 +215,28 @@ public class ModelTester
 		TurnManager turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
-		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.getCurrentUser(), devDeck));
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
 		
 		//dev card deck empty
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		TurnManager turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
-		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.getCurrentUser(), devDeck));
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
 
 		//insufficient funds
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		TurnManager turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
-		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.getCurrentUser(), devDeck));
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
 		
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		TurnManager turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
-		assertTrue(testModelFacade.canBuyDevCard(turnManager, turnManager.getCurrentUser(), devDeck));
+		assertTrue(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
 
 	}
 
@@ -261,23 +262,23 @@ public class ModelTester
 		//not user's turn
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.getUserFromIndex(1), turnManager.getCurrentUser()));
+		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.getUserFromIndex(1), turnManager.currentUser()));
 
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.getCurrentUser(), VICTIM));		
+		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));		
 		
 		//victim has no resource cards
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.getCurrentUser(), VICTIM));
+		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
 		
 		//victim must have city or settlement connected to tile robber is on
-		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.getCurrentUser(), VICTIM));
+		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
 
 		//true test case		
-		assertTrue(testModelFacade.canRobPlayer(HEXTILE, turnManager.getCurrentUser(), VICTIM));
+		assertTrue(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
 	}
 
 	//	@Test
@@ -295,12 +296,12 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.getUserFromIndex(1),
-				turnManager.getCurrentUser(), TRADEOFFER));
+				turnManager.currentUser(), TRADEOFFER));
 
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.getCurrentUser(),
+		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
 				OTHERUSER, TRADEOFFER));
 
 		//I don't quite understand the other test cases here
@@ -308,7 +309,7 @@ public class ModelTester
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.getCurrentUser(),
+		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
 				OTHERUSER, TRADEOFFER));
 	}
 
@@ -332,21 +333,21 @@ public class ModelTester
 
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-		TurnManager turnManager = testModelFacade.turnManager();
+		turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
-		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getCurrentUser(), TRADEOFFER));
+		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
 		
 		//user doesn't have necessary resources
 		testModelFacade.updateModel(testMoxy.getModel(""));
-		TurnManager turnManager = testModelFacade.turnManager();
+		turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
-		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getCurrentUser(), TRADEOFFER));
+		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
 
 		//bank doesn't have necessary resources
 		testModelFacade.updateModel(testMoxy.getModel(""));
-		TurnManager turnManager = testModelFacade.turnManager();
+		turnManager = testModelFacade.turnManager();
 		bank = testModelFacade.bank();
-		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getCurrentUser(), TRADEOFFER));
+		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
 
 		//tests with different ratios
 
@@ -364,12 +365,12 @@ public class ModelTester
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canFinishTurn(turnManager, turnManager.getCurrentUser()));
+		assertFalse(testModelFacade.canFinishTurn(turnManager, turnManager.currentUser()));
 		
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel(""));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canFinishTurn(turnManager, turnManager.getCurrentUser()));
+		assertTrue(testModelFacade.canFinishTurn(turnManager, turnManager.currentUser()));
 
 	}
 
