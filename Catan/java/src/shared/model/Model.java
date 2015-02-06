@@ -447,6 +447,15 @@ public class Model {
 		int victoryPoints = jsonUser.get("victoryPoints").getAsInt();
 		
 		User currUser = turnManager.getUser(playerID);
+		if (currUser == null) {
+			currUser = new User();
+			currUser.setPlayerID(playerID);
+			try {
+				turnManager.addUser(currUser);
+			} catch (Exception e) {
+				System.out.println("Too many players, cannot add a new one");
+			}
+		}
 		
 		currUser.setPlayerTurnIndex(playerIndex);
 		
