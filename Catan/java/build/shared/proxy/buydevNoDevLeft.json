@@ -1,10 +1,10 @@
 {
   "deck": {
-    "yearOfPlenty": 2,
-    "monopoly": 2,
-    "soldier": 14,
-    "roadBuilding": 2,
-    "monument": 5
+    "yearOfPlenty": 0,
+    "monopoly": 0,
+    "soldier": 0,
+    "roadBuilding": 0,
+    "monument": 0
   },
   "map": {
     "hexes": [
@@ -159,7 +159,16 @@
         "number": 11
       }
     ],
-    "roads": [],
+    "roads": [
+      {
+        "owner": 0,
+        "location": {
+          "direction": "SW",
+          "x": 0,
+          "y": 0
+        }
+      }
+    ],
     "cities": [
       {
         "owner": 0,
@@ -261,29 +270,29 @@
       "resources": {
         "brick": 0,
         "wood": 0,
-        "sheep": 0,
-        "wheat": 2,
-        "ore": 3
+        "sheep": -1,
+        "wheat": -3,
+        "ore": -4
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
         "monopoly": 0,
         "soldier": 0,
         "roadBuilding": 0,
-        "monument": 0
+        "monument": -1
       },
       "newDevCards": {
         "yearOfPlenty": 0,
-        "monopoly": 0,
+        "monopoly": 1,
         "soldier": 0,
         "roadBuilding": 0,
         "monument": 0
       },
-      "roads": 15,
+      "roads": 14,
       "cities": 3,
       "settlements": 5,
       "soldiers": 0,
-      "victoryPoints": 2,
+      "victoryPoints": 3,
       "monuments": 0,
       "playedDevCard": false,
       "discarded": false,
@@ -339,6 +348,18 @@
       {
         "source": "tiger",
         "message": "tiger upgraded to a city"
+      },
+      {
+        "source": "tiger",
+        "message": "tiger built a road"
+      },
+      {
+        "source": "tiger",
+        "message": "tiger built a monument and gained a victory point"
+      },
+      {
+        "source": "tiger",
+        "message": "tiger bought a Development Card."
       }
     ]
   },
@@ -353,9 +374,9 @@
   "bank": {
     "brick": 24,
     "wood": 24,
-    "sheep": 24,
-    "wheat": 26,
-    "ore": 27
+    "sheep": 25,
+    "wheat": 27,
+    "ore": 28
   },
   "turnTracker": {
     "status": "FirstRound",
@@ -364,5 +385,5 @@
     "largestArmy": -1
   },
   "winner": -1,
-  "version": 3
+  "version": 6
 }

@@ -1,6 +1,6 @@
 import org.junit.Before;
 import org.junit.Test;
-
+import static org.junit.Assert.*;
 import client.poller.Poller;
 import shared.model.facade.ModelFacade;
 import shared.proxy.Moxy;
@@ -38,6 +38,7 @@ public class PollerTester
 	{
 		testPoller.pollServer();
 		
+		assertFalse(true);
 		//test that the model has indeed been initialized with the information from model.json
 
 	}

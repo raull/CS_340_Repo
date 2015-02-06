@@ -1,4 +1,14 @@
-import shared.proxy.ServerProxy;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import shared.proxy.*;
+import shared.proxy.moves.*;
+import shared.proxy.game.*;
+import shared.proxy.util.*;
+import shared.proxy.games.*;
+import shared.proxy.user.*;
 
 //Need to add all the necessary imports
 
@@ -25,158 +35,159 @@ public class ProxyTester
 
 	private ServerProxy testProxy;
 
-//	@Before
-//	public void setUp()
-//	{
-//		String host;
-//		String port;
-//
-//		testProxy = new ServerProxy(host, port);
-//	}
-//
-//	@Test
-//	public void testLogin()
-//	{
-//		try
-//		{
-//			testProxy.login(new Credentials());
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testRegister()
-//	{
-//		try
-//		{
-//			testProxy.register(new Credentials());
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testList()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.list());
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testCreate()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.create(new CreateGameRequest()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testJoin()
-//	{
-//		try
-//		{
-//			testProxy.join(new JoinGameRequest());
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testSave()
-//	{
-//		try
-//		{
-//			testProxy.save(new SaveGameRequest());
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testLoad()
-//	{
-//		try
-//		{
-//			testProxy.load(new LoadGameRequest());
-//		}
-//		catch (ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testModel()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.model(1));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testReset()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.reset());
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testSendChat()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.sendChat(new SendChat()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
-//	@Test
-//	public void testRollNumber()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.rollNumber(new RollNumber()));
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
-//
+	@Before
+	public void setUp()
+	{
+		//TODO this needs to be set to the host and port where the server is running
+		String host = null;
+		String port = null;
+
+		testProxy = new ServerProxy(host, port);
+	}
+
+	@Test
+	public void testLogin()
+	{
+		try
+		{
+			testProxy.login(new Credentials("Sam", "sam"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testRegister()
+	{
+		try
+		{
+			testProxy.register(new Credentials("Jacob", "jacob"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testList()
+	{
+		try
+		{
+			assertNotNull(testProxy.list());
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testCreate()
+	{
+		try
+		{
+			assertNotNull(testProxy.create(new CreateGameRequest(true, true, true, "Game 7")));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testJoin()
+	{
+		try
+		{
+			testProxy.join(new JoinGameRequest(1, "red"));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testSave()
+	{
+		try
+		{
+			testProxy.save(new SaveGameRequest(1, "save1.txt"));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testLoad()
+	{
+		try
+		{
+			testProxy.load(new LoadGameRequest("save1.txt"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testModel()
+	{
+		try
+		{
+			assertNotNull(testProxy.model(1));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testReset()
+	{
+		try
+		{
+			assertNotNull(testProxy.reset());
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testSendChat()
+	{
+		try
+		{
+			assertNotNull(testProxy.sendChat(new SendChat(0, "Hello world!")));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
+	@Test
+	public void testRollNumber()
+	{
+		try
+		{
+			assertNotNull(testProxy.rollNumber(new RollNumber(0, 7)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
+
 //	@Test
 //	public void testRobPlayer()
 //	{
@@ -254,7 +265,7 @@ public class ProxyTester
 //			fail();
 //		}
 //	}
-//
+
 //	@Test
 //	public void testMonopoly()
 //	{
@@ -267,7 +278,7 @@ public class ProxyTester
 //			fail();
 //		}
 //	}
-//
+
 //	@Test
 //	public void testMonument()
 //	{
@@ -397,17 +408,17 @@ public class ProxyTester
 //			fail();
 //		}
 //	}
-//
-//	@Test
-//	public void testListAI()
-//	{
-//		try
-//		{
-//			assertNotNull(testProxy.listAI());
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
-//	}
+
+	@Test
+	public void testListAI()
+	{
+		try
+		{
+			assertNotNull(testProxy.listAI());
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+	}
 }
