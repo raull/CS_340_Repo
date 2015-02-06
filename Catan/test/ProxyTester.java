@@ -10,9 +10,6 @@ import shared.proxy.util.*;
 import shared.proxy.games.*;
 import shared.proxy.user.*;
 
-//Need to add all the necessary imports
-
-
 
 /**
 	This class tests specifically the ServerProxy class.

@@ -30,7 +30,7 @@ public class ModelTester
 	private Moxy testMoxy = new Moxy();
 
 	//Test can initialize model from JSON from server
-	
+
 	@Test
 	public void testCanDiscardCards()
 	{
@@ -90,7 +90,7 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
-		
+
 		//wrong turn phase?
 
 		//true test case
@@ -106,12 +106,12 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest), turnManager.getUserFromIndex(1)));
-		
+
 		//location is occupied
 		testModelFacade.updateModel(testMoxy.getModel("cantRoadatX0Y1S.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.South), turnManager.currentUser()));
-		
+
 		//not connected to other pieces of the given player
 		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.South), turnManager.currentUser()));
 
@@ -131,9 +131,9 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
-		
+
 		//unnecessary to test setup phase
-		
+
 		//insufficient funds
 		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
@@ -148,31 +148,31 @@ public class ModelTester
 	@Test
 	public void testCanPlaceBuildingAtLoc()
 	{
-		
+
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("finishTurn.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		VertexLocation validLocation = new VertexLocation(new HexLocation(2,2),VertexDirection.SouthWest);
 		VertexLocation invalidLocation = new VertexLocation(new HexLocation(-1,-1), VertexDirection.West);
 		VertexLocation validCityLocationForUser0 = new VertexLocation(new HexLocation(1,-1), VertexDirection.SouthEast);
-		
+
 		User currentUser = turnManager.currentUser();
 		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.SETTLEMENT));
-		
+
 		//set up round
 		testModelFacade.updateModel(testMoxy.getModel("model.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, currentUser, PieceType.SETTLEMENT));
-		
+
 		//not user's turn
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.getUserFromIndex(1), PieceType.SETTLEMENT));
-		
+
 		//invalid location (occupied, one away occupied)
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, invalidLocation, turnManager.currentUser(), PieceType.SETTLEMENT));		
-		
+
 		//test for city (must have settlement already)
 		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.CITY));
 		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, validCityLocationForUser0, turnManager.currentUser(), PieceType.CITY));
@@ -193,7 +193,7 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
-		
+
 		//insufficient funds
 		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
@@ -221,7 +221,7 @@ public class ModelTester
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
 		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-		
+
 		//dev card deck empty
 		testModelFacade.updateModel(testMoxy.getModel("buydevNoDevLeft.json"));
 		turnManager = testModelFacade.turnManager();
@@ -235,7 +235,7 @@ public class ModelTester
 		bank = testModelFacade.bank();
 		devDeck = bank.getDevCardDeck();
 		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-		
+
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("buydevValidBuy.json"));
 		turnManager = testModelFacade.turnManager();
@@ -249,9 +249,9 @@ public class ModelTester
 	public void testCanPlayDevCard()
 	{
 		//not user's turn
-		
+
 		//user doesn't have a dev card
-		
+
 		//bought it this turn
 		//already played dev card this turn
 		//special case for monument
@@ -276,14 +276,14 @@ public class ModelTester
 		turnManager = testModelFacade.turnManager();
 		tile = testModelFacade.map().getHexTileByLocation(location);
 		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));		
-		
+
 		//victim has no resource cards
 		testModelFacade.updateModel(testMoxy.getModel("user2NoResources.json"));
 		turnManager = testModelFacade.turnManager();
 		location = new HexLocation(-2,0);
 		tile =testModelFacade.map().getHexTileByLocation(location);
 		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(2)));
-		
+
 		//victim must have city or settlement connected to tile robber is on
 		location = new HexLocation(0,2);
 		tile = testModelFacade.map().getHexTileByLocation(location);
@@ -294,98 +294,96 @@ public class ModelTester
 		tile = testModelFacade.map().getHexTileByLocation(location);
 		assertTrue(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));
 	}
-//
-//	//	@Test
-//	//	public void testCanPlaceRobber()
-//	//	{
-//	//		//robber already there
-//	//		
-//	//		//true test case
-//	//	}
-//
-//	@Test
-//	public void testCanOfferTrade() 
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.getUserFromIndex(1),
-//				turnManager.currentUser(), TRADEOFFER));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
-//				OTHERUSER, TRADEOFFER));
-//
-//		//I don't quite understand the other test cases here
-//
-//		//true test case
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
-//				OTHERUSER, TRADEOFFER));
-//	}
-//
-//	@Test
-//	public void testCanAcceptTrade() 
-//	{
-//		//hasn't been offered a trade
-//		//doesn't have the cards required for trade
-//
-//		//true test case
-//	}
-//
-//	@Test
-//	public void testCanMaritimeTrade() 
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		Bank bank = testModelFacade.bank();
-//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getUserFromIndex(1), TRADEOFFER));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
-//		
-//		//user doesn't have necessary resources
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
-//
-//		//bank doesn't have necessary resources
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
-//
-//		//tests with different ratios
-//
-//
-//	}
-//
-//	@Test
-//	public void testCanFinishTurn() 
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canFinishTurn(turnManager, turnManager.getUserFromIndex(1)));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canFinishTurn(turnManager, turnManager.currentUser()));
-//		
-//		//true test case
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertTrue(testModelFacade.canFinishTurn(turnManager, turnManager.currentUser()));
-//
-//	}
+	//
+	//	//	@Test
+	//	//	public void testCanPlaceRobber()
+	//	//	{
+	//	//		//robber already there
+	//	//		
+	//	//		//true test case
+	//	//	}
+	//
+	//	@Test
+	//	public void testCanOfferTrade() 
+	//	{
+	//		//not user's turn
+	//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+	//		TurnManager turnManager = testModelFacade.turnManager();
+	//		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.getUserFromIndex(1),
+	//				turnManager.currentUser(), TRADEOFFER));
+	//
+	//		//wrong turn phase
+	//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+	//		TurnManager turnManager = testModelFacade.turnManager();
+	//		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
+	//				OTHERUSER, TRADEOFFER));
+	//
+	//		//I don't quite understand the other test cases here
+	//
+	//		//true test case
+	//		testModelFacade.updateModel(testMoxy.getModel(""));
+	//		TurnManager turnManager = testModelFacade.turnManager();
+	//		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
+	//				OTHERUSER, TRADEOFFER));
+	//	}
+	//
+	//	@Test
+	//	public void testCanAcceptTrade() 
+	//	{
+	//		//hasn't been offered a trade
+	//		//doesn't have the cards required for trade
+	//
+	//		//true test case
+	//	}
+	//
+	//	@Test
+	//	public void testCanMaritimeTrade() 
+	//	{
+	//		//not user's turn
+	//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+	//		TurnManager turnManager = testModelFacade.turnManager();
+	//		Bank bank = testModelFacade.bank();
+	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getUserFromIndex(1), TRADEOFFER));
+	//
+	//		//wrong turn phase
+	//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+	//		turnManager = testModelFacade.turnManager();
+	//		bank = testModelFacade.bank();
+	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
+	//		
+	//		//user doesn't have necessary resources
+	//		testModelFacade.updateModel(testMoxy.getModel(""));
+	//		turnManager = testModelFacade.turnManager();
+	//		bank = testModelFacade.bank();
+	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
+	//
+	//		//bank doesn't have necessary resources
+	//		testModelFacade.updateModel(testMoxy.getModel(""));
+	//		turnManager = testModelFacade.turnManager();
+	//		bank = testModelFacade.bank();
+	//		assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), TRADEOFFER));
+	//
+	//		//tests with different ratios
+	//
+	//
+	//	}
+	//
+	@Test
+	public void testCanFinishTurn() 
+	{
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canFinishTurn(turnManager, turnManager.currentUser()));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canFinishTurn(turnManager, turnManager.getUserFromIndex(1)));
+
+		//true test case
+		assertTrue(testModelFacade.canFinishTurn(turnManager, turnManager.currentUser()));
+
+	}
 
 }
