@@ -39,8 +39,8 @@ public class ProxyTester
 	public void setUp()
 	{
 		//TODO this needs to be set to the host and port where the server is running
-		String host = null;
-		String port = null;
+		String host = "localhost";
+		String port = "8082";
 
 		testProxy = new ServerProxy(host, port);
 	}
