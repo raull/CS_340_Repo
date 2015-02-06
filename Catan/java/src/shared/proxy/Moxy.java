@@ -1,10 +1,13 @@
 package shared.proxy;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.plaf.metal.MetalIconFactory.FileIcon16;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,25 +104,22 @@ public class Moxy implements Proxy{
 	}
 	
 	public JsonObject getModel(String filepath){
-		JsonObject json = new JsonObject();
 		JsonParser parser = new JsonParser();
 		JsonElement jsonElement;
 		
 		JsonObject model = new JsonObject();
 		
 		try {
-			jsonElement = parser.parse(new FileReader(filepath));
+			File file = new File("java/src/shared/proxy/" + filepath);
+			jsonElement = parser.parse(new FileReader(file));
 			Gson gson = new GsonBuilder().create();
 			model = gson.fromJson(jsonElement, JsonObject.class);
 		} catch (JsonIOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JsonSyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("JSON file not found");
 		}
 		return model;
 	}
