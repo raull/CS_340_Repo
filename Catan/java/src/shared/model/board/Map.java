@@ -6,11 +6,20 @@ import java.util.Collections;
 
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.board.piece.Building;
+import shared.model.board.piece.Road;
 
 public class Map {
 
 	private ArrayList<HexTile> hexTiles;
 	
+	private ArrayList<Road> roadsOnMap;
+	
+	private ArrayList<Building> settlementsOnMap;
+	
+	private ArrayList<Building> citiesOnMap;
+	
+	private ArrayList<Port> portsOnMap;
 	//Getters
 	
 	public Collection<HexTile> getHexTiles() {
@@ -41,4 +50,46 @@ public class Map {
 	public void setHexTiles(ArrayList<HexTile> hexTiles) {
 		this.hexTiles = hexTiles;
 	}
+
+
+	public ArrayList<Road> getRoadsOnMap() {
+		return roadsOnMap;
+	}
+
+
+	public void setRoadsOnMap(ArrayList<Road> roadsOnMap) {
+		this.roadsOnMap = roadsOnMap;
+	}
+
+
+	public ArrayList<Building> getSettlementsOnMap() {
+		return settlementsOnMap;
+	}
+
+
+	public void setSettlementsOnMap(ArrayList<Building> settlementsOnMap) {
+		this.settlementsOnMap = settlementsOnMap;
+	}
+
+
+	public ArrayList<Building> getCitiesOnMap() {
+		return citiesOnMap;
+	}
+
+
+	public void setCitiesOnMap(ArrayList<Building> citiesOnMap) {
+		this.citiesOnMap = citiesOnMap;
+	}
+
+
+	public ArrayList<Port> getPortsOnMap() {
+		return portsOnMap;
+	}
+
+
+	public void setPortsOnMap(ArrayList<Port> portsOnMap) {
+		this.portsOnMap = portsOnMap;
+	}
+	
+	
 }

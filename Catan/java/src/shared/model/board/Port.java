@@ -23,7 +23,7 @@ public class Port {
 	/**
 	 * location of the port
 	 */
-	private VertexLocation location;
+	private Vertex location;
 		
 	//Constructors
 	/**
@@ -44,7 +44,7 @@ public class Port {
 		return offerRate;
 	}
 	
-	public void setLocation(VertexLocation location) {
+	public void setLocation(Vertex location) {
 		this.location = location;
 	}
 	

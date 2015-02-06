@@ -11,10 +11,20 @@ import shared.model.board.Edge;
  */
 public class Road extends Piece{
 
+	private Edge edge;
+	
 	@Override
 	public PieceType getType() {
 		// TODO Auto-generated method stub
 		return PieceType.ROAD;
 	}
-
+	
+	public Edge getEdge() {
+		return edge;
+	}
+	
+	public void setEdge(Edge edge) {
+		this.edge = edge;
+	}
+	
 }

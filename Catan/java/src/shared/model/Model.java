@@ -14,9 +14,11 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
+import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
+import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.board.piece.Piece;
 import shared.model.board.piece.Road;
@@ -155,13 +157,16 @@ public class Model {
 			extractUsers(jsonObject);
 			
 			//get roads and update users
+			map.setRoadsOnMap(extractRoads(jsonMap));
 				
-				//get cities
+			//get cities
+			map.setCitiesOnMap(extractBuildings(jsonMap, "cities"));
 				
-				//get settlements
+			//get settlements
+			map.setSettlementsOnMap(extractBuildings(jsonMap, "settlements"));
 				
-				
-				//get ports
+			//get ports
+			map.setPortsOnMap(extractPorts(jsonMap));
 			
 			//place robber
 			extractRobber(jsonMap);
@@ -308,6 +313,7 @@ public class Model {
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
+		
 		return port;
 	}
 	
@@ -339,6 +345,11 @@ public class Model {
 		EdgeLocation location = new EdgeLocation(hexLocation, direction);
 		//need to populate user's occupied vertices, etc
 		Road road = new Road();
+		
+		road.setOwner(owner);
+		Edge edge = new Edge(location);
+		road.setEdge(edge);
+		
 		return road;
 	}
 	
@@ -370,6 +381,12 @@ public class Model {
 		VertexLocation location = new VertexLocation(hexLocation, direction);
 		
 		Building building = new Building();
+		building.setOwner(owner);
+		
+		
+		Vertex vertex = new Vertex(location);
+		building.setVertex(vertex);
+		
 		return building;
 	}
 	

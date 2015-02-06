@@ -21,4 +21,14 @@ public class Building extends Piece{
 		// TODO Auto-generated method stub
 		return type;
 	}
+
+	public Vertex getVertex() {
+		return vertex;
+	}
+
+	public void setVertex(Vertex vertex) {
+		this.vertex = vertex;
+	}
+	
+	
 }

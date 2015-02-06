@@ -39,13 +39,14 @@ public class Edge {
 	 * @param direction
 	 * @param hexTiles
 	 */
-	public Edge(EdgeLocation location, EdgeDirection direction, final ArrayList<HexTile> hexTiles) {
-		this.direction = direction;
-		this.location = location;
-		this.hexTiles = hexTiles;
+	public Edge(EdgeLocation location) {
+ 		this.direction = direction;
+ 		this.location = location;
+ 		this.hexTiles = hexTiles;
 		road = null;
 	}
 	
+
 	//Getters
 	public EdgeLocation getLocation() {
 		return location;
@@ -75,7 +76,5 @@ public class Edge {
 	public boolean hasAdjoiningPiece(User user){
 		return false; //need to think more about this
 	}
-
-	
 	
 }

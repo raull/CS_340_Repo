@@ -8,11 +8,19 @@ import shared.definitions.PieceType;
  *
  */
 public abstract class Piece {
-
+	
+	private int owner;
 	/**
 	 * Get the type of the <code>Piece</code>
 	 * @return
 	 */
 	public abstract PieceType getType();
+	
+	public int getOwner() {
+		return owner;
+	}
+	public void setOwner(int owner) {
+		this.owner = owner;
+	}
 	
 }
