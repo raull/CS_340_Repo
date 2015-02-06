@@ -50,7 +50,7 @@ public class User {
 	/**
 	 * An ArrayList of {@link Vertex}es representing the edges that the <code>User</code> occupies
 	 */
-	private ArrayList<Vertex> occupiedVertices;
+	private ArrayList<Vertex> occupiedVertices = new ArrayList<Vertex>();
 	
 	/**
 	 * An ArrayList of {@link Piece} representing the unplayed pieces of the user
