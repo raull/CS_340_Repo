@@ -24,7 +24,6 @@ public class ModelTester
 	}
 
 	private ModelFacade testModelFacade = new ModelFacade();
-	private Model testModel = new Model();
 	private Moxy testMoxy = new Moxy();
 
 	//Test can initialize model from JSON from server	
