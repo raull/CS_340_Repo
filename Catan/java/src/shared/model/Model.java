@@ -311,17 +311,26 @@ public class Model {
 		}
 		
 		HexLocation portLocation = gson.fromJson(jsonPort.get("location"), HexLocation.class);
+
+		EdgeDirection portDirection = gson.fromJson(jsonPort.get("direction"), EdgeDirection.class);
+
+
+		EdgeLocation location = new EdgeLocation(portLocation, portDirection);
 		
-		VertexDirection portDirection = gson.fromJson(jsonPort.get("direction"), VertexDirection.class);
+		//pass in edgelocation to get array list of vertex locations
+		ArrayList<VertexLocation> vertexLocations = Map.getAdjacentVertices(location);
 		
-		VertexLocation location = new VertexLocation(portLocation, portDirection);
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 		
-		Vertex vertex = new Vertex(location);
+		for(VertexLocation vloc : vertexLocations) {
+			Vertex vertex = new Vertex(vloc);
+			vertices.add(vertex);
+		}
 		
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
-		port.setLocation(vertex);
+		port.setLocations(vertices);
 		
 		return port;
 	}
@@ -415,8 +424,13 @@ public class Model {
 //		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
 		
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
+		System.out.println(jsonUserArray);
 		
 		for(JsonElement jsonEleUser : jsonUserArray) {
+			if(jsonEleUser == null) {
+				continue;
+			}
+
 			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
 //			User user = extractUser(jsonUser);
 			updateUser(jsonUser);
@@ -523,8 +537,10 @@ public class Model {
 		ArrayList<Port> ports = map.getPortsOnMap();
 		
 		for(Port port: ports) {
-			if(user.occupiesVertex(port.getLocation().getLocation())) {
-				user.ports().add(port);
+			for(Vertex portVertex : port.getLocations()) {
+				if(user.occupiesVertex(portVertex.getLocation())) {
+					user.ports().add(port);
+				}
 			}
 		}
 	}

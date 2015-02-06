@@ -1,5 +1,7 @@
 package shared.model.board;
 
+import java.util.ArrayList;
+
 import shared.definitions.PortType;
 import shared.locations.VertexLocation;
 
@@ -21,9 +23,9 @@ public class Port {
 	private int offerRate;
 	
 	/**
-	 * location of the port
+	 * array of 2 vertices of port locations
 	 */
-	private Vertex location;
+	private ArrayList<Vertex> locations;
 		
 	//Constructors
 	/**
@@ -44,12 +46,12 @@ public class Port {
 		return offerRate;
 	}
 	
-	public Vertex getLocation() {
-		return location;
+	public ArrayList<Vertex> getLocations() {
+		return locations;
 	}
 	
-	public void setLocation(Vertex location) {
-		this.location = location;
+	public void setLocations(ArrayList<Vertex> locations) {
+		this.locations = locations;
 	}
 	
 }

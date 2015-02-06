@@ -11,12 +11,14 @@ import shared.definitions.DevCardType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
+import shared.model.board.Vertex;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -142,6 +144,34 @@ public class ModelFacade {
 		}
 	}
 	
+//	public Boolean isEdgeOnWater(EdgeLocation location) {
+//		HexLocation hexLoc = location.getHexLoc();
+//		int radius = 3-1;
+//		//bottom right of board, water edge on top, left
+//		if(hexLoc.getX() > radius && hexLoc.getY() > radius) {
+//			
+//		}
+//		//top right of board, water edge on bottom, left
+//		else if(hexLoc.getX() > radius && hexLoc.getY() < radius) {
+//			
+//		}
+//		//top left of board, water edge on bottom, right
+//		else if(hexLoc.getX() < radius && hexLoc.getY() < radius){
+//			
+//		}
+//		//bottom left of board, water edge on top, right
+//		else if(hexLoc.getX() < radius && hexLoc.getY() > radius) {
+//			
+//		}
+//		else{ //within radius, shouldn't be on water
+//			return false;
+//		}
+//	}
+//	
+//	public Boolean isVertexOnWater(VertexLocation location) {
+//		return false;
+//	}
+	
 	/**
 	 * Checks to see whether the location is valid for road placement - i.e. is it adjacent to other roads or buidlings
 	 * owned by the user, is the location unoccupied, etc.
@@ -158,6 +188,7 @@ public class ModelFacade {
 		}
 		
 		//if trying to build road on water, return false
+		
 		
 		//if edge is occupied, return false;
 		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());

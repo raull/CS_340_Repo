@@ -358,9 +358,9 @@
       "resources": {
         "brick": 0,
         "wood": 0,
-        "sheep": -1,
+        "sheep": 1,
         "wheat": 0,
-        "ore": -1
+        "ore": 1
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
