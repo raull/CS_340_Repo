@@ -43,6 +43,7 @@ public class Edge {
  		this.direction = direction;
  		this.location = location;
  		this.hexTiles = hexTiles;
+
 		road = null;
 	}
 	

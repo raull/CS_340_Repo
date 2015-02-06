@@ -38,7 +38,7 @@ public class ModelFacade {
 	//will eventually have to talk to controllers
 	private Proxy proxy; //has a pointer to the server proxy to see if methods that user has called is valid
 	//need separate "do" functions, canDos return booleans
-	public Model model;
+	public Model model = new Model();
 	
 	/**
 	 * The games's {@link ScoreKeeper} class to keep track of the score

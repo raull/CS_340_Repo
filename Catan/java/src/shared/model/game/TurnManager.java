@@ -3,6 +3,8 @@ package shared.model.game;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import shared.model.exception.ModelException;
+
 /**
  * The manager that keeps track of the user's turn
  * @author Raul Lopez
@@ -66,6 +68,20 @@ public class TurnManager {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Adds a user to the user array
+	 * @param newUser the user to be added
+	 * @throws ModelException if too many players are added
+	 */
+	public void addUser(User newUser) throws ModelException{
+		if(users.size()<4){
+			users.add(newUser);
+		}
+		else{
+			throw new ModelException();
+		}
 	}
 	
 	/**

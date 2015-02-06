@@ -269,10 +269,16 @@ public class Model {
 	
 	public HexTile extractHexTile(JsonObject jsonHexTile) {
 		Gson gson = new Gson();
-	
+		
+		int number;
 		HexType hexType = gson.fromJson(jsonHexTile.get("resource"), HexType.class);
+		if (hexType == null) {
+			hexType = HexType.DESERT;
+			number = -1;
+		} else {
+			number = jsonHexTile.get("number").getAsInt();
+		}
 		HexLocation hexLocation = gson.fromJson(jsonHexTile.get("location"), HexLocation.class);
-		int number = jsonHexTile.get("number").getAsInt();
 		
 		HexTile hexTile = new HexTile(hexType, hexLocation, number); //hex type, hex location, hex number
 		
@@ -458,6 +464,15 @@ public class Model {
 		int victoryPoints = jsonUser.get("victoryPoints").getAsInt();
 		
 		User currUser = turnManager.getUser(playerID);
+		if (currUser == null) {
+			currUser = new User();
+			currUser.setPlayerID(playerID);
+			try {
+				turnManager.addUser(currUser);
+			} catch (Exception e) {
+				System.out.println("Too many players, cannot add a new one");
+			}
+		}
 		
 		currUser.setPlayerTurnIndex(playerIndex);
 		
