@@ -43,6 +43,19 @@ public class Hand {
 		return newDevCardDeck;
 	}
 	
+
+	public void setDevCardDeck(DevCardDeck devCardDeck) {
+		this.devCardDeck = devCardDeck;
+	}
+
+	public void setNewDevCardDeck(DevCardDeck newDevCardDeck) {
+		this.newDevCardDeck = newDevCardDeck;
+	}
+
+	public void setResourceCardDeck(ResourceCardDeck resourceCardDeck) {
+		this.resourceCardDeck = resourceCardDeck;
+	}
+
 	/**
 	 * Determines whether a card can be removed from the hand
 	 * @param type the type of card to be removed

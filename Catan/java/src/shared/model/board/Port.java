@@ -1,6 +1,7 @@
 package shared.model.board;
 
 import shared.definitions.PortType;
+import shared.locations.VertexLocation;
 
 
 /**
@@ -18,6 +19,11 @@ public class Port {
 	 * An integer representing the offer rate for the resource that it provides, must be either 2 or 3
 	 */
 	private int offerRate;
+	
+	/**
+	 * location of the port
+	 */
+	private VertexLocation location;
 		
 	//Constructors
 	/**
@@ -37,4 +43,9 @@ public class Port {
 	public int getOfferRate() {
 		return offerRate;
 	}
+	
+	public void setLocation(VertexLocation location) {
+		this.location = location;
+	}
+	
 }

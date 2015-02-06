@@ -56,6 +56,10 @@ public class User {
 	 * An ArrayList of {@link Piece} representing the unplayed pieces of the user
 	 */
 	private ArrayList<Piece> unusedPieces;
+	//instead of array list, maybe just have count?
+	private int unusedRoads;
+	private int unusedSettlements;
+	private int unusedCities;
 	
 	/**
 	 * An int representing the unique ID of the player. Used in login/cookie functionality
@@ -247,6 +251,34 @@ public class User {
 
 	public void setUnusedPieces(ArrayList<Piece> unusedPieces) {
 		this.unusedPieces = unusedPieces;
+	}
+	
+	public void setPlayerTurnIndex(int turnIndex) {
+		this.turnIndex = turnIndex;
+	}
+
+	public int getUnusedRoads() {
+		return unusedRoads;
+	}
+
+	public void setUnusedRoads(int unusedRoads) {
+		this.unusedRoads = unusedRoads;
+	}
+
+	public int getUnusedSettlements() {
+		return unusedSettlements;
+	}
+
+	public void setUnusedSettlements(int unusedSettlements) {
+		this.unusedSettlements = unusedSettlements;
+	}
+
+	public int getUnusedCities() {
+		return unusedCities;
+	}
+
+	public void setUnusedCities(int unusedCities) {
+		this.unusedCities = unusedCities;
 	}
 
 	/**

@@ -24,6 +24,15 @@ public class TradeOffer {
 	private ResourceCardDeck receivingDeck;
 	
 	/**
+	 * index of the person offering the trade
+	 */
+	private int senderIndex;
+	
+	/**
+	 * index of the person the trade was offered to
+	 */
+	private int receiverIndex;
+	/**
 	 * The PortType in case the trade is maritime
 	 */
 	private PortType portType;
@@ -38,6 +47,12 @@ public class TradeOffer {
 		this.rate = offerRate;
 		this.receivingDeck = receivingDeck;
 		this.sendingDeck = sendingDeck;
+	}
+	
+	//trade offer doesn't necessarily have rate?
+	public TradeOffer(ResourceCardDeck offeredDeck, ResourceCardDeck requestedDeck) { //some temp names to help me clarify
+		this.sendingDeck = offeredDeck; 
+		this.receivingDeck = requestedDeck;
 	}
 
 	public int getRate() {
@@ -71,5 +86,23 @@ public class TradeOffer {
 	public void setPortType(PortType portType) {
 		this.portType = portType;
 	}
+
+	public int getSenderIndex() {
+		return senderIndex;
+	}
+
+	public void setSenderIndex(int senderIndex) {
+		this.senderIndex = senderIndex;
+	}
+
+	public int getReceiverIndex() {
+		return receiverIndex;
+	}
+
+	public void setReceiverIndex(int receiverIndex) {
+		this.receiverIndex = receiverIndex;
+	}
+	
+	
 	
 }

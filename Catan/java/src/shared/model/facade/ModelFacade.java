@@ -67,6 +67,11 @@ public class ModelFacade {
 	 */
 	public void updateModel(JsonObject jsonResponse) {
 		model.deserialize(jsonResponse);
+		turnManager = model.getTurnManager();
+		map = model.getMap();
+		bank = model.getBank();
+		//update stuff from model
+		
 	}
 	/**
 	 * gets the current model
@@ -549,7 +554,7 @@ public class ModelFacade {
 			return false;
 		}
 		//if user does not have at least 2 un-used roads
-		if(user.getUnusedPieces().size() < 2) {
+		if(user.getUnusedRoads() < 2) {
 			return false;
 		}
 		

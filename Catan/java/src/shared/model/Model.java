@@ -40,104 +40,71 @@ import com.google.gson.JsonObject;
 
 public class Model {
 	
-	//according to the client model json spec
-	public ResourceCardDeck bank; //cards available to be distributed to the players
+	//mostly according to the client model json spec
+	public Bank bank; //cards available to be distributed to the players
 	public MessageList chat; //all chat messages
 	public MessageList log; //all log messages
 	public Map map; //game map
-	public UserManager users; //list of users
 	public TradeOffer tradeOffer; //current trade offer, if there is one
 	public TurnManager turnManager; //the turntracker -- tracks who's turn it is
 	public int version; //version of the model, to see if up to date
 	public int winner; //-1 when nobody won yet. when someone wins, it's their order index
 	
-	public Model(){}
+	public Model(){
+		this.bank = new Bank(new ArrayList<DevCard>(), new ArrayList<ResourceCard>());
+		this.chat = new MessageList();
+		this.log = new MessageList();
+		this.map = new Map(new ArrayList<HexTile>());
+		this.tradeOffer = null;
+		this.turnManager = new TurnManager(new ArrayList<User>());
+		this.version = 0;
+		this.winner = -1;
+	}
 	
-	public Model(ResourceCardDeck bank, MessageList chat, MessageList log,
-			Map map, UserManager users, TradeOffer tradeOffer,
+	public Model(Bank bank, MessageList chat, MessageList log,
+			Map map, TradeOffer tradeOffer,
 			TurnManager turnManager, int version, int winner) {
 		super();
 		this.bank = bank;
 		this.chat = chat;
 		this.log = log;
 		this.map = map;
-		this.users = users;
 		this.tradeOffer = tradeOffer;
 		this.turnManager = turnManager;
 		this.version = version;
 		this.winner = winner;
 	}
 
-	public ResourceCardDeck getBank() {
+	public Bank getBank() {
 		return bank;
-	}
-
-	public void setBank(ResourceCardDeck bank) {
-		this.bank = bank;
 	}
 
 	public MessageList getChat() {
 		return chat;
 	}
 
-	public void setChat(MessageList chat) {
-		this.chat = chat;
-	}
-
 	public MessageList getLog() {
 		return log;
-	}
-
-	public void setLog(MessageList log) {
-		this.log = log;
 	}
 
 	public Map getMap() {
 		return map;
 	}
 
-	public void setMap(Map map) {
-		this.map = map;
-	}
-
-	public UserManager getUsers() {
-		return users;
-	}
-
-	public void setUsers(UserManager users) {
-		this.users = users;
-	}
-
 	public TradeOffer getTradeOffer() {
 		return tradeOffer;
-	}
-
-	public void setTradeOffer(TradeOffer tradeOffer) {
-		this.tradeOffer = tradeOffer;
 	}
 
 	public TurnManager getTurnManager() {
 		return turnManager;
 	}
 
-	public void setTurnManager(TurnManager turnManager) {
-		this.turnManager = turnManager;
-	}
-
 	public int getVersion() {
 		return version;
 	}
 
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
 	public int getWinner() {
 		return winner;
-	}
-
-	public void setWinner(int winner) {
-		this.winner = winner;
 	}
 
 	/**
@@ -166,52 +133,58 @@ public class Model {
 			//get bank dev cards
 			ArrayList<DevCard> bankDevCards = extractDevDeck(jsonObject);
 			
-			//create bank for model
-			Bank bank = new Bank(bankDevCards, bankResourceCards);
+			//update bank
+			bank.setDevCardDeck(new DevCardDeck(bankDevCards));
+			bank.setResourceCardDeck(new ResourceCardDeck(bankResourceCards));
 			
 			//chat
 			JsonObject jsonChat = jsonModel.get("chat").getAsJsonObject(); 
-			MessageList chat = extractMessageList(jsonChat);
+			chat = extractMessageList(jsonChat);
 			
 			//log
 			JsonObject jsonLog = jsonModel.get("log").getAsJsonObject();
-			MessageList log = extractMessageList(jsonLog);
+			log = extractMessageList(jsonLog);
 			
-			//get map
-				//get hexes
-			ArrayList<HexTile> mapHexTiles = extractHexes(jsonObject);
+			JsonObject jsonMap = jsonObject.get("map").getAsJsonObject();
 			
-				//get roads
+			//update map/hexes
+			ArrayList<HexTile> mapHexTiles = extractHexes(jsonMap);
+			map.setHexTiles(mapHexTiles);
+			
+			//extract and update users
+			extractUsers(jsonObject);
+			
+			//get roads and update users
 				
 				//get cities
 				
 				//get settlements
 				
-				//radius??
 				
 				//get ports
-				
-				//get robber
 			
-			//players
+			//place robber
+			extractRobber(jsonMap);
 			
 			//trade offer -- may be null
 			if(jsonObject.get("tradeOffer") != null) {
-				JsonObject tradeOffer = jsonObject.get("tradeOffer").getAsJsonObject();
-				
+				JsonObject jsonTradeOffer = jsonObject.get("tradeOffer").getAsJsonObject();
+				updateTradeOffer(jsonTradeOffer);
 			}
 
 			//turn manager
 			JsonObject jsonTurnManager = jsonModel.get("turnTracker").getAsJsonObject();
+			updateTurnManager(jsonTurnManager);
 			
 			//version
-			int version = jsonModel.get("version").getAsInt();
+			version = jsonModel.get("version").getAsInt();
 			
 			//winner
-			int winner = jsonModel.get("winner").getAsInt();
+			winner = jsonModel.get("winner").getAsInt();
 			
 		}
 	}
+	
 	
 	public ArrayList<ResourceCard> extractResourceDeck(JsonObject jsonModel) {
 		ArrayList<ResourceCard> bankResourceCards = new ArrayList<ResourceCard>();
@@ -274,10 +247,10 @@ public class Model {
 		return messageList;
 	}
 	
-	public ArrayList<HexTile> extractHexes(JsonObject jsonModel) {
+	public ArrayList<HexTile> extractHexes(JsonObject jsonMap) {
 		ArrayList<HexTile> mapHexTiles = new ArrayList<HexTile>();
 		
-		JsonArray jsonHexArray = jsonModel.get("hexes").getAsJsonArray();
+		JsonArray jsonHexArray = jsonMap.get("hexes").getAsJsonArray();
 		
 		//go through and extract each hex object
 		for(int i = 0; i < jsonHexArray.size(); i++) {
@@ -400,7 +373,7 @@ public class Model {
 		return building;
 	}
 	
-	public void extractRobber(JsonObject jsonMap, Map map) {
+	public void extractRobber(JsonObject jsonMap) {
 		
 		JsonObject jsonLocation = jsonMap.get("robber").getAsJsonObject();
 		int x = jsonLocation.get("x").getAsInt();
@@ -411,23 +384,25 @@ public class Model {
 		robberTile.setRobber(true);
 	}
 	
-	public ArrayList<User> extractUsers(JsonObject jsonModel) {
-		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
+//	public ArrayList<User> extractUsers(JsonObject jsonModel) {
+	public void extractUsers(JsonObject jsonModel){
+//		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
 		
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
 		
 		for(JsonElement jsonEleUser : jsonUserArray) {
 			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
-			User user = extractUser(jsonUser);
+//			User user = extractUser(jsonUser);
+			updateUser(jsonUser);
 		}
-		return currentPlayers;
+//		return currentPlayers;
 	}
 	
 	public void addPieceToList(ArrayList<Piece> userPieces, PieceType pieceType) {
 		
 	}
 	
-	public User extractUser(JsonObject jsonUser) {
+	public void updateUser(JsonObject jsonUser) {
 		Gson gson = new Gson();
 		
 		int numCities = jsonUser.get("cities").getAsInt();
@@ -461,12 +436,28 @@ public class Model {
 		
 		int settlements = jsonUser.get("settlements").getAsInt();
 		
-		int solders = jsonUser.get("soldiers").getAsInt();
+		int soldiers = jsonUser.get("soldiers").getAsInt();
 		
 		int victoryPoints = jsonUser.get("victoryPoints").getAsInt();
 		
-		User user = new User(name, name, userColor); //need name, pw, color..
-		return user;
+		User currUser = turnManager.getUser(playerID);
+		
+		currUser.setPlayerTurnIndex(playerIndex);
+		
+		currUser.setUnusedCities(numCities);
+		currUser.setHasPlayedDevCard(playedDevCard);
+//		currUser.setDiscarded(discarded); 
+//		currUser.setMonuments(monumentsPlayed);
+		currUser.getHand().setNewDevCardDeck(newDevCardDeck);
+		currUser.getHand().setDevCardDeck(oldDevCardDeck);
+		currUser.getHand().setResourceCardDeck(resourceDeck);
+		
+		currUser.setUnusedRoads(roads);
+		currUser.setUnusedSettlements(settlements);
+		
+		//soldier
+		//victory points
+		
 	}
 	
 	//2nd array for when populating tradeOffer
@@ -501,8 +492,7 @@ public class Model {
 			}
 	}
 	
-	public TradeOffer tradeOffer(JsonObject jsonTradeOffer) {
-		
+	public void updateTradeOffer(JsonObject jsonTradeOffer) {
 		int senderIndex = jsonTradeOffer.get("sender").getAsInt();
 		int receiverIndex = jsonTradeOffer.get("receiver").getAsInt();
 		
@@ -514,17 +504,15 @@ public class Model {
 		
 		populateResourceDeck(jsonTradeOffer.get("offer").getAsJsonObject(), offeredCards, requestedCards);
 		
-		TradeOffer tradeOffer = new TradeOffer(0, new ResourceCardDeck(offeredCards), new ResourceCardDeck(requestedCards));
+		tradeOffer.setReceiverIndex(receiverIndex);
+		tradeOffer.setSenderIndex(senderIndex);
+		tradeOffer.setReceivingDeck(new ResourceCardDeck(requestedCards));
+		tradeOffer.setSendingDeck(new ResourceCardDeck(offeredCards));
 		
-		return tradeOffer;
 	}
 	
-	public TurnManager extractTurnTracker(JsonObject jsonModel) {
+	public void updateTurnManager(JsonObject jsonTurnManager) {
 		Gson gson = new Gson();
-		
-		TurnManager turnManager = new TurnManager(null); //add array list of users
-		
-		JsonObject jsonTurnManager = jsonModel.get("turnTracker").getAsJsonObject();
 		
 		int currentTurn = jsonTurnManager.get("currentTurn").getAsInt();
 		
@@ -535,7 +523,11 @@ public class Model {
 		
 		int largestArmy = jsonTurnManager.get("largestArmy").getAsInt();
 		
-		return turnManager;
+		turnManager.setCurrentTurn(currentTurn);
+		turnManager.setCurrentPhase(currTurnPhase);
+		turnManager.setLongestRoadIndex(longestRoad);
+		turnManager.setLargestArmyIndex(largestArmy);
+		
 	}
 	
 }

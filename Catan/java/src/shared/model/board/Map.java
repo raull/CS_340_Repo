@@ -16,8 +16,7 @@ public class Map {
 	public Collection<HexTile> getHexTiles() {
 		return Collections.unmodifiableCollection(this.hexTiles);
 	}
-	
-	
+
 	
 	public Map(ArrayList<HexTile> hexTiles) {
 		super();
@@ -37,5 +36,9 @@ public class Map {
 		}
 		
 		return null;
+	}
+	
+	public void setHexTiles(ArrayList<HexTile> hexTiles) {
+		this.hexTiles = hexTiles;
 	}
 }

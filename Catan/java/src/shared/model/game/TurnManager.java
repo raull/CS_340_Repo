@@ -31,6 +31,15 @@ public class TurnManager {
 	 */
 	private TurnPhase currentPhase;
 	
+	/**
+	 * user index with the longest road
+	 */
+	private int longestRoadIndex;
+	
+	/**
+	 * user index with largest army
+	 */
+	private int largestArmyIndex;
 	
 	//Constructor
 	
@@ -46,7 +55,7 @@ public class TurnManager {
 	
 	/**
 	 * Returns the user for the provided turn index
-	 * @param turnIndex The number of the turn
+	 * @param turnIndex The user's turn number
 	 * @return Returns the user corresponding the turn index. If there was no user with that index, then it returns null.
 	 */
 	public User getUserFromIndex(int turnIndex) {
@@ -83,14 +92,6 @@ public class TurnManager {
 		return currentUser;
 	}
 	
-	/**
-	 * Get the user with the current turn
-	 * @return An int representing the current turn index
-	 */
-	public int currentTurn() {
-		return currentTurn;
-	}
-	
 	
 	/**
 	 * Get the current phase of the current turn
@@ -107,6 +108,7 @@ public class TurnManager {
 	public ArrayList<User> getUsers() {
 		return (ArrayList<User>) Collections.unmodifiableCollection(this.users);
 	}
+	
 
 	public int getRolledNumber() {
 		return rolledNumber;
@@ -115,5 +117,38 @@ public class TurnManager {
 	public void setRolledNumber(int rolledNumber) {
 		this.rolledNumber = rolledNumber;
 	}
+	
+	/**
+	 * Get the user with the current turn
+	 * @return An int representing the current turn index
+	 */
+	public int getCurrentTurn() {
+		return currentTurn;
+	}
+
+	public void setCurrentTurn(int currentTurn) {
+		this.currentTurn = currentTurn;
+	}
+
+	public void setCurrentPhase(TurnPhase currentPhase) {
+		this.currentPhase = currentPhase;
+	}
+
+	public int getLogestRoadIndex() {
+		return longestRoadIndex;
+	}
+
+	public void setLongestRoadIndex(int longestRoadIndex) {
+		this.longestRoadIndex = longestRoadIndex;
+	}
+
+	public int getLargestArmyIndex() {
+		return largestArmyIndex;
+	}
+
+	public void setLargestArmyIndex(int largestArmyIndex) {
+		this.largestArmyIndex = largestArmyIndex;
+	}
+
 	
 }

@@ -21,6 +21,11 @@ public class Bank {
 	 */
 	private ResourceCardDeck resourceCardDeck;
 	
+	public Bank() {
+		devCardDeck = new DevCardDeck(new ArrayList<DevCard>());
+		resourceCardDeck = new ResourceCardDeck(new ArrayList<ResourceCard>());
+	}
+	
 	public Bank(ArrayList<DevCard> initDevCards, ArrayList<ResourceCard> initResourceCards){
 		devCardDeck = new DevCardDeck(initDevCards);
 		resourceCardDeck = new ResourceCardDeck(initResourceCards);
