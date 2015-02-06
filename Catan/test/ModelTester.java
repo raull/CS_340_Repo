@@ -198,9 +198,9 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 
 		//true test case
-		testModelFacade.updateModel(testMoxy.getModel("canBldcty.json"));
+		testModelFacade.updateModel(testMoxy.getModel("buyCityValidBuy.json"));
 		turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
+		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 	}
 
 	@Test
@@ -301,10 +301,18 @@ public class ModelTester
 		tile = testModelFacade.map().getHexTileByLocation(location);
 		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));
 
-		//true test case		
+		//Robber is not set to a new location 
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		turnManager = testModelFacade.turnManager();
 		location = new HexLocation(1,1);
 		tile = testModelFacade.map().getHexTileByLocation(location);
-		assertTrue(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));
+		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));
+		
+		// True case
+		//Setting a Hex that doesn't have the Robber
+		location = new HexLocation(0, 1);
+		tile = testModelFacade.map().getHexTileByLocation(location);
+		assertTrue(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(0)));
 	}
 
 	
