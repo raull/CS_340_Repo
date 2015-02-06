@@ -44,6 +44,10 @@ public class Port {
 		return offerRate;
 	}
 	
+	public Vertex getLocation() {
+		return location;
+	}
+	
 	public void setLocation(Vertex location) {
 		this.location = location;
 	}

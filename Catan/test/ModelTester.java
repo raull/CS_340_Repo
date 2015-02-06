@@ -7,6 +7,7 @@ import org.junit.Test;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;
+import shared.model.board.HexTile;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
@@ -198,6 +199,8 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 
 		//true test case
+		testModelFacade.updateModel(testMoxy.getModel("canBldcty.json"));
+		turnManager = testModelFacade.turnManager();
 		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
 	}
 
@@ -245,7 +248,7 @@ public class ModelTester
 	public void testCanPlayDevCard()
 	{
 		//not user's turn
-		assert(false);//need to fill in!!!
+		
 		//user doesn't have a dev card
 		
 		//bought it this turn
@@ -254,33 +257,37 @@ public class ModelTester
 
 		//true test case
 	}
-//
-//	//TESTS for specific cards
-//
-//	@Test
-//	public void testCanRobPlayer() 
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.getUserFromIndex(1), turnManager.currentUser()));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));		
-//		
-//		//victim has no resource cards
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
-//		
+
+	//TESTS for specific cards
+
+	@Test
+	public void testCanRobPlayer() 
+	{
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		HexLocation location = new HexLocation(0,0);
+		HexTile tile = testModelFacade.map().getHexTileByLocation(location);
+		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.getUserFromIndex(1), turnManager.currentUser()));
+
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+		turnManager = testModelFacade.turnManager();
+		tile = testModelFacade.map().getHexTileByLocation(location);
+		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(1)));		
+		
+		//victim has no resource cards
+		testModelFacade.updateModel(testMoxy.getModel("user3NoResources.json"));
+		turnManager = testModelFacade.turnManager();
+		tile =testModelFacade.map().getHexTileByLocation(location);
+		assertFalse(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(3)));
+		
 //		//victim must have city or settlement connected to tile robber is on
 //		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
 //
 //		//true test case		
 //		assertTrue(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
-//	}
+	}
 //
 //	//	@Test
 //	//	public void testCanPlaceRobber()

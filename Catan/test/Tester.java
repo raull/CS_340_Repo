@@ -10,7 +10,7 @@ public class Tester
 	public static void main(String[] args)
 	{
 		String[] testClasses = new String[]{
-			"test.Tester", "test.PollerTester"	
+			"ProxyTester", "PollerTester", "ModelTester"	
 		};
 		
 		org.junit.runner.JUnitCore.main(testClasses);

@@ -15,7 +15,7 @@ public abstract class Piece {
 	 * @return
 	 */
 	public abstract PieceType getType();
-	
+
 	public int getOwner() {
 		return owner;
 	}
