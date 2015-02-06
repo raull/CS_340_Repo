@@ -318,7 +318,7 @@ public class Model {
 		EdgeLocation location = new EdgeLocation(portLocation, portDirection);
 		
 		//pass in edgelocation to get array list of vertex locations
-		ArrayList<VertexLocation> vertexLocations;
+		ArrayList<VertexLocation> vertexLocations = Map.getAdjacentVertices(location);
 		
 		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 		
@@ -330,7 +330,7 @@ public class Model {
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
-		port.setLocation(vertices);
+		port.setLocations(vertices);
 		
 		return port;
 	}
@@ -532,8 +532,10 @@ public class Model {
 		ArrayList<Port> ports = map.getPortsOnMap();
 		
 		for(Port port: ports) {
-			if(user.occupiesVertex(port.getLocation().getLocation())) {
-				user.ports().add(port);
+			for(Vertex portVertex : port.getLocations()) {
+				if(user.occupiesVertex(portVertex.getLocation())) {
+					user.ports().add(port);
+				}
 			}
 		}
 	}

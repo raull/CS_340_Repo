@@ -46,11 +46,11 @@ public class Port {
 		return offerRate;
 	}
 	
-	public ArrayList<Vertex> getLocation() {
+	public ArrayList<Vertex> getLocations() {
 		return locations;
 	}
 	
-	public void setLocation(ArrayList<Vertex> locations) {
+	public void setLocations(ArrayList<Vertex> locations) {
 		this.locations = locations;
 	}
 	
