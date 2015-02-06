@@ -130,9 +130,9 @@ public class ModelFacade {
 	 * @param user get user and see if user has proper resources
 	 * @return boolean, whether user can buy a piece
 	 */
-	public Boolean canBuyPiece(TurnManager turnManager, User user, PieceType pieceType) {
-		//if it's not user's turn or if user can't buy piece
-		if(user != turnManager.currentUser() || !user.canBuyPiece(pieceType)) {
+	public Boolean canBuyPiece(TurnManager turnManager, User user, PieceType pieceType) {		
+		//if it's not user's turn, the user isn't in the right phase, or if user can't buy piece
+		if(user != turnManager.currentUser() || !user.canBuyPiece(pieceType) || turnManager.currentTurnPhase()!= TurnPhase.PLAYING) {
 			return false;
 		}
 		else{
@@ -220,31 +220,9 @@ public class ModelFacade {
 		return false;
 	}
 	
-	/**
-	 * Determines whether or not the user can purchase the road given his or her resources and current status
-	 * @param turnManager Helps determine whether or not it's the user's turn
-	 * @param user The User desiring to purchase the road
-	 * @param free Whether or not the piece is free
-	 * @return True if the user can purchase the road, false otherwise
-	 */
-	public Boolean canBuyRoad(TurnManager turnManager, User user, boolean free) {
-		//if it isn't user's turn or if model status is not on playing
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
-			return false;
-		}
-		else if(free) { 							//is set up round, user given road for free
-			return true;
-		}
-		else if (user.canBuyPiece(PieceType.ROAD)){ //if user has the required resources to buy a road
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
 	
 	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
-		return (canBuyRoad(turnManager, user, free) && canPlaceRoadAtLoc(turnManager, location, user));
+		return (canBuyPiece(turnManager, user, PieceType.ROAD) && canPlaceRoadAtLoc(turnManager, location, user));
 	}
 	
 	/**
@@ -256,8 +234,14 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, VertexLocation location, User user, PieceType type) {
-		//if it isn't user's turn or if model status is not on playing
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		//if it isn't user's turn
+		if(user != turnManager.currentUser()) {
+			return false;
+		}
+		
+		//if it's not the right phase (either playing or setup rounds)
+		if(!(turnManager.currentTurnPhase()==TurnPhase.PLAYING || 
+				turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND || turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)){
 			return false;
 		}
 		
@@ -309,18 +293,6 @@ public class ModelFacade {
 
 		
 		return true;
-	}
-	
-	public Boolean canBuyBuilding(TurnManager turnManager, User user, PieceType type, boolean free) {
-		//if it isn't user's turn or if model status is not on playing
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
-			return false;
-		}
-		//user must have enough resources (or the piece must be free)
-		else if(free || user.canBuyPiece(type)) {
-			return true;
-		}
-		return false;
 	}
 	
 	/**
