@@ -272,6 +272,36 @@ public class ModelTester
 //		//true test case
 //		assertTrue(testModelFacade.canPlayDevCard(turnManager, turnManager.currentUser(), devCard));
 //	}
+	
+	@Test
+	public void testCanPlaySoldier()
+	{
+		
+	}
+	
+	@Test
+	public void testCanPlayMonument()
+	{
+		
+	}
+	
+	@Test
+	public void testCanPlayMonopoly()
+	{
+		
+	}
+	
+	@Test
+	public void testCanPlayYearOfPlenty()
+	{
+		
+	}
+	
+	@Test
+	public void testCanPlayRoadBuilding()
+	{
+		
+	}
 
 	@Test
 	public void testCanRobPlayer() 
