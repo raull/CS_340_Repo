@@ -331,7 +331,6 @@ public class ModelTester
 //			assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
 //					OTHERUSER, TRADEOFFER));
 //		}
-//	
 	//	@Test
 	//	public void testCanAcceptTrade() 
 	//	{

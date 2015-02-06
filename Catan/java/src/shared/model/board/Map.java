@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import shared.locations.EdgeLocation;
+import shared.locations.EdgeDirection;
 import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.board.piece.Building;
 import shared.model.board.piece.Road;
@@ -45,6 +48,29 @@ public class Map {
 		}
 		
 		return null;
+	}
+	
+	public static ArrayList<VertexLocation> getAdjacentVertices(EdgeLocation location){
+		ArrayList<VertexLocation> output = new ArrayList();
+		location = location.getNormalizedLocation();
+		switch(location.getDir()){
+			case North:
+				output.add(new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast));
+				output.add(new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest));
+				break;
+			case NorthWest:
+				output.add(new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest));
+				output.add(new VertexLocation(location.getHexLoc(), VertexDirection.West));
+				break;
+			case NorthEast:
+				output.add(new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast));
+				output.add(new VertexLocation(location.getHexLoc(), VertexDirection.East));
+				break;
+			default:
+				assert(false); //should never be reachable
+				
+		}
+		return output;
 	}
 	
 	public void setHexTiles(ArrayList<HexTile> hexTiles) {
