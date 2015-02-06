@@ -254,9 +254,9 @@ public class ModelTester
 
 		//true test case
 	}
-//
-//	//TESTS for specific cards
-//
+
+	//TESTS for specific cards
+
 //	@Test
 //	public void testCanRobPlayer() 
 //	{
@@ -267,12 +267,12 @@ public class ModelTester
 //
 //		//wrong turn phase
 //		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
+//		turnManager = testModelFacade.turnManager();
 //		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));		
 //		
 //		//victim has no resource cards
 //		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
+//		turnManager = testModelFacade.turnManager();
 //		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
 //		
 //		//victim must have city or settlement connected to tile robber is on
