@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import shared.definitions.ResourceType;
+import shared.definitions.*;
+import shared.locations.*;
 import shared.model.*;
 import shared.model.cards.ResourceCard;
 import shared.model.facade.ModelFacade;
@@ -85,16 +86,16 @@ public class ModelTester
 		//can't buy piece (one for each type of piece)
 		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.ROAD));
-		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.CITY));
-		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.SETTLEMENT));
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 		
 		//wrong turn phase?
 
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("canBuyRoad.json"));
 		turnManager = testModelFacade.turnManager();
-		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.getCurrentUser(), PieceType.ROAD));
+		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
 	}
 
 	@Test
@@ -109,13 +110,13 @@ public class ModelTester
 		//location is occupied
 		testModelFacade.updateModel(testMoxy.getModel("cantRoadatX0Y1S.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.South), turnManager.getCurrentUser()));
+		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.South), turnManager.currentUser()));
 		
 		//not connected to other pieces of the given player
-		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManger, new EdgeDirection(new HexLocation(-1,-1), EdgeDirection.South), turnManager.getCurrentUser()));
+		assertFalse(testModelFacade.canPlaceRoadAtLoc(turnManger, new EdgeDirection(new HexLocation(-1,-1), EdgeDirection.South), turnManager.currentUser()));
 
 		//true test case
-		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeDirection(new HexLocation(0,1), EdgeDirection.SouthEast), turnManager.getCurrentUser()));
+		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeDirection(new HexLocation(0,1), EdgeDirection.SouthEast), turnManager.currentUser()));
 	}
 
 	@Test
