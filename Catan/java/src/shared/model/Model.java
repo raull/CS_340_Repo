@@ -312,16 +312,27 @@ public class Model {
 		
 		HexLocation portLocation = gson.fromJson(jsonPort.get("location"), HexLocation.class);
 		
-		VertexDirection portDirection = gson.fromJson(jsonPort.get("direction"), VertexDirection.class);
+		EdgeDirection portDirection = gson.fromJson(jsonPort.get("direction"), EdgeDirection.class);
 		
-		VertexLocation location = new VertexLocation(portLocation, portDirection);
+		EdgeLocation location = new EdgeLocation(portLocation, portDirection);
 		
-		Vertex vertex = new Vertex(location);
+		//get normalized location to determine where ports are
+		location = location.getNormalizedLocation();
+		
+		//pass in edgelocation to get array list of vertex locations
+		ArrayList<VertexLocation> vertexLocations;
+		
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+		
+		for(VertexLocation vloc : vertexLocations) {
+			Vertex vertex = new Vertex(vloc);
+			vertices.add(vertex);
+		}
 		
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
-		port.setLocation(vertex);
+		port.setLocation(vertices);
 		
 		return port;
 	}
