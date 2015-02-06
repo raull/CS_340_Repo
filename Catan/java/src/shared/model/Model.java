@@ -311,14 +311,11 @@ public class Model {
 		}
 		
 		HexLocation portLocation = gson.fromJson(jsonPort.get("location"), HexLocation.class);
-		
+
 		EdgeDirection portDirection = gson.fromJson(jsonPort.get("direction"), EdgeDirection.class);
 
 
 		EdgeLocation location = new EdgeLocation(portLocation, portDirection);
-		
-		//get normalized location to determine where ports are
-		location = location.getNormalizedLocation();
 		
 		//pass in edgelocation to get array list of vertex locations
 		ArrayList<VertexLocation> vertexLocations;

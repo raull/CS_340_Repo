@@ -51,7 +51,7 @@ public class Map {
 	}
 	
 	public static ArrayList<VertexLocation> getAdjacentVertices(EdgeLocation location){
-		ArrayList<VertexLocation> output = new ArrayList();
+		ArrayList<VertexLocation> output = new ArrayList<VertexLocation>();
 		location = location.getNormalizedLocation();
 		switch(location.getDir()){
 			case North:
