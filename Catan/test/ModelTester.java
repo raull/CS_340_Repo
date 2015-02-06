@@ -98,7 +98,6 @@ public class ModelTester
 	@Test
 	public void testCanPlaceRoadAtLoc()
 	{
-		//TODO create appropriate jsons, call functions with EDGELOCATION objects
 		//not user's turn
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
@@ -192,7 +191,7 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
 		
 		//insufficient funds
-		testModelFacade.updateModel(testMoxy.getModel(""));
+		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 
