@@ -177,29 +177,29 @@ public class ModelTester
 		//true test case
 		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.SETTLEMENT));
 	}
-//
-//	@Test
-//	public void testCanBuyBuilding()
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.getUserFromIndex(1), PieceType.CITY, false));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.currentUser(), PieceType.CITY, false));
-//		
-//		//insufficient funds
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canBuyBuilding(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT, false));
-//
-//		//true test case
-//		assertTrue(testModelFacade.canBuyBuilding(turnManager, turnManager.currentUser(), PieceType.CITY));
-//	}
-//
+
+	@Test
+	public void testCanBuyBuilding()
+	{
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.getUserFromIndex(1), PieceType.CITY));
+
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
+		
+		//insufficient funds
+		testModelFacade.updateModel(testMoxy.getModel(""));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
+
+		//true test case
+		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
+	}
+
 //	@Test
 //	public void testCanBuyDevCard()
 //	{
