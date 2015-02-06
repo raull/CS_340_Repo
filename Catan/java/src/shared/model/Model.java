@@ -426,6 +426,9 @@ public class Model {
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
 		
 		for(JsonElement jsonEleUser : jsonUserArray) {
+			if(jsonEleUser == null) {
+				continue;
+			}
 			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
 //			User user = extractUser(jsonUser);
 			updateUser(jsonUser);
