@@ -13,10 +13,6 @@ import shared.model.exception.ModelException;
 public class TurnManager {
 	
 	private ArrayList<User> users;
-	/**
-	 * The turn's current user
-	 */
-	private User currentUser;
 	
 	/**
 	 * The index of the user whose current turn is
@@ -105,7 +101,7 @@ public class TurnManager {
 	 * @return A {@link User} object that currently hold the turn of the game
 	 */
 	public User currentUser() {
-		return currentUser;
+		return this.users.get(this.currentTurn);
 	}
 	
 	
