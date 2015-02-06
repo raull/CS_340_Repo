@@ -9,6 +9,7 @@ import shared.locations.*;
 import shared.model.*;
 import shared.model.board.HexTile;
 import shared.model.cards.Bank;
+import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
 import shared.model.facade.ModelFacade;
@@ -91,8 +92,6 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 
-		//wrong turn phase?
-
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("canBuyRoad.json"));
 		turnManager = testModelFacade.turnManager();
@@ -132,8 +131,6 @@ public class ModelTester
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
 
-		//unnecessary to test setup phase
-
 		//insufficient funds
 		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
@@ -148,7 +145,6 @@ public class ModelTester
 	@Test
 	public void testCanPlaceBuildingAtLoc()
 	{
-
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("finishTurn.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
@@ -248,18 +244,32 @@ public class ModelTester
 	@Test
 	public void testCanPlayDevCard()
 	{
-		//not user's turn
-
-		//user doesn't have a dev card
-
-		//bought it this turn
 		//already played dev card this turn
-		//special case for monument
+		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		DevCard devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlayDevCard(turnManager, turnManager.currentUser(), devCard));
+		
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtRdBldgThisTurn.json"));
+		devCard = new DevCard(DevCardType.ROAD_BUILD);
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canPlayDevCard(turnManager, turnManager.currentUser(), devCard));
+		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canPlayDevCard(turnManager, turnManager.currentUser(), devCard));
 
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlaySoldier.json"));
+		turnManager = testModelFacade.turnManager();
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlayDevCard(turnManager, turnManager.getUserFromIndex(1), devCard));
+		
 		//true test case
+		assertTrue(testModelFacade.canPlayDevCard(turnManager, turnManager.currentUser(), devCard));
 	}
-
-	//TESTS for specific cards
 
 	@Test
 	public void testCanRobPlayer() 
