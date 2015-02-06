@@ -155,10 +155,10 @@ public class Model {
 			map.setRoadsOnMap(extractRoads(jsonMap));
 				
 			//get cities
-			map.setCitiesOnMap(extractBuildings(jsonMap, "cities"));
+			map.setCitiesOnMap(extractBuildings(jsonMap, "cities", PieceType.CITY));
 				
 			//get settlements
-			map.setSettlementsOnMap(extractBuildings(jsonMap, "settlements"));
+			map.setSettlementsOnMap(extractBuildings(jsonMap, "settlements", PieceType.SETTLEMENT));
 				
 			//get ports
 			map.setPortsOnMap(extractPorts(jsonMap));
@@ -362,21 +362,21 @@ public class Model {
 		return road;
 	}
 	
-	public ArrayList<Building> extractBuildings(JsonObject jsonMap, String buildingType) {
+	public ArrayList<Building> extractBuildings(JsonObject jsonMap, String buildingType, PieceType pieceBuildingType) {
 		ArrayList<Building> buildings = new ArrayList<Building>();
 		
 		//building type is settlements or cities
 		JsonArray jsonBuildings = jsonMap.get(buildingType).getAsJsonArray();
 		
 		for(JsonElement jsonEleBuilding : jsonBuildings) {
-			Building building = extractBuilding(jsonEleBuilding.getAsJsonObject());
+			Building building = extractBuilding(jsonEleBuilding.getAsJsonObject(), pieceBuildingType);
 			buildings.add(building);
 		}
 		
 		return buildings;
 	}
 	
-	public Building extractBuilding(JsonObject jsonBuilding) {
+	public Building extractBuilding(JsonObject jsonBuilding, PieceType buildingType) {
 		Gson gson = new Gson();
 		
 		int owner = jsonBuilding.get("owner").getAsInt();
@@ -391,7 +391,7 @@ public class Model {
 		
 		Building building = new Building();
 		building.setOwner(owner);
-		
+		building.setType(buildingType);
 		
 		Vertex vertex = new Vertex(location);
 		building.setVertex(vertex);
@@ -489,7 +489,7 @@ public class Model {
 		
 		//soldier
 		//victory points
-		
+		updateUserPieces(currUser);
 	}
 	
 	public void updateUserPieces(User user) {
