@@ -94,6 +94,8 @@ public class ModelFacade {
 			return false;
 		}
 		ArrayList<ResourceCard> userCards = new ArrayList<ResourceCard>(user.getHand().getResourceCards().getAllResourceCards()) ;
+		ResourceCardDeck userDeck = user.getHand().getResourceCards();
+		ResourceCardDeck removeDeck = new ResourceCardDeck(cardsToRemove);
 		
 		//if user doesn't have over 7 cards
 		if(!(userCards.size() > 7)) {
@@ -101,7 +103,7 @@ public class ModelFacade {
 		}
 		
 		//if user doesn't have all the cards they are choosing to remove
-		if(!userCards.containsAll(cardsToRemove)) {
+		if(!TradeManager.hasEnoughResources(userDeck, removeDeck)) {
 			return false;
 		}
 		

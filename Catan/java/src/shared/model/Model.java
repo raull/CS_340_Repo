@@ -1,7 +1,6 @@
 package shared.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
@@ -33,7 +32,6 @@ import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
-import shared.model.game.UserManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
