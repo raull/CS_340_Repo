@@ -40,7 +40,7 @@ public class User {
 	/**
 	 * A {@link Hand} representing the cards of the <code>User</code>
 	 */
-	private Hand hand;
+	private Hand hand = new Hand();
 	
 	/**
 	 * An ArrayList of {@link Edge}s representing the edges that the <code>User</code> occupies

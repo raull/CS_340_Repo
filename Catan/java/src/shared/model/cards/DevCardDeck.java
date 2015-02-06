@@ -12,13 +12,17 @@ import shared.model.exception.InvalidMoveException;
  *
  */
 public class DevCardDeck {
-	private ArrayList<DevCard> cards;
+	private ArrayList<DevCard> cards = new ArrayList<DevCard>();
 	
 	/**
 	 * Constructor for the deck
 	 */
 	public DevCardDeck(ArrayList<DevCard> initDevCards){
 		cards = initDevCards;
+	}
+	
+	public DevCardDeck() {
+		
 	}
 	
 	/**

@@ -15,11 +15,11 @@ public class Hand {
 	/**
 	 * The development cards deck
 	 */
-	private DevCardDeck devCardDeck;
+	private DevCardDeck devCardDeck = new DevCardDeck();
 	/**
 	 * The newly added development cards
 	 */
-	private DevCardDeck newDevCardDeck;
+	private DevCardDeck newDevCardDeck = new DevCardDeck();
 	/**
 	 * The resource cards deck
 	 */
@@ -29,6 +29,10 @@ public class Hand {
 		devCardDeck = oldDevCards; 
 		newDevCardDeck = newDevCards;
 		resourceCardDeck =resourceCards;
+	}
+	
+	public Hand() {
+		
 	}
 	
 	public ResourceCardDeck getResourceCards(){
