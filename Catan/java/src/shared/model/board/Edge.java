@@ -39,7 +39,7 @@ public class Edge {
 	 * @param direction
 	 * @param hexTiles
 	 */
-	public Edge(EdgeLocation location, EdgeDirection direction, final ArrayList<HexTile> hexTiles) {
+	public Edge(EdgeLocation location) {
 		this.direction = direction;
 		this.location = location;
 		this.hexTiles = hexTiles;

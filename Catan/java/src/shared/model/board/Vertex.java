@@ -42,7 +42,7 @@ public class Vertex {
 	 * @param direction A {@link VertexDirection} representing the direction of the <code>Vertex</code>
 	 * @param hexTiles A list of {@link HexTiles} representing the hexTiles surrounding the <code>Vertex</code>
 	 */
-	public Vertex(VertexLocation location, VertexDirection direction, final ArrayList<HexTile> hexTiles) {
+	public Vertex(VertexLocation location) {
 		this.location = location;
 		this.direction = direction;
 		
