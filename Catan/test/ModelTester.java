@@ -116,63 +116,67 @@ public class ModelTester
 		assertTrue(testModelFacade.canPlaceRoadAtLoc(turnManager, new EdgeLocation(new HexLocation(0,1), EdgeDirection.SouthEast), turnManager.currentUser()));
 	}
 
-//	@Test
-//	public void testCanBuyRoad()
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.getUserFromIndex(1), false));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), false));
-//		
-//		//TODO THIS TEST I HAVE QUESTIONS ABOUT. TURN PHASE
-//		//set up round
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		turnManager = testModelFacade.turnManager();
-//		assertTrue(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), true));
-//		
-//		//insufficient funds
-//		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
-//		turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), false));
-//
-//		//true test case
-//		testModelFacade.updateModel(testMoxy.getModel("canBuyRoad.json"));
-//		turnManager = testModelFacade.turnManager();
-//		assertTrue(testModelFacade.canBuyRoad(turnManager, turnManager.currentUser(), false));
-//	}
-//
-//	@Test
-//	public void testCanPlaceBuildingAtLoc()
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.getUserFromIndex(1), PieceType.SETTLEMENT));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.SETTLEMENT));
-//		
-//		//set up round
-//		
-//		//invalid location (occupied, one away occupied)
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		turnManager = testModelFacade.turnManager();
-//		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.SETTLEMENT));		
-//		
-//		//test for city (must have settlement already)
-//		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.CITY));
-//		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.CITY));
-//
-//		//true test case
-//		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, VERTEXLOCATION, turnManager.currentUser(), PieceType.SETTLEMENT));
-//	}
+	@Test
+	public void testCanBuyRoad()
+	{
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canBuyPiece(turnManager,  turnManager.getUserFromIndex(1), PieceType.ROAD));
+
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
+		
+		//unnecessary to test setup phase
+		
+		//insufficient funds
+		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
+
+		//true test case
+		testModelFacade.updateModel(testMoxy.getModel("canBuyRoad.json"));
+		turnManager = testModelFacade.turnManager();
+		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.ROAD));
+	}
+
+	@Test
+	public void testCanPlaceBuildingAtLoc()
+	{
+		
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("finishTurn.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		VertexLocation validLocation = new VertexLocation(new HexLocation(2,2),VertexDirection.SouthWest);
+		VertexLocation invalidLocation = new VertexLocation(new HexLocation(-1,-1), VertexDirection.West);
+		VertexLocation validCityLocationForUser0 = new VertexLocation(new HexLocation(1,-1), VertexDirection.SouthEast);
+		
+		User currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.SETTLEMENT));
+		
+		//set up round
+		testModelFacade.updateModel(testMoxy.getModel("model.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, currentUser, PieceType.SETTLEMENT));
+		
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.getUserFromIndex(1), PieceType.SETTLEMENT));
+		
+		//invalid location (occupied, one away occupied)
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, invalidLocation, turnManager.currentUser(), PieceType.SETTLEMENT));		
+		
+		//test for city (must have settlement already)
+		assertFalse(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.CITY));
+		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, validCityLocationForUser0, turnManager.currentUser(), PieceType.CITY));
+
+		//true test case
+		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.SETTLEMENT));
+	}
 //
 //	@Test
 //	public void testCanBuyBuilding()
