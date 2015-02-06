@@ -54,6 +54,10 @@ public class ServerProxy implements Proxy{
 				Object result = jsonStream.fromXML(connection.getInputStream());
 				return result;
 			}
+			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
+			{
+				return null;
+			}
 			else{
 				throw new ProxyException(String.format("doGet failed: %s (http code %d)",
 						urlPath, connection.getResponseCode()));
@@ -79,6 +83,10 @@ public class ServerProxy implements Proxy{
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				Object result = jsonStream.fromXML(connection.getInputStream());
 				return result;
+			}
+			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
+			{
+				return null;
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -111,6 +119,10 @@ public class ServerProxy implements Proxy{
 				Object result = jsonStream.fromXML(connection.getInputStream());
 				return result;
 			}
+			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
+			{
+				return null;
+			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
 						urlPath, connection.getResponseCode()));
@@ -140,6 +152,10 @@ public class ServerProxy implements Proxy{
 				setGameID(sb.toString());
 				Object result = jsonStream.fromXML(connection.getInputStream());
 				return result;
+			}
+			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
+			{
+				return null;
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -180,8 +196,8 @@ public class ServerProxy implements Proxy{
 	}
 
 	@Override
-	public List<Game> list() throws ProxyException {
-		return (List<Game>)doGet("/games/list");
+	public JsonObject list() throws ProxyException {
+		return (JsonObject)doGet("/games/list");
 	}
 
 	@Override
@@ -313,7 +329,7 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public void changeLogLevel(ChangeLogLevelRequest cllr) throws ProxyException {
-		doPost("util/changeLogLevel", cllr);
+		doPost("/util/changeLogLevel", cllr);
 		
 	}
 
@@ -324,8 +340,8 @@ public class ServerProxy implements Proxy{
 	}
 
 	@Override
-	public List<String> listAI() throws ProxyException {
-		return (List<String>)doGet("/game/listAI");
+	public JsonObject listAI() throws ProxyException {
+		return (JsonObject)doGet("/game/listAI");
 	}
 
 }

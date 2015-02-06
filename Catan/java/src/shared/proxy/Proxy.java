@@ -32,7 +32,7 @@ public interface Proxy {
 	 * Returns a list of all games in progress and their players.
 	 * @return
 	 */
-	public List<Game> list()throws ProxyException;
+	public JsonObject list()throws ProxyException;
 	/**
 	 * Requests that a new game be created.
 	 * @param CreateRequest
@@ -199,7 +199,7 @@ public interface Proxy {
 	 * Returns a list of the supported AI types.
 	 * @return
 	 */
-	public List<String> listAI()throws ProxyException;
+	public JsonObject listAI()throws ProxyException;
 }
 
 

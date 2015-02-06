@@ -35,19 +35,20 @@ public class ProxyTester
 	 */
 
 	//need to make sure the server is running for all of these tests
-
-	private ServerProxy testProxy;
+	private String host = "localhost";
+	private String port = "8081";
+	private ServerProxy testProxy = new ServerProxy(host, port);
 
 	@Before
 	public void setUp()
 	{
 		//TODO this needs to be set to the host and port where the server is running
-		String host = "localhost";
-		String port = "8082";
+		
 
-		testProxy = new ServerProxy(host, port);
+		;
 	}
 
+	
 	@Test
 	public void testLogin()
 	{
@@ -79,7 +80,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.list());
+			testProxy.list();
 		}
 		catch(ProxyException e)
 		{
@@ -92,7 +93,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.create(new CreateGameRequest(true, true, true, "Game 7")));
+			testProxy.create(new CreateGameRequest(true, true, true, "Game 7"));
 		}
 		catch(ProxyException e)
 		{
@@ -144,7 +145,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.model(1));
+			testProxy.model(1);
 		}
 		catch(ProxyException e)
 		{
@@ -157,7 +158,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.reset());
+			testProxy.reset();
 		}
 		catch(ProxyException e)
 		{
@@ -170,7 +171,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.sendChat(new SendChat(0, "Hello world!")));
+			testProxy.sendChat(new SendChat(0, "Hello world!"));
 		}
 		catch(ProxyException e)
 		{
@@ -183,7 +184,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.rollNumber(new RollNumber(0, 7)));
+			testProxy.rollNumber(new RollNumber(0, 7));
 		}
 		catch(ProxyException e)
 		{
@@ -196,7 +197,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0))));
+			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0)));
 		}
 		catch (ProxyException e)
 		{
@@ -209,7 +210,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.finishTurn(new FinishMove(0)));
+			testProxy.finishTurn(new FinishMove(0));
 		}
 		catch(ProxyException e)
 		{
@@ -222,7 +223,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.buyDevCard(new BuyDevCard(0)));
+			testProxy.buyDevCard(new BuyDevCard(0));
 		}
 		catch(ProxyException e)
 		{
@@ -235,7 +236,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.Year_of_Plenty(new Year_of_Plenty_(0, ResourceType.BRICK, ResourceType.WHEAT)));
+			testProxy.Year_of_Plenty(new Year_of_Plenty_(0, ResourceType.BRICK, ResourceType.WHEAT));
 		}
 		catch (ProxyException e)
 		{
@@ -251,7 +252,7 @@ public class ProxyTester
 			HexLocation hex = new HexLocation(0,0);
 			EdgeLocation edge1 = new EdgeLocation(hex, EdgeDirection.North);
 			EdgeLocation edge2 = new EdgeLocation(hex, EdgeDirection.NorthEast);
-			assertNotNull(testProxy.Road_Building(new Road_Building_(0, edge1, edge2)));
+			testProxy.Road_Building(new Road_Building_(0, edge1, edge2));
 		}
 		catch(ProxyException e)
 		{
@@ -264,7 +265,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0))));
+			testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0)));
 		}
 		catch(ProxyException e)
 		{
@@ -277,7 +278,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.Monopoly(new Monopoly_(ResourceType.BRICK, 0)));
+			testProxy.Monopoly(new Monopoly_(ResourceType.BRICK, 0));
 		}
 		catch(ProxyException e)
 		{
@@ -290,7 +291,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.Monument(new Monument_(0)));
+			testProxy.Monument(new Monument_(0));
 		}
 		catch(ProxyException e)
 		{
@@ -305,7 +306,7 @@ public class ProxyTester
 		{
 			HexLocation hex = new HexLocation(0,0);
 			EdgeLocation edge = new EdgeLocation(hex, EdgeDirection.North);
-			assertNotNull(testProxy.buildRoad(new BuildRoad(0, edge, false)));
+			testProxy.buildRoad(new BuildRoad(0, edge, false));
 		}
 		catch(ProxyException e)
 		{
@@ -320,7 +321,7 @@ public class ProxyTester
 		{
 			HexLocation hex = new HexLocation(0,0);
 			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
-			assertNotNull(testProxy.buildSettlement(new BuildSettlement(0, vertex, false)));
+			testProxy.buildSettlement(new BuildSettlement(0, vertex, false));
 		}
 		catch(ProxyException e)
 		{
@@ -335,7 +336,7 @@ public class ProxyTester
 		{
 			HexLocation hex = new HexLocation(0,0);
 			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
-			assertNotNull(testProxy.buildCity(new BuildCity(0, vertex)));
+			testProxy.buildCity(new BuildCity(0, vertex));
 		}
 		catch(ProxyException e)
 		{
@@ -348,7 +349,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.offerTrade(new OfferTrade(0, new ResourceList(1,0,0,0,0),1)));
+			testProxy.offerTrade(new OfferTrade(0, new ResourceList(1,0,0,0,0),1));
 		}
 		catch(ProxyException e)
 		{
@@ -361,7 +362,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.acceptTrade(new AcceptTrade(1, false)));
+			testProxy.acceptTrade(new AcceptTrade(1, false));
 		}
 		catch(ProxyException e)
 		{
@@ -374,7 +375,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.maritimeTrade(new MaritimeTrade(0,0,0,0)));
+			testProxy.maritimeTrade(new MaritimeTrade(0,0,0,0));
 		}
 		catch(ProxyException e)
 		{
@@ -387,7 +388,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.discardCards(new DiscardCards(0, new ResourceList(1,0,0,0,0))));
+			testProxy.discardCards(new DiscardCards(0, new ResourceList(1,0,0,0,0)));
 		}
 		catch(ProxyException e)
 		{
@@ -426,7 +427,7 @@ public class ProxyTester
 	{
 		try
 		{
-			assertNotNull(testProxy.listAI());
+			testProxy.listAI();
 		}
 		catch(ProxyException e)
 		{
