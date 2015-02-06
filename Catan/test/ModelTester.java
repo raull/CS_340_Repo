@@ -7,6 +7,8 @@ import org.junit.Test;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.*;
+import shared.model.cards.Bank;
+import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
@@ -98,7 +100,6 @@ public class ModelTester
 	@Test
 	public void testCanPlaceRoadAtLoc()
 	{
-		//TODO create appropriate jsons, call functions with EDGELOCATION objects
 		//not user's turn
 		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
@@ -192,7 +193,7 @@ public class ModelTester
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
 		
 		//insufficient funds
-		testModelFacade.updateModel(testMoxy.getModel(""));
+		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
 		turnManager = testModelFacade.turnManager();
 		assertFalse(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.SETTLEMENT));
 
@@ -200,62 +201,62 @@ public class ModelTester
 		assertTrue(testModelFacade.canBuyPiece(turnManager, turnManager.currentUser(), PieceType.CITY));
 	}
 
-//	@Test
-//	public void testCanBuyDevCard()
-//	{
-//		//not user's turn
-//		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		Bank bank = testModelFacade.bank();
-//		DevCardDeck devDeck = bank.getDevCardDeck();
-//		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.getUserFromIndex(1), devDeck));
-//
-//		//wrong turn phase
-//		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		devDeck = bank.getDevCardDeck();
-//		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-//		
-//		//dev card deck empty
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		devDeck = bank.getDevCardDeck();
-//		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-//
-//		//insufficient funds
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		devDeck = bank.getDevCardDeck();
-//		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-//		
-//		//true test case
-//		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
-//		bank = testModelFacade.bank();
-//		devDeck = bank.getDevCardDeck();
-//		assertTrue(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
-//
-//	}
-//
-//	@Test
-//	public void testCanPlayDevCard()
-//	{
-//		//not user's turn
-//		
-//		//user doesn't have a dev card
-//		
-//		//bought it this turn
-//		//already played dev card this turn
-//		//special case for monument
-//
-//		//true test case
-//	}
-//
-//	//TESTS for specific cards
-//
+	@Test
+	public void testCanBuyDevCard()
+	{
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		Bank bank = testModelFacade.bank();
+		DevCardDeck devDeck = bank.getDevCardDeck();
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.getUserFromIndex(1), devDeck));
+
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+		turnManager = testModelFacade.turnManager();
+		bank = testModelFacade.bank();
+		devDeck = bank.getDevCardDeck();
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
+		
+		//dev card deck empty
+		testModelFacade.updateModel(testMoxy.getModel("buydevNoDevLeft.json"));
+		turnManager = testModelFacade.turnManager();
+		bank = testModelFacade.bank();
+		devDeck = bank.getDevCardDeck();
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
+
+		//insufficient funds
+		testModelFacade.updateModel(testMoxy.getModel("cantBuyAnyPiece.json"));
+		turnManager = testModelFacade.turnManager();
+		bank = testModelFacade.bank();
+		devDeck = bank.getDevCardDeck();
+		assertFalse(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
+		
+		//true test case
+		testModelFacade.updateModel(testMoxy.getModel("buydevValidBuy.json"));
+		turnManager = testModelFacade.turnManager();
+		bank = testModelFacade.bank();
+		devDeck = bank.getDevCardDeck();
+		assertTrue(testModelFacade.canBuyDevCard(turnManager, turnManager.currentUser(), devDeck));
+
+	}
+
+	@Test
+	public void testCanPlayDevCard()
+	{
+		//not user's turn
+		assert(false);//need to fill in!!!
+		//user doesn't have a dev card
+		
+		//bought it this turn
+		//already played dev card this turn
+		//special case for monument
+
+		//true test case
+	}
+
+	//TESTS for specific cards
+
 //	@Test
 //	public void testCanRobPlayer() 
 //	{
@@ -266,12 +267,12 @@ public class ModelTester
 //
 //		//wrong turn phase
 //		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//		TurnManager turnManager = testModelFacade.turnManager();
+//		turnManager = testModelFacade.turnManager();
 //		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));		
 //		
 //		//victim has no resource cards
 //		testModelFacade.updateModel(testMoxy.getModel(""));
-//		TurnManager turnManager = testModelFacade.turnManager();
+//		turnManager = testModelFacade.turnManager();
 //		assertFalse(testModelFacade.canRobPlayer(HEXTILE, turnManager.currentUser(), VICTIM));
 //		
 //		//victim must have city or settlement connected to tile robber is on
