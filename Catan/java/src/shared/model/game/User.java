@@ -84,6 +84,10 @@ public class User {
 		this.color = color;
 	}
 	
+	public User() {
+		
+	}
+	
 	//Getters
 	
 	public String getName() {
