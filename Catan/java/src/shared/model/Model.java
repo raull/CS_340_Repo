@@ -424,11 +424,11 @@ public class Model {
 //		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
 		
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
-		System.out.println(jsonUserArray);
+		
 		
 //		for(JsonElement jsonEleUser : jsonUserArray) {
 		for(int i = 0; i < jsonUserArray.size(); i++) {
-			if(jsonUserArray.get(i) == null) {
+			if(jsonUserArray.get(i).isJsonNull()) {
 				continue;
 			}
 			JsonObject jsonUser = jsonUserArray.get(i).getAsJsonObject();

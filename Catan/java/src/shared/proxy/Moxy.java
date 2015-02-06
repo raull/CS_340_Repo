@@ -111,6 +111,8 @@ public class Moxy implements Proxy{
 		
 		try {
 			File file = new File("java/src/shared/proxy/" + filepath);
+			//temp change
+//			File file = new File("Catan/java/src/shared/proxy/" + filepath);
 			jsonElement = parser.parse(new FileReader(file));
 			Gson gson = new GsonBuilder().create();
 			model = gson.fromJson(jsonElement, JsonObject.class);
