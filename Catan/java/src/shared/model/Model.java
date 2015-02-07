@@ -28,6 +28,7 @@ import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
+import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
@@ -49,6 +50,7 @@ public class Model {
 	public TurnManager turnManager; //the turntracker -- tracks who's turn it is
 	public int version; //version of the model, to see if up to date
 	public int winner; //-1 when nobody won yet. when someone wins, it's their order index
+	public ScoreKeeper scoreKeeper;
 	
 	public Model(){
 		this.bank = new Bank(new ArrayList<DevCard>(), new ArrayList<ResourceCard>());
@@ -59,6 +61,7 @@ public class Model {
 		this.turnManager = new TurnManager(new ArrayList<User>());
 		this.version = 0;
 		this.winner = -1;
+		this.scoreKeeper = null; //initialize score keeper later
 	}
 	
 	public Model(Bank bank, MessageList chat, MessageList log,
@@ -166,6 +169,8 @@ public class Model {
 			//extract and update users
 			extractUsers(jsonObject);
 			
+			scoreKeeper = new ScoreKeeper(turnManager.getUsers().size());
+			
 			//place robber
 			extractRobber(jsonMap);
 			
@@ -185,6 +190,7 @@ public class Model {
 			
 			//winner
 			winner = jsonModel.get("winner").getAsInt();
+			scoreKeeper.setWinner(winner);
 			
 		}
 	}
@@ -504,8 +510,9 @@ public class Model {
 		currUser.setUnusedRoads(roads);
 		currUser.setUnusedSettlements(settlements);
 		
-		//soldier
-		//victory points
+		currUser.setSoldiers(soldiers);
+		currUser.setVictoryPoints(victoryPoints);
+		
 		updateUserPieces(currUser);
 		//color
 		currUser.setColor(userColor);
@@ -619,6 +626,14 @@ public class Model {
 		turnManager.setLongestRoadIndex(longestRoad);
 		turnManager.setLargestArmyIndex(largestArmy);
 		
+	}
+	
+	public void updateScoreKeeper() {
+		ArrayList<User> users = (ArrayList<User>) turnManager.getUsers();
+		
+		for(User user : users) {
+			scoreKeeper.setScore(user.getTurnIndex(), user.getVictoryPoints());
+		}
 	}
 	
 }

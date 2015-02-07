@@ -76,6 +76,10 @@ public class User {
 	
 	private ArrayList<Port> ports = new ArrayList<Port>();
 	
+	int soldiers = 0;
+	
+	private int victoryPoints = 0;
+	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
 	 * @param A {@link String} representing the name of the <code>User</code>
@@ -326,5 +330,23 @@ public class User {
 		}
 		return false;
 	}
+
+	
+	public int getSoldiers() {
+		return soldiers;
+	}
+
+	public void setSoldiers(int soldiers) {
+		this.soldiers = soldiers;
+	}
+
+	public int getVictoryPoints() {
+		return victoryPoints;
+	}
+
+	public void setVictoryPoints(int victoryPoints) {
+		this.victoryPoints = victoryPoints;
+	}
+	
 	
 }

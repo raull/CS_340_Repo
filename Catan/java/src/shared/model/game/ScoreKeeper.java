@@ -12,6 +12,8 @@ import java.util.TreeMap;
 public class ScoreKeeper {
 
 	private Map<Integer, Integer> score;
+	private int longestRoadUser;
+	private int largestArmyUser;
 	private int winner;
 	
 	//Constructor
@@ -64,6 +66,23 @@ public class ScoreKeeper {
 	 */
 	public void setScore(int turnIndex, int score) {
 		this.score.put(new Integer(turnIndex), new Integer(score));
+	}
+
+
+	public int getLongestRoadUser() {
+		return longestRoadUser;
+	}
+
+	public void setLongestRoadUser(int longestRoadUser) {
+		this.longestRoadUser = longestRoadUser;
+	}
+
+	public int getLargestArmyUser() {
+		return largestArmyUser;
+	}
+
+	public void setLargestArmyUser(int largestArmyUser) {
+		this.largestArmyUser = largestArmyUser;
 	}
 
 	/**
