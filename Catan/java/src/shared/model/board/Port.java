@@ -3,6 +3,7 @@ package shared.model.board;
 import java.util.ArrayList;
 
 import shared.definitions.PortType;
+import shared.definitions.ResourceType;
 import shared.locations.VertexLocation;
 
 
@@ -17,6 +18,7 @@ public class Port {
 	 * {@link PortType} representing the resource that the <code>Port</code> may provide
 	 */
 	private PortType type;
+	
 	/**
 	 * An integer representing the offer rate for the resource that it provides, must be either 2 or 3
 	 */
@@ -52,6 +54,28 @@ public class Port {
 	
 	public void setLocations(ArrayList<Vertex> locations) {
 		this.locations = locations;
+	}
+	
+	public ResourceType getPortResourceType() {
+		ResourceType resourceType = null;
+		
+		if(this.type == PortType.WOOD) {
+			resourceType = ResourceType.WOOD;
+		}
+		else if(this.type == PortType.BRICK) {
+			resourceType = ResourceType.BRICK;
+		}
+		else if(this.type == PortType.SHEEP) {
+			resourceType = ResourceType.SHEEP;
+		}
+		else if(this.type == PortType.WHEAT) {
+			resourceType = ResourceType.WHEAT;
+		}
+		else if(this.type == PortType.ORE) {
+			resourceType = ResourceType.ORE;
+		}
+		
+		return resourceType; 
 	}
 	
 }

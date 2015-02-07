@@ -8,6 +8,7 @@ import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.PortType;
+import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
@@ -300,6 +301,15 @@ public class User {
 		
 		return false;
 		
+	}
+	
+	public boolean hasPortByResource(ResourceType resourceType) {
+		for(Port port : this.ports()) {
+			if(port.getPortResourceType() == resourceType) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }
