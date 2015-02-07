@@ -509,6 +509,7 @@ public class Model {
 		updateUserPieces(currUser);
 		//color
 		currUser.setColor(userColor);
+		currUser.setName(name);
 	}
 	
 	public void updateUserPieces(User user) {

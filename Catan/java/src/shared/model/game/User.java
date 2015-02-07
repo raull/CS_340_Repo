@@ -289,6 +289,11 @@ public class User {
 	public void setColor(CatanColor color) {
 		this.color = color;
 	}
+	
+	public void setName(String name)
+	{
+		this.name = new PlayerName(name);
+	}
 
 	/**
 	 * Check if user has a port with the specified port type
