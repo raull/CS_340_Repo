@@ -2,6 +2,7 @@ package shared.model.cards;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import shared.definitions.DevCardType;
 import shared.model.exception.InvalidMoveException;
@@ -37,8 +38,8 @@ public class DevCardDeck {
 	 * Returns a read-only list of all the DevCards
 	 * @return an unmodifiable List of DevCards
 	 */
-	public ArrayList<DevCard> getAllCards(){
-		return (ArrayList<DevCard>) Collections.unmodifiableList(cards);
+	public List<DevCard> getAllCards(){
+		return Collections.unmodifiableList(cards);
 	}
 	
 	/**

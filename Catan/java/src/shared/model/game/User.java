@@ -99,11 +99,11 @@ public class User {
 	}
 	
 	public ArrayList<DevCard> getUsableDevCards() {
-		return this.hand.getUsableDevCards().getAllCards();
+		return (ArrayList<DevCard>) this.hand.getUsableDevCards().getAllCards();
 	}
 	
 	public ArrayList<DevCard> getNewDevCards(){
-		return this.hand.getNewDevCards().getAllCards();
+		return (ArrayList<DevCard>) this.hand.getNewDevCards().getAllCards();
 	}
 	
 	public ResourceCardDeck getResourceCards(){

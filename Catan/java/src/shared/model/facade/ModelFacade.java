@@ -340,6 +340,22 @@ public class ModelFacade {
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || devCardDeck.getAllCards().size() == 0 || !user.canBuyDevCard()) {
 			return false;
 		}
+//		if(user != turnManager.currentUser()){
+//			System.out.println("not current user");
+//			return false;
+//		}
+//		else if(turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+//			System.out.println("not in correct turnphase");
+//			return false;
+//		}
+//		else if(devCardDeck.getAllCards().size() == 0) {
+//			System.out.println("dev card deck empty");
+//			return false;
+//		}
+//		else if(!user.canBuyDevCard()) {
+//			System.out.println("user can't buy dev card");
+//			return false;
+//		}
 		else{
 			return true;
 		}
