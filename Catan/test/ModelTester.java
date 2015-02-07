@@ -400,23 +400,30 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		User currentUser = turnManager.currentUser();
+		EdgeLocation edge1 = new EdgeLocation(new HexLocation(0,0), EdgeDirection.North);
+		EdgeLocation edge2 = new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest);
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, currentUser, edge1, edge2));
 		
 		//bought it this turn
 		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, turnManager.currentUser(), edge1, edge2));
 		
 		//user doesn't have a dev card
 		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, turnManager.currentUser(), edge1, edge2));
 
 		//not user's turn
-		testModelFacade.updateModel(testMoxy.getModel(""/*REPLACE WITH YOUR JSON*/));
+		testModelFacade.updateModel(testMoxy.getModel("canPlayRoadBuilding.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, turnManager.getUserFromIndex(1), edge1, edge2));
 		
 		//true test case
+		assertTrue(testModelFacade.canPlayRoadBuilding(turnManager, currentUser, edge1, edge2));
 	}
 
 	@Test

@@ -165,7 +165,7 @@
 
 	<target name="test" depends="compile-test, compile" description="compiles, packages, and runs the JUnit tests for the project">
 		<java classname="test.Tester" fork="yes">
-			
+			<echo message="${java.build}"/>
 			<classpath>
 				<path refid="all-classpath"/> 
 			</classpath>
@@ -175,9 +175,19 @@
 		</java>
 	</target>
     
-    <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
+	<target name="make-tester-zip" depends="package">
+		<zip destfile="./tester.zip" basedir="${java.dist}" />
+	    <java classname="${main-class}" fork="true" >
+	        <classpath>
+	            <path refid="classpath" />
+	            <path location="${jar.dir}/${ant.project.name}.jar" />
+	        </classpath>
+	    </java>
+	</target>
+	
+    <!--<target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />
-    </target>
+    </target>-->
   
 </project>
 
