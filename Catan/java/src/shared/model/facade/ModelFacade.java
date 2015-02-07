@@ -429,52 +429,75 @@ public class ModelFacade {
 		return true;
 	}
 	
+	
 	/**
 	 * if user can maritime trade
-	 * @param bank - if bank has resources
-	 * @param user - if user has resources
-	 * @param tradeOffer information about the offer (offeredCards, acceptedCards, ratio)
+	 * @param turnManager checks if it's user's turn
+	 * @param bank check if bank has the card wanted
+	 * @param user who is trading
+	 * @param wantedCard the card user wants
+	 * @param offeredCards the cards user is giving
 	 * @return
 	 */
-	public Boolean canMaritimeTrade(TurnManager turnManager, Bank bank, User user, TradeOffer tradeOffer) {
-		//one ResourceCard per trade, assumes that the cards user is offering is all of the same type 
+	public Boolean canMaritimeTrade(TurnManager turnManager, Bank bank, User user, ResourceCard wantedCard, ResourceCardDeck offeredCards) {
+		//one ResourceCard per trade, users should only be able to offer cards all of the same type from UI
 		if(user != turnManager.currentUser()) {
+			System.out.println("not user's turn");
 			return false;
 		}
-		//check if bank has cards user wants available
-		ResourceCardDeck availableCards = bank.getResourceDeck(); //unimplemented function -- basically checks what cards bank has available
+		if(turnManager.currentTurnPhase() != TurnPhase.PLAYING){
+			System.out.println("wrong turn phase");
+			return false;
+		}
+		
+		ResourceCardDeck availableCards = bank.getResourceDeck();
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
 		
-		//if bank doesn't have all cards available, or if user doesn't have the cards they are offering
-		if(!TradeManager.hasEnoughResources(availableCards, tradeOffer.getReceivingDeck()) || !TradeManager.hasEnoughResources(userCards, tradeOffer.getSendingDeck())) {
+		ArrayList<ResourceCard> wantedResourceCards = new ArrayList<ResourceCard>();
+		wantedResourceCards.add(wantedCard);
+		ResourceCardDeck wantedCardDeck = new ResourceCardDeck(wantedResourceCards);
+		//if bank doesn't have all cards available
+		if(!TradeManager.hasEnoughResources(availableCards, wantedCardDeck) ) {
+			System.out.println("bank doesn't have available cards");
 			return false;
 		}
 		
-		int ratio = tradeOffer.getRate();
-		//if ratio is 4, default ok
+		//user doesn't have cards they are offering
+		if(!TradeManager.hasEnoughResources(userCards, offeredCards)) {
+			return false;
+		}
+		
+		//if user is trading the same resource for the same type -- why would you do this
+		ResourceType userOfferedType = offeredCards.getAllResourceCards().get(0).getType();
+		
+		if(wantedCard.getType() == userOfferedType) {
+			return false;
+		}
+		
+		int ratio = offeredCards.getAllResourceCards().size(); //ratio of cards that the user is offering
+		
+		//check that the number of cards user is offering is possible due to a port they own
+		//any maritime with 4 ratio is ok
 		if(ratio == 4) {
 			return true;
 		}
 		else if(ratio == 3) {
-			//check that user has the THREE port
 			if(!user.hasPort(PortType.THREE)) {
+				System.out.println("user trying to trade 3 for 1 without port");
 				return false;
 			}
-			else{
-				return true;
-			}
-			
+			return true;
 		}
-		else if (ratio == 2){ 
-			if(!user.hasPort(tradeOffer.getPortType())) { 
+		else if(ratio == 2) {
+			if(!user.hasPortByResource(userOfferedType)){
+				System.out.println("user trying to trade 2 for 1 without specific port");
 				return false;
 			}
-			else {
-				return true;
-			}
+			return true;
 		}
 		else{
-			return false; //ration shouldn't be anything besides 2-4 for maritime trade
+			//shouldn't get here
+			return false;
 		}
 		
 	}
