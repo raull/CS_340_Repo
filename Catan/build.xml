@@ -25,6 +25,14 @@
 	<property name="demo.dir" value="demo"/>
     <property name="server.jar.file" value="${demo.dir}/server.jar"/>
     <property name="client.jar.file" value="${demo.dir}/client.jar"/>
+  	<property name="java.dir" location="java"/>
+
+	<property name="java.src" location="${java.dir}/src"/>
+	<property name="java.images" location="${java.dir}/images"/>
+	<property name="java.build" location="${java.dir}/build"/>
+	<property name="java.dist" location="${java.dir}/dist"/>
+	<property name="java.lib" location="${java.dir}/lib"/>
+	<property name="java.test" location="test"/>
   
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
@@ -85,13 +93,7 @@
 	</target>
     -->
 
-  	<property name="java.dir" location="java"/>
-	<property name="java.src" location="${java.dir}/src"/>
-	<property name="java.images" location="${java.dir}/images"/>
-	<property name="java.build" location="${java.dir}/build"/>
-	<property name="java.dist" location="${java.dir}/dist"/>
-	<property name="java.lib" location="${java.dir}/lib"/>
-	<property name="java.test" location="test"/>
+
  
 	<target name="init" description="create build directories">
 		<tstamp/>
