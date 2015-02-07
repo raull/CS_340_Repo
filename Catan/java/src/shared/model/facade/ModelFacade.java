@@ -293,6 +293,9 @@ public class ModelFacade {
 			if(!user.occupiesVertex(location)){
 				return false;
 			}
+			else{
+				return true;
+			}
 		}
 		else{
 			assert(false); //means the method was called incorrectly

@@ -277,6 +277,44 @@ public class ModelTester
 	public void testCanPlaySoldier()
 	{
 		
+		//already played dev card this turn
+		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		User validVictim = turnManager.getUserFromIndex(1);
+		HexTile validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		DevCard devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
+		
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		validVictim = turnManager.getUserFromIndex(1);
+		validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
+		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		validVictim = turnManager.getUserFromIndex(1);
+		validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlaySoldier.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		validVictim = turnManager.getUserFromIndex(1);
+		validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, validVictim, currentUser, validHex)); //note the users are switched here
+		
+		//true test case
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
 	}
 	
 	@Test
