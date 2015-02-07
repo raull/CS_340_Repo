@@ -3,9 +3,7 @@ package shared.proxy;
 import java.util.List;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
-import shared.model.*;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
 import shared.proxy.moves.*;

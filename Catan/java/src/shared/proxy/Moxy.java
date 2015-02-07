@@ -3,11 +3,8 @@ package shared.proxy;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.plaf.metal.MetalIconFactory.FileIcon16;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,12 +13,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
-import shared.model.Model;
-import shared.model.cards.*;
-import shared.model.game.*;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
 import shared.proxy.user.*;
@@ -37,7 +29,6 @@ import shared.proxy.moves.*;
 public class Moxy implements Proxy{
 
 	private JsonObject model;
-	private JsonObject JSONModel;
 	
 	
 	public Moxy() {
@@ -181,7 +172,7 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public JsonObject create(CreateGameRequest CreateRequest) {
+	public JsonElement create(CreateGameRequest CreateRequest) {
 		EmptyPlayer[] players = new EmptyPlayer[3];
 		NewGame nugame = new NewGame(CreateRequest.getName(), 3, players);
 		return null;
