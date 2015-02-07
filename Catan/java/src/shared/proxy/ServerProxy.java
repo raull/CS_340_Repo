@@ -39,6 +39,8 @@ public class ServerProxy implements Proxy{
 	private static final String HTTP_POST = "POST";
 	private String usercookie;
 	private String gameID;
+	private Gson gson = new Gson();
+
 	
 	private XStream jsonStream;
 	/** Default Constructor*/
@@ -61,7 +63,7 @@ public class ServerProxy implements Proxy{
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 	}
 	
-	private JsonObject doGet(String urlPath) throws ProxyException{
+	private JsonElement doGet(String urlPath) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -75,14 +77,9 @@ public class ServerProxy implements Proxy{
 				    while ((inputStr = streamReader.readLine()) != null)
 				        responseStrBuilder.append(inputStr);
 				    String jsonstff = responseStrBuilder.toString();
-				    JsonParser parser = new JsonParser();
 					
-				    //jsonElement = parser.parse(jsonstff);
-					Gson gson = new Gson();
 					JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
-					JsonObject jsonObj = element.getAsJsonObject();
-					//Object result = jsonStream.fromXML(connection.getInputStream());
-					return jsonObj;
+					return element;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -98,7 +95,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private JsonObject doPost(String urlPath, Object postData) throws ProxyException{
+	private JsonElement doPost(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -119,20 +116,8 @@ public class ServerProxy implements Proxy{
 			        responseStrBuilder.append(inputStr);
 			    String jsonstff = responseStrBuilder.toString();
 			    
-			    JsonParser parser = new JsonParser();
-				//JsonElement jsonElement;
-				Gson gson = new Gson();
 				JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
-				JsonObject jsonObj ;
-
-				if (element.isJsonObject()) {
-					jsonObj = element.getAsJsonObject();
-				} else {
-					jsonObj = new JsonObject();
-					jsonObj.add("result", element);
-				}
-				//Object result = jsonStream.fromXML(connection.getInputStream());
-				return jsonObj;
+				return element;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -148,7 +133,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private void doLogin(String urlPath, Object postData) throws ProxyException{
+	private boolean doLogin(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -157,7 +142,6 @@ public class ServerProxy implements Proxy{
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
 			connection.connect();
-			jsonStream.toXML(postData, connection.getOutputStream());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
@@ -172,15 +156,12 @@ public class ServerProxy implements Proxy{
 			    String inputStr;
 			    while ((inputStr = streamReader.readLine()) != null)
 			        responseStrBuilder.append(inputStr);
-			    String jsonstff = responseStrBuilder.toString();
-			    JsonParser parser = new JsonParser();
-			    //JsonObject o = (JsonObject)parser.parse(jsonstff);
-			//Object result = jsonStream.fromXML(connection.getInputStream());
-			//return o;
+			   
+			    return true;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				//return null;
+				return false;
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -192,7 +173,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private JsonObject doJoin(String urlPath, Object postData) throws ProxyException{
+	private JsonElement doJoin(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -202,7 +183,6 @@ public class ServerProxy implements Proxy{
 			connection.addRequestProperty("Accept", "text/html");
 			connection.setRequestProperty("Cookie", usercookie);
 			connection.connect();
-			jsonStream.toXML(postData, connection.getOutputStream());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
@@ -216,14 +196,9 @@ public class ServerProxy implements Proxy{
 			    while ((inputStr = streamReader.readLine()) != null)
 			        responseStrBuilder.append(inputStr);
 			    String jsonstff = responseStrBuilder.toString();
-			    JsonParser parser = new JsonParser();
-				JsonElement jsonElement;
 				
-				Gson gson = new Gson();
 				JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
-				JsonObject jsonObj = element.getAsJsonObject();
-				//Object result = jsonStream.fromXML(connection.getInputStream());
-				return jsonObj;
+				return element;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -258,13 +233,11 @@ public class ServerProxy implements Proxy{
 	@Override
 	public void login(Credentials cred) throws ProxyException {
 		doLogin("/user/login", cred);
-		
 	}
 
 	@Override
 	public void register(Credentials cred) throws ProxyException {
 		doLogin("/user/register", cred);
-		
 	}
 
 	@Override
