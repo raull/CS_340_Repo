@@ -482,6 +482,7 @@ public class ModelFacade {
 		
 		//user doesn't have cards they are offering
 		if(!TradeManager.hasEnoughResources(userCards, offeredCards)) {
+			System.out.println("user doesn't have cards they are offering");
 			return false;
 		}
 		
@@ -504,6 +505,7 @@ public class ModelFacade {
 				System.out.println("user trying to trade 3 for 1 without port");
 				return false;
 			}
+			System.out.println("user has a three port, ok");
 			return true;
 		}
 		else if(ratio == 2) {
@@ -511,6 +513,7 @@ public class ModelFacade {
 				System.out.println("user trying to trade 2 for 1 without specific port");
 				return false;
 			}
+			System.out.println("user has a specific port, ok");
 			return true;
 		}
 		else{

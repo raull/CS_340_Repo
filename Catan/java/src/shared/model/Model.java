@@ -545,7 +545,7 @@ public class Model {
 		for(Port port: ports) {
 			for(Vertex portVertex : port.getLocations()) {
 				if(user.occupiesVertex(portVertex.getLocation())) {
-					user.ports().add(port);
+					user.addPort(port);
 				}
 			}
 		}
