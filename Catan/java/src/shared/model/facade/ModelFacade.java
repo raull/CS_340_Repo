@@ -561,7 +561,6 @@ public class ModelFacade {
 		//if it isn't user's turn or if model status is not on playing or if user does not have year of plenty card
 		//if user has already played dev card
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard) || user.getHasPlayedDevCard()) {
-			System.out.println("Failure on current status");
 			return false;
 		}
 		ResourceCardDeck availableCards = bank.getResourceDeck();
