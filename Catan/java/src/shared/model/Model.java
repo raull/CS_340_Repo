@@ -171,6 +171,7 @@ public class Model {
 			
 			//trade offer -- may be null
 			if(jsonObject.get("tradeOffer") != null) {
+				tradeOffer = new TradeOffer(new ResourceCardDeck(), new ResourceCardDeck());
 				JsonObject jsonTradeOffer = jsonObject.get("tradeOffer").getAsJsonObject();
 				updateTradeOffer(jsonTradeOffer);
 			}

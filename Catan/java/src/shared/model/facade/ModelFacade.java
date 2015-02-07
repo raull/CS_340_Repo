@@ -397,11 +397,23 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
-		//if it isn't user's turn or if model status is not on playing
-		if(offeringUser != turnManager.currentUser() ||
-		offeringUser == receivingUser ||
-		turnManager.currentTurnPhase() != TurnPhase.PLAYING || 
-		!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
+		//if it isn't user's turn if model status is not on playing
+		if (offeringUser != turnManager.currentUser()) {
+			return false;
+		}
+		
+		//If it's trading with itself
+		if (offeringUser == receivingUser) {
+			return false;
+		}
+		
+		//if model status is not on playing
+		if (turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			return false;
+		}
+		
+		//If the offer can be made
+		if(!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
 			return false;
 		}
 
@@ -549,12 +561,20 @@ public class ModelFacade {
 		//if it isn't user's turn or if model status is not on playing or if user does not have year of plenty card
 		//if user has already played dev card
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard) || user.getHasPlayedDevCard()) {
+			System.out.println("Failure on current status");
 			return false;
 		}
 		ResourceCardDeck availableCards = bank.getResourceDeck();
 		//if bank  does not have resource cards wanted
-		if(!availableCards.getAllResourceCards().contains(card1) || !availableCards.getAllResourceCards().contains(card2)) {
-			return false;
+		if(card1.getType()==card2.getType()){
+			if(availableCards.getCountByType(card1.type)<2){ //if the cards are the same, make sure there's two of that type in the bank
+				return false;
+			}
+		}
+		else{
+			if(availableCards.getCountByType(card1.type)<1||availableCards.getCountByType(card2.type)<1){ //else one of each type
+				return false;
+			}
 		}
 		return true;
 	}

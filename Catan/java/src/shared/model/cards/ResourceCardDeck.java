@@ -34,6 +34,10 @@ public class ResourceCardDeck {
 		}
 	}
 	
+	public ResourceCardDeck() {
+		
+	}
+	
 	/**
 	 * Iterates through the deck to see if a card with the available type is available
 	 * @param type The desired ResourceCard type
