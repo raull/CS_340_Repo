@@ -191,6 +191,7 @@ public class Model {
 			//winner
 			winner = jsonModel.get("winner").getAsInt();
 			scoreKeeper.setWinner(winner);
+			updateScoreKeeper();
 			
 		}
 	}
@@ -629,7 +630,7 @@ public class Model {
 	}
 	
 	public void updateScoreKeeper() {
-		ArrayList<User> users = (ArrayList<User>) turnManager.getUsers();
+		ArrayList<User> users = new ArrayList<User>( turnManager.getUsers());
 		
 		for(User user : users) {
 			scoreKeeper.setScore(user.getTurnIndex(), user.getVictoryPoints());
