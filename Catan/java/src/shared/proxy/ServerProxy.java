@@ -261,12 +261,12 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public JsonElement list() throws ProxyException {
-		return (JsonObject)doGet("/games/list");
+		return doGet("/games/list");
 	}
 
 	@Override
 	public JsonElement create(CreateGameRequest CreateRequest) throws ProxyException {
-		return (JsonObject)doPost("/games/create", CreateRequest);
+		return doPost("/games/create", CreateRequest);
 	}
 
 	@Override
@@ -288,107 +288,107 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public JsonElement model(int version) throws ProxyException {
-		return (JsonObject)doGet("/game/model");
+		return doGet("/game/model");
 	}
 
 	@Override
 	public JsonElement reset() throws ProxyException {
-		return (JsonObject)doGet("/game/reset");
+		return doGet("/game/reset");
 	}
 
 	@Override
 	public JsonElement postCommands(List<String> commandslist) throws ProxyException {
-		return (JsonObject)doPost("/game/commands", commandslist);
+		return doPost("/game/commands", commandslist);
 	}
 
 	@Override
 	public JsonElement getCommands() throws ProxyException {
-		return (JsonObject)doGet("/game/commands");
+		return doGet("/game/commands");
 	}
 
 	@Override
 	public JsonElement sendChat(SendChat sendchat) throws ProxyException {
-		return (JsonObject)doPost("/moves/sendChat", sendchat);
+		return doPost("/moves/sendChat", sendchat);
 	}
 
 	@Override
 	public JsonElement rollNumber(RollNumber rollnum) throws ProxyException {
-		return (JsonObject)doPost("/moves/rollNumber", rollnum);
+		return doPost("/moves/rollNumber", rollnum);
 	}
 
 	@Override
 	public JsonElement robPlayer(RobPlayer robplayer) throws ProxyException {
-		return (JsonObject)doPost("/moves/robPlayer", robplayer);
+		return doPost("/moves/robPlayer", robplayer);
 	}
 
 	@Override
 	public JsonElement finishTurn(FinishMove finishmove) throws ProxyException {
-		return (JsonObject)doPost("/moves/finishTurn", finishmove);
+		return doPost("/moves/finishTurn", finishmove);
 	}
 
 	@Override
 	public JsonElement buyDevCard(BuyDevCard buydev) throws ProxyException {
-		return (JsonObject)doPost("/moves/buyDevCard", buydev);
+		return doPost("/moves/buyDevCard", buydev);
 	}
 
 	@Override
 	public JsonElement Year_of_Plenty(Year_of_Plenty_ yop) throws ProxyException {
-		return (JsonObject)doPost("/moves/Year_of_Plenty", yop);
+		return doPost("/moves/Year_of_Plenty", yop);
 	}
 
 	@Override
 	public JsonElement Road_Building(Road_Building_ roadbuild) throws ProxyException {
-		return (JsonObject)doPost("/moves/Road_Building", roadbuild);
+		return doPost("/moves/Road_Building", roadbuild);
 	}
 
 	@Override
 	public JsonElement Soldier(Soldier_ soldier) throws ProxyException {
-		return (JsonObject)doPost("/moves/Soldier", soldier);
+		return doPost("/moves/Soldier", soldier);
 	}
 
 	@Override
 	public JsonElement Monopoly(Monopoly_ monopoly) throws ProxyException {
-		return (JsonObject)doPost("/moves/Monopoly", monopoly);
+		return doPost("/moves/Monopoly", monopoly);
 	}
 
 	@Override
 	public JsonElement Monument(Monument_ monument) throws ProxyException {
-		return (JsonObject)doPost("/moves/Monument", monument);
+		return doPost("/moves/Monument", monument);
 	}
 
 	@Override
 	public JsonElement buildRoad(BuildRoad buildroad) throws ProxyException {
-		return (JsonObject)doPost("/moves/buildRoad", buildroad);
+		return doPost("/moves/buildRoad", buildroad);
 	}
 
 	@Override
 	public JsonElement buildSettlement(BuildSettlement buildsettlement) throws ProxyException {
-		return (JsonObject)doPost("/moves/buildSettlement", buildsettlement);
+		return doPost("/moves/buildSettlement", buildsettlement);
 	}
 
 	@Override
 	public JsonElement buildCity(BuildCity buildcity) throws ProxyException {
-		return (JsonObject)doPost("/moves/buildCity", buildcity);
+		return doPost("/moves/buildCity", buildcity);
 	}
 
 	@Override
 	public JsonElement offerTrade(OfferTrade tradeOffer) throws ProxyException {
-		return (JsonObject)doPost("/moves/offerTrade", tradeOffer);
+		return doPost("/moves/offerTrade", tradeOffer);
 	}
 
 	@Override
 	public JsonElement acceptTrade(AcceptTrade tradeAccept) throws ProxyException {
-		return (JsonObject)doPost("/moves/acceptTrade", tradeAccept);
+		return doPost("/moves/acceptTrade", tradeAccept);
 	}
 
 	@Override
 	public JsonElement maritimeTrade(MaritimeTrade tradeMaritime) throws ProxyException {
-		return (JsonObject)doPost("/moves/maritimeTrade", tradeMaritime);
+		return doPost("/moves/maritimeTrade", tradeMaritime);
 	}
 
 	@Override
 	public JsonElement discardCards(DiscardCards discard) throws ProxyException {
-		return (JsonObject)doPost("/moves/discardCards", discard);
+		return doPost("/moves/discardCards", discard);
 	}
 
 	@Override
@@ -404,7 +404,7 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public JsonElement listAI() throws ProxyException {
-		return (JsonObject)doGet("/game/listAI");
+		return doGet("/game/listAI");
 	}
 
 }

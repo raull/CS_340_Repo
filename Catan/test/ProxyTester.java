@@ -73,14 +73,14 @@ public class ProxyTester
 			fail();
 		}
 		
-//		try
-//		{
-//			testProxy.list();
-//		}
-//		catch(ProxyException e)
-//		{
-//			fail();
-//		}
+		try
+		{
+			testProxy.list();
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
 		
 		try
 		{
@@ -183,14 +183,14 @@ public class ProxyTester
 			fail();
 		}
 		
-		/*try
+		try
 		{
 			testProxy.listAI();
 		}
 		catch(ProxyException e)
 		{
 			fail();
-		}*/
+		}
 		
 		try
 		{
