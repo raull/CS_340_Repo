@@ -1,13 +1,22 @@
 package shared.proxy;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
+import com.thoughtworks.xstream.io.json.JsonWriter;
 
 import shared.model.Model;
 import shared.proxy.game.*;
@@ -34,25 +43,44 @@ public class ServerProxy implements Proxy{
 	private XStream jsonStream;
 	/** Default Constructor*/
 	public ServerProxy(){
-		jsonStream = new XStream(new JsonHierarchicalStreamDriver());
+		jsonStream = new XStream(new JsonHierarchicalStreamDriver() {
+		    public HierarchicalStreamWriter createWriter(Writer writer) {
+		        return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
+		    }
+		});
 	}
 	
 	public ServerProxy(String host, String port){
-		jsonStream = new XStream(new JsonHierarchicalStreamDriver());
+		jsonStream = new XStream(new JsonHierarchicalStreamDriver() {
+		    public HierarchicalStreamWriter createWriter(Writer writer) {
+		        return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
+		    }
+		});
 		SERVER_HOST = host;
 		SERVER_PORT = Integer.parseInt(port);
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 	}
 	
-	private Object doGet(String urlPath) throws ProxyException{
+	private JsonObject doGet(String urlPath) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestMethod(HTTP_GET);
 			connection.connect();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
-				Object result = jsonStream.fromXML(connection.getInputStream());
-				return result;
+				 BufferedReader streamReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8")); 
+				    StringBuilder responseStrBuilder = new StringBuilder();
+
+				    String inputStr;
+				    while ((inputStr = streamReader.readLine()) != null)
+				        responseStrBuilder.append(inputStr);
+				    String jsonstff = responseStrBuilder.toString();
+				    JsonParser parser = new JsonParser();
+					JsonElement jsonElement;
+				    jsonElement = parser.parse(jsonstff);
+				    JsonObject o = (JsonObject)parser.parse(jsonstff);
+					//Object result = jsonStream.fromXML(connection.getInputStream());
+					return o;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -68,7 +96,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private Object doPost(String urlPath, Object postData) throws ProxyException{
+	private JsonObject doPost(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -81,8 +109,20 @@ public class ServerProxy implements Proxy{
 			jsonStream.toXML(postData, connection.getOutputStream());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
-				Object result = jsonStream.fromXML(connection.getInputStream());
-				return result;
+				BufferedReader streamReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8")); 
+			    StringBuilder responseStrBuilder = new StringBuilder();
+
+			    String inputStr;
+			    while ((inputStr = streamReader.readLine()) != null)
+			        responseStrBuilder.append(inputStr);
+			    String jsonstff = responseStrBuilder.toString();
+			    
+			    JsonParser parser = new JsonParser();
+				JsonElement jsonElement;
+			    jsonElement = parser.parse(jsonstff);
+			    JsonObject o = (JsonObject)parser.parse(jsonstff);
+				//Object result = jsonStream.fromXML(connection.getInputStream());
+				return o;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -98,7 +138,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private Object doLogin(String urlPath, Object postData) throws ProxyException{
+	private JsonObject doLogin(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -116,8 +156,17 @@ public class ServerProxy implements Proxy{
 				int length = sb.length();
 				sb.delete(length-8, length-1);
 				setUsercookie(sb.toString());
-				Object result = jsonStream.fromXML(connection.getInputStream());
-				return result;
+				BufferedReader streamReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8")); 
+			    StringBuilder responseStrBuilder = new StringBuilder();
+
+			    String inputStr;
+			    while ((inputStr = streamReader.readLine()) != null)
+			        responseStrBuilder.append(inputStr);
+			    String jsonstff = responseStrBuilder.toString();
+			    JsonParser parser = new JsonParser();
+			    JsonObject o = (JsonObject)parser.parse(jsonstff);
+			//Object result = jsonStream.fromXML(connection.getInputStream());
+			return o;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -133,7 +182,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private Object doJoin(String urlPath, Object postData) throws ProxyException{
+	private JsonObject doJoin(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -150,8 +199,20 @@ public class ServerProxy implements Proxy{
 				StringBuilder sb = new StringBuilder(cookieheader);
 				sb.substring(11, 12);
 				setGameID(sb.toString());
-				Object result = jsonStream.fromXML(connection.getInputStream());
-				return result;
+				BufferedReader streamReader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8")); 
+			    StringBuilder responseStrBuilder = new StringBuilder();
+
+			    String inputStr;
+			    while ((inputStr = streamReader.readLine()) != null)
+			        responseStrBuilder.append(inputStr);
+			    String jsonstff = responseStrBuilder.toString();
+			    JsonParser parser = new JsonParser();
+				JsonElement jsonElement;
+				
+			    jsonElement = parser.parse(jsonstff);
+			    JsonObject o = (JsonObject)parser.parse(jsonstff);
+				//Object result = jsonStream.fromXML(connection.getInputStream());
+				return o;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -201,8 +262,8 @@ public class ServerProxy implements Proxy{
 	}
 
 	@Override
-	public NewGame create(CreateGameRequest CreateRequest) throws ProxyException {
-		return (NewGame)doPost("/games/create", CreateRequest);
+	public JsonObject create(CreateGameRequest CreateRequest) throws ProxyException {
+		return (JsonObject)doPost("/games/create", CreateRequest);
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public interface Proxy {
 	 * @param CreateRequest
 	 * @return
 	 */
-	public  NewGame create(CreateGameRequest CreateRequest)throws ProxyException;
+	public JsonObject create(CreateGameRequest CreateRequest)throws ProxyException;
 	/**
 	 * Requests to join a particular game, with a specific color for the player
 	 * @param JoinRequest
