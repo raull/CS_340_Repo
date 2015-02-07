@@ -181,10 +181,10 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public NewGame create(CreateGameRequest CreateRequest) {
+	public JsonObject create(CreateGameRequest CreateRequest) {
 		EmptyPlayer[] players = new EmptyPlayer[3];
 		NewGame nugame = new NewGame(CreateRequest.getName(), 3, players);
-		return nugame;
+		return null;
 	}
 
 	@Override

@@ -123,7 +123,14 @@ public class ServerProxy implements Proxy{
 				//JsonElement jsonElement;
 				Gson gson = new Gson();
 				JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
-				JsonObject jsonObj = element.getAsJsonObject();
+				JsonObject jsonObj ;
+
+				if (element.isJsonObject()) {
+					jsonObj = element.getAsJsonObject();
+				} else {
+					jsonObj = new JsonObject();
+					jsonObj.add("result", element);
+				}
 				//Object result = jsonStream.fromXML(connection.getInputStream());
 				return jsonObj;
 			}
