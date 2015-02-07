@@ -277,6 +277,44 @@ public class ModelTester
 	public void testCanPlaySoldier()
 	{
 		
+		//already played dev card this turn
+		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		User validVictim = turnManager.getUserFromIndex(1);
+		HexTile validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		DevCard devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
+		
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		validVictim = turnManager.getUserFromIndex(1);
+		validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
+		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		validVictim = turnManager.getUserFromIndex(1);
+		validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlaySoldier.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		validVictim = turnManager.getUserFromIndex(1);
+		validHex = new HexTile(HexType.WOOD, new HexLocation(1,0), 11);
+		devCard = new DevCard(DevCardType.SOLDIER);
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, validVictim, currentUser, validHex)); //note the users are switched here
+		
+		//true test case
+		assertFalse(testModelFacade.canPlaySoldier(turnManager, currentUser, validVictim, validHex));
 	}
 	
 	@Test
@@ -346,29 +384,42 @@ public class ModelTester
 	}
 
 	
-//		@Test
-//		public void testCanOfferTrade() 
-//		{
-//			//not user's turn
-//			testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-//			TurnManager turnManager = testModelFacade.turnManager();
-//			assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.getUserFromIndex(1),
-//					turnManager.currentUser(), TRADEOFFER));
-//	
-//			//wrong turn phase
-//			testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-//			TurnManager turnManager = testModelFacade.turnManager();
-//			assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
-//					OTHERUSER, TRADEOFFER));
-//	
-//			//I don't quite understand the other test cases here
-//	
-//			//true test case
-//			testModelFacade.updateModel(testMoxy.getModel(""));
-//			TurnManager turnManager = testModelFacade.turnManager();
-//			assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
-//					OTHERUSER, TRADEOFFER));
-//		}
+	@Test
+	public void testCanOfferTrade() 
+	{
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.getUserFromIndex(1),
+				turnManager.currentUser(), null));
+
+		//wrong turn phase
+		testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
+				turnManager.getUserFromIndex(1), null));
+
+		//Trading with itself
+		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
+				turnManager.currentUser(), null));
+		
+		//A Player doesn't have enough resources
+		testModelFacade.updateModel(testMoxy.getModel("user2NoResources.json"));
+		turnManager = testModelFacade.turnManager();
+		TradeOffer offer = new TradeOffer(new ResourceCardDeck(new ResourceType[]{ResourceType.BRICK}), new ResourceCardDeck(new ResourceType[]{ResourceType.ORE}));
+		assertFalse(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
+				turnManager.getUserFromIndex(2), offer));
+		
+
+		//true test case
+		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
+		turnManager = testModelFacade.turnManager();
+		ResourceCardDeck offerDeck = new ResourceCardDeck(new ResourceType[]{ResourceType.BRICK, ResourceType.BRICK, ResourceType.BRICK});
+		ResourceCardDeck receiveDeck = new ResourceCardDeck(new ResourceType[]{ResourceType.SHEEP, ResourceType.SHEEP});
+
+		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
+				turnManager.getUserFromIndex(1), new TradeOffer(offerDeck, receiveDeck)));
+	}
 	//	@Test
 	//	public void testCanAcceptTrade() 
 	//	{

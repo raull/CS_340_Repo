@@ -13,13 +13,25 @@ import shared.definitions.ResourceType;
  *
  */
 public class ResourceCardDeck {
-	private ArrayList<ResourceCard> cards;
+	private ArrayList<ResourceCard> cards = new ArrayList<ResourceCard>();
 
 	/**
-	 * Constructor for the deck.
+	 * Constructor for the deck
+	 * @param initResourceCards The arrayList of resources added to the deck
 	 */
 	public ResourceCardDeck(ArrayList<ResourceCard> initResourceCards) {
 		cards = initResourceCards;
+	}
+	
+	/**
+	 * Constructor for the deck
+	 * @param resources The array of resources added to the deck
+	 */
+	public ResourceCardDeck(ResourceType[] resources) {
+				
+		for (ResourceType resourceType : resources) {
+			cards.add(new ResourceCard(resourceType));
+		}
 	}
 	
 	/**

@@ -293,6 +293,9 @@ public class ModelFacade {
 			if(!user.occupiesVertex(location)){
 				return false;
 			}
+			else{
+				return true;
+			}
 		}
 		else{
 			assert(false); //means the method was called incorrectly
@@ -395,7 +398,10 @@ public class ModelFacade {
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
 		//if it isn't user's turn or if model status is not on playing
-		if(offeringUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
+		if(offeringUser != turnManager.currentUser() ||
+		offeringUser == receivingUser ||
+		turnManager.currentTurnPhase() != TurnPhase.PLAYING || 
+		!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
 			return false;
 		}
 

@@ -356,11 +356,11 @@
   "players": [
     {
       "resources": {
-        "brick": 1,
-        "wood": 1,
-        "sheep": 0,
+        "brick": 0,
+        "wood": 0,
+        "sheep": -1,
         "wheat": 0,
-        "ore": 0
+        "ore": -1
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
@@ -370,11 +370,11 @@
         "monument": 0
       },
       "newDevCards": {
-        "yearOfPlenty": 0,
-        "monopoly": 0,
-        "soldier": 0,
-        "roadBuilding": 0,
-        "monument": 0
+        "yearOfPlenty": 1,
+        "monopoly": 1,
+        "soldier": 1,
+        "roadBuilding": 1,
+        "monument": 1
       },
       "roads": 13,
       "cities": 4,
@@ -392,7 +392,7 @@
     {
       "resources": {
         "brick": 0,
-        "wood": 0,
+        "wood": -2,
         "sheep": 0,
         "wheat": 0,
         "ore": 0
@@ -400,7 +400,7 @@
       "oldDevCards": {
         "yearOfPlenty": 0,
         "monopoly": 0,
-        "soldier": 0,
+        "soldier": 1,
         "roadBuilding": -1,
         "monument": 0
       },
@@ -417,7 +417,7 @@
       "soldiers": 0,
       "victoryPoints": 2,
       "monuments": 0,
-      "playedDevCard": true,
+      "playedDevCard": false,
       "discarded": false,
       "playerID": 0,
       "playerIndex": 1,
@@ -430,7 +430,7 @@
         "wood": 0,
         "sheep": 0,
         "wheat": 0,
-        "ore": 0
+        "ore": 1
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
@@ -461,7 +461,7 @@
     },
     {
       "resources": {
-        "brick": 0,
+        "brick": 4,
         "wood": 0,
         "sheep": 0,
         "wheat": 0,
@@ -602,7 +602,7 @@
     "ore": 24
   },
   "turnTracker": {
-    "status": "Rolling",
+    "status": "Playing",
     "currentTurn": 0,
     "longestRoad": -1,
     "largestArmy": -1
