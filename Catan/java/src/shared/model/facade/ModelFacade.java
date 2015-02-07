@@ -397,11 +397,23 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
-		//if it isn't user's turn or if model status is not on playing
-		if(offeringUser != turnManager.currentUser() ||
-		offeringUser == receivingUser ||
-		turnManager.currentTurnPhase() != TurnPhase.PLAYING || 
-		!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
+		//if it isn't user's turn if model status is not on playing
+		if (offeringUser != turnManager.currentUser()) {
+			return false;
+		}
+		
+		//If it's trading with itself
+		if (offeringUser == receivingUser) {
+			return false;
+		}
+		
+		//if model status is not on playing
+		if (turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			return false;
+		}
+		
+		//If the offer can be made
+		if(!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
 			return false;
 		}
 
@@ -576,8 +588,15 @@ public class ModelFacade {
 		}
 		ResourceCardDeck availableCards = bank.getResourceDeck();
 		//if bank  does not have resource cards wanted
-		if(!availableCards.getAllResourceCards().contains(card1) || !availableCards.getAllResourceCards().contains(card2)) {
-			return false;
+		if(card1.getType()==card2.getType()){
+			if(availableCards.getCountByType(card1.type)<2){ //if the cards are the same, make sure there's two of that type in the bank
+				return false;
+			}
+		}
+		else{
+			if(availableCards.getCountByType(card1.type)<1||availableCards.getCountByType(card2.type)<1){ //else one of each type
+				return false;
+			}
 		}
 		return true;
 	}
@@ -592,17 +611,14 @@ public class ModelFacade {
 	 * @return
 	 */
 	
-	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user, EdgeLocation spot1, EdgeLocation spot2) {
+	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user) {
 		DevCard roadCard = new DevCard(DevCardType.ROAD_BUILD);
 		//if it isn't user's turn or if model status is not on playing or if user does not have road build card
 		//if user has already played dev card
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
-		//if the location is not connected to an existing road/settlement owned by user
-		if(canPlaceRoadAtLoc(turnManager, spot1, user) || canPlaceRoadAtLoc(turnManager, spot2, user)) {
-			return false;
-		}
+		
 		//if user does not have at least 2 un-used roads
 		if(user.getUnusedRoads() < 2) {
 			return false;

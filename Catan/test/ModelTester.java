@@ -276,7 +276,6 @@ public class ModelTester
 	@Test
 	public void testCanPlaySoldier()
 	{
-		
 		//already played dev card this turn
 		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
@@ -320,25 +319,139 @@ public class ModelTester
 	@Test
 	public void testCanPlayMonument()
 	{
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonument(turnManager, currentUser));
 		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonument(turnManager, currentUser));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlayMonument.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonument(turnManager, turnManager.getUserFromIndex(1)));
+		
+		//true test case
+		assertTrue(testModelFacade.canPlayMonument(turnManager, currentUser));
 	}
 	
 	@Test
 	public void testCanPlayMonopoly()
 	{
+		//already played dev card this turn
+		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
 		
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
+		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlayMonopoly.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, turnManager.getUserFromIndex(1), ResourceType.BRICK));
+		
+		//true test case
+		assertTrue(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
 	}
 	
 	@Test
 	public void testCanPlayYearOfPlenty()
 	{
+		//already played dev card this turn
+		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		ResourceCard card1 = new ResourceCard(ResourceType.WOOD);
+		ResourceCard card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
 		
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
+		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
+		
+		//bank out of resources
+		testModelFacade.updateModel(testMoxy.getModel("bankIsOutOfResources.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlayYOP.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		System.out.println("Test1");
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, turnManager.getUserFromIndex(1), testModelFacade.bank(), card1, card2));
+		
+		//true test case
+		System.out.println("Test2");
+		assertTrue(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
 	}
 	
 	@Test
 	public void testCanPlayRoadBuilding()
 	{
+		//already played dev card this turn
+		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		User currentUser = turnManager.currentUser();
+		//EdgeLocation edge1 = new EdgeLocation(new HexLocation(0,0), EdgeDirection.North);
+		//EdgeLocation edge2 = new EdgeLocation(new HexLocation(0,0), EdgeDirection.NorthWest);
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, currentUser));
 		
+		//bought it this turn
+		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, turnManager.currentUser()));
+		
+		//user doesn't have a dev card
+		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, turnManager.currentUser()));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlayRoadBuilding.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayRoadBuilding(turnManager, turnManager.getUserFromIndex(1)));
+		
+		//true test case
+		assertTrue(testModelFacade.canPlayRoadBuilding(turnManager, currentUser));
 	}
 
 	@Test
@@ -414,11 +527,11 @@ public class ModelTester
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
 		turnManager = testModelFacade.turnManager();
-		ResourceCardDeck offerDeck = new ResourceCardDeck(new ResourceType[]{ResourceType.BRICK, ResourceType.BRICK, ResourceType.BRICK});
-		ResourceCardDeck receiveDeck = new ResourceCardDeck(new ResourceType[]{ResourceType.SHEEP, ResourceType.SHEEP});
-
-		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
-				turnManager.getUserFromIndex(1), new TradeOffer(offerDeck, receiveDeck)));
+		
+		User sender = turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getSenderIndex());
+		User receiver = turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex());
+		
+		assertTrue(testModelFacade.canOfferTrade(turnManager, sender, receiver, testModelFacade.model.tradeOffer));
 	}
 	//	@Test
 	//	public void testCanAcceptTrade() 

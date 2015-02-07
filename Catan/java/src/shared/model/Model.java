@@ -171,6 +171,7 @@ public class Model {
 			
 			//trade offer -- may be null
 			if(jsonObject.get("tradeOffer") != null) {
+				tradeOffer = new TradeOffer(new ResourceCardDeck(), new ResourceCardDeck());
 				JsonObject jsonTradeOffer = jsonObject.get("tradeOffer").getAsJsonObject();
 				updateTradeOffer(jsonTradeOffer);
 			}
@@ -566,7 +567,7 @@ public class Model {
 	
 	public void addToCards(int count, ResourceType resourceType, ArrayList<ResourceCard> resourceCards1, ArrayList<ResourceCard> resourceCards2) {
 		if(count < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, count, resourceType);
+			addResourceCardsByNum(resourceCards2, -count, resourceType);
 		}
 		else{
 			addResourceCardsByNum(resourceCards1, count, resourceType);
