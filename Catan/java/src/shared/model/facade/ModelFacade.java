@@ -589,17 +589,14 @@ public class ModelFacade {
 	 * @return
 	 */
 	
-	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user, EdgeLocation spot1, EdgeLocation spot2) {
+	public Boolean canPlayRoadBuilding(TurnManager turnManager, User user) {
 		DevCard roadCard = new DevCard(DevCardType.ROAD_BUILD);
 		//if it isn't user's turn or if model status is not on playing or if user does not have road build card
 		//if user has already played dev card
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(roadCard) || user.getHasPlayedDevCard()) {
 			return false;
 		}
-		//if the location is not connected to an existing road/settlement owned by user
-		if(canPlaceRoadAtLoc(turnManager, spot1, user) || canPlaceRoadAtLoc(turnManager, spot2, user)) {
-			return false;
-		}
+		
 		//if user does not have at least 2 un-used roads
 		if(user.getUnusedRoads() < 2) {
 			return false;
