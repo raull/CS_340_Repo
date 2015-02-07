@@ -17,11 +17,11 @@ public class TradeOffer {
 	/**
 	 * The {@link ResourceCardDeck} with the sending resource cards
 	 */
-	private ResourceCardDeck sendingDeck;
+	private ResourceCardDeck sendingDeck = new ResourceCardDeck();
 	/**
 	 * The {@link ResourceCardDeck} with the receiving resource cards
 	 */
-	private ResourceCardDeck receivingDeck;
+	private ResourceCardDeck receivingDeck = new ResourceCardDeck();
 	
 	/**
 	 * index of the person offering the trade
@@ -49,11 +49,15 @@ public class TradeOffer {
 		this.sendingDeck = sendingDeck;
 	}
 	
-	//trade offer doesn't necessarily have rate?
-	public TradeOffer(ResourceCardDeck offeredDeck, ResourceCardDeck requestedDeck) { //some temp names to help me clarify
+	public TradeOffer(ResourceCardDeck offeredDeck, ResourceCardDeck requestedDeck) { 
 		this.sendingDeck = offeredDeck; 
 		this.receivingDeck = requestedDeck;
 	}
+	
+	public TradeOffer() {
+		
+	}
+	
 
 	public int getRate() {
 		return rate;

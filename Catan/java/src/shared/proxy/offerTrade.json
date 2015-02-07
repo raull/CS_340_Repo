@@ -250,7 +250,7 @@
   "players": [
     {
       "resources": {
-        "brick": 0,
+        "brick": 4,
         "wood": 0,
         "sheep": 0,
         "wheat": 0,
@@ -287,7 +287,7 @@
       "resources": {
         "brick": 0,
         "wood": 0,
-        "sheep": 0,
+        "sheep": 2,
         "wheat": 0,
         "ore": 0
       },
@@ -369,7 +369,7 @@
     "ore": 24
   },
   "turnTracker": {
-    "status": "FirstRound",
+    "status": "Playing",
     "currentTurn": 0,
     "longestRoad": -1,
     "largestArmy": -1

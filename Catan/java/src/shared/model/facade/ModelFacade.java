@@ -397,11 +397,23 @@ public class ModelFacade {
 	 * @return
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
-		//if it isn't user's turn or if model status is not on playing
-		if(offeringUser != turnManager.currentUser() ||
-		offeringUser == receivingUser ||
-		turnManager.currentTurnPhase() != TurnPhase.PLAYING || 
-		!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
+		//if it isn't user's turn if model status is not on playing
+		if (offeringUser != turnManager.currentUser()) {
+			return false;
+		}
+		
+		//If it's trading with itself
+		if (offeringUser == receivingUser) {
+			return false;
+		}
+		
+		//if model status is not on playing
+		if (turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			return false;
+		}
+		
+		//If the offer can be made
+		if(!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
 			return false;
 		}
 

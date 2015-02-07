@@ -492,11 +492,11 @@ public class ModelTester
 		//true test case
 		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
 		turnManager = testModelFacade.turnManager();
-		ResourceCardDeck offerDeck = new ResourceCardDeck(new ResourceType[]{ResourceType.BRICK, ResourceType.BRICK, ResourceType.BRICK});
-		ResourceCardDeck receiveDeck = new ResourceCardDeck(new ResourceType[]{ResourceType.SHEEP, ResourceType.SHEEP});
-
-		assertTrue(testModelFacade.canOfferTrade(turnManager, turnManager.currentUser(),
-				turnManager.getUserFromIndex(1), new TradeOffer(offerDeck, receiveDeck)));
+		
+		User sender = turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getSenderIndex());
+		User receiver = turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex());
+		
+		assertTrue(testModelFacade.canOfferTrade(turnManager, sender, receiver, testModelFacade.model.tradeOffer));
 	}
 	//	@Test
 	//	public void testCanAcceptTrade() 
