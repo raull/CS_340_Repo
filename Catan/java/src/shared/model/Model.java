@@ -110,6 +110,9 @@ public class Model {
 		return winner;
 	}
 
+	public ScoreKeeper getScoreKeeper() {
+		return scoreKeeper;
+	}
 	/**
 	 * serializes the current model into a JSON object
 	 * @return

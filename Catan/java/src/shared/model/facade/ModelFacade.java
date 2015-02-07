@@ -72,6 +72,7 @@ public class ModelFacade {
 		turnManager = model.getTurnManager();
 		map = model.getMap();
 		bank = model.getBank();
+		score = model.getScoreKeeper();
 		//update stuff from model
 		
 	}
@@ -460,11 +461,11 @@ public class ModelFacade {
 	public Boolean canMaritimeTrade(TurnManager turnManager, Bank bank, User user, ResourceCard wantedCard, ResourceCardDeck offeredCards) {
 		//one ResourceCard per trade, users should only be able to offer cards all of the same type from UI
 		if(user != turnManager.currentUser()) {
-			System.out.println("not user's turn");
+//			System.out.println("not user's turn");
 			return false;
 		}
 		if(turnManager.currentTurnPhase() != TurnPhase.PLAYING){
-			System.out.println("wrong turn phase");
+//			System.out.println("wrong turn phase");
 			return false;
 		}
 		
@@ -476,13 +477,13 @@ public class ModelFacade {
 		ResourceCardDeck wantedCardDeck = new ResourceCardDeck(wantedResourceCards);
 		//if bank doesn't have all cards available
 		if(!TradeManager.hasEnoughResources(availableCards, wantedCardDeck) ) {
-			System.out.println("bank doesn't have available cards");
+//			System.out.println("bank doesn't have available cards");
 			return false;
 		}
 		
 		//user doesn't have cards they are offering
 		if(!TradeManager.hasEnoughResources(userCards, offeredCards)) {
-			System.out.println("user doesn't have cards they are offering");
+//			System.out.println("user doesn't have cards they are offering");
 			return false;
 		}
 		
@@ -502,18 +503,18 @@ public class ModelFacade {
 		}
 		else if(ratio == 3) {
 			if(!user.hasPort(PortType.THREE)) {
-				System.out.println("user trying to trade 3 for 1 without port");
+//				System.out.println("user trying to trade 3 for 1 without port");
 				return false;
 			}
-			System.out.println("user has a three port, ok");
+//			System.out.println("user has a three port, ok");
 			return true;
 		}
 		else if(ratio == 2) {
 			if(!user.hasPortByResource(userOfferedType)){
-				System.out.println("user trying to trade 2 for 1 without specific port");
+//				System.out.println("user trying to trade 2 for 1 without specific port");
 				return false;
 			}
-			System.out.println("user has a specific port, ok");
+//			System.out.println("user has a specific port, ok");
 			return true;
 		}
 		else{
