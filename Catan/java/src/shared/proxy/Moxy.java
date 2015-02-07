@@ -132,15 +132,15 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public void login(Credentials cred) {
+	public boolean login(Credentials cred) {
 		// TODO Auto-generated method stub
-		
+		return true;
 	}
 
 	@Override
-	public void register(Credentials cred) {
+	public boolean register(Credentials cred) {
 		// TODO Auto-generated method stub
-		
+		return true;
 	}
 
 	@Override
@@ -188,21 +188,21 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public void join(JoinGameRequest JoinRequest) {
+	public JsonElement join(JoinGameRequest JoinRequest) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public void save(SaveGameRequest SaveRequest) {
+	public JsonElement save(SaveGameRequest SaveRequest) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public void load(LoadGameRequest LoadRequest) {
+	public JsonElement load(LoadGameRequest LoadRequest) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
@@ -312,19 +312,19 @@ public class Moxy implements Proxy{
 	}
 
 	@Override
-	public void changeLogLevel(ChangeLogLevelRequest cllr) {
+	public JsonElement changeLogLevel(ChangeLogLevelRequest cllr) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public void addAI(AddAIRequest addAIreq) {
+	public JsonElement addAI(AddAIRequest addAIreq) {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 
 	@Override
-	public JsonObject listAI() {
+	public JsonElement listAI() {
 		return getModel("ailist.json");
 	}
 

@@ -127,7 +127,7 @@ public class Model {
 	 * @param jsonModel
 	 */
 	
-	public void deserialize(JsonObject jsonModel) {
+	public void deserialize(JsonElement jsonModel) {
 		//would model be better as jsonElement?
 		if(jsonModel.isJsonObject()) {
 			
@@ -144,11 +144,11 @@ public class Model {
 			bank.setResourceCardDeck(new ResourceCardDeck(bankResourceCards));
 			
 			//chat
-			JsonObject jsonChat = jsonModel.get("chat").getAsJsonObject(); 
+			JsonObject jsonChat = jsonModel.getAsJsonObject().get("chat").getAsJsonObject(); 
 			chat = extractMessageList(jsonChat);
 			
 			//log
-			JsonObject jsonLog = jsonModel.get("log").getAsJsonObject();
+			JsonObject jsonLog = jsonModel.getAsJsonObject().get("log").getAsJsonObject();
 			log = extractMessageList(jsonLog);
 			
 			JsonObject jsonMap = jsonObject.get("map").getAsJsonObject();
@@ -185,14 +185,14 @@ public class Model {
 			}
 
 			//turn manager
-			JsonObject jsonTurnManager = jsonModel.get("turnTracker").getAsJsonObject();
+			JsonObject jsonTurnManager = jsonModel.getAsJsonObject().get("turnTracker").getAsJsonObject();
 			updateTurnManager(jsonTurnManager);
 			
 			//version
-			version = jsonModel.get("version").getAsInt();
+			version = jsonModel.getAsJsonObject().get("version").getAsInt();
 			
 			//winner
-			winner = jsonModel.get("winner").getAsInt();
+			winner = jsonModel.getAsJsonObject().get("winner").getAsInt();
 			scoreKeeper.setWinner(winner);
 			updateScoreKeeper();
 			

@@ -72,11 +72,9 @@ public class ServerProxy implements Proxy{
 			while ((inputStr = streamReader.readLine()) != null)
 			    responseStrBuilder.append(inputStr);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	    String jsonstff = responseStrBuilder.toString();
-	    JsonParser parser = new JsonParser();
 		
 		Gson gson = new Gson();
 		JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
@@ -252,161 +250,160 @@ public class ServerProxy implements Proxy{
 	}
 
 	@Override
-	public void login(Credentials cred) throws ProxyException {
-		doLogin("/user/login", cred);
+	public boolean login(Credentials cred) throws ProxyException {
+		return doLogin("/user/login", cred);
 	}
 
 	@Override
-	public void register(Credentials cred) throws ProxyException {
-		doLogin("/user/register", cred);
+	public boolean register(Credentials cred) throws ProxyException {
+		return doLogin("/user/register", cred);
 	}
 
 	@Override
-	public JsonObject list() throws ProxyException {
+	public JsonElement list() throws ProxyException {
 		return (JsonObject)doGet("/games/list");
 	}
 
 	@Override
-	public JsonObject create(CreateGameRequest CreateRequest) throws ProxyException {
+	public JsonElement create(CreateGameRequest CreateRequest) throws ProxyException {
 		return (JsonObject)doPost("/games/create", CreateRequest);
 	}
 
 	@Override
-	public void join(JoinGameRequest JoinRequest) throws ProxyException {
-		doJoin("/games/join", JoinRequest);
+	public JsonElement join(JoinGameRequest JoinRequest) throws ProxyException {
+		return doJoin("/games/join", JoinRequest);
 		
 	}
 
 	@Override
-	public void save(SaveGameRequest SaveRequest) throws ProxyException {
-		doPost("/games/save", SaveRequest);
+	public JsonElement save(SaveGameRequest SaveRequest) throws ProxyException {
+		return doPost("/games/save", SaveRequest);
 	}
 
 	@Override
-	public void load(LoadGameRequest LoadRequest) throws ProxyException {
-		doPost("/games/load", LoadRequest);
+	public JsonElement load(LoadGameRequest LoadRequest) throws ProxyException {
+		return doPost("/games/load", LoadRequest);
 		
 	}
 
 	@Override
-	public JsonObject model(int version) throws ProxyException {
+	public JsonElement model(int version) throws ProxyException {
 		return (JsonObject)doGet("/game/model");
 	}
 
 	@Override
-	public JsonObject reset() throws ProxyException {
+	public JsonElement reset() throws ProxyException {
 		return (JsonObject)doGet("/game/reset");
 	}
 
 	@Override
-	public JsonObject postCommands(List<String> commandslist) throws ProxyException {
+	public JsonElement postCommands(List<String> commandslist) throws ProxyException {
 		return (JsonObject)doPost("/game/commands", commandslist);
 	}
 
 	@Override
-	public JsonObject getCommands() throws ProxyException {
+	public JsonElement getCommands() throws ProxyException {
 		return (JsonObject)doGet("/game/commands");
 	}
 
 	@Override
-	public JsonObject sendChat(SendChat sendchat) throws ProxyException {
+	public JsonElement sendChat(SendChat sendchat) throws ProxyException {
 		return (JsonObject)doPost("/moves/sendChat", sendchat);
 	}
 
 	@Override
-	public JsonObject rollNumber(RollNumber rollnum) throws ProxyException {
+	public JsonElement rollNumber(RollNumber rollnum) throws ProxyException {
 		return (JsonObject)doPost("/moves/rollNumber", rollnum);
 	}
 
 	@Override
-	public JsonObject robPlayer(RobPlayer robplayer) throws ProxyException {
+	public JsonElement robPlayer(RobPlayer robplayer) throws ProxyException {
 		return (JsonObject)doPost("/moves/robPlayer", robplayer);
 	}
 
 	@Override
-	public JsonObject finishTurn(FinishMove finishmove) throws ProxyException {
+	public JsonElement finishTurn(FinishMove finishmove) throws ProxyException {
 		return (JsonObject)doPost("/moves/finishTurn", finishmove);
 	}
 
 	@Override
-	public JsonObject buyDevCard(BuyDevCard buydev) throws ProxyException {
+	public JsonElement buyDevCard(BuyDevCard buydev) throws ProxyException {
 		return (JsonObject)doPost("/moves/buyDevCard", buydev);
 	}
 
 	@Override
-	public JsonObject Year_of_Plenty(Year_of_Plenty_ yop) throws ProxyException {
+	public JsonElement Year_of_Plenty(Year_of_Plenty_ yop) throws ProxyException {
 		return (JsonObject)doPost("/moves/Year_of_Plenty", yop);
 	}
 
 	@Override
-	public JsonObject Road_Building(Road_Building_ roadbuild) throws ProxyException {
+	public JsonElement Road_Building(Road_Building_ roadbuild) throws ProxyException {
 		return (JsonObject)doPost("/moves/Road_Building", roadbuild);
 	}
 
 	@Override
-	public JsonObject Soldier(Soldier_ soldier) throws ProxyException {
+	public JsonElement Soldier(Soldier_ soldier) throws ProxyException {
 		return (JsonObject)doPost("/moves/Soldier", soldier);
 	}
 
 	@Override
-	public JsonObject Monopoly(Monopoly_ monopoly) throws ProxyException {
+	public JsonElement Monopoly(Monopoly_ monopoly) throws ProxyException {
 		return (JsonObject)doPost("/moves/Monopoly", monopoly);
 	}
 
 	@Override
-	public JsonObject Monument(Monument_ monument) throws ProxyException {
+	public JsonElement Monument(Monument_ monument) throws ProxyException {
 		return (JsonObject)doPost("/moves/Monument", monument);
 	}
 
 	@Override
-	public JsonObject buildRoad(BuildRoad buildroad) throws ProxyException {
+	public JsonElement buildRoad(BuildRoad buildroad) throws ProxyException {
 		return (JsonObject)doPost("/moves/buildRoad", buildroad);
 	}
 
 	@Override
-	public JsonObject buildSettlement(BuildSettlement buildsettlement) throws ProxyException {
+	public JsonElement buildSettlement(BuildSettlement buildsettlement) throws ProxyException {
 		return (JsonObject)doPost("/moves/buildSettlement", buildsettlement);
 	}
 
 	@Override
-	public JsonObject buildCity(BuildCity buildcity) throws ProxyException {
+	public JsonElement buildCity(BuildCity buildcity) throws ProxyException {
 		return (JsonObject)doPost("/moves/buildCity", buildcity);
 	}
 
 	@Override
-	public JsonObject offerTrade(OfferTrade tradeOffer) throws ProxyException {
+	public JsonElement offerTrade(OfferTrade tradeOffer) throws ProxyException {
 		return (JsonObject)doPost("/moves/offerTrade", tradeOffer);
 	}
 
 	@Override
-	public JsonObject acceptTrade(AcceptTrade tradeAccept) throws ProxyException {
+	public JsonElement acceptTrade(AcceptTrade tradeAccept) throws ProxyException {
 		return (JsonObject)doPost("/moves/acceptTrade", tradeAccept);
 	}
 
 	@Override
-	public JsonObject maritimeTrade(MaritimeTrade tradeMaritime) throws ProxyException {
+	public JsonElement maritimeTrade(MaritimeTrade tradeMaritime) throws ProxyException {
 		return (JsonObject)doPost("/moves/maritimeTrade", tradeMaritime);
 	}
 
 	@Override
-	public JsonObject discardCards(DiscardCards discard) throws ProxyException {
+	public JsonElement discardCards(DiscardCards discard) throws ProxyException {
 		return (JsonObject)doPost("/moves/discardCards", discard);
 	}
 
 	@Override
-	public void changeLogLevel(ChangeLogLevelRequest cllr) throws ProxyException {
-		doPost("/util/changeLogLevel", cllr);
+	public JsonElement changeLogLevel(ChangeLogLevelRequest cllr) throws ProxyException {
+		return doPost("/util/changeLogLevel", cllr);
+	}
+
+	@Override
+	public JsonElement addAI(AddAIRequest addAIreq) throws ProxyException {
+		return doPost("/game/addAI", addAIreq);
 		
 	}
 
 	@Override
-	public void addAI(AddAIRequest addAIreq) throws ProxyException {
-		doPost("/game/addAI", addAIreq);
-		
-	}
-
-	@Override
-	public JsonObject listAI() throws ProxyException {
+	public JsonElement listAI() throws ProxyException {
 		return (JsonObject)doGet("/game/listAI");
 	}
 

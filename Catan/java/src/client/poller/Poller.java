@@ -3,6 +3,7 @@ package client.poller;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import shared.model.Model;
@@ -48,7 +49,7 @@ public class Poller {
 	 */
 	public void pollServer() {
 		Model currModel = modelFacade.getModel();
-		JsonObject response = null;
+		JsonElement response = null;
 		try {
 			response = proxy.model(currModel.getVersion());
 		} catch (ProxyException e) {

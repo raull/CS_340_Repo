@@ -3,6 +3,7 @@ package shared.model.facade;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import shared.definitions.PieceType;
@@ -67,7 +68,7 @@ public class ModelFacade {
 	 * updates the model class with the JSON response
 	 * @param jsonResponse
 	 */
-	public void updateModel(JsonObject jsonResponse) {
+	public void updateModel(JsonElement jsonResponse) {
 		model.deserialize(jsonResponse);
 		turnManager = model.getTurnManager();
 		map = model.getMap();
