@@ -76,11 +76,13 @@ public class ServerProxy implements Proxy{
 				        responseStrBuilder.append(inputStr);
 				    String jsonstff = responseStrBuilder.toString();
 				    JsonParser parser = new JsonParser();
-					JsonElement jsonElement;
-				    jsonElement = parser.parse(jsonstff);
-				    JsonObject o = (JsonObject)parser.parse(jsonstff);
+					
+				    //jsonElement = parser.parse(jsonstff);
+					Gson gson = new Gson();
+					JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
+					JsonObject jsonObj = element.getAsJsonObject();
 					//Object result = jsonStream.fromXML(connection.getInputStream());
-					return o;
+					return jsonObj;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -118,11 +120,12 @@ public class ServerProxy implements Proxy{
 			    String jsonstff = responseStrBuilder.toString();
 			    
 			    JsonParser parser = new JsonParser();
-				JsonElement jsonElement;
-			    jsonElement = parser.parse(jsonstff);
-			    JsonObject o = (JsonObject)parser.parse(jsonstff);
+				//JsonElement jsonElement;
+				Gson gson = new Gson();
+				JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
+				JsonObject jsonObj = element.getAsJsonObject();
 				//Object result = jsonStream.fromXML(connection.getInputStream());
-				return o;
+				return jsonObj;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
@@ -138,7 +141,7 @@ public class ServerProxy implements Proxy{
 		}
 	}
 	
-	private JsonObject doLogin(String urlPath, Object postData) throws ProxyException{
+	private void doLogin(String urlPath, Object postData) throws ProxyException{
 		try{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -164,13 +167,13 @@ public class ServerProxy implements Proxy{
 			        responseStrBuilder.append(inputStr);
 			    String jsonstff = responseStrBuilder.toString();
 			    JsonParser parser = new JsonParser();
-			    JsonObject o = (JsonObject)parser.parse(jsonstff);
+			    //JsonObject o = (JsonObject)parser.parse(jsonstff);
 			//Object result = jsonStream.fromXML(connection.getInputStream());
-			return o;
+			//return o;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				//return null;
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -209,10 +212,11 @@ public class ServerProxy implements Proxy{
 			    JsonParser parser = new JsonParser();
 				JsonElement jsonElement;
 				
-			    jsonElement = parser.parse(jsonstff);
-			    JsonObject o = (JsonObject)parser.parse(jsonstff);
+				Gson gson = new Gson();
+				JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
+				JsonObject jsonObj = element.getAsJsonObject();
 				//Object result = jsonStream.fromXML(connection.getInputStream());
-				return o;
+				return jsonObj;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{

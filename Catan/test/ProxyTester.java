@@ -20,6 +20,8 @@ import shared.proxy.user.*;
 /**
 	This class tests specifically the ServerProxy class.
  */
+
+
 public class ProxyTester
 {
 	public ProxyTester()
@@ -48,22 +50,10 @@ public class ProxyTester
 		;
 	}
 
+
 	
 	@Test
-	public void testLogin()
-	{
-		try
-		{
-			testProxy.login(new Credentials("Sam", "sam"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-	}
-
-	@Test
-	public void testRegister()
+	public void testAll()
 	{
 		try
 		{
@@ -73,24 +63,25 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testList()
-	{
+		
 		try
+		{
+			testProxy.login(new Credentials("Sam", "sam"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		/*try
 		{
 			testProxy.list();
 		}
 		catch(ProxyException e)
 		{
 			fail();
-		}
-	}
-
-	@Test
-	public void testCreate()
-	{
+		}*/
+		
 		try
 		{
 			testProxy.create(new CreateGameRequest(true, true, true, "Game 7"));
@@ -99,24 +90,16 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testJoin()
-	{
+		
 		try
 		{
-			testProxy.join(new JoinGameRequest(1, "red"));
+			testProxy.join(new JoinGameRequest(4, "red"));
 		}
 		catch(ProxyException e)
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testSave()
-	{
+		
 		try
 		{
 			testProxy.save(new SaveGameRequest(1, "save1.txt"));
@@ -125,11 +108,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testLoad()
-	{
+		
 		try
 		{
 			testProxy.load(new LoadGameRequest("save1.txt"));
@@ -138,11 +117,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testModel()
-	{
+		
 		try
 		{
 			testProxy.model(1);
@@ -151,11 +126,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testReset()
-	{
+		
 		try
 		{
 			testProxy.reset();
@@ -164,11 +135,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testSendChat()
-	{
+		
 		try
 		{
 			testProxy.sendChat(new SendChat(0, "Hello world!"));
@@ -177,50 +144,54 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testRollNumber()
-	{
+		
 		try
 		{
-			testProxy.rollNumber(new RollNumber(0, 7));
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
-	}
-
-	@Test
-	public void testRobPlayer()
-	{
-		try
-		{
-			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0)));
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
 		}
 		catch (ProxyException e)
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testFinishTurn()
-	{
+		
 		try
 		{
-			testProxy.finishTurn(new FinishMove(0));
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			HexLocation hex = new HexLocation(0,0);
+			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
+			testProxy.buildSettlement(new BuildSettlement(0, vertex, false));
 		}
 		catch(ProxyException e)
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testBuyDevCard()
-	{
+		
+		/*try
+		{
+			testProxy.listAI();
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}*/
+		
 		try
 		{
 			testProxy.buyDevCard(new BuyDevCard(0));
@@ -229,11 +200,16 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testYearOfPlenty()
-	{
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 7));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
 		try
 		{
 			testProxy.Year_of_Plenty(new Year_of_Plenty_(0, ResourceType.BRICK, ResourceType.WHEAT));
@@ -242,11 +218,63 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testRoadBuilding()
-	{
+		
+		try
+		{
+			testProxy.changeLogLevel(new ChangeLogLevelRequest(LogLevel.ALL));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.offerTrade(new OfferTrade(0, new ResourceList(1,0,0,0,0),1));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.Monument(new Monument_(0));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			HexLocation hex = new HexLocation(0,0);
+			EdgeLocation edge = new EdgeLocation(hex, EdgeDirection.North);
+			testProxy.buildRoad(new BuildRoad(0, edge, false));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0)));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0)));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
 		try
 		{
 			HexLocation hex = new HexLocation(0,0);
@@ -258,24 +286,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testSoldier()
-	{
-		try
-		{
-			testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0)));
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
-	}
-
-	@Test
-	public void testMonopoly()
-	{
+		
 		try
 		{
 			testProxy.Monopoly(new Monopoly_(ResourceType.BRICK, 0));
@@ -284,54 +295,16 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testMonument()
-	{
+		
 		try
 		{
-			testProxy.Monument(new Monument_(0));
+			testProxy.finishTurn(new FinishMove(0));
 		}
 		catch(ProxyException e)
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testBuildRoad()
-	{
-		try
-		{
-			HexLocation hex = new HexLocation(0,0);
-			EdgeLocation edge = new EdgeLocation(hex, EdgeDirection.North);
-			testProxy.buildRoad(new BuildRoad(0, edge, false));
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
-	}
-
-	@Test
-	public void testBuildSettlement()
-	{
-		try
-		{
-			HexLocation hex = new HexLocation(0,0);
-			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
-			testProxy.buildSettlement(new BuildSettlement(0, vertex, false));
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
-	}
-
-	@Test
-	public void testBuildCity()
-	{
+		
 		try
 		{
 			HexLocation hex = new HexLocation(0,0);
@@ -342,11 +315,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testOfferTrade()
-	{
+		
 		try
 		{
 			testProxy.offerTrade(new OfferTrade(0, new ResourceList(1,0,0,0,0),1));
@@ -355,11 +324,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testAcceptTrade()
-	{
+		
 		try
 		{
 			testProxy.acceptTrade(new AcceptTrade(1, false));
@@ -368,11 +333,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testMaritimeTrade()
-	{
+	
 		try
 		{
 			testProxy.maritimeTrade(new MaritimeTrade(0,0,0,0));
@@ -381,11 +342,7 @@ public class ProxyTester
 		{
 			fail();
 		}
-	}
-
-	@Test
-	public void testDiscardCards()
-	{
+		
 		try
 		{
 			testProxy.discardCards(new DiscardCards(0, new ResourceList(1,0,0,0,0)));
@@ -397,41 +354,172 @@ public class ProxyTester
 	}
 
 	@Test
+	public void testRegister()
+	{
+		
+	}
+
+	@Test
+	public void testList()
+	{
+		
+	}
+
+	@Test
+	public void testCreate()
+	{
+		
+		
+		
+	}
+
+	@Test
+	public void testJoin()
+	{
+		
+	}
+
+	@Test
+	public void testSave()
+	{
+		
+	}
+
+	@Test
+	public void testLoad()
+	{
+		
+	}
+
+	@Test
+	public void testModel()
+	{
+	
+	}
+
+	@Test
+	public void testReset()
+	{
+		
+	}
+
+	@Test
+	public void testSendChat()
+	{
+		
+	}
+
+	@Test
+	public void testRollNumber()
+	{
+	
+	}
+
+	@Test
+	public void testRobPlayer()
+	{
+		
+	}
+
+	@Test
+	public void testFinishTurn()
+	{
+	
+	}
+
+	@Test
+	public void testBuyDevCard()
+	{
+		
+	}
+
+	@Test
+	public void testYearOfPlenty()
+	{
+		
+	}
+
+	@Test
+	public void testRoadBuilding()
+	{
+		
+	}
+
+	@Test
+	public void testSoldier()
+	{
+		
+	}
+
+	@Test
+	public void testMonopoly()
+	{
+		
+	}
+
+	@Test
+	public void testMonument()
+	{
+		
+	}
+
+	@Test
+	public void testBuildRoad()
+	{
+		
+	}
+
+	@Test
+	public void testBuildSettlement()
+	{
+		
+	}
+
+	@Test
+	public void testBuildCity()
+	{
+	}
+	
+		
+
+	@Test
+	public void testOfferTrade()
+	{
+		
+	}
+
+	@Test
+	public void testAcceptTrade()
+	{}
+		
+
+	@Test
+	public void testMaritimeTrade()
+	{
+		
+	}
+
+	@Test
+	public void testDiscardCards()
+	{
+		
+	}
+
+	@Test
 	public void testChangeLogLevel()
 	{
-		try
-		{
-			testProxy.changeLogLevel(new ChangeLogLevelRequest(LogLevel.ALL));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
+		
 	}
 
 	@Test
 	public void testAddAI()
 	{
-		try
-		{
-			testProxy.addAI(new AddAIRequest("good"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
+		
 	}
 
 	@Test
 	public void testListAI()
 	{
-		try
-		{
-			testProxy.listAI();
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
+		
 	}
 }
