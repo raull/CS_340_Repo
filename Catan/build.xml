@@ -166,8 +166,7 @@
 	</target>
 
 	<target name="test" depends="compile-test, compile" description="compiles, packages, and runs the JUnit tests for the project">
-		<java classname="test.Tester" fork="yes">
-			<echo message="${java.build}"/>
+		<java classname="Tester" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/> 
 			</classpath>
