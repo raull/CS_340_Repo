@@ -3,7 +3,9 @@ package shared.proxy;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -59,6 +61,27 @@ public class ServerProxy implements Proxy{
 		SERVER_HOST = host;
 		SERVER_PORT = Integer.parseInt(port);
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
+	}
+	
+	public JsonObject getJson(InputStream input) throws UnsupportedEncodingException{
+		BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8")); 
+	    StringBuilder responseStrBuilder = new StringBuilder();
+
+	    String inputStr;
+	    try {
+			while ((inputStr = streamReader.readLine()) != null)
+			    responseStrBuilder.append(inputStr);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    String jsonstff = responseStrBuilder.toString();
+	    JsonParser parser = new JsonParser();
+		
+		Gson gson = new Gson();
+		JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
+		JsonObject jsonObj = element.getAsJsonObject();
+		return jsonObj;
 	}
 	
 	private JsonObject doGet(String urlPath) throws ProxyException{
