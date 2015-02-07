@@ -507,6 +507,9 @@ public class Model {
 		//soldier
 		//victory points
 		updateUserPieces(currUser);
+		//color
+		currUser.setColor(userColor);
+		currUser.setName(name);
 	}
 	
 	public void updateUserPieces(User user) {

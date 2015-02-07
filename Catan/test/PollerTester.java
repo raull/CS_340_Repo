@@ -127,7 +127,7 @@ public class PollerTester
 		assertEquals(tile.getType(), HexType.WOOD);
 		assertEquals(tile.getNumber(), 6);
 
-		tile = map.getHexTileByLocation(new HexLocation(1,-2));
+		tile = map.getHexTileByLocation(new HexLocation(0,1));
 		assertEquals(tile.getType(), HexType.DESERT);
 
 		tile = map.getHexTileByLocation(new HexLocation(1,1));
@@ -161,7 +161,7 @@ public class PollerTester
 		//player 0 has no resources, no devcards, no victorypoints,
 			//playerid is 12, has not played devcard, name tiger, color red
 		User player0 = turnManager.getUserFromIndex(0);
-		assertTrue(player0.getColor() == Color.RED);
+		assertTrue(player0.getColor().equals(new Color(227, 66, 52)));
 		assertFalse(player0.getHasPlayedDevCard());
 		assertTrue(player0.getName().equals("tiger"));
 		assertTrue(player0.getNewDevCards().size() == 0);
@@ -173,7 +173,7 @@ public class PollerTester
 		
 		//player 1 is similar except playerid 0, name sam, collor yellow
 		User player1 = turnManager.getUserFromIndex(1);
-		assertTrue(player0.getColor() == Color.YELLOW);
+		assertTrue(player0.getColor().equals(new Color(253, 224, 105)));
 		assertFalse(player0.getHasPlayedDevCard());
 		assertTrue(player0.getName().equals("Sam"));
 		assertTrue(player0.getNewDevCards().size() == 0);

@@ -533,98 +533,116 @@ public class ModelTester
 		
 		assertTrue(testModelFacade.canOfferTrade(turnManager, sender, receiver, testModelFacade.model.tradeOffer));
 	}
-	//	@Test
-	//	public void testCanAcceptTrade() 
-	//	{
-	//		//hasn't been offered a trade
-	//		//doesn't have the cards required for trade
-	//
-	//		//true test case
-	//	}
-	//
 	
-		public void populateCardArray(int cardsCount, ArrayList<ResourceCard> cards, ResourceType resourceType){
-			for(int i = 0; i < cardsCount; i++) {
-				cards.add(new ResourceCard(resourceType));
-			}
-		}
+	@Test
+	public void testCanAcceptTrade() 
+	{
 		
-		@Test
-		public void testCanMaritimeTrade() 
-		{
-			//wrong turn phase
-			testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
-			
-			TurnManager turnManager = testModelFacade.turnManager();
-			Bank bank = testModelFacade.bank();
-			ArrayList<ResourceCard> empty = new ArrayList<ResourceCard>();
-			ResourceCard card = new ResourceCard(ResourceType.BRICK);
-			ResourceCardDeck offeredDeck = new ResourceCardDeck(empty);
-			
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, offeredDeck));
+		//hasn't been offered a trade
+		
+		testModelFacade.updateModel(testMoxy.getModel("noTrade.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.tradeOffer));
+		
+		//wrong user (user is not the one receiving the offer)
+		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.tradeOffer));
+		
+		//true test case
+		assertTrue(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex()), testModelFacade.model.tradeOffer));
+		
+		//doesn't have the cards required for trade
+
+		testModelFacade.updateModel(testMoxy.getModel("offerTradeNoResources.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex()), testModelFacade.model.tradeOffer));
+		
+		
+	}
 	
-			//not user's turn
-			testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getUserFromIndex(1), card, offeredDeck));
-			
-			//user doesn't have necessary resources
-			ArrayList<ResourceCard> offeredCards = new ArrayList<ResourceCard>();
-			populateCardArray(4, offeredCards, ResourceType.WOOD);
-			
-			testModelFacade.updateModel(testMoxy.getModel("maritimeUserNoResource.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-	
-			//bank doesn't have necessary resources
-			testModelFacade.updateModel(testMoxy.getModel("bankIsOutOfResources.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-	
-			//user trying to trade same type with same type
-			offeredCards.clear();
-			populateCardArray(4, offeredCards, ResourceType.BRICK);
-			
-			testModelFacade.updateModel(testMoxy.getModel("maritimeTrade.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-			
-			//tests with different ratios 
-			//user trying to go for ratio 3, but doesn't have port
-			offeredCards.clear();
-			populateCardArray(3, offeredCards, ResourceType.WOOD);
-			
-			testModelFacade.updateModel(testMoxy.getModel("maritimeTrade.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-			
-			//user has port for ratio 3
-			testModelFacade.updateModel(testMoxy.getModel("maritimeTradePort3.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertTrue(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-			
-			//user use ratio 2, but doesn't have port
-			offeredCards.clear();
-			populateCardArray(2, offeredCards, ResourceType.WOOD);
-			
-			testModelFacade.updateModel(testMoxy.getModel("maritimeTrade.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-			
-			//user has port
-			testModelFacade.updateModel(testMoxy.getModel("maritimeTradeWoodPort.json"));
-			turnManager = testModelFacade.turnManager();
-			bank = testModelFacade.bank();
-			assertTrue(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
-	
+	public void populateCardArray(int cardsCount, ArrayList<ResourceCard> cards, ResourceType resourceType){
+		for(int i = 0; i < cardsCount; i++) {
+			cards.add(new ResourceCard(resourceType));
 		}
+	}
+	
+@Test
+public void testCanMaritimeTrade() 
+{
+	//wrong turn phase
+	testModelFacade.updateModel(testMoxy.getModel("rollingPhase.json"));
+	
+	TurnManager turnManager = testModelFacade.turnManager();
+	Bank bank = testModelFacade.bank();
+	ArrayList<ResourceCard> empty = new ArrayList<ResourceCard>();
+	ResourceCard card = new ResourceCard(ResourceType.BRICK);
+	ResourceCardDeck offeredDeck = new ResourceCardDeck(empty);
+	
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, offeredDeck));
+
+	//not user's turn
+	testModelFacade.updateModel(testMoxy.getModel("currentTurn0.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.getUserFromIndex(1), card, offeredDeck));
+	
+	//user doesn't have necessary resources
+	ArrayList<ResourceCard> offeredCards = new ArrayList<ResourceCard>();
+	populateCardArray(4, offeredCards, ResourceType.WOOD);
+	
+	testModelFacade.updateModel(testMoxy.getModel("maritimeUserNoResource.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+
+	//bank doesn't have necessary resources
+	testModelFacade.updateModel(testMoxy.getModel("bankIsOutOfResources.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+
+	//user trying to trade same type with same type
+	offeredCards.clear();
+	populateCardArray(4, offeredCards, ResourceType.BRICK);
+	
+	testModelFacade.updateModel(testMoxy.getModel("maritimeTrade.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+	
+	//tests with different ratios 
+	//user trying to go for ratio 3, but doesn't have port
+	offeredCards.clear();
+	populateCardArray(3, offeredCards, ResourceType.WOOD);
+	
+	testModelFacade.updateModel(testMoxy.getModel("maritimeTrade.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+	
+	//user has port for ratio 3
+	testModelFacade.updateModel(testMoxy.getModel("maritimeTradePort3.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertTrue(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+	
+	//user use ratio 2, but doesn't have port
+	offeredCards.clear();
+	populateCardArray(2, offeredCards, ResourceType.WOOD);
+	
+	testModelFacade.updateModel(testMoxy.getModel("maritimeTrade.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertFalse(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+	
+	//user has port
+	testModelFacade.updateModel(testMoxy.getModel("maritimeTradeWoodPort.json"));
+	turnManager = testModelFacade.turnManager();
+	bank = testModelFacade.bank();
+	assertTrue(testModelFacade.canMaritimeTrade(turnManager, bank, turnManager.currentUser(), card, new ResourceCardDeck(offeredCards)));
+
+	}
 	
 	@Test
 	public void testCanFinishTurn() 
