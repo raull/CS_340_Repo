@@ -567,7 +567,7 @@ public class Model {
 	
 	public void addToCards(int count, ResourceType resourceType, ArrayList<ResourceCard> resourceCards1, ArrayList<ResourceCard> resourceCards2) {
 		if(count < 0 && resourceCards2 != null) {
-			addResourceCardsByNum(resourceCards2, count, resourceType);
+			addResourceCardsByNum(resourceCards2, -count, resourceType);
 		}
 		else{
 			addResourceCardsByNum(resourceCards1, count, resourceType);
