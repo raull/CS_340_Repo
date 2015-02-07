@@ -426,11 +426,17 @@ public class ModelFacade {
 	 * @param tradeOffer
 	 * @return
 	 */
-	public Boolean canAcceptTrade(User user, TradeOffer tradeOffer) {
+	public Boolean canAcceptTrade(TurnManager turnManager, User user, TradeOffer tradeOffer) {
 		//user hasn't been offered a trade
 		if(tradeOffer == null) {
 			return false;
 		}
+		
+		//Check if the user is the one receiving the offer
+		if (turnManager.getUserFromIndex(tradeOffer.getReceiverIndex()) != user) {
+			return false;
+		}
+		
 		ResourceCardDeck userCards = user.getHand().getResourceCards();
 		ResourceCardDeck neededCards = tradeOffer.getReceivingDeck();
 		//if user doesn't have all the required resources to accept offered trade

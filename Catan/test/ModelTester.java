@@ -533,15 +533,34 @@ public class ModelTester
 		
 		assertTrue(testModelFacade.canOfferTrade(turnManager, sender, receiver, testModelFacade.model.tradeOffer));
 	}
-	//	@Test
-	//	public void testCanAcceptTrade() 
-	//	{
-	//		//hasn't been offered a trade
-	//		//doesn't have the cards required for trade
-	//
-	//		//true test case
-	//	}
-	//
+	
+	@Test
+	public void testCanAcceptTrade() 
+	{
+		
+		//hasn't been offered a trade
+		
+		testModelFacade.updateModel(testMoxy.getModel("noTrade.json"));
+		TurnManager turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.tradeOffer));
+		
+		//wrong user (user is not the one receiving the offer)
+		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.tradeOffer));
+		
+		//true test case
+		assertTrue(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex()), testModelFacade.model.tradeOffer));
+		
+		//doesn't have the cards required for trade
+
+		testModelFacade.updateModel(testMoxy.getModel("offerTradeNoResources.json"));
+		turnManager = testModelFacade.turnManager();
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex()), testModelFacade.model.tradeOffer));
+		
+		
+	}
+
 //		@Test
 //		public void testCanMaritimeTrade() 
 //		{
