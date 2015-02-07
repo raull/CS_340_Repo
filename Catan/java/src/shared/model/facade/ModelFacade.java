@@ -561,12 +561,20 @@ public class ModelFacade {
 		//if it isn't user's turn or if model status is not on playing or if user does not have year of plenty card
 		//if user has already played dev card
 		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || !user.canPlayDevCard(yopCard) || user.getHasPlayedDevCard()) {
+			System.out.println("Failure on current status");
 			return false;
 		}
 		ResourceCardDeck availableCards = bank.getResourceDeck();
 		//if bank  does not have resource cards wanted
-		if(!availableCards.getAllResourceCards().contains(card1) || !availableCards.getAllResourceCards().contains(card2)) {
-			return false;
+		if(card1.getType()==card2.getType()){
+			if(availableCards.getCountByType(card1.type)<2){ //if the cards are the same, make sure there's two of that type in the bank
+				return false;
+			}
+		}
+		else{
+			if(availableCards.getCountByType(card1.type)<1||availableCards.getCountByType(card2.type)<1){ //else one of each type
+				return false;
+			}
 		}
 		return true;
 	}

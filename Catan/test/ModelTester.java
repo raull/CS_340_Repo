@@ -348,23 +348,28 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		User currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
 		
 		//bought it this turn
 		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
 		
 		//user doesn't have a dev card
 		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
 
 		//not user's turn
-		testModelFacade.updateModel(testMoxy.getModel(""/*REPLACE WITH YOUR JSON*/));
+		testModelFacade.updateModel(testMoxy.getModel("canPlayMonopoly.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		assertFalse(testModelFacade.canPlayMonopoly(turnManager, turnManager.getUserFromIndex(1), ResourceType.BRICK));
 		
 		//true test case
+		assertTrue(testModelFacade.canPlayMonopoly(turnManager, currentUser, ResourceType.BRICK));
 	}
 	
 	@Test
@@ -374,23 +379,46 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("alreadyPlayedDev.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
 		User currentUser = turnManager.currentUser();
+		ResourceCard card1 = new ResourceCard(ResourceType.WOOD);
+		ResourceCard card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
 		
 		//bought it this turn
 		testModelFacade.updateModel(testMoxy.getModel("boughtAllDevCardsThisTurn.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
 		
 		//user doesn't have a dev card
 		testModelFacade.updateModel(testMoxy.getModel("user0NoDev.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
-
-		//not user's turn
-		testModelFacade.updateModel(testMoxy.getModel(""/*REPLACE WITH YOUR JSON*/));
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
+		
+		//bank out of resources
+		testModelFacade.updateModel(testMoxy.getModel("bankIsOutOfResources.json"));
 		turnManager = testModelFacade.turnManager();
 		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
+
+		//not user's turn
+		testModelFacade.updateModel(testMoxy.getModel("canPlayYOP.json"));
+		turnManager = testModelFacade.turnManager();
+		currentUser = turnManager.currentUser();
+		card1 = new ResourceCard(ResourceType.WOOD);
+		card2 = new ResourceCard(ResourceType.BRICK);
+		System.out.println("Test1");
+		assertFalse(testModelFacade.canPlayYearofPlenty(turnManager, turnManager.getUserFromIndex(1), testModelFacade.bank(), card1, card2));
 		
 		//true test case
+		System.out.println("Test2");
+		assertTrue(testModelFacade.canPlayYearofPlenty(turnManager, currentUser, testModelFacade.bank(), card1, card2));
 	}
 	
 	@Test
