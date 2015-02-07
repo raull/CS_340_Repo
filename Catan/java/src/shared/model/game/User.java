@@ -74,6 +74,8 @@ public class User {
 	
 	private boolean hasPlayedDevCard = false;
 	
+	private ArrayList<Port> ports = new ArrayList<Port>();
+	
 	/**
 	 * Constructor to instantiate a <code>User</code> with authentication information and a color
 	 * @param A {@link String} representing the name of the <code>User</code>
@@ -241,6 +243,10 @@ public class User {
 		return ports;
 	}
 
+	public void addPort(Port port) {
+		ports.add(port);
+	}
+	
 	public Boolean getHasPlayedDevCard() {
 		return hasPlayedDevCard;
 	}
@@ -293,7 +299,7 @@ public class User {
 	 */
 	public boolean hasPort(PortType portType) {
 				
-		for (Port port : this.ports()) {
+		for (Port port : ports) {
 			if (port.getType() == portType) {
 				return true;
 			}
@@ -304,7 +310,7 @@ public class User {
 	}
 	
 	public boolean hasPortByResource(ResourceType resourceType) {
-		for(Port port : this.ports()) {
+		for(Port port : ports) {
 			if(port.getPortResourceType() == resourceType) {
 				return true;
 			}

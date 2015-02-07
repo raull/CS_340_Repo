@@ -356,8 +356,8 @@
   "players": [
     {
       "resources": {
-        "brick": 3,
-        "wood": 3,
+        "brick": 1,
+        "wood": 1,
         "sheep": 0,
         "wheat": 0,
         "ore": 0

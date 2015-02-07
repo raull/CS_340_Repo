@@ -356,11 +356,11 @@
   "players": [
     {
       "resources": {
-        "brick": 3,
-        "wood": 3,
-        "sheep": 0,
-        "wheat": 0,
-        "ore": 0
+        "brick": 4,
+        "wood": 4,
+        "sheep": 4,
+        "wheat": 4,
+        "ore": 4
       },
       "oldDevCards": {
         "yearOfPlenty": 0,
