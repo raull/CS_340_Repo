@@ -286,6 +286,10 @@ public class User {
 		this.unusedCities = unusedCities;
 	}
 
+	public void setColor(CatanColor color) {
+		this.color = color;
+	}
+
 	/**
 	 * Check if user has a port with the specified port type
 	 * @param portType The port type to check on the user
