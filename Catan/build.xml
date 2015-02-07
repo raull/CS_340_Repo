@@ -165,7 +165,7 @@
 		</java>
 	</target>
 
-	<target name="test" depends="compile-test, compile" description="compiles, packages, and runs the JUnit tests for the project">
+	<target name="test" depends="compile, compile-test" description="compiles, packages, and runs the JUnit tests for the project">
 		<java classname="Tester" fork="yes">
 			<classpath>
 				<path refid="all-classpath"/> 
