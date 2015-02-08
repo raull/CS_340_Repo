@@ -376,14 +376,24 @@ public class ModelFacade {
 	public Boolean canRobPlayer(HexTile hexTile,User currUser, User victim) {
 		//if it isn't user's turn or if model status is not on playing
 		if(currUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+			System.out.println("Failed because of wrong turn/status");
 			return false;
 		}
 		//if new location already has robber, robber is being kept in the same location 
 		if(hexTile.hasRobber()) {
+			System.out.println("Failed because robber didn't move");
 			return false;
 		}
+		
+		//the victim needs to be adjacent to the robber
+		if(!victim.ownsAdjacentBuildingToHex(hexTile.getLocation())){
+			System.out.println("Failed because victim wasn't adjacent");
+			return false;
+		}
+		
 		//if the victim getting robbed has no resource cards
 		if(victim.getHand().getResourceCards().getAllResourceCards().size() == 0){
+			System.out.println("Failed because victim is out of cards");
 			return false;
 		}
 		

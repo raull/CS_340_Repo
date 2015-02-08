@@ -491,9 +491,9 @@ public class ModelTester
 		
 		// True case
 		//Setting a Hex that doesn't have the Robber
-		location = new HexLocation(0, 1);
+		location = new HexLocation(-2, 0);
 		tile = testModelFacade.map().getHexTileByLocation(location);
-		assertTrue(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(0)));
+		assertTrue(testModelFacade.canRobPlayer(tile, turnManager.currentUser(), turnManager.getUserFromIndex(2)));
 	}
 
 	

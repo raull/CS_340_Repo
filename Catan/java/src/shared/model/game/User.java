@@ -10,6 +10,8 @@ import shared.definitions.PieceType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
 import shared.model.board.Port;
@@ -228,6 +230,23 @@ public class User {
 			}
 		}
 		return false;
+	}
+	
+	public boolean ownsAdjacentBuildingToHex(HexLocation location){
+		ArrayList<VertexLocation> locations = new ArrayList<VertexLocation>();
+		locations.add(new VertexLocation(location, VertexDirection.West));
+		locations.add(new VertexLocation(location, VertexDirection.NorthWest));
+		locations.add(new VertexLocation(location, VertexDirection.NorthEast));
+		locations.add(new VertexLocation(location, VertexDirection.East));
+		locations.add(new VertexLocation(location, VertexDirection.SouthEast));
+		locations.add(new VertexLocation(location, VertexDirection.SouthWest));
+		for(VertexLocation vl : locations){
+			if(this.occupiesVertex(vl)){
+				return true;
+			}
+		}
+		return false;
+
 	}
 	
 	/**
