@@ -7,6 +7,7 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
+
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
@@ -14,7 +15,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * Implementation for the login controller
  */
-public class LoginController extends Controller implements ILoginController {
+public class LoginController extends Controller implements ILoginController, Observer {
 
 	private IMessageView messageView;
 	private IAction loginAction;
@@ -87,6 +88,12 @@ public class LoginController extends Controller implements ILoginController {
 		// If register succeeded
 		getLoginView().closeModal();
 		loginAction.execute();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

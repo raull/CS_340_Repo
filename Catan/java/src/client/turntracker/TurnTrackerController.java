@@ -1,5 +1,8 @@
 package client.turntracker;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import shared.definitions.CatanColor;
 import client.base.*;
 
@@ -7,7 +10,7 @@ import client.base.*;
 /**
  * Implementation for the turn tracker controller
  */
-public class TurnTrackerController extends Controller implements ITurnTrackerController {
+public class TurnTrackerController extends Controller implements ITurnTrackerController, Observer {
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		
@@ -31,6 +34,12 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//<temp>
 		getView().setLocalPlayerColor(CatanColor.RED);
 		//</temp>
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
