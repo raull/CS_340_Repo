@@ -1,5 +1,7 @@
 package client.base;
 
+import client.state.State;
+
 /**
  * Base controller interface
  */

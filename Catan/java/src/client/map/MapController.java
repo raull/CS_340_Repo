@@ -6,6 +6,7 @@ import shared.definitions.*;
 import shared.locations.*;
 import client.base.*;
 import client.data.*;
+import client.state.State;
 
 
 /**

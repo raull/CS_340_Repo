@@ -1,5 +1,7 @@
 package client.map;
 
+import client.base.IController;
+import client.state.State;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
@@ -28,6 +30,12 @@ public class MapInactiveState extends MapControllerState{
 	public boolean canPlaceRobber(HexLocation hexLoc) {
 		//TODO: logic
 		return false;
+	}
+
+	@Override
+	public void setState(IController controller, State state) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
