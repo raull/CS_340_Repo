@@ -1,12 +1,12 @@
 package client.map;
 
-import client.base.IController;
-import client.state.State;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import client.base.IController;
+import client.state.State;
 
-public class MapInactiveState extends MapControllerState{
+public class MapRobbingState extends MapControllerState{
 
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
@@ -28,9 +28,8 @@ public class MapInactiveState extends MapControllerState{
 
 	@Override
 	public boolean canPlaceRobber(HexLocation hexLoc) {
-		//If the user isn't active, they can't interact with the map
+		// TODO logic
 		return false;
 	}
-
 
 }

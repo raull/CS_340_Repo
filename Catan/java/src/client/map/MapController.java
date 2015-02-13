@@ -172,6 +172,11 @@ public class MapController extends Controller implements IMapController, Observe
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void setState(State state) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

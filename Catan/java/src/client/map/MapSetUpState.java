@@ -36,10 +36,4 @@ public class MapSetUpState extends MapControllerState{
 		return false;
 	}
 
-	@Override
-	public void setState(IController controller, State state) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

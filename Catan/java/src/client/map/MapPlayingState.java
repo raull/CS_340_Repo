@@ -8,7 +8,7 @@ import shared.locations.VertexLocation;
 import shared.model.facade.ModelFacade;
 import shared.model.game.User;
 
-public class MapActiveState extends MapControllerState{
+public class MapPlayingState extends MapControllerState{
 
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
@@ -34,12 +34,6 @@ public class MapActiveState extends MapControllerState{
 	public boolean canPlaceRobber(HexLocation hexLoc) {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public void setState(IController controller, State state) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }
