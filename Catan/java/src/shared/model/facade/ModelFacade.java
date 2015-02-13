@@ -2,6 +2,7 @@ package shared.model.facade;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Observable;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -33,7 +34,7 @@ import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.Proxy;
 
-public class ModelFacade {
+public class ModelFacade extends Observable{
 	
 
 	//canDo functions
@@ -75,7 +76,8 @@ public class ModelFacade {
 		bank = model.getBank();
 		score = model.getScoreKeeper();
 		//update stuff from model
-		
+		this.setChanged();
+		this.notifyObservers();
 	}
 	/**
 	 * gets the current model
