@@ -32,5 +32,5 @@ public class MapInactiveState extends MapControllerState{
 		return false;
 	}
 
-
+//
 }
