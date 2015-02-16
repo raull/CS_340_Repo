@@ -4,6 +4,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import shared.definitions.CatanColor;
+import shared.proxy.ProxyException;
+import shared.proxy.ServerProxy;
+import shared.proxy.games.JoinGameRequest;
 import client.base.*;
 import client.data.*;
 import client.misc.*;
@@ -130,14 +133,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void joinGame(CatanColor color) {
 		
 		// If join succeeded
-		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
-		joinAction.execute();
+		ServerProxy tempProxy = new ServerProxy(); //TODO: Get the real proxy in here
+		JoinGameRequest tempRequest = new JoinGameRequest(0, null); //TODO: Get the real request written
+		try {
+			tempProxy.join(tempRequest);
+			getSelectColorView().closeModal();
+			getJoinGameView().closeModal();
+			joinAction.execute(); //TODO: figure out what on earth the joinAction.execute() does
+		} catch (ProxyException e) {
+			//TODO show error modal
+		}
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		// update games
+		// revalidate available games
 		
 	}
 
