@@ -131,18 +131,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
+		//For now
+		getSelectColorView().closeModal();
+		getJoinGameView().closeModal();
+		joinAction.execute();
 		
-		// If join succeeded
-		ServerProxy tempProxy = new ServerProxy(); //TODO: Get the real proxy in here
-		JoinGameRequest tempRequest = new JoinGameRequest(0, null); //TODO: Get the real request written
-		try {
-			tempProxy.join(tempRequest);
-			getSelectColorView().closeModal();
-			getJoinGameView().closeModal();
-			joinAction.execute(); //TODO: figure out what on earth the joinAction.execute() does
-		} catch (ProxyException e) {
-			//TODO show error modal
-		}
+//		// If join succeeded
+//		ServerProxy tempProxy = new ServerProxy(); //TODO: Get the real proxy in here
+//		JoinGameRequest tempRequest = new JoinGameRequest(0, null); //TODO: Get the real request written
+//		try {
+//			tempProxy.join(tempRequest);
+//			getSelectColorView().closeModal();
+//			getJoinGameView().closeModal();
+//			joinAction.execute(); //TODO: figure out what on earth the joinAction.execute() does
+//		} catch (ProxyException e) {
+//			//TODO show error modal
+//		}
 	}
 
 	@Override
