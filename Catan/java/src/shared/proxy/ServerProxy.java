@@ -157,15 +157,15 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return false;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
-				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
-						urlPath, connection.getResponseCode()));
+				throw new ProxyException(String.format("Request failed: (http code %d)",
+						connection.getResponseCode()));
 			}
 		}
 		catch (IOException e) {
-			throw new ProxyException(String.format("doPost failed: %s", e.getMessage()), e);
+			throw new ProxyException(String.format("Request failed: %s", e.getMessage()));
 		}
 	}
 	
