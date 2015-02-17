@@ -1,12 +1,15 @@
 package client.login;
 
 import client.base.*;
+import client.manager.ClientManager;
 import client.misc.*;
 
 import java.net.*;
 import java.io.*;
 import java.util.*;
 import java.lang.reflect.*;
+
+import shared.proxy.user.Credentials;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
@@ -73,11 +76,27 @@ public class LoginController extends Controller implements ILoginController, Obs
 	public void signIn() {
 		
 		// TODO: log in user
+		String username = getLoginView().getLoginUsername();
+		String password = getLoginView().getLoginPassword();
 		
-
-		// If log in succeeded
-		getLoginView().closeModal();
-		loginAction.execute();
+		Credentials cred = new Credentials(username, password);
+		
+		try {
+			boolean login = ClientManager.instance().getServerProxy().login(cred);
+			if (login) {
+				// If log in succeeded
+				getLoginView().closeModal();
+				loginAction.execute();
+			} else {
+				getMessageView().setTitle("Warning");
+				getMessageView().setMessage("Wrong username and password");
+				getMessageView().showModal();
+			}
+		} catch (Exception e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Something went wrong while loggin in. Please check connection and try again later.");
+			getMessageView().showModal();
+		}
 	}
 
 	@Override
@@ -92,8 +111,9 @@ public class LoginController extends Controller implements ILoginController, Obs
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+		// If log in succeeded
+		getLoginView().closeModal();
+		loginAction.execute();
 	}
 
 }

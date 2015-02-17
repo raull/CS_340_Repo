@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
@@ -141,6 +142,8 @@ public class ServerProxy implements Proxy{
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
 			connection.connect();
+			String param = gson.toJson(postData);
+			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
