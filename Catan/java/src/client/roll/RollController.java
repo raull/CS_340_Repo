@@ -50,7 +50,7 @@ public class RollController extends Controller implements IRollController, Obser
 		RollNumber param = new RollNumber(1, total);
 		
 		try {
-			ClientManager.getServerProxy().rollNumber(param);
+			ClientManager.instance().getServerProxy().rollNumber(param);
 			getResultView().setRollValue(total);
 			getResultView().showModal();
 		} catch (Exception e) {
