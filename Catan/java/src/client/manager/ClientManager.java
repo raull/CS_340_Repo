@@ -37,7 +37,7 @@ public class ClientManager {
 	 * Calls canAddUser, if that returns true, adds the new user to the player list
 	 * @param newPlayer the player to be added
 	 */
-	public static void addUserToGame(User newPlayer){
+	public void addUserToGame(User newPlayer){
 		players.add(newPlayer);
 		//TODO: throw exception if player can't be added
 	}
@@ -47,7 +47,7 @@ public class ClientManager {
 	 * @param newPlayer
 	 * @return true if the player can be added, false otherwise
 	 */
-	public static boolean canUserJoinGame(User newPlayer){
+	public boolean canUserJoinGame(User newPlayer){
 		return true;
 	}
 	
@@ -55,7 +55,7 @@ public class ClientManager {
 	 * Removes a given player from the list (not sure if we'd need this)
 	 * @param toBeRemovedPlayer
 	 */
-	public static void removePlayer(User toBeRemovedPlayer){
+	public void removePlayer(User toBeRemovedPlayer){
 		
 	}
 	
@@ -63,7 +63,7 @@ public class ClientManager {
 	 * Get the client Model Facade
 	 * @return The singleton copy of the Model Facade
 	 */
-	public static ModelFacade getModelFacade() {
+	public ModelFacade getModelFacade() {
 		return modelFacade;
 	}
 	
@@ -71,7 +71,7 @@ public class ClientManager {
 	 * Get the client Server Proxy
 	 * @return The singleton copy of the Server Proxy
 	 */
-	public static ServerProxy getServerProxy() {
+	public ServerProxy getServerProxy() {
 		return serverProxy;
 	}
 	
@@ -79,7 +79,7 @@ public class ClientManager {
 	 * Get the current logged in User
 	 * @return the current logged in user
 	 */
-	public static User getCurrentUser() {
+	public User getCurrentUser() {
 		return currentUser;
 	}
 
