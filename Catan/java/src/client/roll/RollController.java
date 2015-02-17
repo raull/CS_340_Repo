@@ -3,7 +3,10 @@ package client.roll;
 import java.util.Observable;
 import java.util.Observer;
 
+import shared.proxy.moves.RollNumber;
 import client.base.*;
+import client.manager.ClientManager;
+import client.misc.MessageView;
 
 
 /**
@@ -39,14 +42,29 @@ public class RollController extends Controller implements IRollController, Obser
 	
 	@Override
 	public void rollDice() {
-
-		getResultView().showModal();
+		
+		int dice1 = (int)(Math.random()*6) + 1;
+		int dice2 = (int)(Math.random()*6) + 1;
+		int total = dice1 + dice2;
+		
+		RollNumber param = new RollNumber(1, total);
+		
+		try {
+			ClientManager.getServerProxy().rollNumber(param);
+			getResultView().setRollValue(total);
+			getResultView().showModal();
+		} catch (Exception e) {
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to roll dice. Please try again later.");
+			errorMessage.showModal();
+		}
+		
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+		getRollView().closeModal();
 	}
 
 }
