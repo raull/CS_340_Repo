@@ -6,6 +6,7 @@ import client.misc.*;
 
 import java.util.*;
 
+import shared.model.game.User;
 import shared.proxy.user.Credentials;
 
 
@@ -60,6 +61,12 @@ public class LoginController extends Controller implements ILoginController, Obs
 		
 		return loginAction;
 	}
+	
+	private void saveUsername(String username) {
+		User user = new User();
+		user.setName(username);
+		ClientManager.instance().setCurrentUser(user);
+	}
 
 	@Override
 	public void start() {
@@ -79,6 +86,7 @@ public class LoginController extends Controller implements ILoginController, Obs
 			boolean login = ClientManager.instance().getServerProxy().login(cred);
 			if (login) {
 				// If log in succeeded
+				saveUsername(username);
 				getLoginView().closeModal();
 				loginAction.execute();
 			} else {
@@ -120,6 +128,7 @@ public class LoginController extends Controller implements ILoginController, Obs
 				boolean register = ClientManager.instance().getServerProxy().register(cred);
 				if (register) {
 					// If register succeeded
+					saveUsername(username);
 					getLoginView().closeModal();
 					loginAction.execute();
 				}
