@@ -82,5 +82,13 @@ public class ClientManager {
 	public User getCurrentUser() {
 		return currentUser;
 	}
+	
+	/**
+	 * Set the new current user
+	 * @param newUser
+	 */
+	public void setCurrentUser(User newUser) {
+		this.currentUser = newUser;
+	}
 
 }
