@@ -4,8 +4,12 @@ import java.util.*;
 
 import shared.definitions.*;
 import shared.locations.*;
+import shared.proxy.ProxyException;
+import shared.proxy.moves.BuildRoad;
+import shared.proxy.moves.Soldier_;
 import client.base.*;
 import client.data.*;
+import client.manager.ClientManager;
 import client.state.State;
 
 
@@ -15,6 +19,7 @@ import client.state.State;
 public class MapController extends Controller implements IMapController, Observer {
 	
 	private IRobView robView;
+	private MapControllerState state;
 	
 	public MapController(IMapView view, IRobView robView) {
 		
@@ -104,29 +109,31 @@ public class MapController extends Controller implements IMapController, Observe
 		//</temp>
 	}
 
-	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
-		
-		return true;
+	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
+	{
+		return state.canPlaceRoad(edgeLoc);
 	}
 
-	public boolean canPlaceSettlement(VertexLocation vertLoc) {
-		
-		return true;
+	public boolean canPlaceSettlement(VertexLocation vertLoc) 
+	{	
+		return state.canPlaceSettlement(vertLoc);
 	}
 
 	public boolean canPlaceCity(VertexLocation vertLoc) {
 		
-		return true;
+		return state.canPlaceCity(vertLoc);
 	}
 
 	public boolean canPlaceRobber(HexLocation hexLoc) {
 		
-		return true;
+		return state.canPlaceRobber(hexLoc);
 	}
 
-	public void placeRoad(EdgeLocation edgeLoc) {
+	public void placeRoad(EdgeLocation edgeLoc) 
+	{
 		
-		getView().placeRoad(edgeLoc, CatanColor.ORANGE);
+//		BuildRoad build = new BuildRoad(0, edgeLoc, false);
+//		ClientManager.instance().getServerProxy().buildRoad();
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) {
@@ -151,19 +158,26 @@ public class MapController extends Controller implements IMapController, Observe
 		getView().startDrop(pieceType, CatanColor.ORANGE, true);
 	}
 	
-	public void cancelMove() {
+	public void cancelMove() 
+	{
 		
 	}
 	
-	public void playSoldierCard() {	
-		
+	public void playSoldierCard() 
+	{	
+		//initiate placement of the robber using map overlay and retrieve the new location
+		//of the robber
+		//do we then call place robber??
+		//initiate the robview overlay to be able to get the index of the individual to be robbed
+		//
 	}
 	
 	public void playRoadBuildingCard() {	
 		
 	}
 	
-	public void robPlayer(RobPlayerInfo victim) {	
+	public void robPlayer(RobPlayerInfo victim) 
+	{	
 		
 	}
 
