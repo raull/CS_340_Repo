@@ -57,7 +57,7 @@ public class ProxyTester
 	{
 		try
 		{
-			testProxy.register(new Credentials("Jacoby", "jacob"));
+			testProxy.register(new Credentials("Jacobaa", "jacob"));
 		}
 		catch (ProxyException e)
 		{
@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(19, "red"));
+			testProxy.join(new JoinGameRequest(21, "red"));
 		}
 		catch(ProxyException e)
 		{
@@ -428,7 +428,7 @@ public class ProxyTester
 	
 		try
 		{
-			testProxy.maritimeTrade(new MaritimeTrade(0,0,0,0));
+			testProxy.maritimeTrade(new MaritimeTrade(0,0,"brick", "wheat"));
 		}
 		catch(ProxyException e)
 		{
