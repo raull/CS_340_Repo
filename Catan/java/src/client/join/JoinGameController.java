@@ -9,6 +9,7 @@ import shared.proxy.ServerProxy;
 import shared.proxy.games.JoinGameRequest;
 import client.base.*;
 import client.data.*;
+import client.manager.ClientManager;
 import client.misc.*;
 
 
@@ -21,6 +22,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
+	
+	private ServerProxy proxy = ClientManager.instance().getServerProxy();
 	
 	/**
 	 * JoinGameController constructor
@@ -131,22 +134,17 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
-		//For now
-		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
-		joinAction.execute();
 		
-//		// If join succeeded
-//		ServerProxy tempProxy = new ServerProxy(); //TODO: Get the real proxy in here
-//		JoinGameRequest tempRequest = new JoinGameRequest(0, null); //TODO: Get the real request written
-//		try {
-//			tempProxy.join(tempRequest);
-//			getSelectColorView().closeModal();
-//			getJoinGameView().closeModal();
-//			joinAction.execute(); //TODO: figure out what on earth the joinAction.execute() does
-//		} catch (ProxyException e) {
-//			//TODO show error modal
-//		}
+		// If join succeeded
+		JoinGameRequest tempRequest = new JoinGameRequest(0, color.toString()); //TODO: Get the real gameID number
+		try {
+			proxy.join(tempRequest);
+			getSelectColorView().closeModal();
+			getJoinGameView().closeModal();
+			joinAction.execute(); //brings up the waiting modal
+		} catch (ProxyException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
