@@ -207,8 +207,10 @@ public class MapController extends Controller implements IMapController, Observe
 		//
 	}
 	
-	public void playRoadBuildingCard() {	
-		
+	public void playRoadBuildingCard() 
+	{	
+		//place road twice
+		//at some point the server proxy needs to be called
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) 
@@ -229,7 +231,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	private void run()
 	{
-		
+		state.run();
 	}
 	
 }

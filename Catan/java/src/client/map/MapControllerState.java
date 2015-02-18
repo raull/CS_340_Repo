@@ -1,6 +1,7 @@
 package client.map;
 
 import client.base.IController;
+import client.data.RobPlayerInfo;
 import client.state.State;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -17,6 +18,10 @@ public abstract class MapControllerState extends State{
 	public abstract boolean canPlaceCity(VertexLocation vertLoc);
 	
 	public abstract boolean canPlaceRobber(HexLocation hexLoc);
+	
+	public abstract void run();
+	
+	public abstract void robPlayer(RobPlayerInfo victim);
 	
 	@Override
 	public void setState(IController controller, State state) {

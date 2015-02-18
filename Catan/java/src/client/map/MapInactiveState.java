@@ -1,6 +1,7 @@
 package client.map;
 
 import client.base.IController;
+import client.data.RobPlayerInfo;
 import client.state.State;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -30,6 +31,18 @@ public class MapInactiveState extends MapControllerState{
 	public boolean canPlaceRobber(HexLocation hexLoc) {
 		//If the user isn't active, they can't interact with the map
 		return false;
+	}
+
+	@Override
+	public void run() 
+	{
+		return;
+	}
+
+	@Override
+	public void robPlayer(RobPlayerInfo victim) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

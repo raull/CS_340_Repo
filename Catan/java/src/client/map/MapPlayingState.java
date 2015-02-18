@@ -1,6 +1,7 @@
 package client.map;
 
 import client.base.IController;
+import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
 import client.state.State;
 import shared.definitions.PieceType;
@@ -42,6 +43,18 @@ public class MapPlayingState extends MapControllerState
 	{
 		//not quite sure what to use for this one just yet
 		return false;
+	}
+
+	@Override
+	public void run() 
+	{
+		return;
+	}
+
+	@Override
+	public void robPlayer(RobPlayerInfo victim) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

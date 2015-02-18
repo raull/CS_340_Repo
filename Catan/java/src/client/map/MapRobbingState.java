@@ -4,6 +4,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import client.base.IController;
+import client.data.RobPlayerInfo;
 import client.state.State;
 
 public class MapRobbingState extends MapControllerState{
@@ -27,9 +28,22 @@ public class MapRobbingState extends MapControllerState{
 	}
 
 	@Override
-	public boolean canPlaceRobber(HexLocation hexLoc) {
+	public boolean canPlaceRobber(HexLocation hexLoc) 
+	{
 		// TODO logic
 		return false;
+	}
+
+	@Override
+	public void run() 
+	{
+		//TODO will automatically start the player moving the robber
+	}
+
+	@Override
+	public void robPlayer(RobPlayerInfo victim) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
