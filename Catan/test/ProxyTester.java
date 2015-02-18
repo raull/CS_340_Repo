@@ -57,7 +57,7 @@ public class ProxyTester
 	{
 		try
 		{
-			testProxy.register(new Credentials("Jacobp", "jacob"));
+			testProxy.register(new Credentials("Jacobv", "jacob"));
 		}
 		catch (ProxyException e)
 		{
@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(10, "red"));
+			testProxy.join(new JoinGameRequest(16, "red"));
 		}
 		catch(ProxyException e)
 		{
@@ -184,6 +184,18 @@ public class ProxyTester
 			fail();
 		}
 		
+		//Second is to allow player 0 to rob player 1
+		try
+		{
+			HexLocation hex = new HexLocation(0,1);
+			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
+			testProxy.buildSettlement(new BuildSettlement(1, vertex, true));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
 		try
 		{
 			testProxy.listAI();
@@ -204,13 +216,92 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.rollNumber(new RollNumber(0, 7));
+			testProxy.rollNumber(new RollNumber(0, 5));
 		}
 		catch(ProxyException e)
 		{
 			fail();
 		}
 		
+		//Soldier and Rob don't work if nobody has resources, hopefully rolling all 
+		//numbers wil let that happen
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 6));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 8));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 9));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 4));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 3));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 2));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 10));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 11));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 12));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
 		try
 		{
 			testProxy.Year_of_Plenty(new Year_of_Plenty_(0, ResourceType.BRICK, ResourceType.WHEAT));
@@ -251,7 +342,7 @@ public class ProxyTester
 		{
 			HexLocation hex = new HexLocation(0,0);
 			EdgeLocation edge = new EdgeLocation(hex, EdgeDirection.North);
-			testProxy.buildRoad(new BuildRoad(0, edge, false));
+			testProxy.buildRoad(new BuildRoad(0, edge, true));
 		}
 		catch(ProxyException e)
 		{
@@ -269,7 +360,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0)));
+			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,1)));
 		}
 		catch (ProxyException e)
 		{

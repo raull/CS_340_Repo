@@ -12,11 +12,11 @@ public class RobPlayer {
 	/**
 	 * The player who is robbing
 	 */
-	private int PlayerIndex;
+	private int playerIndex;
 	/**
 	 * The player being robbed
 	 */
-	private int VictimIndex;
+	private int victimIndex;
 	/**
 	 * The new location of the robber
 	 */
@@ -28,30 +28,30 @@ public class RobPlayer {
 	 * @param victimIndex
 	 * @param location
 	 */
-	public RobPlayer(int playerIndex, int victimIndex, HexLocation location) {
+	public RobPlayer(int PlayerIndex, int victimIndex, HexLocation location) {
 		super();
-		PlayerIndex = playerIndex;
-		VictimIndex = victimIndex;
+		playerIndex = PlayerIndex;
+		this.victimIndex = victimIndex;
 		this.location = location;
 		type = "robPlayer";
 	}
 
 	public int getPlayerIndex() {
-		return PlayerIndex;
+		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(int PlayerIndex) {
 		//INPUT VERIFICATION
-		PlayerIndex = playerIndex;
+		playerIndex = PlayerIndex;
 	}
 
 	public int getVictimIndex() {
-		return VictimIndex;
+		return victimIndex;
 	}
 
 	public void setVictimIndex(int victimIndex) {
 		//INPUT VERIFICATION
-		VictimIndex = victimIndex;
+		victimIndex = victimIndex;
 	}
 
 	public HexLocation getLocation() {
