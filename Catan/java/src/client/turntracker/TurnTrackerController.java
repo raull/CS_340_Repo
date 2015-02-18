@@ -1,10 +1,9 @@
 package client.turntracker;
 
-import java.awt.Color;
 import java.util.Observable;
 import java.util.Observer;
 
-import shared.definitions.CatanColor;
+import shared.model.game.User;
 import client.base.*;
 import client.manager.ClientManager;
 
@@ -33,15 +32,20 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	}
 	
 	private void initFromModel() {
-		//<temp>
-		CatanColor currentColor = ClientManager.instance().getCurrentUser().getCatanColor();
-		getView().setLocalPlayerColor(currentColor);
-		//</temp>
+		
+		User currentUser = ClientManager.instance().getCurrentUser();
+		
+		//set color of local player
+		getView().setLocalPlayerColor(currentUser.getCatanColor());
+		
+		// initialize the player in turn tracker display
+		getView().initializePlayer(currentUser.getTurnIndex(), currentUser.getName(), currentUser.getCatanColor());
+		
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		// model facade has changed
 		
 	}
 
