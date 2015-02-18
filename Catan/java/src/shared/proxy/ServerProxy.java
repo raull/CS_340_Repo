@@ -148,9 +148,9 @@ public class ServerProxy implements Proxy{
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
 				StringBuilder sb = new StringBuilder(cookieheader);
-				sb.delete(0, 10);
+//				sb.delete(0, 11);
 				int length = sb.length();
-				sb.delete(length-8, length-1);
+				sb.delete(length-8, length);
 				setUsercookie(sb.toString());
 			   
 			    return true;
@@ -180,6 +180,8 @@ public class ServerProxy implements Proxy{
 			connection.addRequestProperty("Accept", "text/html");
 			connection.setRequestProperty("Cookie", usercookie);
 			connection.connect();
+			String param = gson.toJson(postData);
+			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
