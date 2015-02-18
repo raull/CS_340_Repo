@@ -15,7 +15,7 @@ public class BuildRoad {
 	/**
 	 * Where the road is to be built
 	 */
-	private EdgeLocation roadLocation;
+	private comEdgeLoc roadLocation;
 	/**
 	 * Whether the location is free (doesn't cost resources, used for setup).
 	 */
@@ -30,7 +30,7 @@ public class BuildRoad {
 	public BuildRoad(int playerIndex, EdgeLocation roadLocation, boolean free) {
 		super();
 		this.playerIndex = playerIndex;
-		this.roadLocation = roadLocation;
+		this.roadLocation = new comEdgeLoc(roadLocation);
 		this.free = free;
 		type = "buildRoad";
 	}
@@ -43,12 +43,12 @@ public class BuildRoad {
 		this.playerIndex = playerIndex;
 	}
 
-	public EdgeLocation getRoadLocation() {
+	public comEdgeLoc getRoadLocation() {
 		return roadLocation;
 	}
 
 	public void setRoadLocation(EdgeLocation roadLocation) {
-		this.roadLocation = roadLocation;
+		this.roadLocation = new comEdgeLoc(roadLocation);
 	}
 
 	public boolean isFree() {

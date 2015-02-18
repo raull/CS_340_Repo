@@ -12,7 +12,7 @@ public class RollNumber {
 	/**
 	 * The Index of the player (0-3)
 	 */
-	private int PlayerIndex;
+	private int playerIndex;
 	/**
 	 * The number roled (2-12)
 	 */
@@ -23,15 +23,15 @@ public class RollNumber {
 	 * @param playerIndex
 	 * @param number
 	 */
-	public RollNumber(int playerIndex, int number) {
+	public RollNumber(int PlayerIndex, int number) {
 		super();
-		PlayerIndex = playerIndex;
+		playerIndex = PlayerIndex;
 		this.number = number;
 		type = "rollNumber";
 	}
 
-	public int getPlayerIndex() {
-		return PlayerIndex;
+	public int getplayerIndex() {
+		return playerIndex;
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class RollNumber {
 	 */
 	public void setPlayerIndex(int playerIndex) {
 		//INPUT VERIFICATION
-		PlayerIndex = playerIndex;
+		playerIndex = playerIndex;
 	}
 
 	public int getNumber() {

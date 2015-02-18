@@ -57,7 +57,7 @@ public class ProxyTester
 	{
 		try
 		{
-			testProxy.register(new Credentials("Jacobh", "jacob"));
+			testProxy.register(new Credentials("Jacobp", "jacob"));
 		}
 		catch (ProxyException e)
 		{
@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(3, "red"));
+			testProxy.join(new JoinGameRequest(10, "red"));
 		}
 		catch(ProxyException e)
 		{
@@ -260,7 +260,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0)));
+			testProxy.Soldier(new Soldier_(1, 0, new HexLocation(0,0)));
 		}
 		catch(ProxyException e)
 		{
