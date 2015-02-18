@@ -10,9 +10,18 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.facade.ModelFacade;
 import shared.model.game.User;
+import shared.proxy.ProxyException;
+import shared.proxy.moves.BuildSettlement;
 
 public class MapSetUpState extends MapControllerState{
 
+	public MapSetUpState(MapController mapController) 
+	{
+		controller = mapController;
+	}
+
+	private MapController controller;
+	
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
 	{
@@ -54,9 +63,23 @@ public class MapSetUpState extends MapControllerState{
 	}
 
 	@Override
-	public void robPlayer(RobPlayerInfo victim) {
-		// TODO Auto-generated method stub
-		
+	public void robPlayer(RobPlayerInfo victim) 
+	{
+		return;
+	}
+
+	@Override
+	public void placeSettlement(VertexLocation vertLoc) 
+	{
+		User client = ClientManager.instance().getCurrentUser();
+		controller.getView().placeSettlement(vertLoc, client.getCatanColor());
+		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, true);
+		try {
+			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

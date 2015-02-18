@@ -14,6 +14,7 @@ import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildRoad;
+import shared.proxy.moves.BuildSettlement;
 import shared.proxy.moves.Soldier_;
 import client.base.*;
 import client.data.*;
@@ -38,20 +39,25 @@ public class MapController extends Controller implements IMapController, Observe
 		initFromModel();
 	}
 	
-	public IMapView getView() {
-		
+	public IMapView getView() 
+	{
 		return (IMapView)super.getView();
 	}
 	
-	private IRobView getRobView() {
+	private IRobView getRobView() 
+	{
 		return robView;
 	}
-	private void setRobView(IRobView robView) {
+	private void setRobView(IRobView robView) 
+	{
 		this.robView = robView;
 	}
 	
 	protected void initFromModel() 
 	{
+		//TODO add test so the map is only initialized once the specific game is joined
+		//otherwise we are most likely going to get a whole bunch of null pointer exceptions
+		
 		//access the model 
 		ModelFacade facade = ClientManager.instance().getModelFacade();
 		shared.model.board.Map map = facade.map();
@@ -118,49 +124,53 @@ public class MapController extends Controller implements IMapController, Observe
 		User client = ClientManager.instance().getCurrentUser();
 		if (turnManager.getCurrentTurn() != client.getTurnIndex())
 		{
-			setState(new MapInactiveState());
+			setState(new MapInactiveState(this));
 		}
 		else if (turnManager.currentTurnPhase() == TurnPhase.ROBBING)
 		{
-			setState(new MapRobbingState());
+			setState(new MapRobbingState(this));
 		}
 		else if (turnManager.currentTurnPhase() == TurnPhase.PLAYING)
 		{
-			setState(new MapPlayingState());
+			setState(new MapPlayingState(this));
 		}
 		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND
 				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
 		{
-			setState(new MapSetUpState());
+			setState(new MapSetUpState(this));
 		}
 		else
 		{
-			setState(new MapInactiveState());
+			setState(new MapInactiveState(this));
 		}
 	}
 
-	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
+	public boolean canPlaceRoad(EdgeLocation edgeLoc) //TODO finish setUp version
 	{
 		return state.canPlaceRoad(edgeLoc);
 	}
 
-	public boolean canPlaceSettlement(VertexLocation vertLoc) 
+	public boolean canPlaceSettlement(VertexLocation vertLoc) //TODO verify setUp version
 	{	
 		return state.canPlaceSettlement(vertLoc);
 	}
 
-	public boolean canPlaceCity(VertexLocation vertLoc) {
-		
+	public boolean canPlaceCity(VertexLocation vertLoc) 
+	{	
 		return state.canPlaceCity(vertLoc);
 	}
 
-	public boolean canPlaceRobber(HexLocation hexLoc) {
-		
+	public boolean canPlaceRobber(HexLocation hexLoc) 
+	{	
 		return state.canPlaceRobber(hexLoc);
 	}
 
 	public void placeRoad(EdgeLocation edgeLoc) 
 	{
+		//TODO may need to be moved to states 
+		//(difference in server call between roadbuilding and just buying a road)
+		//what would the states be though?
+		
 		//This function should likely also include a call to the serverproxy
 		User client = ClientManager.instance().getCurrentUser();
 		getView().placeRoad(edgeLoc, client.getCatanColor());
@@ -168,9 +178,16 @@ public class MapController extends Controller implements IMapController, Observe
 
 	public void placeSettlement(VertexLocation vertLoc) 
 	{
-		//This function should likely also include a call to the serverproxy
+		
 		User client = ClientManager.instance().getCurrentUser();
 		getView().placeSettlement(vertLoc, client.getCatanColor());
+		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, false);
+		try {
+			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void placeCity(VertexLocation vertLoc) 
@@ -216,6 +233,7 @@ public class MapController extends Controller implements IMapController, Observe
 	public void robPlayer(RobPlayerInfo victim) 
 	{	
 		//states
+		state.robPlayer(victim);
 	}
 
 	@Override

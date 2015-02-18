@@ -9,6 +9,13 @@ import shared.locations.VertexLocation;
 
 public class MapInactiveState extends MapControllerState{
 
+	public MapInactiveState(MapController mapController) 
+	{
+		this.controller = mapController;
+	}
+
+	private MapController controller;
+	
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
 		//If the user isn't active, they can't interact with the map
@@ -40,9 +47,15 @@ public class MapInactiveState extends MapControllerState{
 	}
 
 	@Override
-	public void robPlayer(RobPlayerInfo victim) {
-		// TODO Auto-generated method stub
-		
+	public void robPlayer(RobPlayerInfo victim) 
+	{
+		return;
+	}
+
+	@Override
+	public void placeSettlement(VertexLocation vertLoc) 
+	{
+		return;
 	}
 
 

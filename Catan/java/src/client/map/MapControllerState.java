@@ -23,6 +23,8 @@ public abstract class MapControllerState extends State{
 	
 	public abstract void robPlayer(RobPlayerInfo victim);
 	
+	public abstract void placeSettlement(VertexLocation vertLoc);
+	
 	@Override
 	public void setState(IController controller, State state) {
 		if(controller.getClass()!= MapController.class){

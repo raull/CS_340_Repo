@@ -9,6 +9,13 @@ import client.state.State;
 
 public class MapRobbingState extends MapControllerState{
 
+	public MapRobbingState(MapController mapController) 
+	{
+		controller = mapController;
+	}
+	
+	private MapController controller;
+
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
 		//If the user isn't active, they can't interact with the map
@@ -44,6 +51,12 @@ public class MapRobbingState extends MapControllerState{
 	public void robPlayer(RobPlayerInfo victim) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void placeSettlement(VertexLocation vertLoc) 
+	{
+		return;
 	}
 
 }
