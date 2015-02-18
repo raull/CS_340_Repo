@@ -9,22 +9,22 @@ public class AddAIRequest {
 	/**
 	 * The type of AI to be added
 	 */
-	private String AItype;
+	private String AIType;
 
 	/**
 	 * Constructor to instantiate AddAIRequest object
 	 * @return
 	 */
-	public String getAItype() {
-		return AItype;
+	public String getAIType() {
+		return AIType;
 	}
 
 	public void setAItype(String aItype) {
-		AItype = aItype;
+		AIType = aItype;
 	}
 
 	public AddAIRequest(String aItype) {
 		super();
-		AItype = aItype;
+		AIType = aItype;
 	}
 }

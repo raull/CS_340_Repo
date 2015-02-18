@@ -8,10 +8,11 @@ package shared.proxy.moves;
  */
 public class SendChat {
 
+	private String type;
 	/**
 	 * Index of which player sent the chat
 	 */
-	private int PlayerIndex;
+	private int playerIndex;
 	/**
 	 * The message being sent. 
 	 */
@@ -23,14 +24,15 @@ public class SendChat {
 	 */
 	public SendChat(int playerIndex, String content) {
 		super();
-		PlayerIndex = playerIndex;
+		playerIndex = playerIndex;
 		this.content = content;
+		type = "sendChat";
 	}
 	public int getPlayerIndex() {
-		return PlayerIndex;
+		return playerIndex;
 	}
 	public void setPlayerIndex(int playerIndex) {
-		PlayerIndex = playerIndex;
+		playerIndex = playerIndex;
 	}
 	public String getContent() {
 		return content;
