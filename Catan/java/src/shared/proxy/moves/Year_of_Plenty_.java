@@ -8,6 +8,7 @@ import shared.definitions.*;
  */
 public class Year_of_Plenty_ {
 
+	private String type;
 	/**
 	 * Index of the player using the card
 	 */
@@ -32,6 +33,7 @@ public class Year_of_Plenty_ {
 		this.playerIndex = playerIndex;
 		this.resource1 = resource1;
 		this.resource2 = resource2;
+		type = "Year_of_Plenty";
 	}
 	public int getPlayerIndex() {
 		return playerIndex;

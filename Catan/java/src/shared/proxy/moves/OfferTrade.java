@@ -8,6 +8,7 @@ package shared.proxy.moves;
  */
 public class OfferTrade {
 
+	private String type;
 	/**
 	 * Who is offering the trade
 	 */
@@ -32,6 +33,7 @@ public class OfferTrade {
 		this.playerIndex = playerIndex;
 		this.offer = offer;
 		this.receiver = receiver;
+		type = "offerTrade";
 	}
 
 	public int getPlayerIndex() {

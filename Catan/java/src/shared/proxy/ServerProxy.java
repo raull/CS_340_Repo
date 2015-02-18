@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.HttpURLConnection;
@@ -13,7 +12,6 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
@@ -86,13 +84,14 @@ public class ServerProxy implements Proxy{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestMethod(HTTP_GET);
+			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				 return getJson(connection.getInputStream());
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
 				throw new ProxyException(String.format("doGet failed: %s (http code %d)",
@@ -112,16 +111,18 @@ public class ServerProxy implements Proxy{
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
-			connection.setRequestProperty("Cookie", "catan.user="+ usercookie + "; catan.game=" + gameID);
+			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
 			connection.connect();
-			jsonStream.toXML(postData, connection.getOutputStream());
+			String param = gson.toJson(postData);
+			System.out.println(param);
+			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				return getJson(connection.getInputStream());
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -140,7 +141,7 @@ public class ServerProxy implements Proxy{
 			connection.setRequestMethod(HTTP_POST);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			connection.addRequestProperty("Accept", "text/html");
+			connection.setRequestProperty("Accept", "text/html");
 			connection.connect();
 			String param = gson.toJson(postData);
 			connection.getOutputStream().write(param.getBytes());
@@ -148,16 +149,16 @@ public class ServerProxy implements Proxy{
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
 				StringBuilder sb = new StringBuilder(cookieheader);
-				sb.delete(0, 10);
 				int length = sb.length();
-				sb.delete(length-8, length-1);
+				sb.delete(length-8, length);
 				setUsercookie(sb.toString());
 			   
 			    return true;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(connection.getResponseMessage());
+				String input = connection.getResponseMessage();
+				throw new ProxyException(input);
 			}
 			else{
 				throw new ProxyException(String.format("Request failed: (http code %d)",
@@ -179,17 +180,21 @@ public class ServerProxy implements Proxy{
 			connection.addRequestProperty("Accept", "text/html");
 			connection.setRequestProperty("Cookie", usercookie);
 			connection.connect();
+			String param = gson.toJson(postData);
+			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
 				StringBuilder sb = new StringBuilder(cookieheader);
-				sb.substring(11, 12);
+				sb.delete(0, 11);
+				int length = sb.length();
+				sb.delete(length-8, length);
 				setGameID(sb.toString());
 				return getJson(connection.getInputStream());
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",

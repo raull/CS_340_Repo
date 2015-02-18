@@ -9,7 +9,7 @@ public class ChangeLogLevelRequest {
 	/**
 	 * The level to which the server's log will be set.
 	 */
-	private LogLevel level;
+	private LogLevel logLevel;
 
 	/**
 	 * Constructor to create ChangeLogLevelRequest object
@@ -17,15 +17,15 @@ public class ChangeLogLevelRequest {
 	 */
 	public ChangeLogLevelRequest(LogLevel level) {
 		super();
-		this.level = level;
+		this.logLevel = level;
 	}
 
 	public LogLevel getLevel() {
-		return level;
+		return logLevel;
 	}
 
 	public void setLevel(LogLevel level) {
-		this.level = level;
+		this.logLevel = level;
 	}
 	
 	

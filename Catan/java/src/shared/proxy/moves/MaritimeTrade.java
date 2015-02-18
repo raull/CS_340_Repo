@@ -6,6 +6,7 @@ package shared.proxy.moves;
  */
 public class MaritimeTrade {
 
+	private String type;
 	/**
 	 * Who is doing the Maritime trade
 	 */
@@ -17,11 +18,11 @@ public class MaritimeTrade {
 	/**
 	 * The resource you're getting
 	 */
-	private int outputResource;
+	private String outputResource;
 	/**
 	 * The resource you're giving
 	 */
-	private int inputResource;
+	private String inputResource;
 	
 	/**
 	 * Constructor for the MaritimeTrade object
@@ -30,13 +31,14 @@ public class MaritimeTrade {
 	 * @param outputResource
 	 * @param inputResource
 	 */
-	public MaritimeTrade(int playerIndex, int ratio, int outputResource,
-			int inputResource) {
+	public MaritimeTrade(int playerIndex, int ratio, String outputResource,
+			String inputResource) {
 		super();
 		this.playerIndex = playerIndex;
 		this.ratio = ratio;
 		this.outputResource = outputResource;
 		this.inputResource = inputResource;
+		type = "maritimeTrade";
 	}
 
 	public int getPlayerIndex() {
@@ -55,19 +57,19 @@ public class MaritimeTrade {
 		this.ratio = ratio;
 	}
 
-	public int getOutputResource() {
+	public String getOutputResource() {
 		return outputResource;
 	}
 
-	public void setOutputResource(int outputResource) {
+	public void setOutputResource(String outputResource) {
 		this.outputResource = outputResource;
 	}
 
-	public int getInputResource() {
+	public String getInputResource() {
 		return inputResource;
 	}
 
-	public void setInputResource(int inputResource) {
+	public void setInputResource(String inputResource) {
 		this.inputResource = inputResource;
 	}
 }

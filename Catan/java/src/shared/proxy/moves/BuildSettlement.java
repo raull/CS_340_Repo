@@ -7,6 +7,7 @@ import shared.locations.*;
  */
 public class BuildSettlement {
 
+	private String type;
 	/**
 	 * Who is trying to build a settlement
 	 */
@@ -14,7 +15,7 @@ public class BuildSettlement {
 	/**
 	 * Where the settlement is to be built
 	 */
-	private VertexLocation vertexLocation;
+	private comVertexLoc vertexLocation;
 	/**
 	 * Whether this is placed for free (used for setup)
 	 */
@@ -30,8 +31,9 @@ public class BuildSettlement {
 			boolean free) {
 		super();
 		this.playerIndex = playerIndex;
-		this.vertexLocation = vertexLocation;
+		this.vertexLocation = new comVertexLoc(vertexLocation);
 		this.free = free;
+		type = "buildSettlement";
 	}
 
 	public int getPlayerIndex() {
@@ -42,12 +44,12 @@ public class BuildSettlement {
 		this.playerIndex = playerIndex;
 	}
 
-	public VertexLocation getVertexLocation() {
+	public comVertexLoc getVertexLocation() {
 		return vertexLocation;
 	}
 
 	public void setVertexLocation(VertexLocation vertexLocation) {
-		this.vertexLocation = vertexLocation;
+		this.vertexLocation = new comVertexLoc(vertexLocation);
 	}
 
 	public boolean isFree() {

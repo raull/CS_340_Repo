@@ -7,6 +7,7 @@ import shared.locations.*;
  */
 public class BuildCity {
 
+	private String type;
 	/**
 	 * Who is building the city.
 	 */
@@ -14,7 +15,7 @@ public class BuildCity {
 	/**
 	 * Where the city is to be built.
 	 */
-	private VertexLocation vertexLocation;
+	private comVertexLoc vertexLocation;
 	
 	/**
 	 * Constructor to instantiate the BiuldCity object
@@ -24,7 +25,8 @@ public class BuildCity {
 	public BuildCity(int playerIndex, VertexLocation vertexLocation) {
 		super();
 		this.playerIndex = playerIndex;
-		this.vertexLocation = vertexLocation;
+		this.vertexLocation = new comVertexLoc(vertexLocation);
+		type = "buildCity";
 	}
 
 	public int getPlayerIndex() {
@@ -35,11 +37,11 @@ public class BuildCity {
 		this.playerIndex = playerIndex;
 	}
 
-	public VertexLocation getVertexLocation() {
+	public comVertexLoc getVertexLocation() {
 		return vertexLocation;
 	}
 
 	public void setVertexLocation(VertexLocation vertexLocation) {
-		this.vertexLocation = vertexLocation;
+		this.vertexLocation = new comVertexLoc(vertexLocation);
 	}
 }
