@@ -103,6 +103,11 @@ public class User {
 		return this.name.getName();
 	}
 	
+	public CatanColor getCatanColor()
+	{
+		return color;
+	}
+	
 	public Color getColor() {
 		return color.getJavaColor();
 	}
