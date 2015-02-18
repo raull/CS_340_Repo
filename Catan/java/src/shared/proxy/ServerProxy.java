@@ -5,17 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
-import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.json.JsonWriter;
 
 import shared.proxy.game.*;
 import shared.proxy.games.*;
@@ -40,28 +35,26 @@ public class ServerProxy implements Proxy{
 	private Gson gson = new Gson();
 
 	
-	private XStream jsonStream;
 	/** Default Constructor*/
 	public ServerProxy(){
-		jsonStream = new XStream(new JsonHierarchicalStreamDriver() {
-		    public HierarchicalStreamWriter createWriter(Writer writer) {
-		        return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
-		    }
-		});
+
 	}
 	
 	public ServerProxy(String host, String port){
-		jsonStream = new XStream(new JsonHierarchicalStreamDriver() {
-		    public HierarchicalStreamWriter createWriter(Writer writer) {
-		        return new JsonWriter(writer, JsonWriter.DROP_ROOT_MODE);
-		    }
-		});
+
 		SERVER_HOST = host;
 		SERVER_PORT = Integer.parseInt(port);
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 	}
 	
 	public JsonElement getJson(InputStream input) throws UnsupportedEncodingException{
+		
+		JsonElement element = gson.fromJson (getString(input), JsonElement.class);
+		return element;
+	}
+	
+	public String getString(InputStream input) throws UnsupportedEncodingException {
+		
 		BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8")); 
 	    StringBuilder responseStrBuilder = new StringBuilder();
 
@@ -72,11 +65,7 @@ public class ServerProxy implements Proxy{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    String jsonstff = responseStrBuilder.toString();
-		
-		
-		JsonElement element = gson.fromJson (jsonstff, JsonElement.class);
-		return element;
+	    return responseStrBuilder.toString();
 	}
 	
 	private JsonElement doGet(String urlPath) throws ProxyException{
@@ -91,7 +80,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(connection.getResponseMessage());
+				throw new ProxyException(getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("doGet failed: %s (http code %d)",
@@ -122,7 +111,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(connection.getResponseMessage());
+				throw new ProxyException(getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -157,8 +146,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				String input = connection.getResponseMessage();
-				throw new ProxyException(input);
+				throw new ProxyException(getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("Request failed: (http code %d)",
@@ -194,7 +182,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(connection.getResponseMessage());
+				throw new ProxyException(getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
