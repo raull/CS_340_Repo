@@ -341,6 +341,7 @@ public class Model {
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
+		port.setEdgeLocation(location);
 		port.setLocations(vertices);
 		
 		return port;

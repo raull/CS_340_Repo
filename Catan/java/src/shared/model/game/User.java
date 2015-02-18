@@ -104,7 +104,9 @@ public class User {
 	}
 	
 	public CatanColor getCatanColor() {
-		return this.color;
+		
+		return color;
+
 	}
 	
 	public Color getColor() {
