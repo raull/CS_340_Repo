@@ -140,7 +140,7 @@ public class ServerProxy implements Proxy{
 			connection.setRequestMethod(HTTP_POST);
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
-			connection.addRequestProperty("Accept", "text/html");
+			connection.setRequestProperty("Accept", "text/html");
 			connection.connect();
 			String param = gson.toJson(postData);
 			connection.getOutputStream().write(param.getBytes());
@@ -157,7 +157,8 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(connection.getResponseMessage());
+				String input = connection.getResponseMessage();
+				throw new ProxyException(input);
 			}
 			else{
 				throw new ProxyException(String.format("Request failed: (http code %d)",
