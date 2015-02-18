@@ -138,36 +138,36 @@ public class ProxyTester
 		
 		try
 		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
 			testProxy.sendChat(new SendChat(0, "Hello world!"));
 		}
 		catch(ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
 		{
 			fail();
 		}
