@@ -6,6 +6,7 @@ package shared.proxy.moves;
  */
 public class AcceptTrade {
 
+	private String type;
 	/**
 	 * Who is accepting or declining the trade
 	 */
@@ -24,6 +25,7 @@ public class AcceptTrade {
 		super();
 		this.playerIndex = playerIndex;
 		this.willAccept = willAccept;
+		type = "acceptTrade";
 	}
 
 	public int getPlayerIndex() {

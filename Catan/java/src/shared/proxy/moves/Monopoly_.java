@@ -8,6 +8,7 @@ import shared.definitions.*;
  */
 public class Monopoly_ {
 
+	private String type;
 	/**
 	 * Resource to be monopolized
 	 */
@@ -26,6 +27,7 @@ public class Monopoly_ {
 		super();
 		this.resource = resource;
 		this.playerIndex = playerIndex;
+		type = "Monopoly";
 	}
 
 	public ResourceType getResource() {
