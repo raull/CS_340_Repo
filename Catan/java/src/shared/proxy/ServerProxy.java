@@ -92,7 +92,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
 				throw new ProxyException(String.format("doGet failed: %s (http code %d)",
@@ -121,7 +121,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -189,7 +189,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				return null;
+				throw new ProxyException(connection.getResponseMessage());
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
