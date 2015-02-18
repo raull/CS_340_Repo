@@ -48,8 +48,10 @@ public class MapRobbingState extends MapControllerState{
 	}
 
 	@Override
-	public void robPlayer(RobPlayerInfo victim) {
-		// TODO Auto-generated method stub
+	public void robPlayer(RobPlayerInfo victim) 
+	{
+		// TODO not done yet
+		
 		
 	}
 

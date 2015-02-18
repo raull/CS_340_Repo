@@ -61,14 +61,15 @@ public class MapPlayingState extends MapControllerState
 	}
 
 	@Override
-	public void robPlayer(RobPlayerInfo victim) {
-		// TODO Auto-generated method stub
-		
+	public void robPlayer(RobPlayerInfo victim) 
+	{
+		// TODO This is going to be called when playing a Soldier card	
 	}
 
 	@Override
 	public void placeSettlement(VertexLocation vertLoc) 
 	{		
+		//TODO decide what to do on ProxyException
 		User client = ClientManager.instance().getCurrentUser();
 		controller.getView().placeSettlement(vertLoc, client.getCatanColor());
 		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, false);

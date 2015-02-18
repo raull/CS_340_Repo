@@ -36,6 +36,8 @@ public class MapController extends Controller implements IMapController, Observe
 		
 		setRobView(robView);
 		
+		ClientManager.instance().getModelFacade().addObserver(this);
+		
 		initFromModel();
 	}
 	
@@ -155,12 +157,12 @@ public class MapController extends Controller implements IMapController, Observe
 		return state.canPlaceSettlement(vertLoc);
 	}
 
-	public boolean canPlaceCity(VertexLocation vertLoc) 
+	public boolean canPlaceCity(VertexLocation vertLoc) //done
 	{	
 		return state.canPlaceCity(vertLoc);
 	}
 
-	public boolean canPlaceRobber(HexLocation hexLoc) 
+	public boolean canPlaceRobber(HexLocation hexLoc) //TODO write new can do in facade, finish robbing and playing states
 	{	
 		return state.canPlaceRobber(hexLoc);
 	}
@@ -176,21 +178,12 @@ public class MapController extends Controller implements IMapController, Observe
 		getView().placeRoad(edgeLoc, client.getCatanColor());
 	}
 
-	public void placeSettlement(VertexLocation vertLoc) 
+	public void placeSettlement(VertexLocation vertLoc) //TODO playing and setUp, catching exception?
 	{
-		
-		User client = ClientManager.instance().getCurrentUser();
-		getView().placeSettlement(vertLoc, client.getCatanColor());
-		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, false);
-		try {
-			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
-		} catch (ProxyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		state.placeSettlement(vertLoc);
 	}
 
-	public void placeCity(VertexLocation vertLoc) 
+	public void placeCity(VertexLocation vertLoc) //TODO not finished
 	{
 		//This function should likely also include a call to the serverproxy
 		User client = ClientManager.instance().getCurrentUser();
@@ -205,7 +198,8 @@ public class MapController extends Controller implements IMapController, Observe
 		getRobView().showModal();
 	}
 	
-	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) {	
+	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) //TODO need to understand this function more. When is it called? 
+	{	
 		
 		getView().startDrop(pieceType, CatanColor.ORANGE, true);
 	}
@@ -237,7 +231,7 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 
 	@Override
-	public void update(Observable o, Object arg) 
+	public void update(Observable o, Object arg) //TODO verify that this is correct
 	{
 		initFromModel();
 	}
@@ -247,7 +241,7 @@ public class MapController extends Controller implements IMapController, Observe
 		this.state = (MapControllerState) state;
 	}
 	
-	private void run()
+	private void run() //TODO provide functionality in setup and robbing
 	{
 		state.run();
 	}
