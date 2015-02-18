@@ -57,7 +57,7 @@ public class ProxyTester
 	{
 		try
 		{
-			testProxy.register(new Credentials("Jacob", "jacob"));
+			testProxy.register(new Credentials("Jacobf", "jacob"));
 		}
 		catch (ProxyException e)
 		{
@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(3, "red"));
+			testProxy.join(new JoinGameRequest(8, "red"));
 		}
 		catch(ProxyException e)
 		{
@@ -102,7 +102,33 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.save(new SaveGameRequest(1, "save1.txt"));
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		/*try
+		{
+			testProxy.save(new SaveGameRequest(4, "save1"));
 		}
 		catch(ProxyException e)
 		{
@@ -116,7 +142,7 @@ public class ProxyTester
 		catch (ProxyException e)
 		{
 			fail();
-		}
+		}*/
 		
 		try
 		{
@@ -136,32 +162,7 @@ public class ProxyTester
 			fail();
 		}
 		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
+	
 		
 		try
 		{
