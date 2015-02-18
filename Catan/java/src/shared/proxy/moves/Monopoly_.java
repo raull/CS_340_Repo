@@ -27,7 +27,7 @@ public class Monopoly_ {
 		super();
 		this.resource = resource;
 		this.playerIndex = playerIndex;
-		type = "Monoploy";
+		type = "Monopoly";
 	}
 
 	public ResourceType getResource() {
