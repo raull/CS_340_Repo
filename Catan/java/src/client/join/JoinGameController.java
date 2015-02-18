@@ -1,7 +1,13 @@
 package client.join;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import shared.definitions.CatanColor;
 import shared.proxy.ProxyException;
@@ -149,8 +155,49 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// update games
-		// revalidate available games
+		try {
+			JsonElement je = proxy.list();
+			this.getJoinGameView().setGames(this.getGameInfo(je), null);//TODO fill in PlayerInfo
+		} catch (ProxyException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private GameInfo[] getGameInfo(JsonElement je){
+		System.out.println("Entering getGameInfo method");
+		ArrayList<GameInfo> gameInfoList = new ArrayList<GameInfo>();
+		JsonArray gameArray = je.getAsJsonArray();
+		for(int i=0; i < gameArray.size(); ++i){
+			Gson gson = new Gson();
+			JsonObject game = gameArray.get(i).getAsJsonObject();
+			String title = gson.fromJson(game.get("title"), String.class);
+			int id = game.get("id").getAsInt();
+			GameInfo gi = new GameInfo();
+			gi.setId(id);
+			gi.setTitle(title);
+			populatePlayerInfo(gi, game.get("players").getAsJsonArray());
+			
+			gameInfoList.add(gi);
+		}
+		return (GameInfo[]) gameInfoList.toArray();
+	}
+
+	private void populatePlayerInfo(GameInfo gi, JsonArray players) {
+		System.out.println("Entering populatePlayerInfo method");
+		for(int i = 0; i < players.size(); ++i){
+			Gson gson = new Gson();
+			JsonObject player = players.get(i).getAsJsonObject();
+			CatanColor color = gson.fromJson(player.get("color"), CatanColor.class);
+			String name = gson.fromJson(player.get("name"), String.class);
+			int id = player.get("id").getAsInt();
+			
+			PlayerInfo pi = new PlayerInfo();
+			pi.setColor(color);
+			pi.setName(name);
+			pi.setId(id);
+			gi.addPlayer(pi);
+		}
 		
 	}
 
