@@ -148,7 +148,6 @@ public class ServerProxy implements Proxy{
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
 				StringBuilder sb = new StringBuilder(cookieheader);
-//				sb.delete(0, 11);
 				int length = sb.length();
 				sb.delete(length-8, length);
 				setUsercookie(sb.toString());
@@ -186,7 +185,9 @@ public class ServerProxy implements Proxy{
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				String cookieheader = connection.getHeaderField("Set-cookie");
 				StringBuilder sb = new StringBuilder(cookieheader);
-				sb.substring(11, 12);
+				sb.delete(0, 11);
+				int length = sb.length();
+				sb.delete(length-8, length);
 				setGameID(sb.toString());
 				return getJson(connection.getInputStream());
 			}
