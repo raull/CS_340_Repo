@@ -113,7 +113,9 @@ public class ServerProxy implements Proxy{
 			connection.addRequestProperty("Accept", "text/html");
 			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
 			connection.connect();
-			jsonStream.toXML(postData, connection.getOutputStream());
+			String param = gson.toJson(postData);
+			System.out.println(param);
+			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				return getJson(connection.getInputStream());

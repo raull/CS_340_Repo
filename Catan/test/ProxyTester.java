@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(10, "red"));
+			testProxy.join(new JoinGameRequest(3, "red"));
 		}
 		catch(ProxyException e)
 		{
@@ -126,23 +126,23 @@ public class ProxyTester
 		{
 			fail();
 		}
-		/*try
-		{
-			testProxy.save(new SaveGameRequest(4, "save1"));
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.load(new LoadGameRequest("save1.txt"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}*/
+//		try
+//		{
+//			testProxy.save(new SaveGameRequest(4, "save1"));
+//		}
+//		catch(ProxyException e)
+//		{
+//			fail();
+//		}
+//		
+//		try
+//		{
+//			testProxy.load(new LoadGameRequest("save1.txt"));
+//		}
+//		catch (ProxyException e)
+//		{
+//			fail();
+//		}
 		
 		try
 		{
@@ -177,7 +177,7 @@ public class ProxyTester
 		{
 			HexLocation hex = new HexLocation(0,0);
 			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
-			testProxy.buildSettlement(new BuildSettlement(0, vertex, false));
+			testProxy.buildSettlement(new BuildSettlement(0, vertex, true));
 		}
 		catch(ProxyException e)
 		{
