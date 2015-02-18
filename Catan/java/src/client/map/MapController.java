@@ -67,6 +67,12 @@ public class MapController extends Controller implements IMapController, Observe
 			
 			getView().addHex(location, type);
 			getView().addNumber(location, number);
+			
+			//also place the robber if necessary
+			if (hex.hasRobber())
+			{
+				getView().placeRobber(location);
+			}
 		}
 		
 		//getView().placeRoad for each road
@@ -98,9 +104,6 @@ public class MapController extends Controller implements IMapController, Observe
 			CatanColor color = owner.getCatanColor();
 			getView().placeCity(loc, color);
 		}
-		
-		//identify where the robber is
-		//getView().placeRobber(hexLoc);
 		
 		//getView().placePort for each port
 		ArrayList<Port> ports = map.getPortsOnMap();
@@ -159,23 +162,28 @@ public class MapController extends Controller implements IMapController, Observe
 
 	public void placeRoad(EdgeLocation edgeLoc) 
 	{
-		
-//		BuildRoad build = new BuildRoad(0, edgeLoc, false);
-//		ClientManager.instance().getServerProxy().buildRoad();
+		//This function should likely also include a call to the serverproxy
+		User client = ClientManager.instance().getCurrentUser();
+		getView().placeRoad(edgeLoc, client.getCatanColor());
 	}
 
-	public void placeSettlement(VertexLocation vertLoc) {
-		
-		getView().placeSettlement(vertLoc, CatanColor.ORANGE);
+	public void placeSettlement(VertexLocation vertLoc) 
+	{
+		//This function should likely also include a call to the serverproxy
+		User client = ClientManager.instance().getCurrentUser();
+		getView().placeSettlement(vertLoc, client.getCatanColor());
 	}
 
-	public void placeCity(VertexLocation vertLoc) {
-		
-		getView().placeCity(vertLoc, CatanColor.ORANGE);
+	public void placeCity(VertexLocation vertLoc) 
+	{
+		//This function should likely also include a call to the serverproxy
+		User client = ClientManager.instance().getCurrentUser();
+		getView().placeCity(vertLoc, client.getCatanColor());
 	}
 
-	public void placeRobber(HexLocation hexLoc) {
-		
+	public void placeRobber(HexLocation hexLoc) 
+	{
+		//This function should likely also include a call to the serverproxy	
 		getView().placeRobber(hexLoc);
 		
 		getRobView().showModal();
@@ -210,13 +218,18 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+	public void update(Observable o, Object arg) 
+	{
+		initFromModel();
 	}
 
-	public void setState(State state) {
-		// TODO Auto-generated method stub
+	public void setState(State state) 
+	{
+		this.state = (MapControllerState) state;
+	}
+	
+	private void run()
+	{
 		
 	}
 	
