@@ -120,7 +120,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.model(1);
+			testProxy.model(0);
 		}
 		catch(ProxyException e)
 		{

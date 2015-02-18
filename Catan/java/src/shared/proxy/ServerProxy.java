@@ -86,6 +86,7 @@ public class ServerProxy implements Proxy{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestMethod(HTTP_GET);
+			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				 return getJson(connection.getInputStream());
@@ -112,7 +113,7 @@ public class ServerProxy implements Proxy{
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
-			connection.setRequestProperty("Cookie", "catan.user="+ usercookie + "; catan.game=" + gameID);
+			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			jsonStream.toXML(postData, connection.getOutputStream());
 			connection.getOutputStream().close();
