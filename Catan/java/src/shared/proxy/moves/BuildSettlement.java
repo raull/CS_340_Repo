@@ -7,6 +7,7 @@ import shared.locations.*;
  */
 public class BuildSettlement {
 
+	private String type;
 	/**
 	 * Who is trying to build a settlement
 	 */
@@ -32,6 +33,7 @@ public class BuildSettlement {
 		this.playerIndex = playerIndex;
 		this.vertexLocation = vertexLocation;
 		this.free = free;
+		type = "buildSettlement";
 	}
 
 	public int getPlayerIndex() {

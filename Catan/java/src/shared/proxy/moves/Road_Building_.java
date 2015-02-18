@@ -8,6 +8,7 @@ import shared.locations.*;
  */
 public class Road_Building_ {
 
+	private String type;
 	/**
 	 * Index of Player who is building roads
 	 */
@@ -33,6 +34,7 @@ public class Road_Building_ {
 		this.playerIndex = playerIndex;
 		this.location1 = location1;
 		this.location2 = location2;
+		type = "Road_Building";
 	}
 
 	public int getPlayerIndex() {

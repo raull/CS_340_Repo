@@ -7,6 +7,7 @@ package shared.proxy.moves;
  */
 public class FinishMove {
 
+	private String type;
 	/**
 	 * Index (0-3) of the player whose turn has ended.
 	 */
@@ -19,6 +20,7 @@ public class FinishMove {
 	public FinishMove(int playerIndex) {
 		super();
 		this.playerIndex = playerIndex;
+		type = "finishTurn";
 	}
 
 	public int getPlayerIndex() {

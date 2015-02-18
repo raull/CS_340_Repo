@@ -7,6 +7,7 @@ import shared.locations.*;
  */
 public class BuildRoad {
 
+	private String type;
 	/**
 	 * Who is building a road
 	 */
@@ -31,6 +32,7 @@ public class BuildRoad {
 		this.playerIndex = playerIndex;
 		this.roadLocation = roadLocation;
 		this.free = free;
+		type = "buildRoad";
 	}
 
 	public int getPlayerIndex() {

@@ -7,6 +7,7 @@ import shared.locations.*;
  */
 public class BuildCity {
 
+	private String type;
 	/**
 	 * Who is building the city.
 	 */
@@ -25,6 +26,7 @@ public class BuildCity {
 		super();
 		this.playerIndex = playerIndex;
 		this.vertexLocation = vertexLocation;
+		type = "buildCity";
 	}
 
 	public int getPlayerIndex() {

@@ -8,6 +8,7 @@ package shared.proxy.moves;
  */
 public class RollNumber {
 
+	private String type;
 	/**
 	 * The Index of the player (0-3)
 	 */
@@ -26,6 +27,7 @@ public class RollNumber {
 		super();
 		PlayerIndex = playerIndex;
 		this.number = number;
+		type = "rollNumber";
 	}
 
 	public int getPlayerIndex() {

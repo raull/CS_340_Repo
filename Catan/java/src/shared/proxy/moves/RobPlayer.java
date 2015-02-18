@@ -8,6 +8,7 @@ import shared.locations.*;
  */
 public class RobPlayer {
 
+	private String type;
 	/**
 	 * The player who is robbing
 	 */
@@ -32,6 +33,7 @@ public class RobPlayer {
 		PlayerIndex = playerIndex;
 		VictimIndex = victimIndex;
 		this.location = location;
+		type = "robPlayer";
 	}
 
 	public int getPlayerIndex() {

@@ -6,6 +6,7 @@ package shared.proxy.moves;
  */
 public class MaritimeTrade {
 
+	private String type;
 	/**
 	 * Who is doing the Maritime trade
 	 */
@@ -37,6 +38,7 @@ public class MaritimeTrade {
 		this.ratio = ratio;
 		this.outputResource = outputResource;
 		this.inputResource = inputResource;
+		type = "maritimeTrade";
 	}
 
 	public int getPlayerIndex() {

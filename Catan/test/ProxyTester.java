@@ -57,7 +57,7 @@ public class ProxyTester
 	{
 		try
 		{
-			testProxy.register(new Credentials("Jacobf", "jacob"));
+			testProxy.register(new Credentials("Jacobh", "jacob"));
 		}
 		catch (ProxyException e)
 		{
@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(8, "red"));
+			testProxy.join(new JoinGameRequest(10, "red"));
 		}
 		catch(ProxyException e)
 		{
