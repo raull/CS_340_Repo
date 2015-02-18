@@ -109,8 +109,7 @@ public class MapController extends Controller implements IMapController, Observe
 		ArrayList<Port> ports = map.getPortsOnMap();
 		for (Port port : ports)
 		{
-			//need to be able to acccess the edgelocation of the port
-			EdgeLocation loc = new EdgeLocation(null, null); //port.getLocations().
+			EdgeLocation loc = port.getEdgeLocation();
 			PortType type = port.getType();
 			getView().addPort(loc, type);
 		}
