@@ -88,7 +88,7 @@ public class ClientManager {
 	 * @param newUser
 	 */
 	public void setCurrentUser(User newUser) {
-		this.currentUser = newUser;
+		currentUser = newUser;
 	}
 
 }

@@ -7,11 +7,16 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.List;
+
+import client.manager.ClientManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
+import shared.model.game.User;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
 import shared.proxy.moves.*;
@@ -73,7 +78,7 @@ public class ServerProxy implements Proxy{
 			URL url = new URL(URL_PREFIX + urlPath);
 			HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 			connection.setRequestMethod(HTTP_GET);
-			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
+			connection.setRequestProperty("Cookie", "catan.user=" + usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
 				 return getJson(connection.getInputStream());
@@ -100,7 +105,7 @@ public class ServerProxy implements Proxy{
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
-			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
+			connection.setRequestProperty("Cookie", "catan.user=" + usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			String param = gson.toJson(postData);
 			System.out.println(param);
@@ -136,12 +141,17 @@ public class ServerProxy implements Proxy{
 			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
+				//Set the user cookie
 				String cookieheader = connection.getHeaderField("Set-cookie");
 				StringBuilder sb = new StringBuilder(cookieheader);
+				sb.delete(0, 11);
 				int length = sb.length();
 				sb.delete(length-8, length);
 				setUsercookie(sb.toString());
-			   
+				
+				//Update current logged in user
+				updateCurrentUser(usercookie);
+				
 			    return true;
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
@@ -166,7 +176,7 @@ public class ServerProxy implements Proxy{
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 			connection.addRequestProperty("Accept", "text/html");
-			connection.setRequestProperty("Cookie", usercookie);
+			connection.setRequestProperty("Cookie", "catan.user=" + usercookie);
 			connection.connect();
 			String param = gson.toJson(postData);
 			connection.getOutputStream().write(param.getBytes());
@@ -192,6 +202,22 @@ public class ServerProxy implements Proxy{
 		catch (IOException e) {
 			throw new ProxyException(String.format("doPost failed: %s", e.getMessage()), e);
 		}
+	}
+	
+	private void updateCurrentUser(String encodedURL) throws UnsupportedEncodingException {
+		String jsonDecoded = URLDecoder.decode(encodedURL, "UTF-8");
+		JsonElement element = gson.fromJson(jsonDecoded, JsonElement.class);
+		User currentUser = ClientManager.instance().getCurrentUser();
+		
+		if (currentUser == null) {
+			currentUser = new User();
+		}
+		
+		JsonObject userObject = element.getAsJsonObject();
+		
+		currentUser.setName(userObject.get("name").getAsString());
+		currentUser.setPlayerID(Integer.parseInt(userObject.get("playerID").getAsString()));
+		ClientManager.instance().setCurrentUser(currentUser);
 	}
 	
 	public String getUsercookie() {

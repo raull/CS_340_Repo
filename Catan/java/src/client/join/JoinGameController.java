@@ -4,9 +4,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import shared.definitions.CatanColor;
-import shared.proxy.ProxyException;
-import shared.proxy.ServerProxy;
-import shared.proxy.games.JoinGameRequest;
 import client.base.*;
 import client.data.*;
 import client.misc.*;
