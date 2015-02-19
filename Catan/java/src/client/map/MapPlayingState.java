@@ -58,8 +58,8 @@ public class MapPlayingState extends MapControllerState
 	@Override
 	public boolean canPlaceRobber(HexLocation hexLoc) 
 	{
-		//not quite sure what to use for this one just yet
-		return false;
+		ModelFacade facade = ClientManager.instance().getModelFacade();
+		return facade.canPlaceRobberAtLoc(hexLoc);
 	}
 
 	@Override

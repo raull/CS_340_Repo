@@ -162,7 +162,7 @@ public class MapController extends Controller implements IMapController, Observe
 		return state.canPlaceCity(vertLoc);
 	}
 
-	public boolean canPlaceRobber(HexLocation hexLoc) //TODO write new can do in facade, finish robbing and playing states
+	public boolean canPlaceRobber(HexLocation hexLoc) //done
 	{	
 		return state.canPlaceRobber(hexLoc);
 	}

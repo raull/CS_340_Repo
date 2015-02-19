@@ -3,8 +3,10 @@ package client.map;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.facade.ModelFacade;
 import client.base.IController;
 import client.data.RobPlayerInfo;
+import client.manager.ClientManager;
 import client.state.State;
 
 public class MapRobbingState extends MapControllerState{
@@ -37,8 +39,8 @@ public class MapRobbingState extends MapControllerState{
 	@Override
 	public boolean canPlaceRobber(HexLocation hexLoc) 
 	{
-		// TODO logic
-		return false;
+		ModelFacade facade = ClientManager.instance().getModelFacade();
+		return facade.canPlaceRobberAtLoc(hexLoc);
 	}
 
 	@Override

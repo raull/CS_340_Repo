@@ -265,9 +265,11 @@ public class ModelFacade extends Observable{
 		return false;
 	}
 	
-	public Boolean canPlaceRobberAtLoc(HexTile hex)
+	public Boolean canPlaceRobberAtLoc(HexLocation hexLoc)
 	{
 		//account for water spaces?
+		
+		HexTile hex = map.getHexTileByLocation(hexLoc);
 		
 		if (hex.canMoveRobberHere())
 		{
