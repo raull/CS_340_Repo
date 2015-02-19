@@ -20,14 +20,14 @@ import shared.proxy.ServerProxy;
 public class ClientManager {
 	
 	private static ClientManager instance;
-	private static ArrayList <User> players;
 	private static ServerProxy serverProxy = new ServerProxy();
 	private static ModelFacade modelFacade = new ModelFacade();
-	private PlayerInfo currentPlayerInfo;
-	private GameInfo currentGameInfo;
+	private static PlayerInfo currentPlayerInfo;
+	private static GameInfo currentGameInfo;
 	
 	private ClientManager() {
 		currentPlayerInfo = new PlayerInfo();
+		currentGameInfo = new GameInfo();
 	}
 	
 	public static ClientManager instance(){
@@ -54,34 +54,38 @@ public class ClientManager {
 		return serverProxy;
 	}
 	
-	public PlayerInfo getCurrentPlayerInfo(){
+	public static PlayerInfo getCurrentPlayerInfo(){
 		return currentPlayerInfo;
 	}
 	
-	public void setPlayerName(String name){
+	public static void setPlayerName(String name){
 		currentPlayerInfo.setName(name);
 	}
 	
-	public void setPlayerID(int id){
+	public static void setPlayerID(int id){
 		currentPlayerInfo.setId(id);
 	}
 	
-	public void setPlayerIndex(int index){
+	public static void setPlayerIndex(int index){
 		currentPlayerInfo.setPlayerIndex(index);
 	}
 	
-	public void setPlayerColor(CatanColor color){
+	public static void setPlayerColor(CatanColor color){
 		currentPlayerInfo.setColor(color);
 	}
 
-	public GameInfo getCurrentGameInfo() {
+	public static GameInfo getCurrentGameInfo() {
 		return currentGameInfo;
 	}
 
-	public void setCurrentGameInfo(GameInfo currentGameInfo) {
+	public static void setCurrentGameInfo(GameInfo gi) {
 		System.out.println("GameInfo being set in Client Manager");
-		System.out.println("\tGame ID: " + currentGameInfo.getId());
-		this.currentGameInfo = currentGameInfo;
+		System.out.println("\tGame ID: " + gi.getId());
+		currentGameInfo.setId(gi.getId());
+		currentGameInfo.setTitle(gi.getTitle());
+		for(PlayerInfo pi : gi.getPlayers()){
+			currentGameInfo.addPlayer(pi);
+		}
 	}
 	
 
