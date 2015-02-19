@@ -65,7 +65,7 @@ public class LoginController extends Controller implements ILoginController, Obs
 	private void saveUsername(String username) {
 		User user = new User();
 		user.setName(username);
-		ClientManager.instance().setCurrentUser(user);
+		ClientManager.instance().setPlayerName(username);
 	}
 
 	@Override

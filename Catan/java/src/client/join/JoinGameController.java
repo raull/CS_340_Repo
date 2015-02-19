@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import shared.definitions.CatanColor;
 import shared.proxy.ProxyException;
 import shared.proxy.ServerProxy;
+import shared.proxy.games.CreateGameRequest;
 import shared.proxy.games.JoinGameRequest;
 import client.base.*;
 import client.data.*;
@@ -43,6 +44,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 								ISelectColorView selectColorView, IMessageView messageView) {
 
 		super(view);
+		
+		ClientManager.instance().getModelFacade().addObserver(this);
 
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
@@ -104,8 +107,17 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void start() {
+		System.out.println("Entered start method in JoinGameController");
+		try {
+			JsonElement je = ClientManager.instance().getServerProxy().list();
+			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
+			getJoinGameView().showModal();
+		} catch (ProxyException e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
+			getMessageView().showModal();
+		}
 		
-		getJoinGameView().showModal();
 	}
 
 	@Override
@@ -122,13 +134,31 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void createNewGame() {
+		//gets new game's info from the view
+		String title = getNewGameView().getTitle();
+		boolean randomHexes = getNewGameView().getRandomlyPlaceHexes();
+		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
+		boolean randomPorts = getNewGameView().getUseRandomPorts();
 		
-		getNewGameView().closeModal();
+		//sets up the request and transmits it through the proxy
+		CreateGameRequest cr = new CreateGameRequest(randomHexes, randomNumbers, randomPorts, title);
+		try {
+			ClientManager.instance().getServerProxy().create(cr);
+			getNewGameView().closeModal();
+			this.start();
+		} catch (ProxyException e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("New game could not be created. " + e.getMessage());
+			getMessageView().showModal();
+		}
+		
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-
+		System.out.println("Setting current game info: " + game.toString());
+		System.out.println("\tID: " + game.getId());
+		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
 	}
 
@@ -142,7 +172,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void joinGame(CatanColor color) {
 		
 		// If join succeeded
-		JoinGameRequest tempRequest = new JoinGameRequest(0, color.toString()); //TODO: Get the real gameID number
+		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
+		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString());
 		try {
 			proxy.join(tempRequest);
 			getSelectColorView().closeModal();
@@ -155,9 +186,10 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void update(Observable o, Object arg) {
+		System.out.println("Entered update method in JoinGameController");
 		try {
 			JsonElement je = proxy.list();
-			this.getJoinGameView().setGames(this.getGameInfo(je), null);//TODO fill in PlayerInfo
+			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
 		} catch (ProxyException e) {
 			e.printStackTrace();
 		}
@@ -180,7 +212,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			
 			gameInfoList.add(gi);
 		}
-		return (GameInfo[]) gameInfoList.toArray();
+		GameInfo[] output = new GameInfo[gameInfoList.size()];
+		for(int i=0; i<gameInfoList.size(); ++i){
+			output[i] = gameInfoList.get(i);
+		}
+		return output;
 	}
 
 	private void populatePlayerInfo(GameInfo gi, JsonArray players) {
@@ -190,7 +226,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			JsonObject player = players.get(i).getAsJsonObject();
 			CatanColor color = gson.fromJson(player.get("color"), CatanColor.class);
 			String name = gson.fromJson(player.get("name"), String.class);
-			int id = player.get("id").getAsInt();
+			JsonElement idElement = player.get("id");
+			if(idElement==null){
+				System.out.println("nullPlayer");
+				continue;
+			}
+			int id = idElement.getAsInt();
 			
 			PlayerInfo pi = new PlayerInfo();
 			pi.setColor(color);
