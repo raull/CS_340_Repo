@@ -1,9 +1,10 @@
 package client.manager;
 
-import java.util.ArrayList;
 
+import client.data.GameInfo;
+import client.data.PlayerInfo;
+import shared.definitions.CatanColor;
 import shared.model.facade.ModelFacade;
-import shared.model.game.User;
 import shared.proxy.ServerProxy;
 
 
@@ -17,10 +18,10 @@ import shared.proxy.ServerProxy;
 public class ClientManager {
 	
 	private static ClientManager instance;
-	private static ArrayList <User> players;
-	private static ServerProxy serverProxy = new ServerProxy();
-	private static ModelFacade modelFacade = new ModelFacade();
-	private static User currentUser;
+	private ServerProxy serverProxy = new ServerProxy();
+	private ModelFacade modelFacade = new ModelFacade();
+	private PlayerInfo currentPlayerInfo = new PlayerInfo();
+	private GameInfo currentGameInfo = new GameInfo();
 	
 	private ClientManager() {
 	}
@@ -29,34 +30,9 @@ public class ClientManager {
 		if (instance != null) {
 			return instance;
 		} else {
-			return new ClientManager();
+			instance = new ClientManager();
+			return instance;
 		}
-	}
-	
-	/**
-	 * Calls canAddUser, if that returns true, adds the new user to the player list
-	 * @param newPlayer the player to be added
-	 */
-	public void addUserToGame(User newPlayer){
-		players.add(newPlayer);
-		//TODO: throw exception if player can't be added
-	}
-	
-	/**
-	 * Checks to see if the Player is logged in and if the list is sufficiently small.
-	 * @param newPlayer
-	 * @return true if the player can be added, false otherwise
-	 */
-	public boolean canUserJoinGame(User newPlayer){
-		return true;
-	}
-	
-	/**
-	 * Removes a given player from the list (not sure if we'd need this)
-	 * @param toBeRemovedPlayer
-	 */
-	public void removePlayer(User toBeRemovedPlayer){
-		
 	}
 	
 	/**
@@ -75,20 +51,37 @@ public class ClientManager {
 		return serverProxy;
 	}
 	
-	/**
-	 * Get the current logged in User
-	 * @return the current logged in user
-	 */
-	public User getCurrentUser() {
-		return currentUser;
+	public PlayerInfo getCurrentPlayerInfo(){
+		return currentPlayerInfo;
 	}
 	
-	/**
-	 * Set the new current user
-	 * @param newUser
-	 */
-	public void setCurrentUser(User newUser) {
-		currentUser = newUser;
+	public void setPlayerName(String name){
+		currentPlayerInfo.setName(name);
 	}
+	
+	public void setPlayerID(int id){
+		currentPlayerInfo.setId(id);
+	}
+	
+	public void setPlayerIndex(int index){
+		currentPlayerInfo.setPlayerIndex(index);
+	}
+	
+	public void setPlayerColor(CatanColor color){
+		currentPlayerInfo.setColor(color);
+	}
+
+	public GameInfo getCurrentGameInfo() {
+		return currentGameInfo;
+	}
+
+	public void setCurrentGameInfo(GameInfo gi) {
+		currentGameInfo.setId(gi.getId());
+		currentGameInfo.setTitle(gi.getTitle());
+		for(PlayerInfo pi : gi.getPlayers()){
+			currentGameInfo.addPlayer(pi);
+		}
+	}
+	
 
 }

@@ -10,13 +10,13 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import shared.model.game.User;
 import shared.proxy.game.*;
 import shared.proxy.games.*;
 import shared.proxy.moves.*;
@@ -108,7 +108,6 @@ public class ServerProxy implements Proxy{
 			connection.setRequestProperty("Cookie", "catan.user=" + usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			String param = gson.toJson(postData);
-			System.out.println(param);
 			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
@@ -207,17 +206,12 @@ public class ServerProxy implements Proxy{
 	private void updateCurrentUser(String encodedURL) throws UnsupportedEncodingException {
 		String jsonDecoded = URLDecoder.decode(encodedURL, "UTF-8");
 		JsonElement element = gson.fromJson(jsonDecoded, JsonElement.class);
-		User currentUser = ClientManager.instance().getCurrentUser();
-		
-		if (currentUser == null) {
-			currentUser = new User();
-		}
+		PlayerInfo currentUser = ClientManager.instance().getCurrentPlayerInfo();
 		
 		JsonObject userObject = element.getAsJsonObject();
 		
 		currentUser.setName(userObject.get("name").getAsString());
-		currentUser.setPlayerID(Integer.parseInt(userObject.get("playerID").getAsString()));
-		ClientManager.instance().setCurrentUser(currentUser);
+		currentUser.setId(Integer.parseInt(userObject.get("playerID").getAsString()));
 	}
 	
 	public String getUsercookie() {
