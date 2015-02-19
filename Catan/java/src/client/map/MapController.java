@@ -200,8 +200,9 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) //TODO need to understand this function more. When is it called? 
 	{	
-		
-		getView().startDrop(pieceType, CatanColor.ORANGE, true);
+		//TODO need to move this to states. Identify when canceling should be allowed/disallowed
+		User client = ClientManager.instance().getCurrentUser();
+		getView().startDrop(pieceType, client.getCatanColor(), true);
 	}
 	
 	public void cancelMove() 
