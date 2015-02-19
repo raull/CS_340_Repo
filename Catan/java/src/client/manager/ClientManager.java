@@ -1,12 +1,10 @@
 package client.manager;
 
-import java.util.ArrayList;
 
 import client.data.GameInfo;
 import client.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.model.facade.ModelFacade;
-import shared.model.game.User;
 import shared.proxy.ServerProxy;
 
 
@@ -20,10 +18,10 @@ import shared.proxy.ServerProxy;
 public class ClientManager {
 	
 	private static ClientManager instance;
-	private static ServerProxy serverProxy = new ServerProxy();
-	private static ModelFacade modelFacade = new ModelFacade();
-	private static PlayerInfo currentPlayerInfo = new PlayerInfo();
-	private static GameInfo currentGameInfo = new GameInfo();
+	private ServerProxy serverProxy = new ServerProxy();
+	private ModelFacade modelFacade = new ModelFacade();
+	private PlayerInfo currentPlayerInfo = new PlayerInfo();
+	private GameInfo currentGameInfo = new GameInfo();
 	
 	private ClientManager() {
 	}
@@ -53,31 +51,31 @@ public class ClientManager {
 		return serverProxy;
 	}
 	
-	public static PlayerInfo getCurrentPlayerInfo(){
+	public PlayerInfo getCurrentPlayerInfo(){
 		return currentPlayerInfo;
 	}
 	
-	public static void setPlayerName(String name){
+	public void setPlayerName(String name){
 		currentPlayerInfo.setName(name);
 	}
 	
-	public static void setPlayerID(int id){
+	public void setPlayerID(int id){
 		currentPlayerInfo.setId(id);
 	}
 	
-	public static void setPlayerIndex(int index){
+	public void setPlayerIndex(int index){
 		currentPlayerInfo.setPlayerIndex(index);
 	}
 	
-	public static void setPlayerColor(CatanColor color){
+	public void setPlayerColor(CatanColor color){
 		currentPlayerInfo.setColor(color);
 	}
 
-	public static GameInfo getCurrentGameInfo() {
+	public GameInfo getCurrentGameInfo() {
 		return currentGameInfo;
 	}
 
-	public static void setCurrentGameInfo(GameInfo gi) {
+	public void setCurrentGameInfo(GameInfo gi) {
 		currentGameInfo.setId(gi.getId());
 		currentGameInfo.setTitle(gi.getTitle());
 		for(PlayerInfo pi : gi.getPlayers()){
