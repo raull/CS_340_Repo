@@ -22,19 +22,18 @@ public class ClientManager {
 	private static ClientManager instance;
 	private static ServerProxy serverProxy = new ServerProxy();
 	private static ModelFacade modelFacade = new ModelFacade();
-	private static PlayerInfo currentPlayerInfo;
-	private static GameInfo currentGameInfo;
+	private static PlayerInfo currentPlayerInfo = new PlayerInfo();
+	private static GameInfo currentGameInfo = new GameInfo();
 	
 	private ClientManager() {
-		currentPlayerInfo = new PlayerInfo();
-		currentGameInfo = new GameInfo();
 	}
 	
 	public static ClientManager instance(){
 		if (instance != null) {
 			return instance;
 		} else {
-			return new ClientManager();
+			instance = new ClientManager();
+			return instance;
 		}
 	}
 	
@@ -79,8 +78,6 @@ public class ClientManager {
 	}
 
 	public static void setCurrentGameInfo(GameInfo gi) {
-		System.out.println("GameInfo being set in Client Manager");
-		System.out.println("\tGame ID: " + gi.getId());
 		currentGameInfo.setId(gi.getId());
 		currentGameInfo.setTitle(gi.getTitle());
 		for(PlayerInfo pi : gi.getPlayers()){

@@ -107,7 +107,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void start() {
-		System.out.println("Entered start method in JoinGameController");
 		try {
 			JsonElement je = ClientManager.instance().getServerProxy().list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
@@ -156,8 +155,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-		System.out.println("Setting current game info: " + game.toString());
-		System.out.println("\tID: " + game.getId());
 		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
 	}
@@ -174,7 +171,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		// If join succeeded
 		GameInfo thisGame = ClientManager.instance().getCurrentGameInfo();
 		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
-		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString());
+		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
 		try {
 			proxy.join(tempRequest);
 			getSelectColorView().closeModal();
@@ -187,7 +184,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void update(Observable o, Object arg) {
-		System.out.println("Entered update method in JoinGameController");
 		try {
 			JsonElement je = proxy.list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
@@ -198,7 +194,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 	
 	private GameInfo[] getGameInfo(JsonElement je){
-		System.out.println("Entering getGameInfo method");
 		ArrayList<GameInfo> gameInfoList = new ArrayList<GameInfo>();
 		JsonArray gameArray = je.getAsJsonArray();
 		for(int i=0; i < gameArray.size(); ++i){
@@ -221,7 +216,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	}
 
 	private void populatePlayerInfo(GameInfo gi, JsonArray players) {
-		System.out.println("Entering populatePlayerInfo method");
 		for(int i = 0; i < players.size(); ++i){
 			Gson gson = new Gson();
 			JsonObject player = players.get(i).getAsJsonObject();
@@ -229,7 +223,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			String name = gson.fromJson(player.get("name"), String.class);
 			JsonElement idElement = player.get("id");
 			if(idElement==null){
-				System.out.println("nullPlayer");
 				continue;
 			}
 			int id = idElement.getAsInt();

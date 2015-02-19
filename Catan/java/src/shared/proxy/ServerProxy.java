@@ -114,7 +114,6 @@ public class ServerProxy implements Proxy{
 			connection.setRequestProperty("Cookie", usercookie + "; catan.game=" + gameID);
 			connection.connect();
 			String param = gson.toJson(postData);
-			System.out.println(param);
 			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
@@ -181,7 +180,6 @@ public class ServerProxy implements Proxy{
 			connection.setRequestProperty("Cookie", usercookie);
 			connection.connect();
 			String param = gson.toJson(postData);
-			System.out.println(param);
 			connection.getOutputStream().write(param.getBytes());
 			connection.getOutputStream().close();
 			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK){
