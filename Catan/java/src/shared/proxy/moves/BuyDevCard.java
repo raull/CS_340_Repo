@@ -7,6 +7,7 @@ package shared.proxy.moves;
  */
 public class BuyDevCard {
 
+	private String type;
 	/**
 	 * Index (0-3) of player who is buying dev. card
 	 */
@@ -19,6 +20,7 @@ public class BuyDevCard {
 	public BuyDevCard(int playerIndex) {
 		super();
 		this.playerIndex = playerIndex;
+		type = "buyDevCard";
 	}
 
 	public int getPlayerIndex() {

@@ -93,7 +93,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.join(new JoinGameRequest(4, "red"));
+			testProxy.join(new JoinGameRequest(3, "red"));
 		}
 		catch(ProxyException e)
 		{
@@ -102,16 +102,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.save(new SaveGameRequest(1, "save1.txt"));
-		}
-		catch(ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.load(new LoadGameRequest("save1.txt"));
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
 		}
 		catch (ProxyException e)
 		{
@@ -120,7 +111,42 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.model(1);
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
+		}
+		catch (ProxyException e)
+		{
+			fail();
+		}
+//		try
+//		{
+//			testProxy.save(new SaveGameRequest(4, "save1"));
+//		}
+//		catch(ProxyException e)
+//		{
+//			fail();
+//		}
+//		
+//		try
+//		{
+//			testProxy.load(new LoadGameRequest("save1.txt"));
+//		}
+//		catch (ProxyException e)
+//		{
+//			fail();
+//		}
+		
+		try
+		{
+			testProxy.model(0);
 		}
 		catch(ProxyException e)
 		{
@@ -136,6 +162,8 @@ public class ProxyTester
 			fail();
 		}
 		
+	
+		
 		try
 		{
 			testProxy.sendChat(new SendChat(0, "Hello world!"));
@@ -147,36 +175,21 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
-			testProxy.addAI(new AddAIRequest("LARGEST_ARMY"));
-		}
-		catch (ProxyException e)
-		{
-			fail();
-		}
-		
-		try
-		{
 			HexLocation hex = new HexLocation(0,0);
 			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
-			testProxy.buildSettlement(new BuildSettlement(0, vertex, false));
+			testProxy.buildSettlement(new BuildSettlement(0, vertex, true));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		//Second is to allow player 0 to rob player 1
+		try
+		{
+			HexLocation hex = new HexLocation(0,1);
+			VertexLocation vertex = new VertexLocation(hex, VertexDirection.East);
+			testProxy.buildSettlement(new BuildSettlement(1, vertex, true));
 		}
 		catch(ProxyException e)
 		{
@@ -203,13 +216,92 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.rollNumber(new RollNumber(0, 7));
+			testProxy.rollNumber(new RollNumber(0, 5));
 		}
 		catch(ProxyException e)
 		{
 			fail();
 		}
 		
+		//Soldier and Rob don't work if nobody has resources, hopefully rolling all 
+		//numbers wil let that happen
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 6));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 8));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 9));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 4));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 3));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 2));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 10));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 11));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
+		
+		try
+		{
+			testProxy.rollNumber(new RollNumber(0, 12));
+		}
+		catch(ProxyException e)
+		{
+			fail();
+		}
 		try
 		{
 			testProxy.Year_of_Plenty(new Year_of_Plenty_(0, ResourceType.BRICK, ResourceType.WHEAT));
@@ -250,7 +342,7 @@ public class ProxyTester
 		{
 			HexLocation hex = new HexLocation(0,0);
 			EdgeLocation edge = new EdgeLocation(hex, EdgeDirection.North);
-			testProxy.buildRoad(new BuildRoad(0, edge, false));
+			testProxy.buildRoad(new BuildRoad(0, edge, true));
 		}
 		catch(ProxyException e)
 		{
@@ -259,7 +351,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.Soldier(new Soldier_(0, 1, new HexLocation(0,0)));
+			testProxy.Soldier(new Soldier_(1, 0, new HexLocation(0,0)));
 		}
 		catch(ProxyException e)
 		{
@@ -268,7 +360,7 @@ public class ProxyTester
 		
 		try
 		{
-			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,0)));
+			testProxy.robPlayer(new RobPlayer(0,1,new HexLocation(0,1)));
 		}
 		catch (ProxyException e)
 		{
@@ -336,7 +428,7 @@ public class ProxyTester
 	
 		try
 		{
-			testProxy.maritimeTrade(new MaritimeTrade(0,0,0,0));
+			testProxy.maritimeTrade(new MaritimeTrade(0,0,"brick", "wheat"));
 		}
 		catch(ProxyException e)
 		{
@@ -353,173 +445,5 @@ public class ProxyTester
 		}
 	}
 
-	@Test
-	public void testRegister()
-	{
-		
-	}
-
-	@Test
-	public void testList()
-	{
-		
-	}
-
-	@Test
-	public void testCreate()
-	{
-		
-		
-		
-	}
-
-	@Test
-	public void testJoin()
-	{
-		
-	}
-
-	@Test
-	public void testSave()
-	{
-		
-	}
-
-	@Test
-	public void testLoad()
-	{
-		
-	}
-
-	@Test
-	public void testModel()
-	{
 	
-	}
-
-	@Test
-	public void testReset()
-	{
-		
-	}
-
-	@Test
-	public void testSendChat()
-	{
-		
-	}
-
-	@Test
-	public void testRollNumber()
-	{
-	
-	}
-
-	@Test
-	public void testRobPlayer()
-	{
-		
-	}
-
-	@Test
-	public void testFinishTurn()
-	{
-	
-	}
-
-	@Test
-	public void testBuyDevCard()
-	{
-		
-	}
-
-	@Test
-	public void testYearOfPlenty()
-	{
-		
-	}
-
-	@Test
-	public void testRoadBuilding()
-	{
-		
-	}
-
-	@Test
-	public void testSoldier()
-	{
-		
-	}
-
-	@Test
-	public void testMonopoly()
-	{
-		
-	}
-
-	@Test
-	public void testMonument()
-	{
-		
-	}
-
-	@Test
-	public void testBuildRoad()
-	{
-		
-	}
-
-	@Test
-	public void testBuildSettlement()
-	{
-		
-	}
-
-	@Test
-	public void testBuildCity()
-	{
-	}
-	
-		
-
-	@Test
-	public void testOfferTrade()
-	{
-		
-	}
-
-	@Test
-	public void testAcceptTrade()
-	{}
-		
-
-	@Test
-	public void testMaritimeTrade()
-	{
-		
-	}
-
-	@Test
-	public void testDiscardCards()
-	{
-		
-	}
-
-	@Test
-	public void testChangeLogLevel()
-	{
-		
-	}
-
-	@Test
-	public void testAddAI()
-	{
-		
-	}
-
-	@Test
-	public void testListAI()
-	{
-		
-	}
 }

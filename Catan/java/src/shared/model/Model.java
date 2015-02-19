@@ -19,7 +19,6 @@ import shared.model.board.Map;
 import shared.model.board.Port;
 import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
-import shared.model.board.piece.Piece;
 import shared.model.board.piece.Road;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
@@ -314,7 +313,6 @@ public class Model {
 		
 		if(jsonPort.get("resource") != null) {
 			portType = gson.fromJson(jsonPort.get("resource"), PortType.class);
-			ResourceType resourceType = gson.fromJson(jsonPort.get("resource"), ResourceType.class);
 		}
 		else{
 			portType = PortType.THREE;
@@ -341,6 +339,7 @@ public class Model {
 		int ratio = jsonPort.get("ratio").getAsInt();
 		
 		Port port = new Port(portType, ratio);
+		port.setEdgeLocation(location);
 		port.setLocations(vertices);
 		
 		return port;
@@ -458,10 +457,7 @@ public class Model {
 		int numCities = jsonUser.get("cities").getAsInt();
 		CatanColor userColor = gson.fromJson(jsonUser.get("color"), CatanColor.class);
 		//discarded -- whether or not user has already discarded cards this turn
-		boolean discarded = jsonUser.get("discarded").getAsBoolean();
-		
-		int monumentsPlayed = jsonUser.get("monuments").getAsInt();
-		
+				
 		String name = jsonUser.get("name").getAsString();
 		
 		ArrayList<DevCard> newDevCards = new ArrayList<DevCard>();

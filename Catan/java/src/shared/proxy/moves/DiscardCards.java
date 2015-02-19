@@ -8,6 +8,7 @@ package shared.proxy.moves;
  */
 public class DiscardCards {
 
+	private String type;
 	/**
 	 * Who is discarding cards
 	 */
@@ -26,6 +27,7 @@ public class DiscardCards {
 		super();
 		this.playerIndex = playerIndex;
 		this.discardedCards = discardedCards;
+		type = "discardCards";
 	}
 
 	public int getPlayerIndex() {

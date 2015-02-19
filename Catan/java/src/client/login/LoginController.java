@@ -1,15 +1,13 @@
 package client.login;
 
 import client.base.*;
+import client.manager.ClientManager;
 import client.misc.*;
 
-import java.net.*;
-import java.io.*;
 import java.util.*;
-import java.lang.reflect.*;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import shared.proxy.user.Credentials;
+
 
 
 /**
@@ -72,28 +70,74 @@ public class LoginController extends Controller implements ILoginController, Obs
 	@Override
 	public void signIn() {
 		
-		// TODO: log in user
+		String username = getLoginView().getLoginUsername();
+		String password = getLoginView().getLoginPassword();
 		
-
-		// If log in succeeded
-		getLoginView().closeModal();
-		loginAction.execute();
+		Credentials cred = new Credentials(username, password);
+		
+		try {
+			boolean login = ClientManager.instance().getServerProxy().login(cred);
+			if (login) {
+				// If log in succeeded
+				getLoginView().closeModal();
+				loginAction.execute();
+			} else {
+				getMessageView().setTitle("Warning");
+				getMessageView().setMessage("Wrong username and password");
+				getMessageView().showModal();
+			}
+		} catch (Exception e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Something went wrong while loggin in. " + e.getMessage());
+			getMessageView().showModal();
+		}
 	}
 
 	@Override
 	public void register() {
 		
-		// TODO: register new user (which, if successful, also logs them in)
+		String username = getLoginView().getRegisterUsername();
+		String password1 = getLoginView().getRegisterPassword();
+		String password2 = getLoginView().getRegisterPasswordRepeat();
 		
-		// If register succeeded
-		getLoginView().closeModal();
-		loginAction.execute();
+		if (password2.length() == 0) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Please confirm the password");
+			getMessageView().showModal();
+		} else if (!password1.equals(password2)) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Passwords don't match");
+			getMessageView().showModal();
+			
+		} else if (password1.length() == 0) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Password cannot be blank");
+			getMessageView().showModal(); 
+		} else {
+			Credentials cred = new Credentials(username,password1);
+			
+			try {
+				boolean register = ClientManager.instance().getServerProxy().register(cred);
+				if (register) {
+					// If register succeeded
+					getLoginView().closeModal();
+					loginAction.execute();
+				}
+			} catch (Exception e) {
+				getMessageView().setTitle("Error");
+				getMessageView().setMessage("Something went wrong while register. " + e.getMessage());
+				getMessageView().showModal();
+			}
+		}
+		
+		
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+		// If log in succeeded
+		getLoginView().closeModal();
+		loginAction.execute();
 	}
 
 }

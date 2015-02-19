@@ -7,6 +7,7 @@ package shared.proxy.moves;
  */
 public class Monument_ {
 
+	private String type;
 	/**
 	 * Who's playing this dev. card.
 	 */
@@ -19,6 +20,7 @@ public class Monument_ {
 	public Monument_(int playerIndex) {
 		super();
 		this.playerIndex = playerIndex;
+		type = "Monument";
 	}
 
 	public int getPlayerIndex() {

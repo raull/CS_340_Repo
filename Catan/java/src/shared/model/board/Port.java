@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
+import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 
 
@@ -24,11 +25,13 @@ public class Port {
 	 */
 	private int offerRate;
 	
+	private EdgeLocation edgeLocation;
+	
 	/**
 	 * array of 2 vertices of port locations
 	 */
 	private ArrayList<Vertex> locations;
-		
+	
 	//Constructors
 	/**
 	 * Port Constructor for type and offerRate.
@@ -48,6 +51,14 @@ public class Port {
 		return offerRate;
 	}
 	
+	public EdgeLocation getEdgeLocation() {
+		return edgeLocation;
+	}
+
+	public void setEdgeLocation(EdgeLocation edgeLocation) {
+		this.edgeLocation = edgeLocation;
+	}
+
 	public ArrayList<Vertex> getLocations() {
 		return locations;
 	}
