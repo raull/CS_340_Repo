@@ -1,6 +1,7 @@
 package client.map;
 
 import client.base.IController;
+import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
 import client.state.State;
@@ -9,6 +10,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildSettlement;
@@ -24,21 +26,21 @@ public class MapSetUpState extends MapControllerState{
 	
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
-	{
-		//TODO will the function call to the canplaceroadatlocation be ok for setup?
-		
+	{		
 		ModelFacade facade = ClientManager.instance().getModelFacade();
-		User user = ClientManager.instance().getCurrentUser();
-		return false;
+		TurnManager turnManager = facade.turnManager();
+		PlayerInfo user = ClientManager.instance().getCurrentPlayerInfo();
+		return facade.canPlaceRoadAtLoc(turnManager, edgeLoc, turnManager.getUserFromIndex(user.getPlayerIndex()));
 	}
 
 	@Override
 	public boolean canPlaceSettlement(VertexLocation vertLoc) 
 	{
-		//TODO same concern as above function
 		ModelFacade facade = ClientManager.instance().getModelFacade();
-		User user = ClientManager.instance().getCurrentUser();
-		return facade.canPlaceBuildingAtLoc(facade.turnManager(), vertLoc, user, PieceType.SETTLEMENT);
+		TurnManager turnManager = facade.turnManager();
+		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
+		User user = turnManager.getUserFromIndex(info.getPlayerIndex());
+		return facade.canPlaceBuildingAtLoc(turnManager, vertLoc, user, PieceType.SETTLEMENT);
 	}
 
 	@Override
@@ -71,9 +73,9 @@ public class MapSetUpState extends MapControllerState{
 	@Override
 	public void placeSettlement(VertexLocation vertLoc) 
 	{
-		User client = ClientManager.instance().getCurrentUser();
-		controller.getView().placeSettlement(vertLoc, client.getCatanColor());
-		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, true);
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		controller.getView().placeSettlement(vertLoc, client.getColor());
+		BuildSettlement buildsettlement = new BuildSettlement(client.getPlayerIndex(), vertLoc, true);
 		try {
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
 		} catch (ProxyException e) {

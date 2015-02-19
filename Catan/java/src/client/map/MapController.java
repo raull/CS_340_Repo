@@ -123,8 +123,8 @@ public class MapController extends Controller implements IMapController, Observe
 		}
 		
 		//set the state
-		User client = ClientManager.instance().getCurrentUser();
-		if (turnManager.getCurrentTurn() != client.getTurnIndex())
+		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
+		if (turnManager.getCurrentTurn() != clientIndex)
 		{
 			setState(new MapInactiveState(this));
 		}
@@ -147,12 +147,12 @@ public class MapController extends Controller implements IMapController, Observe
 		}
 	}
 
-	public boolean canPlaceRoad(EdgeLocation edgeLoc) //TODO finish setUp version
+	public boolean canPlaceRoad(EdgeLocation edgeLoc) //done
 	{
 		return state.canPlaceRoad(edgeLoc);
 	}
 
-	public boolean canPlaceSettlement(VertexLocation vertLoc) //TODO verify setUp version
+	public boolean canPlaceSettlement(VertexLocation vertLoc) //done
 	{	
 		return state.canPlaceSettlement(vertLoc);
 	}
@@ -174,8 +174,8 @@ public class MapController extends Controller implements IMapController, Observe
 		//what would the states be though?
 		
 		//This function should likely also include a call to the serverproxy
-		User client = ClientManager.instance().getCurrentUser();
-		getView().placeRoad(edgeLoc, client.getCatanColor());
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		getView().placeRoad(edgeLoc, client.getColor());
 	}
 
 	public void placeSettlement(VertexLocation vertLoc) //TODO playing and setUp, catching exception?
@@ -186,8 +186,8 @@ public class MapController extends Controller implements IMapController, Observe
 	public void placeCity(VertexLocation vertLoc) //TODO not finished
 	{
 		//This function should likely also include a call to the serverproxy
-		User client = ClientManager.instance().getCurrentUser();
-		getView().placeCity(vertLoc, client.getCatanColor());
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		getView().placeCity(vertLoc, client.getColor());
 	}
 
 	public void placeRobber(HexLocation hexLoc) 
@@ -201,8 +201,8 @@ public class MapController extends Controller implements IMapController, Observe
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) //TODO need to understand this function more. When is it called? 
 	{	
 		//TODO need to move this to states. Identify when canceling should be allowed/disallowed
-		User client = ClientManager.instance().getCurrentUser();
-		getView().startDrop(pieceType, client.getCatanColor(), true);
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		getView().startDrop(pieceType, client.getColor(), true);
 	}
 	
 	public void cancelMove() 

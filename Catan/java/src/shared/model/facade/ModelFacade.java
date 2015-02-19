@@ -202,6 +202,12 @@ public class ModelFacade extends Observable{
 			}
 		}
 		
+		if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND 
+				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		{
+			return true;
+		}
+		
 		//check whether the user has a building connecting to new location
 		location = location.getNormalizedLocation(); //standardizes address
 		EdgeDirection direction = location.getDir();
@@ -254,9 +260,22 @@ public class ModelFacade extends Observable{
 			return true;
 		}
 		
+		
+		
 		return false;
 	}
 	
+	public Boolean canPlaceRobberAtLoc(HexTile hex)
+	{
+		//account for water spaces?
+		
+		if (hex.canMoveRobberHere())
+		{
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
 		return (canBuyPiece(turnManager, user, PieceType.ROAD) && canPlaceRoadAtLoc(turnManager, location, user));
@@ -377,7 +396,9 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canRobPlayer(HexTile hexTile,User currUser, User victim) {
 		//if it isn't user's turn or if model status is not on playing
-		if(currUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		if(currUser != turnManager.currentUser() 
+				|| (turnManager.currentTurnPhase() != TurnPhase.PLAYING 
+				&& turnManager.currentTurnPhase() != TurnPhase.ROBBING)) {
 			return false;
 		}
 		//if new location already has robber, robber is being kept in the same location 

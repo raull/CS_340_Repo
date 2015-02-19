@@ -1,6 +1,7 @@
 package client.map;
 
 import client.base.IController;
+import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
 import client.state.State;
@@ -9,6 +10,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildSettlement;
@@ -27,7 +29,9 @@ public class MapPlayingState extends MapControllerState
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
 	{
 		ModelFacade facade = ClientManager.instance().getModelFacade();
-		User user = ClientManager.instance().getCurrentUser();
+		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
+		TurnManager turnManager = facade.turnManager();
+		User user = turnManager.getUserFromIndex(info.getPlayerIndex());
 		return facade.canPlaceRoadAtLoc(facade.turnManager(), edgeLoc, user);
 	}
 
@@ -35,7 +39,9 @@ public class MapPlayingState extends MapControllerState
 	public boolean canPlaceSettlement(VertexLocation vertLoc) 
 	{	
 		ModelFacade facade = ClientManager.instance().getModelFacade();
-		User user = ClientManager.instance().getCurrentUser();
+		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
+		TurnManager turnManager = facade.turnManager();
+		User user = turnManager.getUserFromIndex(info.getPlayerIndex());
 		return facade.canPlaceBuildingAtLoc(facade.turnManager(), vertLoc, user, PieceType.SETTLEMENT);
 	}
 
@@ -43,7 +49,9 @@ public class MapPlayingState extends MapControllerState
 	public boolean canPlaceCity(VertexLocation vertLoc) 
 	{
 		ModelFacade facade = ClientManager.instance().getModelFacade();
-		User user = ClientManager.instance().getCurrentUser();
+		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
+		TurnManager turnManager = facade.turnManager();
+		User user = turnManager.getUserFromIndex(info.getPlayerIndex());
 		return facade.canPlaceBuildingAtLoc(facade.turnManager(), vertLoc, user, PieceType.CITY);
 	}
 
@@ -70,7 +78,10 @@ public class MapPlayingState extends MapControllerState
 	public void placeSettlement(VertexLocation vertLoc) 
 	{		
 		//TODO decide what to do on ProxyException
-		User client = ClientManager.instance().getCurrentUser();
+		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
+		ModelFacade facade = ClientManager.instance().getModelFacade();
+		TurnManager turnManager = facade.turnManager();
+		User client = turnManager.getUserFromIndex(info.getPlayerIndex());
 		controller.getView().placeSettlement(vertLoc, client.getCatanColor());
 		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, false);
 		try {
