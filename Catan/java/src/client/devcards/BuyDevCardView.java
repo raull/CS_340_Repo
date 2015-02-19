@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import client.base.*;
+import client.manager.ClientManager;
 
 /**
  * "Buy dev card" view implementation
@@ -52,6 +53,10 @@ public class BuyDevCardView extends OverlayView implements IBuyDevCardView {
             // Handle Exception Here
         }
 
+        if (ClientManager.instance().getModelFacade().canBuyDevCard(
+        		ClientManager.instance().getModelFacade().turnManager(),
+        		ClientManager.instance().getModelFacade().turnManager().currentUser(), 
+        		ClientManager.instance().getModelFacade().bank().getDevCardDeck()))
 		acceptButton = new JButton("Buy Card");
 		acceptButton.addActionListener(actionListener);
 		Font buttonFont = acceptButton.getFont();
