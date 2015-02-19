@@ -64,7 +64,7 @@ public class RollController extends Controller implements IRollController, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		getRollView().closeModal();
+		
 	}
 
 }
