@@ -38,12 +38,12 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void addAI() {
-		System.out.println("Adding AI in PlayerWaitingController");
 		
 		try {
 			AddAIRequest req = new AddAIRequest("LARGEST_ARMY"); //only type of AI supported by current server
 			//add AI from proxy
-			JsonElement model = ClientManager.instance().getServerProxy().addAI(req);
+			ClientManager.instance().getServerProxy().addAI(req);
+			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
 			ClientManager.instance().getModelFacade().updateModel(model);
 			attemptClose();
 			
@@ -57,10 +57,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void update(Observable o, Object arg) {
 		ClientManager cm = ClientManager.instance();
-		System.out.println("Updating in PlayerWaitingController");
-		System.out.println("");
 		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
-			System.out.println("Seeing if user " + u.getName() + " exists already");
 			PlayerInfo newPlayer = new PlayerInfo();
 			newPlayer.setColor(u.getCatanColor());
 			newPlayer.setId(u.getPlayerID());
@@ -68,14 +65,12 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			newPlayer.setPlayerIndex(u.getTurnIndex());
 			
 			for(PlayerInfo pi : cm.getCurrentGameInfo().getPlayers()){ //checks all players already known about
-				System.out.println("Comparing user " + u.getName() + " to player " + pi.getName());
 				if(pi.getName().equals(u.getName())){ //if that player is already known, we don't need to add them
-					System.out.println("They're the same! Don't add");
 					newPlayer = null;
+					break;
 				}
 			}
 			if(newPlayer!=null){ //if the player wasn't found, add him/her to the game
-				System.out.println("Adding new player to gameinfo");
 				cm.getCurrentGameInfo().addPlayer(newPlayer);
 			}
 		}
@@ -87,7 +82,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				&& this.getView().isModalShowing()){ //modal only closes if there are four players
 			getView().closeModal();
 			//TODO start the game
-			System.out.println("Here's where we should start the game");
 		}
 	}
 
