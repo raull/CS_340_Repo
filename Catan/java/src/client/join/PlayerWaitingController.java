@@ -58,7 +58,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public void update(Observable o, Object arg) {
 		ClientManager cm = ClientManager.instance();
 		System.out.println("Updating in PlayerWaitingController");
-		
+		System.out.println("");
 		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
 			System.out.println("Seeing if user " + u.getName() + " exists already");
 			PlayerInfo newPlayer = new PlayerInfo();
