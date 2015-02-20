@@ -21,6 +21,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//set the local/client player's color
 		getView().setLocalPlayerColor(ClientManager.instance().getCurrentPlayerInfo().getColor());
 		initFromModel();
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	@Override

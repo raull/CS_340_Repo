@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import client.base.*;
+import client.manager.ClientManager;
 
 
 /**
@@ -26,6 +27,8 @@ public class PointsController extends Controller implements IPointsController, O
 		setFinishedView(finishedView);
 		
 		initFromModel();
+		
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public IPointsView getPointsView() {
