@@ -1,14 +1,22 @@
 package client.join;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import shared.definitions.CatanColor;
 import shared.proxy.ProxyException;
 import shared.proxy.ServerProxy;
+import shared.proxy.games.CreateGameRequest;
 import shared.proxy.games.JoinGameRequest;
 import client.base.*;
 import client.data.*;
+import client.manager.ClientManager;
 import client.misc.*;
 
 
@@ -22,6 +30,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private IMessageView messageView;
 	private IAction joinAction;
 	
+	private ServerProxy proxy = ClientManager.instance().getServerProxy();
+	
 	/**
 	 * JoinGameController constructor
 	 * 
@@ -34,6 +44,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 								ISelectColorView selectColorView, IMessageView messageView) {
 
 		super(view);
+		
+		ClientManager.instance().getModelFacade().addObserver(this);
 
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
@@ -95,8 +107,16 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void start() {
+		try {
+			JsonElement je = ClientManager.instance().getServerProxy().list();
+			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
+			getJoinGameView().showModal();
+		} catch (ProxyException e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
+			getMessageView().showModal();
+		}
 		
-		getJoinGameView().showModal();
 	}
 
 	@Override
@@ -113,13 +133,29 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void createNewGame() {
+		//gets new game's info from the view
+		String title = getNewGameView().getTitle();
+		boolean randomHexes = getNewGameView().getRandomlyPlaceHexes();
+		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
+		boolean randomPorts = getNewGameView().getUseRandomPorts();
 		
-		getNewGameView().closeModal();
+		//sets up the request and transmits it through the proxy
+		CreateGameRequest cr = new CreateGameRequest(randomHexes, randomNumbers, randomPorts, title);
+		try {
+			ClientManager.instance().getServerProxy().create(cr);
+			getNewGameView().closeModal();
+			this.start();
+		} catch (ProxyException e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("New game could not be created. " + e.getMessage());
+			getMessageView().showModal();
+		}
+		
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-
+		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
 	}
 
@@ -131,28 +167,71 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
-		//For now
-		getSelectColorView().closeModal();
-		getJoinGameView().closeModal();
-		joinAction.execute();
 		
-//		// If join succeeded
-//		ServerProxy tempProxy = new ServerProxy(); //TODO: Get the real proxy in here
-//		JoinGameRequest tempRequest = new JoinGameRequest(0, null); //TODO: Get the real request written
-//		try {
-//			tempProxy.join(tempRequest);
-//			getSelectColorView().closeModal();
-//			getJoinGameView().closeModal();
-//			joinAction.execute(); //TODO: figure out what on earth the joinAction.execute() does
-//		} catch (ProxyException e) {
-//			//TODO show error modal
-//		}
+		// If join succeeded
+		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
+		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
+		try {
+			proxy.join(tempRequest);
+			getSelectColorView().closeModal();
+			getJoinGameView().closeModal();
+			joinAction.execute(); //brings up the waiting modal
+		} catch (ProxyException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// update games
-		// revalidate available games
+		try {
+			JsonElement je = proxy.list();
+			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
+		} catch (ProxyException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private GameInfo[] getGameInfo(JsonElement je){
+		ArrayList<GameInfo> gameInfoList = new ArrayList<GameInfo>();
+		JsonArray gameArray = je.getAsJsonArray();
+		for(int i=0; i < gameArray.size(); ++i){
+			Gson gson = new Gson();
+			JsonObject game = gameArray.get(i).getAsJsonObject();
+			String title = gson.fromJson(game.get("title"), String.class);
+			int id = game.get("id").getAsInt();
+			GameInfo gi = new GameInfo();
+			gi.setId(id);
+			gi.setTitle(title);
+			populatePlayerInfo(gi, game.get("players").getAsJsonArray());
+			
+			gameInfoList.add(gi);
+		}
+		GameInfo[] output = new GameInfo[gameInfoList.size()];
+		for(int i=0; i<gameInfoList.size(); ++i){
+			output[i] = gameInfoList.get(i);
+		}
+		return output;
+	}
+
+	private void populatePlayerInfo(GameInfo gi, JsonArray players) {
+		for(int i = 0; i < players.size(); ++i){
+			Gson gson = new Gson();
+			JsonObject player = players.get(i).getAsJsonObject();
+			CatanColor color = gson.fromJson(player.get("color"), CatanColor.class);
+			String name = gson.fromJson(player.get("name"), String.class);
+			JsonElement idElement = player.get("id");
+			if(idElement==null){
+				continue;
+			}
+			int id = idElement.getAsInt();
+			
+			PlayerInfo pi = new PlayerInfo();
+			pi.setColor(color);
+			pi.setName(name);
+			pi.setId(id);
+			gi.addPlayer(pi);
+		}
 		
 	}
 

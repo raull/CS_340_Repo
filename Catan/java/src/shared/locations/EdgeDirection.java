@@ -34,5 +34,25 @@ public enum EdgeDirection
 	{
 		return opposite;
 	}
+	
+	public String original(){
+		String letters = new String();
+		switch (this){
+		
+		case NorthWest:
+			letters = "NW";
+		case North:
+			letters = "N";
+		case NorthEast:
+			letters = "NE";
+		case SouthEast:
+			letters = "SE";
+		case South:
+			letters = "S";
+		case SouthWest:
+			letters = "SW";
+		}
+		return letters;
+	}
 }
 

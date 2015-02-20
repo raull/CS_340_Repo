@@ -8,6 +8,7 @@ import shared.locations.*;
  */
 public class Soldier_ {
 
+	private String type;
 	/**
 	 * Index of player who is using the card
 	 */
@@ -32,6 +33,7 @@ public class Soldier_ {
 		this.playerIndex = playerIndex;
 		this.victimIndex = victimIndex;
 		this.location = location;
+		type = "Soldier";
 	}
 
 	public int getPlayerIndex() {
