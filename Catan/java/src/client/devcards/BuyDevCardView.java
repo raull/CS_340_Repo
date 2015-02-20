@@ -32,6 +32,7 @@ public class BuyDevCardView extends OverlayView implements IBuyDevCardView {
     private JLabel imageLabel;
 	private JPanel buttonPanel;
 
+	
 	public BuyDevCardView() {
 
 		this.setOpaque(true);
@@ -49,14 +50,22 @@ public class BuyDevCardView extends OverlayView implements IBuyDevCardView {
             imageLabel = new JLabel(new ImageIcon(devCardImg));
             this.setBackground(Color.WHITE);
             this.add(imageLabel, BorderLayout.CENTER);
+            
         } catch (IOException ex) {
             // Handle Exception Here
         }
 
+        //Checks if user can buy DevCard
         if (ClientManager.instance().getModelFacade().canBuyDevCard(
         		ClientManager.instance().getModelFacade().turnManager(),
         		ClientManager.instance().getModelFacade().turnManager().currentUser(), 
-        		ClientManager.instance().getModelFacade().bank().getDevCardDeck()))
+        		ClientManager.instance().getModelFacade().bank().getDevCardDeck())){
+            	imageLabel.setEnabled(true);
+        	}
+            else{
+            	imageLabel.setEnabled(false);
+            }
+        	
 		acceptButton = new JButton("Buy Card");
 		acceptButton.addActionListener(actionListener);
 		Font buttonFont = acceptButton.getFont();

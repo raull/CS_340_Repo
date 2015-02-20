@@ -3,8 +3,13 @@ package client.devcards;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.gson.JsonElement;
+
 import shared.definitions.ResourceType;
+import shared.proxy.ProxyException;
+import shared.proxy.moves.BuyDevCard;
 import client.base.*;
+import client.manager.ClientManager;
 
 
 /**
@@ -32,6 +37,7 @@ public class DevCardController extends Controller implements IDevCardController,
 		this.buyCardView = buyCardView;
 		this.soldierAction = soldierAction;
 		this.roadAction = roadAction;
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 
 	public IPlayDevCardView getPlayCardView() {
@@ -56,7 +62,16 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void buyCard() {
-		
+		BuyDevCard buyDev = new BuyDevCard(
+				ClientManager.instance().getModelFacade().
+				turnManager().currentUser().getTurnIndex());
+		try {
+			JsonElement json = ClientManager.instance().getServerProxy().buyDevCard(buyDev);
+			ClientManager.instance().getModelFacade().updateModel(json);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getBuyCardView().closeModal();
 	}
 
