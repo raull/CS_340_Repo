@@ -9,6 +9,7 @@ import client.manager.ClientManager;
 import client.misc.MessageView;
 
 
+
 /**
  * Implementation for the roll controller
  */
@@ -27,6 +28,7 @@ public class RollController extends Controller implements IRollController, Obser
 		super(view);
 		
 		setResultView(resultView);
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public IRollResultView getResultView() {

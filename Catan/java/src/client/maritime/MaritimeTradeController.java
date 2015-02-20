@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import shared.definitions.*;
 import client.base.*;
+import client.manager.ClientManager;
 
 
 /**
@@ -19,6 +20,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		super(tradeView);
 
 		setTradeOverlay(tradeOverlay);
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public IMaritimeTradeView getTradeView() {
