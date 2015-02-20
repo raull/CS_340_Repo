@@ -4,7 +4,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import shared.model.game.User;
+
 import client.base.*;
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 
@@ -33,20 +35,37 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void initFromModel() {
 		
-		User currentUser = ClientManager.instance().getCurrentUser();
+		PlayerInfo playerInfo = ClientManager.instance().getCurrentPlayerInfo();
 		
 		//set color of local player
-		getView().setLocalPlayerColor(currentUser.getCatanColor());
+		getView().setLocalPlayerColor(playerInfo.getColor());
 		
 		// initialize the player in turn tracker display
-		getView().initializePlayer(currentUser.getTurnIndex(), currentUser.getName(), currentUser.getCatanColor());
+		getView().initializePlayer(playerInfo.getPlayerIndex(), playerInfo.getName(), playerInfo.getColor());
 		
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		// model facade has changed
+		ClientManager cm = ClientManager.instance();
 		
+		PlayerInfo playerInfo = cm.getCurrentPlayerInfo();
+		
+		User currUser = cm.getModelFacade().turnManager().getUser(playerInfo.getPlayerIndex());
+		
+		int largestArmyIndex = cm.getModelFacade().score().getLargestArmyUser();
+		int longestRoadIndex = cm.getModelFacade().score().getLongestRoadUser();
+		
+		//user is highlighted if it's currently their turn
+		boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == playerInfo.getId());
+		
+		//booleans for if user has largest army or longest road
+		boolean hasLargestArmy = (largestArmyIndex == playerInfo.getPlayerIndex());
+		boolean hasLongestRoad = (longestRoadIndex == playerInfo.getPlayerIndex());
+		
+		//update the user
+		getView().updatePlayer(playerInfo.getPlayerIndex(), currUser.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
 	}
 
 }
