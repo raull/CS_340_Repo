@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import shared.definitions.*;
 import client.base.*;
+import client.manager.ClientManager;
 import client.misc.*;
 
 
@@ -33,6 +34,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		setTradeOverlay(tradeOverlay);
 		setWaitOverlay(waitOverlay);
 		setAcceptOverlay(acceptOverlay);
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public IDomesticTradeView getTradeView() {

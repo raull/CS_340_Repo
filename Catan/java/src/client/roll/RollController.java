@@ -4,6 +4,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 import client.base.*;
+import client.manager.ClientManager;
 
 
 /**
@@ -24,6 +25,7 @@ public class RollController extends Controller implements IRollController, Obser
 		super(view);
 		
 		setResultView(resultView);
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public IRollResultView getResultView() {
