@@ -80,6 +80,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				cm.getCurrentGameInfo().addPlayer(newPlayer);
 			}
 		}
+		updatePlayers();
 		attemptClose();
 	}
 	
