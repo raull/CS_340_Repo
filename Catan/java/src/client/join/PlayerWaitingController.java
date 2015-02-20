@@ -23,6 +23,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		super(view);
 		ClientManager.instance().getModelFacade().addObserver(this);
 		getView().setAIChoices(new String[]{"Largest Army"});
+		updatePlayers();
+		getView().showModal();
 	}
 
 	@Override
@@ -33,8 +35,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void start() {
-		getView().showModal();
 		updatePlayers();
+		getView().showModal();
 		attemptClose(); //immediately closes the modal if there's nothing to do
 	}
 
@@ -81,6 +83,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			}
 		}
 		updatePlayers();
+		getView().showModal();
 		attemptClose();
 	}
 	
