@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import shared.definitions.CatanColor;
 import client.base.*;
+import client.manager.ClientManager;
 
 
 /**
@@ -17,6 +18,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		super(view);
 		
 		initFromModel();
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	@Override
