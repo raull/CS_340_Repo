@@ -12,6 +12,7 @@ import shared.proxy.game.AddAIRequest;
 import client.base.*;
 import client.data.PlayerInfo;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 
 
 /**
@@ -45,16 +46,15 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			AddAIRequest req = new AddAIRequest("LARGEST_ARMY"); //only type of AI supported by current server
 			//add AI from proxy
 			ClientManager.instance().getServerProxy().addAI(req);
+			
 			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
 			ClientManager.instance().getModelFacade().updateModel(model);
 			
-			updatePlayers();
-			
-			attemptClose();
-			
-			
 		} catch (ProxyException e) {
-			e.printStackTrace();
+			MessageView alertView = new MessageView();
+			alertView.setTitle("Error");
+			alertView.setMessage(e.getLocalizedMessage());
+			alertView.showModal();
 		}
 		
 		
