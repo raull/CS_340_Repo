@@ -19,9 +19,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		super(view);
 		//set the local/client player's color
+		ClientManager.instance().getModelFacade().addObserver(this);
 		getView().setLocalPlayerColor(ClientManager.instance().getCurrentPlayerInfo().getColor());
 		initFromModel();
-		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	@Override
@@ -40,6 +40,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	private void initFromModel() {
 		ClientManager cm = ClientManager.instance();
 		
+		//currently turn manager is null as of this point
 		ArrayList<User> users = (ArrayList<User>) cm.getModelFacade().turnManager().getUsers();
 		
 		//initialize the player in turn tracker display
