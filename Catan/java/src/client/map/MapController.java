@@ -13,6 +13,7 @@ import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
+import shared.proxy.moves.BuildCity;
 import shared.proxy.moves.BuildRoad;
 import shared.proxy.moves.BuildSettlement;
 import shared.proxy.moves.Soldier_;
@@ -167,29 +168,46 @@ public class MapController extends Controller implements IMapController, Observe
 		return state.canPlaceRobber(hexLoc);
 	}
 
+	//This function is called when the user clicks on the map overlay to place a road
+	//There are three different ways this could be called. 
+	//first it could be called in the setup phase, in which case it is free and disconnected is allowed
+	//second it could be called after the road is bought, in which case it is not free and must be connected
+	//third it could be called after road building, in which case it is free but must be connected
 	public void placeRoad(EdgeLocation edgeLoc) 
 	{
-		//TODO may need to be moved to states 
-		//(difference in server call between roadbuilding and just buying a road)
-		//what would the states be though?
+		//TODO may need to be moved to states
 		
 		//This function should likely also include a call to the serverproxy
 		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
 		getView().placeRoad(edgeLoc, client.getColor());
 	}
 
+	//This function is called when the user clicks on the map overlay to place a settlement.
+	//first this could happen if the settlement is bought
+	//second this could happen if the game is in the setup phase.
 	public void placeSettlement(VertexLocation vertLoc) //TODO playing and setUp, catching exception?
 	{
 		state.placeSettlement(vertLoc);
 	}
 
-	public void placeCity(VertexLocation vertLoc) //TODO not finished
+	//This method is called when a user clicks on the map overlay to place a city.
+	//This will only happen when the turnphase is playing and the user has bought a city
+	public void placeCity(VertexLocation vertLoc)
 	{
-		//This function should likely also include a call to the serverproxy
 		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
 		getView().placeCity(vertLoc, client.getColor());
+		BuildCity buildCity = new BuildCity(client.getPlayerIndex(), vertLoc);
+		try {
+			ClientManager.instance().getServerProxy().buildCity(buildCity);
+		} catch (ProxyException e) {
+			// TODO change this to actually display an error window.
+			e.printStackTrace();
+		}
 	}
 
+	//This method is called when a user clicks on the map overlay to place the robber
+	//first this will be called after a soldier card is played
+	//second this will be called after a 7 is rolled
 	public void placeRobber(HexLocation hexLoc) 
 	{
 		//This function should likely also include a call to the serverproxy	

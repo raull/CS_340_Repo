@@ -25,6 +25,8 @@ public abstract class MapControllerState extends State{
 	
 	public abstract void placeSettlement(VertexLocation vertLoc);
 	
+	public abstract void placeRoad(EdgeLocation edgeLoc);
+	
 	@Override
 	public void setState(IController controller, State state) {
 		if(controller.getClass()!= MapController.class){

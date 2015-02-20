@@ -84,4 +84,10 @@ public class MapSetUpState extends MapControllerState{
 		}
 	}
 
+	@Override
+	public void placeRoad(EdgeLocation edgeLoc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

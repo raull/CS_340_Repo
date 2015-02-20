@@ -58,5 +58,11 @@ public class MapInactiveState extends MapControllerState{
 		return;
 	}
 
+	@Override
+	public void placeRoad(EdgeLocation edgeLoc) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }
