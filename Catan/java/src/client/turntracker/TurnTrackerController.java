@@ -1,12 +1,12 @@
 package client.turntracker;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import shared.model.game.User;
 
 import client.base.*;
-import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 
@@ -18,7 +18,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	public TurnTrackerController(ITurnTrackerView view) {
 		
 		super(view);
-		
+		//set the local/client player's color
+		getView().setLocalPlayerColor(ClientManager.instance().getCurrentPlayerInfo().getColor());
 		initFromModel();
 	}
 	
@@ -30,42 +31,48 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 
 	@Override
 	public void endTurn() {
-
+		//ending turn would un-highlight current player?
+		//currently just update the players
+		updatePlayers();
 	}
 	
 	private void initFromModel() {
-		
-		PlayerInfo playerInfo = ClientManager.instance().getCurrentPlayerInfo();
-		
-		//set color of local player
-		getView().setLocalPlayerColor(playerInfo.getColor());
-		
-		// initialize the player in turn tracker display
-		getView().initializePlayer(playerInfo.getPlayerIndex(), playerInfo.getName(), playerInfo.getColor());
-		
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// model facade has changed
 		ClientManager cm = ClientManager.instance();
 		
-		PlayerInfo playerInfo = cm.getCurrentPlayerInfo();
+		ArrayList<User> users = (ArrayList<User>) cm.getModelFacade().turnManager().getUsers();
 		
-		User currUser = cm.getModelFacade().turnManager().getUser(playerInfo.getPlayerIndex());
+		//initialize the player in turn tracker display
+		for(User user : users) {
+			getView().initializePlayer(user.getPlayerID(), user.getName(), user.getCatanColor());
+		}
+		
+	}
+	
+	private void updatePlayers() {
+		ClientManager cm = ClientManager.instance();
+		
+		ArrayList<User> users = (ArrayList<User>) cm.getModelFacade().turnManager().getUsers();
 		
 		int largestArmyIndex = cm.getModelFacade().score().getLargestArmyUser();
 		int longestRoadIndex = cm.getModelFacade().score().getLongestRoadUser();
 		
-		//user is highlighted if it's currently their turn
-		boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == playerInfo.getId());
-		
-		//booleans for if user has largest army or longest road
-		boolean hasLargestArmy = (largestArmyIndex == playerInfo.getPlayerIndex());
-		boolean hasLongestRoad = (longestRoadIndex == playerInfo.getPlayerIndex());
-		
-		//update the user
-		getView().updatePlayer(playerInfo.getPlayerIndex(), currUser.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
+		for(User user : users) {
+			//user is highlighted if it's currently their turn
+			boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == user.getPlayerID());
+			
+			//booleans for if user has largest army or longest road
+			boolean hasLargestArmy = (largestArmyIndex == user.getPlayerID());
+			boolean hasLongestRoad = (longestRoadIndex == user.getPlayerID());
+			
+			getView().updatePlayer(user.getPlayerID(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
+		}
+	}
+	
+	@Override
+	public void update(Observable o, Object arg) {
+		// model facade has changed
+		//update the turntracker view for all players
+		updatePlayers();
 	}
 
 }
