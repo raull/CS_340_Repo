@@ -5,6 +5,7 @@ import client.data.GameInfo;
 import client.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnPhase;
 import shared.proxy.ServerProxy;
 
 
@@ -81,6 +82,10 @@ public class ClientManager {
 		for(PlayerInfo pi : gi.getPlayers()){
 			currentGameInfo.addPlayer(pi);
 		}
+	}
+	
+	public TurnPhase getCurrentTurnPhase() {
+		return modelFacade.turnManager().currentTurnPhase();
 	}
 	
 
