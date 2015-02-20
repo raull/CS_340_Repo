@@ -1,5 +1,6 @@
 package client.join;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -7,7 +8,6 @@ import com.google.gson.JsonElement;
 
 import shared.model.game.User;
 import shared.proxy.ProxyException;
-import shared.proxy.ServerProxy;
 import shared.proxy.game.AddAIRequest;
 import client.base.*;
 import client.data.PlayerInfo;
@@ -22,7 +22,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	public PlayerWaitingController(IPlayerWaitingView view) {
 		super(view);
 		ClientManager.instance().getModelFacade().addObserver(this);
-		view.setAIChoices(new String[]{"Largest Army"});
+		getView().setAIChoices(new String[]{"Largest Army"});
 	}
 
 	@Override
@@ -34,6 +34,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void start() {
 		getView().showModal();
+		updatePlayers();
 		attemptClose(); //immediately closes the modal if there's nothing to do
 	}
 
@@ -46,7 +47,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			ClientManager.instance().getServerProxy().addAI(req);
 			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
 			ClientManager.instance().getModelFacade().updateModel(model);
+			
+			updatePlayers();
+			
 			attemptClose();
+			
 			
 		} catch (ProxyException e) {
 			e.printStackTrace();
@@ -84,6 +89,12 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			getView().closeModal();
 			//TODO start the game
 		}
+	}
+	
+	private void updatePlayers() {
+		ArrayList<PlayerInfo> players =  new ArrayList<PlayerInfo>(ClientManager.instance().getCurrentGameInfo().getPlayers());
+		PlayerInfo [] playerArray = players.toArray(new PlayerInfo[players.size()]);
+		getView().setPlayers(playerArray);
 	}
 
 }
