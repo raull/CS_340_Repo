@@ -2,7 +2,14 @@ package client.resources;
 
 import java.util.*;
 
+import shared.definitions.DevCardType;
+import shared.definitions.ResourceType;
+import shared.model.cards.DevCardDeck;
+import shared.model.cards.ResourceCardDeck;
+import shared.model.facade.ModelFacade;
+import shared.model.game.User;
 import client.base.*;
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 
@@ -73,8 +80,28 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
 		
+		//Get the info
+		ClientManager cm = ClientManager.instance();
+		PlayerInfo player = cm.getCurrentPlayerInfo();
+		ModelFacade facade = cm.getModelFacade();
+		
+		int currentIndex = player.getPlayerIndex();
+		
+		User currentUser = facade.turnManager().getUserFromIndex(currentIndex);
+		ResourceCardDeck resourceHand = currentUser.getHand().getResourceCards();
+		DevCardDeck devHand = currentUser.getHand().getUsableDevCards();
+		
+		//Update view
+		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.WOOD));
+		getView().setElementAmount(ResourceBarElement.BRICK, resourceHand.getCountByType(ResourceType.BRICK));
+		getView().setElementAmount(ResourceBarElement.SHEEP, resourceHand.getCountByType(ResourceType.SHEEP));
+		getView().setElementAmount(ResourceBarElement.WHEAT, resourceHand.getCountByType(ResourceType.WHEAT));
+		getView().setElementAmount(ResourceBarElement.ORE, resourceHand.getCountByType(ResourceType.ORE));
+
+		getView().setElementAmount(ResourceBarElement.ROAD, devHand.getCountByType(DevCardType.ROAD_BUILD));
+		getView().setElementAmount(ResourceBarElement.SOLDIERS, devHand.getCountByType(DevCardType.SOLDIER));
+
 	}
 
 }
