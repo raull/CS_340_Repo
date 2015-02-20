@@ -3,6 +3,7 @@ package client.roll;
 import java.util.Observable;
 import java.util.Observer;
 
+import shared.model.game.TurnPhase;
 import shared.proxy.moves.RollNumber;
 import client.base.*;
 import client.manager.ClientManager;
@@ -27,6 +28,9 @@ public class RollController extends Controller implements IRollController, Obser
 		super(view);
 		
 		setResultView(resultView);
+		
+		//Set as Observer
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public IRollResultView getResultView() {
@@ -64,7 +68,11 @@ public class RollController extends Controller implements IRollController, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		
+		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.ROLLING) {
+			getRollView().showModal();
+		} else {
+			getRollView().closeModal();
+		}
 	}
 
 }
