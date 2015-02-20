@@ -3,6 +3,7 @@ package client.resources;
 import java.util.*;
 
 import client.base.*;
+import client.manager.ClientManager;
 
 
 /**
@@ -17,6 +18,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		super(view);
 		
 		elementActions = new HashMap<ResourceBarElement, IAction>();
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 
 	@Override
