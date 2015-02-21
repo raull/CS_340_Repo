@@ -25,7 +25,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		ClientManager.instance().getModelFacade().addObserver(this);
 		getView().setAIChoices(new String[]{"Largest Army"});
 		updatePlayers();
-		getView().showModal();
+		//getView().showModal();
 	}
 
 	@Override
@@ -37,8 +37,13 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void start() {
 		updatePlayers();
-		getView().showModal();
-		attemptClose(); //immediately closes the modal if there's nothing to do
+		
+		if (isFull()) {
+			ClientManager.instance().startServerPoller();
+			getView().closeModal();
+		} else {
+			getView().showModal();
+		}
 	}
 
 	@Override
@@ -64,6 +69,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void update(Observable o, Object arg) {
+		
 		ClientManager cm = ClientManager.instance();
 		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
 			PlayerInfo newPlayer = new PlayerInfo();
@@ -83,17 +89,21 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			}
 		}
 		updatePlayers();
-		getView().showModal();
-		attemptClose();
+		
+		if(isFull()) {
+			ClientManager.instance().startServerPoller();
+			getView().closeModal();
+		} else {
+			getView().closeModal();
+			getView().showModal();
+		}
 	}
 	
-	private void attemptClose(){
-		if(ClientManager.instance().getCurrentGameInfo().getPlayers().size()==4 
-				&& this.getView().isModalShowing()){ //modal only closes if there are four players
-			getView().closeModal();
-			
-			ClientManager.instance().startServerPoller();
+	private boolean isFull(){
+		if(ClientManager.instance().getCurrentGameInfo().getPlayers().size()==4){ //modal only closes if there are four players
+			return true;
 		}
+		return false;
 	}
 	
 	private void updatePlayers() {
