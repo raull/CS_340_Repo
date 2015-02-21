@@ -86,14 +86,14 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		PlayerInfo player = cm.getCurrentPlayerInfo();
 		ModelFacade facade = cm.getModelFacade();
 		
-		int currentIndex = player.getPlayerIndex();
+		int currentID = player.getId();
 		
-		User currentUser = facade.turnManager().getUserFromIndex(currentIndex);
+		User currentUser = facade.turnManager().getUserFromIndex(currentID);
 		ResourceCardDeck resourceHand = currentUser.getHand().getResourceCards();
 		DevCardDeck devHand = currentUser.getHand().getUsableDevCards();
 		
 		//Update view
-		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.WOOD));
+		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.BRICK));
 		getView().setElementAmount(ResourceBarElement.BRICK, resourceHand.getCountByType(ResourceType.BRICK));
 		getView().setElementAmount(ResourceBarElement.SHEEP, resourceHand.getCountByType(ResourceType.SHEEP));
 		getView().setElementAmount(ResourceBarElement.WHEAT, resourceHand.getCountByType(ResourceType.WHEAT));
