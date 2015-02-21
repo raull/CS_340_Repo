@@ -9,7 +9,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.model.cards.DevCard;
 import shared.proxy.ProxyException;
-import shared.proxy.moves.BuyDevCard;
+import shared.proxy.moves.*;
 import client.base.*;
 import client.manager.ClientManager;
 
@@ -91,12 +91,29 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void playMonopolyCard(ResourceType resource) {
+		Monopoly_ playMonopoly = new Monopoly_(resource, getPlayerIndex());
+		
+		try {
+			JsonElement json = ClientManager.instance().getServerProxy().Monopoly(playMonopoly);
+			ClientManager.instance().getModelFacade().updateModel(json);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
 	@Override
 	public void playMonumentCard() {
+		Monument_ playMonument = new Monument_(getPlayerIndex());
 		
+		try {
+			JsonElement json = ClientManager.instance().getServerProxy().Monument(playMonument);
+			ClientManager.instance().getModelFacade().updateModel(json);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -113,7 +130,15 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void playYearOfPlentyCard(ResourceType resource1, ResourceType resource2) {
+		Year_of_Plenty_ playYOP = new Year_of_Plenty_(getPlayerIndex(), resource1, resource2);
 		
+		try {
+			JsonElement json = ClientManager.instance().getServerProxy().Year_of_Plenty(playYOP);
+			ClientManager.instance().getModelFacade().updateModel(json);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -150,6 +175,12 @@ public class DevCardController extends Controller implements IDevCardController,
 		int totalCards = oldCards + newCards;
 		
 		getPlayCardView().setCardAmount(devType, totalCards);
+	}
+	
+	// Returns the player Index of the client
+	public int getPlayerIndex(){
+		return ClientManager.instance().getModelFacade().
+				turnManager().currentUser().getTurnIndex();
 	}
 }
 
