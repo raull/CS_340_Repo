@@ -5,7 +5,9 @@ import java.util.Observer;
 
 import com.google.gson.JsonElement;
 
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
+import shared.model.cards.DevCard;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuyDevCard;
 import client.base.*;
@@ -116,9 +118,38 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void update(Observable o, Object arg) {
+		setEnabledCard(DevCardType.SOLDIER);
+		setEnabledCard(DevCardType.MONOPOLY);
+		setEnabledCard(DevCardType.MONUMENT);
+		setEnabledCard(DevCardType.ROAD_BUILD);
+		setEnabledCard(DevCardType.YEAR_OF_PLENTY);
 		
-		
+		setCardAmount(DevCardType.MONOPOLY);
+		setCardAmount(DevCardType.MONUMENT);
+		setCardAmount(DevCardType.ROAD_BUILD);
+		setCardAmount(DevCardType.SOLDIER);
+		setCardAmount(DevCardType.YEAR_OF_PLENTY);
 	}
 
+	//Checks to see whether player can play card or not, and sets the View accordingly
+	public void setEnabledCard(DevCardType devType){
+		getPlayCardView().setCardEnabled(devType, 
+				ClientManager.instance().getModelFacade().turnManager().
+				currentUser().canPlayDevCard(new DevCard(devType)));
+	}
+	
+	//Sets how many total development cards of each type are in user's hand
+	public void setCardAmount(DevCardType devType){
+		int oldCards;
+		int newCards;
+		oldCards = ClientManager.instance().getModelFacade().turnManager().currentUser()
+				.getHand().getUsableDevCards().getCountByType(devType);
+		newCards = ClientManager.instance().getModelFacade().turnManager().currentUser()
+				.getHand().getNewDevCards().getCountByType(devType);
+		
+		int totalCards = oldCards + newCards;
+		
+		getPlayCardView().setCardAmount(devType, totalCards);
+	}
 }
 

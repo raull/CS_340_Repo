@@ -578,7 +578,8 @@ public class ModelFacade extends Observable{
 	 * @param newRobberLoc -- dev card will move robber
 	 * @return
 	 */
-	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, HexTile newRobberLoc) {
+	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, 
+			HexTile newRobberLoc) {
 		DevCard soldierCard = new DevCard(DevCardType.SOLDIER);
 		//if it isn't user's turn or if model status is not on playing or if user does not have soldier card
 		//if user has already played dev card
@@ -587,6 +588,7 @@ public class ModelFacade extends Observable{
 		}
 		return canRobPlayer(newRobberLoc, user, victim);
 	}
+	
 	
 	/**
 	 * if user can play year of plenty dev card 
