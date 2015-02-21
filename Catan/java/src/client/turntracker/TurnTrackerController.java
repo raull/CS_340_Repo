@@ -1,12 +1,14 @@
 package client.turntracker;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import shared.model.game.User;
 
 import client.base.*;
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 
@@ -38,22 +40,23 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	}
 	
 	private void initFromModel() {
-		ClientManager cm = ClientManager.instance();
 		
-		//currently turn manager is null as of this point
-		ArrayList<User> users = (ArrayList<User>) cm.getModelFacade().turnManager().getUsers();
+		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
-		//initialize the player in turn tracker display
+		System.out.println("user size: " + users.size());
+		
+		//initialize players from turn manager
 		for(User user : users) {
-			getView().initializePlayer(user.getPlayerID(), user.getName(), user.getCatanColor());
+			getView().initializePlayer(user.getTurnIndex(), user.getName(), user.getCatanColor());
 		}
+
 		
 	}
 	
 	private void updatePlayers() {
 		ClientManager cm = ClientManager.instance();
 		
-		ArrayList<User> users = (ArrayList<User>) cm.getModelFacade().turnManager().getUsers();
+		ArrayList<User> users = new ArrayList<User>(cm.getModelFacade().turnManager().getUsers());
 		
 		int largestArmyIndex = cm.getModelFacade().score().getLargestArmyUser();
 		int longestRoadIndex = cm.getModelFacade().score().getLongestRoadUser();
@@ -66,7 +69,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			boolean hasLargestArmy = (largestArmyIndex == user.getPlayerID());
 			boolean hasLongestRoad = (longestRoadIndex == user.getPlayerID());
 			
-			getView().updatePlayer(user.getPlayerID(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
+			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
 		}
 	}
 	
