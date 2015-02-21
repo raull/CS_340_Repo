@@ -2,6 +2,8 @@ package client.roll;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import shared.model.game.TurnPhase;
 import shared.proxy.moves.RollNumber;
@@ -17,6 +19,7 @@ import client.misc.MessageView;
 public class RollController extends Controller implements IRollController, Observer {
 
 	private IRollResultView resultView;
+	private Timer rollTimer = new Timer(false);
 
 	/**
 	 * RollController constructor
@@ -58,6 +61,7 @@ public class RollController extends Controller implements IRollController, Obser
 			ClientManager.instance().getServerProxy().rollNumber(param);
 			getResultView().setRollValue(total);
 			getResultView().showModal();
+			rollTimer.cancel();
 		} catch (Exception e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
@@ -71,6 +75,13 @@ public class RollController extends Controller implements IRollController, Obser
 	public void update(Observable o, Object arg) {
 		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.ROLLING) {
 			getRollView().showModal();
+			rollTimer.schedule( new TimerTask() {
+				@Override
+				public void run() {
+					rollDice();
+				}
+			} , 5000, 5000);
+			
 		} else {
 			getRollView().closeModal();
 		}
