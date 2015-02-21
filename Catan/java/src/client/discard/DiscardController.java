@@ -5,6 +5,7 @@ import java.util.Observer;
 
 import shared.definitions.*;
 import client.base.*;
+import client.manager.ClientManager;
 import client.misc.*;
 
 
@@ -26,6 +27,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		super(view);
 		
 		this.waitView = waitView;
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 
 	public IDiscardView getDiscardView() {

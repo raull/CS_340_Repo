@@ -29,6 +29,7 @@ public class LoginController extends Controller implements ILoginController, Obs
 		super(view);
 		
 		this.messageView = messageView;
+		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
 	public ILoginView getLoginView() {
