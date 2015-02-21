@@ -99,9 +99,11 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		getView().setElementAmount(ResourceBarElement.WHEAT, resourceHand.getCountByType(ResourceType.WHEAT));
 		getView().setElementAmount(ResourceBarElement.ORE, resourceHand.getCountByType(ResourceType.ORE));
 
-		getView().setElementAmount(ResourceBarElement.ROAD, devHand.getCountByType(DevCardType.ROAD_BUILD));
+		getView().setElementAmount(ResourceBarElement.ROAD, currentUser.getUnusedRoads());
 		getView().setElementAmount(ResourceBarElement.SOLDIERS, devHand.getCountByType(DevCardType.SOLDIER));
-
+		getView().setElementAmount(ResourceBarElement.SETTLEMENT, currentUser.getUnusedSettlements());
+		getView().setElementAmount(ResourceBarElement.CITY, currentUser.getUnusedCities());
+		
 	}
 
 }
