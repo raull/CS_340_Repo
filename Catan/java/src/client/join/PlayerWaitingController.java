@@ -92,7 +92,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				&& this.getView().isModalShowing()){ //modal only closes if there are four players
 			getView().closeModal();
 			
-			ClientManager.instance().startServerPoller();
 		}
 	}
 	

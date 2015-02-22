@@ -15,6 +15,8 @@ import client.manager.ClientManager;
  * Implementation for the turn tracker controller
  */
 public class TurnTrackerController extends Controller implements ITurnTrackerController, Observer {
+	
+	private boolean updated = false;
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		
@@ -22,7 +24,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//set the local/client player's color
 		ClientManager.instance().getModelFacade().addObserver(this);
 		getView().setLocalPlayerColor(ClientManager.instance().getCurrentPlayerInfo().getColor());
-		initFromModel();
 	}
 	
 	@Override
@@ -76,6 +77,12 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	public void update(Observable o, Object arg) {
 		// model facade has changed
 		//update the turntracker view for all players
+		//if users are null, init from model (or, has never been updated yet)
+		if(!updated) {
+			initFromModel();
+			updated = true;
+		}
+		
 		updatePlayers();
 	}
 

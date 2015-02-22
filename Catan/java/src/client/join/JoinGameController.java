@@ -46,7 +46,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		super(view);
 		
 		ClientManager.instance().getModelFacade().addObserver(this);
-
+		
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);
@@ -178,6 +178,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			proxy.join(tempRequest);
 			getSelectColorView().closeModal();
 			getJoinGameView().closeModal();
+			
+			ClientManager.instance().startServerPoller(); //start poller once players join
+			
 			joinAction.execute(); //brings up the waiting modal
 		} catch (ProxyException e) {
 			e.printStackTrace();
