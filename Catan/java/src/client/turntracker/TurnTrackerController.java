@@ -43,8 +43,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
-		System.out.println("user size: " + users.size());
-		
 		//initialize players from turn manager
 		for(User user : users) {
 			getView().initializePlayer(user.getTurnIndex(), user.getName(), user.getCatanColor());
@@ -66,8 +64,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == user.getPlayerID());
 			
 			//booleans for if user has largest army or longest road
-			boolean hasLargestArmy = (largestArmyIndex == user.getPlayerID());
-			boolean hasLongestRoad = (longestRoadIndex == user.getPlayerID());
+			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
+			boolean hasLongestRoad = (longestRoadIndex == user.getTurnIndex());
+//			System.out.println( "current player index: " + user.getTurnIndex() + " player: " + " largestArmyIndex" + " has largest army? " + hasLargestArmy);
 			
 			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
 		}
@@ -79,8 +78,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//update the turntracker view for all players
 		//if users are null, init from model (or, has never been updated yet)
 		if(!updated) {
-			initFromModel();
 			updated = true;
+			initFromModel();
 		}
 		
 		updatePlayers();

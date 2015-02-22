@@ -51,12 +51,20 @@ public class Poller {
 		Model currModel = modelFacade.getModel();
 		JsonElement response = null;
 		try {
+//			int currVer = currModel.getVersion();
+//			System.out.println("version num of model in poller: " + currVer);
+			//set the current model version in the facade
+//			modelFacade.setModelVersion(currVer);
 			response = proxy.model(currModel.getVersion());
+			
+			modelFacade.updateModel(response);
+			
+			
 		} catch (ProxyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		modelFacade.updateModel(response);
+		
 	}
 	
 	/**
