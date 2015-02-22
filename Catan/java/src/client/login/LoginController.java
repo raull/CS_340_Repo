@@ -136,9 +136,7 @@ public class LoginController extends Controller implements ILoginController, Obs
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// If log in succeeded
-		getLoginView().closeModal();
-		loginAction.execute();
+
 	}
 
 }
