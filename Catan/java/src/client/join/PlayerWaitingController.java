@@ -36,14 +36,18 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void start() {
+		forceUpdate();
 		updatePlayers();
 		
 		if (isFull()) {
 			ClientManager.instance().startServerPoller();
 			getView().closeModal();
-		} else {
+		} 
+		else {
 			getView().showModal();
 		}
+
+		
 	}
 
 	@Override
@@ -53,9 +57,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			AddAIRequest req = new AddAIRequest("LARGEST_ARMY"); //only type of AI supported by current server
 			//add AI from proxy
 			ClientManager.instance().getServerProxy().addAI(req);
-			
-			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
-			ClientManager.instance().getModelFacade().updateModel(model);
+			forceUpdate();
 			
 		} catch (ProxyException e) {
 			MessageView alertView = new MessageView();
@@ -81,6 +83,9 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			for(PlayerInfo pi : cm.getCurrentGameInfo().getPlayers()){ //checks all players already known about
 				if(pi.getName().equals(u.getName())){ //if that player is already known, we don't need to add them
 					newPlayer = null;
+					if(!pi.getColor().equals(u.getCatanColor())){
+						pi.setColor(u.getCatanColor()); //in case colors have changed
+					}
 					break;
 				}
 			}
@@ -110,6 +115,20 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		ArrayList<PlayerInfo> players =  new ArrayList<PlayerInfo>(ClientManager.instance().getCurrentGameInfo().getPlayers());
 		PlayerInfo [] playerArray = players.toArray(new PlayerInfo[players.size()]);
 		getView().setPlayers(playerArray);
+	}
+	
+	private void forceUpdate(){
+		JsonElement model;
+		try {
+			model = ClientManager.instance().getServerProxy().model(-1);
+			ClientManager.instance().getModelFacade().updateModel(model);
+
+		} catch (ProxyException e) {
+			MessageView alertView = new MessageView();
+			alertView.setTitle("Error");
+			alertView.setMessage(e.getLocalizedMessage());
+			alertView.showModal();
+		}
 	}
 
 }
