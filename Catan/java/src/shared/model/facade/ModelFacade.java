@@ -64,6 +64,7 @@ public class ModelFacade extends Observable{
 	 */
 	public void updateModel(JsonElement jsonResponse) {
 		model.deserialize(jsonResponse);
+		System.out.println("updating deserialized stuff");
 		turnManager = model.getTurnManager();
 		map = model.getMap();
 		bank = model.getBank();

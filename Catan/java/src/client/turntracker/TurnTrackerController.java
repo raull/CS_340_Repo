@@ -8,7 +8,6 @@ import java.util.Observer;
 import shared.model.game.User;
 
 import client.base.*;
-import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 
