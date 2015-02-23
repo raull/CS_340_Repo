@@ -339,7 +339,7 @@ public class User {
 		this.name = new PlayerName(name);
 	}
 
-	public boolean isHasDiscarded() {
+	public boolean getHasDiscarded() {
 		return hasDiscarded;
 	}
 

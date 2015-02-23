@@ -150,6 +150,10 @@ public class DiscardController extends Controller implements IDiscardController,
 		getDiscardView().setResourceMaxAmount(ResourceType.WOOD, maxWood);
 	}
 	
+	private int getTotalDiscardNum() {
+		return (brickToDiscard + oreToDiscard + sheepToDiscard + wheatToDiscard + woodToDiscard);
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
@@ -170,17 +174,30 @@ public class DiscardController extends Controller implements IDiscardController,
 				
 				User user = turnManager.getUser(playerId);
 				
-				//if a player has more than 7 cards and is not the current player, show modal
-				if(playerId != currPlayerId || user.getHand().getResourceCards().getAllResourceCards().size() < 7) {
+				//if a player has more than 7 cards, has not discarded this turn, and is not the current player, show modal
+				if(playerId != currPlayerId && user.getHand().getResourceCards().getAllResourceCards().size() < 7 && !user.getHasDiscarded()) {
 					//initialize the max amounts a player can discard
 					initMaxAmounts();
+					
+					//once discard is called, set user has discarded to true
+					user.setHasDiscarded(true);
+					
+					//reset when turn ends
 					
 					//show modal
 					getDiscardView().showModal();
 				}
+				//else if it's the current player, show the waiting modal
+				else if(playerId == currPlayerId) {
+					getWaitView().showModal();
+				}
 				
 			}
 			
+		}
+		//close the wait view modal if it's showing and it's not discard phase anymore
+		else if(cm.getCurrentTurnPhase() != TurnPhase.DISCARDING && getWaitView().isModalShowing()) {
+			getWaitView().closeModal();
 		}
 		
 	}
