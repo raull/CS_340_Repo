@@ -77,12 +77,18 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		// model facade has changed
 		//update the turntracker view for all players
 		//if users are null, init from model (or, has never been updated yet)
-		if(!updated) {
+		//also, only initialize when all players have joined
+		if(!updated &&
+				ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4) {
 			updated = true;
 			initFromModel();
 		}
+		//else if there are 4 players, update
+		else if(ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4){
+			updatePlayers();
+		}
 		
-		updatePlayers();
+		
 	}
 
 }
