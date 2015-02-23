@@ -93,7 +93,7 @@ public class MapRoadBuildingState extends MapControllerState
 			try {
 				ClientManager.instance().getServerProxy().Road_Building(move);
 			} catch (ProxyException e) {
-				// TODO Auto-generated catch block
+				// TODO notify client that there was an error
 				e.printStackTrace();
 			}
 		}
@@ -113,7 +113,7 @@ public class MapRoadBuildingState extends MapControllerState
 	}
 	
 	@Override
-	public void robPlayer(RobPlayerInfo victim) 
+	public void robPlayer(RobPlayerInfo victim, HexLocation robberLoc) 
 	{
 		return;
 	}

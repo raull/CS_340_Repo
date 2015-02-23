@@ -22,7 +22,7 @@ public abstract class MapControllerState extends State{
 	
 	public abstract void run();
 	
-	public abstract void robPlayer(RobPlayerInfo victim);
+	public abstract void robPlayer(RobPlayerInfo victim, HexLocation robberLoc);
 	
 	public abstract void placeSettlement(VertexLocation vertLoc);
 	

@@ -15,6 +15,7 @@ import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildRoad;
 import shared.proxy.moves.BuildSettlement;
+import shared.proxy.moves.Soldier_;
 
 public class MapPlayingState extends MapControllerState
 {
@@ -70,9 +71,17 @@ public class MapPlayingState extends MapControllerState
 	}
 
 	@Override
-	public void robPlayer(RobPlayerInfo victim) 
+	public void robPlayer(RobPlayerInfo victim, HexLocation robberLoc) 
 	{
-		// TODO This is going to be called when playing a Soldier card	
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		Soldier_ move = new Soldier_(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
+		
+		try {
+			ClientManager.instance().getServerProxy().Soldier(move);
+		} catch (ProxyException e) {
+			// TODO notify the client there was an error
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -103,7 +112,7 @@ public class MapPlayingState extends MapControllerState
 		try {
 			ClientManager.instance().getServerProxy().buildRoad(buildroad);
 		} catch (ProxyException e) {
-			// TODO Auto-generated catch block
+			// TODO notify the user that there was an error
 			e.printStackTrace();
 		}
 	}

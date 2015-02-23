@@ -112,7 +112,7 @@ public class MapSetUpState extends MapControllerState{
 	}
 	
 	@Override
-	public void robPlayer(RobPlayerInfo victim) 
+	public void robPlayer(RobPlayerInfo victim, HexLocation robberLoc) 
 	{
 		return;
 	}

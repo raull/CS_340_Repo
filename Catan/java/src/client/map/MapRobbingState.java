@@ -5,6 +5,8 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.facade.ModelFacade;
+import shared.proxy.ProxyException;
+import shared.proxy.moves.RobPlayer;
 import client.base.IController;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
@@ -82,9 +84,16 @@ public class MapRobbingState extends MapControllerState{
 	}
 	
 	@Override
-	public void robPlayer(RobPlayerInfo victim) 
+	public void robPlayer(RobPlayerInfo victim, HexLocation robberLoc) 
 	{
-		// TODO call rob player on serverProxy	
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		RobPlayer robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
+		try {
+			ClientManager.instance().getServerProxy().robPlayer(robplayer);
+		} catch (ProxyException e) {
+			// TODO notify the client of the error and restart a robber drop
+			e.printStackTrace();
+		}
 	}
 
 }

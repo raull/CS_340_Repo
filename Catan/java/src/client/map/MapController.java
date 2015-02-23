@@ -30,6 +30,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	private IRobView robView;
 	private MapControllerState state;
+	private HexLocation robberLoc;
 	
 	public MapController(IMapView view, IRobView robView) {
 		
@@ -229,8 +230,11 @@ public class MapController extends Controller implements IMapController, Observe
 	//second this will be called after a 7 is rolled
 	public void placeRobber(HexLocation hexLoc) 
 	{
-		//This function should likely also include a call to the serverproxy	
 		getView().placeRobber(hexLoc);
+		
+		robberLoc = hexLoc;
+		
+		//TODO determine which players should be displayed in the robview
 		
 		getRobView().showModal();
 	}
@@ -247,11 +251,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void playSoldierCard() 
 	{	
-		//initiate placement of the robber using map overlay and retrieve the new location
-		//of the robber
-		//do we then call place robber??
-		//initiate the robview overlay to be able to get the index of the individual to be robbed
-		//
+		startMove(PieceType.ROBBER, true, true);
 	}
 	
 	public void playRoadBuildingCard() 
@@ -262,8 +262,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void robPlayer(RobPlayerInfo victim) 
 	{	
-		//states
-		state.robPlayer(victim);
+		state.robPlayer(victim, robberLoc);
 	}
 
 	@Override
