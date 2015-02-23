@@ -1,17 +1,20 @@
 package client.discard;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import com.google.gson.JsonElement;
 
 import shared.definitions.*;
+import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.DiscardCards;
 import shared.proxy.moves.ResourceList;
 import client.base.*;
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 import client.misc.*;
 
@@ -155,14 +158,30 @@ public class DiscardController extends Controller implements IDiscardController,
 		//check that the user being selected to discard hasn't discarded yet
 		//show modal when it's in discarding phase
 		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
-			//initialize the max amounts a player can discard
-			initMaxAmounts();
 			
-			//show modal
-			getDiscardView().showModal();
+			
+			int currPlayerId = cm.getCurrentPlayerInfo().getId();
+			List<PlayerInfo> players = cm.getCurrentGameInfo().getPlayers();
+			
+			TurnManager turnManager = cm.getModelFacade().turnManager();
+			
+			for(PlayerInfo player : players) {
+				int playerId = player.getId();
+				
+				User user = turnManager.getUser(playerId);
+				
+				//if a player has more than 7 cards and is not the current player, show modal
+				if(playerId != currPlayerId || user.getHand().getResourceCards().getAllResourceCards().size() < 7) {
+					//initialize the max amounts a player can discard
+					initMaxAmounts();
+					
+					//show modal
+					getDiscardView().showModal();
+				}
+				
+			}
 			
 		}
-		
 		
 	}
 
