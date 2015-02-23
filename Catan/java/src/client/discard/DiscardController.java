@@ -54,6 +54,8 @@ public class DiscardController extends Controller implements IDiscardController,
 		return waitView;
 	}
 
+	//update view after increase/decrease amount called?
+	
 	@Override
 	public void increaseAmount(ResourceType resource) {
 		switch(resource) {
@@ -159,39 +161,35 @@ public class DiscardController extends Controller implements IDiscardController,
 		// TODO Auto-generated method stub
 		ClientManager cm = ClientManager.instance();
 		
-		//check that the user being selected to discard hasn't discarded yet
-		//show modal when it's in discarding phase
+		
 		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
-			
+			//show modal when it's in discarding phase
+			//if player has more than 8 cards, must discard
+			//check that the user hasn't discarded yet
 			
 			int currPlayerId = cm.getCurrentPlayerInfo().getId();
-			List<PlayerInfo> players = cm.getCurrentGameInfo().getPlayers();
 			
 			TurnManager turnManager = cm.getModelFacade().turnManager();
 			
-			for(PlayerInfo player : players) {
-				int playerId = player.getId();
+			User user = turnManager.getUser(currPlayerId);
+			
+			int userCardCount = user.getHand().getResourceCards().getAllResourceCards().size(); 
+			
+			if(userCardCount > 7 && !user.getHasDiscarded()) {
+				//initialize the max amounts a player can discard
+				initMaxAmounts();
+				//get how much user has to discard and set in view
+				int needToDiscard = userCardCount/2;
+				getDiscardView().setStateMessage("0/" + needToDiscard);
+				//show modal
+				getDiscardView().showModal();
 				
-				User user = turnManager.getUser(playerId);
+				//once discard is called, set user has discarded to true
+				user.setHasDiscarded(true);
+				//close the discard modal
 				
-				//if a player has more than 7 cards, has not discarded this turn, and is not the current player, show modal
-				if(playerId != currPlayerId && user.getHand().getResourceCards().getAllResourceCards().size() < 7 && !user.getHasDiscarded()) {
-					//initialize the max amounts a player can discard
-					initMaxAmounts();
-					
-					//once discard is called, set user has discarded to true
-					user.setHasDiscarded(true);
-					
-					//reset when turn ends
-					
-					//show modal
-					getDiscardView().showModal();
-				}
-				//else if it's the current player, show the waiting modal
-				else if(playerId == currPlayerId) {
-					getWaitView().showModal();
-				}
-				
+				//show the wait view modal if it's still discard phase but user has already discarded
+				getWaitView().showModal();
 			}
 			
 		}
