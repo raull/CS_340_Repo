@@ -1,13 +1,11 @@
 package client.points;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import shared.model.game.User;
 
 import client.base.*;
-import client.data.PlayerInfo;
 import client.manager.ClientManager;
 
 
@@ -65,7 +63,6 @@ public class PointsController extends Controller implements IPointsController, O
 //		User user = cm.getModelFacade().turnManager().getUser(currPlayerIndex);
 		//get user by id
 		User user = cm.getModelFacade().turnManager().getUser(currPlayerID);
-		
 		//set the user's number of points
 		getPointsView().setPoints(user.getVictoryPoints());
 		
@@ -84,6 +81,7 @@ public class PointsController extends Controller implements IPointsController, O
 		ClientManager cm = ClientManager.instance();
 		//when there are 4 players that has joined, then update
 		if(cm.getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT) {
+			
 			//if there is a winner
 			boolean hasWinner = false;
 			if(cm.getModelFacade().getModel().getWinner() != -1) {
