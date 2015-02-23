@@ -13,7 +13,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import client.base.*;
-import client.manager.ClientManager;
 
 /**
  * "Buy dev card" view implementation
