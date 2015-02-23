@@ -40,7 +40,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		updatePlayers();
 		
 		if (isFull()) {
-			ClientManager.instance().startServerPoller();
 			getView().closeModal();
 		} 
 		else {
@@ -72,6 +71,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 	@Override
 	public void update(Observable o, Object arg) {
 		
+		boolean updated = false;
+		
 		ClientManager cm = ClientManager.instance();
 		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
 			PlayerInfo newPlayer = new PlayerInfo();
@@ -84,22 +85,22 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				if(pi.getName().equals(u.getName())){ //if that player is already known, we don't need to add them
 					newPlayer = null;
 					if(!pi.getColor().equals(u.getCatanColor())){
+						updated = true;
 						pi.setColor(u.getCatanColor()); //in case colors have changed
 					}
 					break;
 				}
 			}
 			if(newPlayer!=null){ //if the player wasn't found, add him/her to the game
+				updated = true;
 				cm.getCurrentGameInfo().addPlayer(newPlayer);
 			}
 		}
 		updatePlayers();
 		
 		if(isFull()) {
-			ClientManager.instance().startServerPoller();
 			getView().closeModal();
-		} else {
-			getView().closeModal();
+		} else if (updated){
 			getView().showModal();
 		}
 	}
