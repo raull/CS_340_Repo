@@ -157,6 +157,11 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void startJoinGame(GameInfo game) {
 		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
+		for(PlayerInfo pi : game.getPlayers()){
+			if(pi.getId()!=ClientManager.instance().getCurrentPlayerInfo().getId()){	
+				getSelectColorView().setColorEnabled(pi.getColor(), false);
+			}
+		}
 	}
 
 	@Override
