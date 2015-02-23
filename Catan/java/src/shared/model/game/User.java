@@ -76,6 +76,15 @@ public class User {
 	
 	private boolean hasPlayedDevCard = false;
 	
+	//if user has already discarded this turn
+	private boolean hasDiscarded = false;
+	
+	private int brickCards;
+	private int oreCards;
+	private int sheepCards;
+	private int wheatCards;
+	private int woodCards;
+	
 	private ArrayList<Port> ports = new ArrayList<Port>();
 	
 	int soldiers = 0;
@@ -328,6 +337,54 @@ public class User {
 	public void setName(String name)
 	{
 		this.name = new PlayerName(name);
+	}
+
+	public boolean isHasDiscarded() {
+		return hasDiscarded;
+	}
+
+	public void setHasDiscarded(boolean hasDiscarded) {
+		this.hasDiscarded = hasDiscarded;
+	}
+
+	public int getBrickCards() {
+		return brickCards;
+	}
+
+	public void setBrickCards(int brickCards) {
+		this.brickCards = brickCards;
+	}
+
+	public int getOreCards() {
+		return oreCards;
+	}
+
+	public void setOreCards(int oreCards) {
+		this.oreCards = oreCards;
+	}
+
+	public int getSheepCards() {
+		return sheepCards;
+	}
+
+	public void setSheepCards(int sheepCards) {
+		this.sheepCards = sheepCards;
+	}
+
+	public int getWheatCards() {
+		return wheatCards;
+	}
+
+	public void setWheatCards(int wheatCards) {
+		this.wheatCards = wheatCards;
+	}
+
+	public int getWoodCards() {
+		return woodCards;
+	}
+
+	public void setWoodCards(int woodCards) {
+		this.woodCards = woodCards;
 	}
 
 	/**

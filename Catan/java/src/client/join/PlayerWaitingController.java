@@ -91,7 +91,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		updatePlayers();
 		
 		if(isFull()) {
-			ClientManager.instance().startServerPoller();
+			//ClientManager.instance().startServerPoller();
 			getView().closeModal();
 		} else {
 			getView().closeModal();
