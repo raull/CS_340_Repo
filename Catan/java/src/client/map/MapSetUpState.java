@@ -4,6 +4,7 @@ import client.base.IController;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 import client.state.State;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
@@ -75,7 +76,11 @@ public class MapSetUpState extends MapControllerState{
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
 		} catch (ProxyException e) {
 			// TODO notify the user that there was an error and restart a settlement drop
-			e.printStackTrace();
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to place the settlement. Please try again later.");
+			errorMessage.showModal();
+			controller.startMove(PieceType.SETTLEMENT, true, false);
 		}
 		
 		//maybe also need to call finishTurn on ServerProxy??
@@ -92,7 +97,12 @@ public class MapSetUpState extends MapControllerState{
 			controller.startMove(PieceType.SETTLEMENT, true, false);
 		} catch (ProxyException e) {
 			// TODO probably want to notify the client that there was an error and then restart a road drop
-			e.printStackTrace();
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to place the road. Please try again later.");
+			errorMessage.showModal();
+			controller.startMove(PieceType.ROAD, true, true);
+			//e.printStackTrace();
 		}
 		
 		

@@ -11,6 +11,7 @@ import client.base.IController;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 import client.state.State;
 
 public class MapRobbingState extends MapControllerState{
@@ -92,7 +93,12 @@ public class MapRobbingState extends MapControllerState{
 			ClientManager.instance().getServerProxy().robPlayer(robplayer);
 		} catch (ProxyException e) {
 			// TODO notify the client of the error and restart a robber drop
-			e.printStackTrace();
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to rob the player. Please try again later.");
+			errorMessage.showModal();
+			controller.startMove(PieceType.ROBBER, true, true);
+			//e.printStackTrace();
 		}
 	}
 

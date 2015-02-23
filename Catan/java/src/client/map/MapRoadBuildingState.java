@@ -12,6 +12,7 @@ import shared.proxy.moves.Road_Building_;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 
 public class MapRoadBuildingState extends MapControllerState 
 {
@@ -93,8 +94,11 @@ public class MapRoadBuildingState extends MapControllerState
 			try {
 				ClientManager.instance().getServerProxy().Road_Building(move);
 			} catch (ProxyException e) {
-				// TODO notify client that there was an error
-				e.printStackTrace();
+				MessageView errorMessage = new MessageView();
+				errorMessage.setTitle("Error");
+				errorMessage.setMessage("Something wrong happened while trying to play Road Building. Please try again later.");
+				errorMessage.showModal();
+				//e.printStackTrace();
 			}
 		}
 	}

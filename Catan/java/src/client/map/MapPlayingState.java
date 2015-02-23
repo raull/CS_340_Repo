@@ -4,6 +4,7 @@ import client.base.IController;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 import client.state.State;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
@@ -79,8 +80,11 @@ public class MapPlayingState extends MapControllerState
 		try {
 			ClientManager.instance().getServerProxy().Soldier(move);
 		} catch (ProxyException e) {
-			// TODO notify the client there was an error
-			e.printStackTrace();
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to play the Soldier card. Please try again later.");
+			errorMessage.showModal();
+			//e.printStackTrace();
 		}
 	}
 
@@ -96,8 +100,11 @@ public class MapPlayingState extends MapControllerState
 		try {
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
 		} catch (ProxyException e) {
-			// TODO notify the user that there was an error
-			e.printStackTrace();
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to place the settlement. Please try again later.");
+			errorMessage.showModal();
+			//e.printStackTrace();
 		}	
 	}
 
@@ -112,7 +119,10 @@ public class MapPlayingState extends MapControllerState
 		try {
 			ClientManager.instance().getServerProxy().buildRoad(buildroad);
 		} catch (ProxyException e) {
-			// TODO notify the user that there was an error
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to place the road. Please try again later.");
+			errorMessage.showModal();
 			e.printStackTrace();
 		}
 	}
