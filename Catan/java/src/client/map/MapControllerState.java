@@ -3,6 +3,7 @@ package client.map;
 import client.base.IController;
 import client.data.RobPlayerInfo;
 import client.state.State;
+import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
@@ -26,6 +27,10 @@ public abstract class MapControllerState extends State{
 	public abstract void placeSettlement(VertexLocation vertLoc);
 	
 	public abstract void placeRoad(EdgeLocation edgeLoc);
+	
+	public abstract void startMove(PieceType type, boolean isFree, boolean allowDisconnected);
+	
+	public abstract void placeRobber(HexLocation hexLoc);
 	
 	@Override
 	public void setState(IController controller, State state) {

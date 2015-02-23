@@ -1,10 +1,12 @@
 package client.map;
 
+import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.facade.ModelFacade;
 import client.base.IController;
+import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
 import client.state.State;
@@ -46,15 +48,8 @@ public class MapRobbingState extends MapControllerState{
 	@Override
 	public void run() 
 	{
-		//TODO will automatically start the player moving the robber
-	}
-
-	@Override
-	public void robPlayer(RobPlayerInfo victim) 
-	{
-		// TODO not done yet
-		
-		
+		//will automatically start the player moving the robber
+		controller.startMove(PieceType.ROBBER, true, true);		
 	}
 
 	@Override
@@ -64,8 +59,29 @@ public class MapRobbingState extends MapControllerState{
 	}
 
 	@Override
-	public void placeRoad(EdgeLocation edgeLoc) {
-		// TODO Auto-generated method stub
+	public void placeRoad(EdgeLocation edgeLoc) 
+	{
+		return;
+	}
+
+	@Override
+	public void startMove(PieceType type, boolean isFree, boolean allowDisconnected) 
+	{
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		controller.getView().startDrop(type, client.getColor(), false);
+	}
+
+	@Override
+	public void placeRobber(HexLocation hexLoc) 
+	{
+		
+	}
+	
+	@Override
+	public void robPlayer(RobPlayerInfo victim) 
+	{
+		// TODO not done yet
+		
 		
 	}
 

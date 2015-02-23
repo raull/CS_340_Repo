@@ -146,6 +146,8 @@ public class MapController extends Controller implements IMapController, Observe
 		{
 			setState(new MapInactiveState(this));
 		}
+		
+		state.run();
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) //done
@@ -175,17 +177,13 @@ public class MapController extends Controller implements IMapController, Observe
 	//third it could be called after road building, in which case it is free but must be connected
 	public void placeRoad(EdgeLocation edgeLoc) 
 	{
-		//TODO may need to be moved to states
-		
-		//This function should likely also include a call to the serverproxy
-		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
-		getView().placeRoad(edgeLoc, client.getColor());
+		state.placeRoad(edgeLoc);
 	}
 
 	//This function is called when the user clicks on the map overlay to place a settlement.
 	//first this could happen if the settlement is bought
 	//second this could happen if the game is in the setup phase.
-	public void placeSettlement(VertexLocation vertLoc) //TODO playing and setUp, catching exception?
+	public void placeSettlement(VertexLocation vertLoc)
 	{
 		state.placeSettlement(vertLoc);
 	}
@@ -200,7 +198,7 @@ public class MapController extends Controller implements IMapController, Observe
 		try {
 			ClientManager.instance().getServerProxy().buildCity(buildCity);
 		} catch (ProxyException e) {
-			// TODO change this to actually display an error window.
+			// TODO notify the user that there was an error
 			e.printStackTrace();
 		}
 	}
@@ -218,14 +216,12 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void startMove(PieceType pieceType, boolean isFree, boolean allowDisconnected) //TODO need to understand this function more. When is it called? 
 	{	
-		//TODO need to move this to states. Identify when canceling should be allowed/disallowed
-		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
-		getView().startDrop(pieceType, client.getColor(), true);
+		state.startMove(pieceType, isFree, allowDisconnected);
 	}
 	
-	public void cancelMove() 
+	public void cancelMove() //TODO need to figure out what, if anything, this needs to do
 	{
-		
+		setState(new MapPlayingState(this));
 	}
 	
 	public void playSoldierCard() 
@@ -239,8 +235,8 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void playRoadBuildingCard() 
 	{	
-		//place road twice
-		//at some point the server proxy needs to be called
+		setState(new MapRoadBuildingState(this));
+		startMove(PieceType.ROAD, true, false);
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) 

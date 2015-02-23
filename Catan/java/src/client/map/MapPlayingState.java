@@ -13,6 +13,7 @@ import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
+import shared.proxy.moves.BuildRoad;
 import shared.proxy.moves.BuildSettlement;
 
 public class MapPlayingState extends MapControllerState
@@ -77,7 +78,6 @@ public class MapPlayingState extends MapControllerState
 	@Override
 	public void placeSettlement(VertexLocation vertLoc) 
 	{		
-		//TODO decide what to do on ProxyException
 		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
 		ModelFacade facade = ClientManager.instance().getModelFacade();
 		TurnManager turnManager = facade.turnManager();
@@ -87,14 +87,37 @@ public class MapPlayingState extends MapControllerState
 		try {
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
 		} catch (ProxyException e) {
-			// TODO Auto-generated catch block
+			// TODO notify the user that there was an error
 			e.printStackTrace();
 		}	
 	}
 
 	@Override
-	public void placeRoad(EdgeLocation edgeLoc) {
-		// TODO Auto-generated method stub
+	public void placeRoad(EdgeLocation edgeLoc) 
+	{
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		controller.getView().placeRoad(edgeLoc, client.getColor());	
+		int clientIndex = client.getPlayerIndex();
+		BuildRoad buildroad = new BuildRoad(clientIndex, edgeLoc, false);
+		
+		try {
+			ClientManager.instance().getServerProxy().buildRoad(buildroad);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void startMove(PieceType type, boolean isFree, boolean allowDisconnected) 
+	{
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		controller.getView().startDrop(type, client.getColor(), true);
+	}
+
+	@Override
+	public void placeRobber(HexLocation hexLoc) 
+	{
 		
 	}
 

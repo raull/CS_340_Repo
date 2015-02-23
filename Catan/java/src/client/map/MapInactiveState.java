@@ -3,6 +3,7 @@ package client.map;
 import client.base.IController;
 import client.data.RobPlayerInfo;
 import client.state.State;
+import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
@@ -59,9 +60,21 @@ public class MapInactiveState extends MapControllerState{
 	}
 
 	@Override
-	public void placeRoad(EdgeLocation edgeLoc) {
-		// TODO Auto-generated method stub
-		
+	public void placeRoad(EdgeLocation edgeLoc) 
+	{
+		return;
+	}
+
+	@Override
+	public void startMove(PieceType type, boolean isFree, boolean allowDisconnected) 
+	{
+		return;
+	}
+
+	@Override
+	public void placeRobber(HexLocation hexLoc) 
+	{
+		return;
 	}
 
 

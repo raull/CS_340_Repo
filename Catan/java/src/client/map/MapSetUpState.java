@@ -13,6 +13,7 @@ import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
+import shared.proxy.moves.BuildRoad;
 import shared.proxy.moves.BuildSettlement;
 
 public class MapSetUpState extends MapControllerState{
@@ -58,36 +59,62 @@ public class MapSetUpState extends MapControllerState{
 	}
 
 	@Override
-	public void run() 
+	public void run()
 	{
 		//This will automatically start the user placing a road
-		//and then automatically start the user placing a settlement
-	}
-
-	@Override
-	public void robPlayer(RobPlayerInfo victim) 
-	{
-		return;
+		controller.startMove(PieceType.ROAD, true, true);
 	}
 
 	@Override
 	public void placeSettlement(VertexLocation vertLoc) 
 	{
 		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
-		controller.getView().placeSettlement(vertLoc, client.getColor());
+		//controller.getView().placeSettlement(vertLoc, client.getColor());
 		BuildSettlement buildsettlement = new BuildSettlement(client.getPlayerIndex(), vertLoc, true);
 		try {
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
 		} catch (ProxyException e) {
-			// TODO Auto-generated catch block
+			// TODO notify the user that there was an error and restart a settlement drop
 			e.printStackTrace();
 		}
+		
+		//maybe also need to call finishTurn on ServerProxy??
 	}
 
 	@Override
-	public void placeRoad(EdgeLocation edgeLoc) {
-		// TODO Auto-generated method stub
+	public void placeRoad(EdgeLocation edgeLoc) 
+	{
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		BuildRoad buildroad = new BuildRoad(client.getPlayerIndex(), edgeLoc, true);
 		
+		try {
+			ClientManager.instance().getServerProxy().buildRoad(buildroad);
+			controller.startMove(PieceType.SETTLEMENT, true, false);
+		} catch (ProxyException e) {
+			// TODO probably want to notify the client that there was an error and then restart a road drop
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	@Override
+	public void startMove(PieceType type, boolean isFree, boolean allowDisconnected) 
+	{
+		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
+		controller.getView().startDrop(type, client.getColor(), false);
+	}
+
+	@Override
+	public void placeRobber(HexLocation hexLoc) 
+	{
+		return;
+	}
+	
+	@Override
+	public void robPlayer(RobPlayerInfo victim) 
+	{
+		return;
 	}
 
 }

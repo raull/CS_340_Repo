@@ -11,6 +11,7 @@ import shared.definitions.DevCardType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
