@@ -45,7 +45,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
 		User currUser = ClientManager.instance().getModelFacade().turnManager().getUser(currPlayerId);
 		
-		currUser.setHasPlayedDevCard(false);
+		//probably already reset in server?
+//		currUser.setHasPlayedDevCard(false);
 //		currUser.setHasDiscarded(false);
 		
 		if(ClientManager.instance().getModelFacade().canFinishTurn(ClientManager.instance().getModelFacade().turnManager(), currUser)) {
