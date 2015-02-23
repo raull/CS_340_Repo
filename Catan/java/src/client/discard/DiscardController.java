@@ -1,6 +1,5 @@
 package client.discard;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -14,7 +13,6 @@ import shared.proxy.ProxyException;
 import shared.proxy.moves.DiscardCards;
 import shared.proxy.moves.ResourceList;
 import client.base.*;
-import client.data.PlayerInfo;
 import client.manager.ClientManager;
 import client.misc.*;
 
