@@ -45,7 +45,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
 		User currUser = ClientManager.instance().getModelFacade().turnManager().getUser(currPlayerId);
 		
-		//probably already reset in server?
+		//probably already reset in server
 //		currUser.setHasPlayedDevCard(false);
 //		currUser.setHasDiscarded(false);
 		
@@ -59,7 +59,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 				JsonElement model = ClientManager.instance().getServerProxy().model(-1);
 				ClientManager.instance().getModelFacade().updateModel(model);
 			} catch (ProxyException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				MessageView alertView = new MessageView();
 				alertView.setTitle("Error");
@@ -70,7 +69,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			
 		}
 		else{
-			//currently can't discard
+			//can't finish turn
 		}
 		
 		
@@ -78,8 +77,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	}
 	
 	private void initFromModel() {
-		
-//		getView().setLocalPlayerColor(ClientManager.instance().getCurrentPlayerInfo().getColor());
 		
 		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
 		
@@ -110,7 +107,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			//booleans for if user has largest army or longest road
 			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
 			boolean hasLongestRoad = (longestRoadIndex == user.getTurnIndex());
-//			System.out.println( "current player index: " + user.getTurnIndex() + " player: " + " largestArmyIndex" + " has largest army? " + hasLargestArmy);
 			
 			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
 		}
