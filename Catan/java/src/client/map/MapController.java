@@ -60,7 +60,7 @@ public class MapController extends Controller implements IMapController, Observe
 	{
 		//TODO add test so the map is only initialized once the specific game is joined
 		//otherwise we are most likely going to get a whole bunch of null pointer exceptions
-		
+				
 		//access the model 
 		ModelFacade facade = ClientManager.instance().getModelFacade();
 		shared.model.board.Map map = facade.map();
@@ -83,6 +83,27 @@ public class MapController extends Controller implements IMapController, Observe
 				getView().placeRobber(location);
 			}
 		}
+		
+		//hardcode in the water tiles
+		getView().addHex(new HexLocation(3,0), HexType.WATER);
+		getView().addHex(new HexLocation(3,-1), HexType.WATER);
+		getView().addHex(new HexLocation(3,-2), HexType.WATER);
+		getView().addHex(new HexLocation(3,-3), HexType.WATER);
+		getView().addHex(new HexLocation(2,1), HexType.WATER);
+		getView().addHex(new HexLocation(2,-3), HexType.WATER);
+		getView().addHex(new HexLocation(1,-3), HexType.WATER);
+		getView().addHex(new HexLocation(0,-3), HexType.WATER);
+		getView().addHex(new HexLocation(1,2), HexType.WATER);
+		getView().addHex(new HexLocation(0,3), HexType.WATER);
+		getView().addHex(new HexLocation(-1,-2), HexType.WATER);
+		getView().addHex(new HexLocation(-1,3), HexType.WATER);
+		getView().addHex(new HexLocation(-2,-2), HexType.WATER);
+		getView().addHex(new HexLocation(-2,3), HexType.WATER);
+		getView().addHex(new HexLocation(-3,0), HexType.WATER);
+		getView().addHex(new HexLocation(-3,1), HexType.WATER);
+		getView().addHex(new HexLocation(-3,2), HexType.WATER);
+		getView().addHex(new HexLocation(-3,3), HexType.WATER);
+
 		
 		//getView().placeRoad for each road
 		ArrayList<Road> roads = map.getRoadsOnMap();

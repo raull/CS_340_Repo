@@ -21,19 +21,22 @@ public class MapRobbingState extends MapControllerState{
 	private MapController controller;
 
 	@Override
-	public boolean canPlaceRoad(EdgeLocation edgeLoc) {
+	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
+	{
 		//If the user isn't active, they can't interact with the map
 		return false;
 	}
 
 	@Override
-	public boolean canPlaceSettlement(VertexLocation vertLoc) {
+	public boolean canPlaceSettlement(VertexLocation vertLoc) 
+	{
 		//If the user isn't active, they can't interact with the map
 		return false;
 	}
 
 	@Override
-	public boolean canPlaceCity(VertexLocation vertLoc) {
+	public boolean canPlaceCity(VertexLocation vertLoc) 
+	{
 		//If the user isn't active, they can't interact with the map
 		return false;
 	}
@@ -74,15 +77,14 @@ public class MapRobbingState extends MapControllerState{
 	@Override
 	public void placeRobber(HexLocation hexLoc) 
 	{
-		
+		// placeRobber on view
+		//initialize robview
 	}
 	
 	@Override
 	public void robPlayer(RobPlayerInfo victim) 
 	{
-		// TODO not done yet
-		
-		
+		// TODO call rob player on serverProxy	
 	}
 
 }
