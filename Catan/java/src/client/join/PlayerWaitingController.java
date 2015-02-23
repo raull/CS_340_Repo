@@ -25,7 +25,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		ClientManager.instance().getModelFacade().addObserver(this);
 		getView().setAIChoices(new String[]{"Largest Army"});
 		updatePlayers();
-		getView().showModal();
+		//getView().showModal();
 	}
 
 	@Override
@@ -36,9 +36,17 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void start() {
+		forceUpdate();
 		updatePlayers();
-		getView().showModal();
-		attemptClose(); //immediately closes the modal if there's nothing to do
+		
+		if (isFull()) {
+			getView().closeModal();
+		} 
+		else {
+			getView().showModal();
+		}
+
+		
 	}
 
 	@Override
@@ -48,9 +56,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			AddAIRequest req = new AddAIRequest("LARGEST_ARMY"); //only type of AI supported by current server
 			//add AI from proxy
 			ClientManager.instance().getServerProxy().addAI(req);
-			
-			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
-			ClientManager.instance().getModelFacade().updateModel(model);
+			forceUpdate();
 			
 		} catch (ProxyException e) {
 			MessageView alertView = new MessageView();
@@ -64,6 +70,9 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void update(Observable o, Object arg) {
+		
+		boolean updated = false;
+		
 		ClientManager cm = ClientManager.instance();
 		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
 			PlayerInfo newPlayer = new PlayerInfo();
@@ -75,31 +84,52 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			for(PlayerInfo pi : cm.getCurrentGameInfo().getPlayers()){ //checks all players already known about
 				if(pi.getName().equals(u.getName())){ //if that player is already known, we don't need to add them
 					newPlayer = null;
+					if(!pi.getColor().equals(u.getCatanColor())){
+						updated = true;
+						pi.setColor(u.getCatanColor()); //in case colors have changed
+					}
 					break;
 				}
 			}
 			if(newPlayer!=null){ //if the player wasn't found, add him/her to the game
+				updated = true;
 				cm.getCurrentGameInfo().addPlayer(newPlayer);
 			}
 		}
 		updatePlayers();
-		getView().showModal();
-		attemptClose();
+		
+		if(isFull()) {
+			getView().closeModal();
+		} else if (updated){
+			getView().showModal();
+		}
 	}
 	
-	private void attemptClose(){
-		if(ClientManager.instance().getCurrentGameInfo().getPlayers().size()==4 
-				&& this.getView().isModalShowing()){ //modal only closes if there are four players
-			getView().closeModal();
-			
-			ClientManager.instance().startServerPoller();
+	private boolean isFull(){
+		if(ClientManager.instance().getCurrentGameInfo().getPlayers().size()==4){ //modal only closes if there are four players
+			return true;
 		}
+		return false;
 	}
 	
 	private void updatePlayers() {
 		ArrayList<PlayerInfo> players =  new ArrayList<PlayerInfo>(ClientManager.instance().getCurrentGameInfo().getPlayers());
 		PlayerInfo [] playerArray = players.toArray(new PlayerInfo[players.size()]);
 		getView().setPlayers(playerArray);
+	}
+	
+	private void forceUpdate(){
+		JsonElement model;
+		try {
+			model = ClientManager.instance().getServerProxy().model(-1);
+			ClientManager.instance().getModelFacade().updateModel(model);
+
+		} catch (ProxyException e) {
+			MessageView alertView = new MessageView();
+			alertView.setTitle("Error");
+			alertView.setMessage(e.getLocalizedMessage());
+			alertView.showModal();
+		}
 	}
 
 }

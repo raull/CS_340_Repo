@@ -26,6 +26,8 @@ public class ClientManager {
 	private GameInfo currentGameInfo = new GameInfo();
 	private Poller serverPoller = new Poller(serverProxy, modelFacade);
 	
+	private boolean serverPollerRunning = false;
+	
 	private ClientManager() {
 	}
 	
@@ -91,8 +93,17 @@ public class ClientManager {
 		return modelFacade.turnManager().currentTurnPhase();
 	}
 	
+	/**
+	 * Runs the server poller. If it was already running it does nothing
+	 */
 	public void startServerPoller() {
-		serverPoller.run();
+		if (!serverPollerRunning) {
+			serverPoller.run();
+		}
+	}
+	
+	public boolean isServerPollerRunning() {
+		return serverPollerRunning;
 	}
 	
 

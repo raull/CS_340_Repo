@@ -84,7 +84,6 @@ public class OverlayView extends PanelView implements IOverlayView
 		
 		if(overlayStack.size() > 0)
 		{
-			
 			// Hide the currently-visible overlay
 			overlayStack.peek().getOverlayPanel().setVisible(false);
 		}
