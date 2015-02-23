@@ -10,6 +10,7 @@ import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.DiscardCards;
+import shared.proxy.moves.ResourceList;
 import client.base.*;
 import client.manager.ClientManager;
 import client.misc.*;
@@ -21,6 +22,12 @@ import client.misc.*;
 public class DiscardController extends Controller implements IDiscardController, Observer {
 
 	private IWaitView waitView;
+	
+	private int brickToDiscard = 0;
+	private int oreToDiscard = 0;
+	private int sheepToDiscard = 0;
+	private int wheatToDiscard = 0;
+	private int woodToDiscard = 0;
 	
 	/**
 	 * DiscardController constructor
@@ -46,12 +53,48 @@ public class DiscardController extends Controller implements IDiscardController,
 
 	@Override
 	public void increaseAmount(ResourceType resource) {
-		
+		switch(resource) {
+			case BRICK:
+				brickToDiscard++;
+				break;
+			case ORE:
+				oreToDiscard++;
+				break;
+			case SHEEP:
+				sheepToDiscard++;
+				break;
+			case WHEAT:
+				wheatToDiscard++;
+				break;
+			case WOOD:
+				woodToDiscard++;
+				break;
+			default: 
+				break;
+		}
 	}
 
 	@Override
 	public void decreaseAmount(ResourceType resource) {
-		
+		switch(resource) {
+			case BRICK:
+				brickToDiscard--;
+				break;
+			case ORE:
+				oreToDiscard--;
+				break;
+			case SHEEP:
+				sheepToDiscard--;
+				break;
+			case WHEAT:
+				wheatToDiscard--;
+				break;
+			case WOOD:
+				woodToDiscard--;
+				break;
+			default: 
+				break;
+		}
 	}
 
 	@Override
@@ -60,11 +103,14 @@ public class DiscardController extends Controller implements IDiscardController,
 		try {
 			//called when all conditions are met and user is able and trying to discard the selected cards
 			//make a call to server proxy to discard cards
-			//TODO set the request properly
-			DiscardCards discardReq = new DiscardCards(-1, null);
+			int playerIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
+			
+			ResourceList toDiscard = new ResourceList(brickToDiscard, oreToDiscard, sheepToDiscard, wheatToDiscard, woodToDiscard);
+			DiscardCards discardReq = new DiscardCards(playerIndex, toDiscard);
 			
 			ClientManager.instance().getServerProxy().discardCards(discardReq);
 			
+			//force the model to update right away
 			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
 			ClientManager.instance().getModelFacade().updateModel(model);
 			
@@ -78,12 +124,10 @@ public class DiscardController extends Controller implements IDiscardController,
 			alertView.setMessage(e.getLocalizedMessage());
 			alertView.showModal();
 		}
-
-		//force the model to update right away
 		
 	}
 
-	private void updateMaxAmounts() {
+	private void initMaxAmounts() {
 		ClientManager cm = ClientManager.instance();
 		
 		//get the current user from client manager
@@ -107,10 +151,16 @@ public class DiscardController extends Controller implements IDiscardController,
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
 		ClientManager cm = ClientManager.instance();
+		
+		//check that the user being selected to discard hasn't discarded yet
+		//show modal when it's in discarding phase
 		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
-			//check that the user being selected to discard hasn't discarded yet
-			//show modal when it's in discarding phase
+			//initialize the max amounts a player can discard
+			initMaxAmounts();
+			
+			//show modal
 			getDiscardView().showModal();
+			
 		}
 		
 		
