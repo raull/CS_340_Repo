@@ -1,11 +1,9 @@
 package shared.model.facade;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Observable;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
@@ -13,14 +11,11 @@ import shared.definitions.DevCardType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
-import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
-import shared.model.board.Port;
-import shared.model.board.Vertex;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -32,7 +27,6 @@ import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
-import shared.proxy.Proxy;
 
 public class ModelFacade extends Observable{
 	
@@ -40,7 +34,6 @@ public class ModelFacade extends Observable{
 	//canDo functions
 	//get pieces from models
 	//will eventually have to talk to controllers
-	private Proxy proxy; //has a pointer to the server proxy to see if methods that user has called is valid
 	//need separate "do" functions, canDos return booleans
 	public Model model = new Model();
 	

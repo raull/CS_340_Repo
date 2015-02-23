@@ -3,6 +3,7 @@ package client.manager;
 
 import client.data.GameInfo;
 import client.data.PlayerInfo;
+import client.poller.Poller;
 import shared.definitions.CatanColor;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnPhase;
@@ -23,6 +24,9 @@ public class ClientManager {
 	private ModelFacade modelFacade = new ModelFacade();
 	private PlayerInfo currentPlayerInfo = new PlayerInfo();
 	private GameInfo currentGameInfo = new GameInfo();
+	private Poller serverPoller = new Poller(serverProxy, modelFacade);
+	
+	private boolean serverPollerRunning = false;
 	
 	private ClientManager() {
 	}
@@ -56,6 +60,7 @@ public class ClientManager {
 		return currentPlayerInfo;
 	}
 	
+	
 	public void setPlayerName(String name){
 		currentPlayerInfo.setName(name);
 	}
@@ -86,6 +91,19 @@ public class ClientManager {
 	
 	public TurnPhase getCurrentTurnPhase() {
 		return modelFacade.turnManager().currentTurnPhase();
+	}
+	
+	/**
+	 * Runs the server poller. If it was already running it does nothing
+	 */
+	public void startServerPoller() {
+		if (!serverPollerRunning) {
+			serverPoller.run();
+		}
+	}
+	
+	public boolean isServerPollerRunning() {
+		return serverPollerRunning;
 	}
 	
 
