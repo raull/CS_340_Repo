@@ -73,18 +73,18 @@ public class RollController extends Controller implements IRollController, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.ROLLING) {
+		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.ROLLING && 
+				!getRollView().isModalShowing() && !getResultView().isModalShowing()) {
 			getRollView().showModal();
 			rollTimer.schedule( new TimerTask() {
 				@Override
 				public void run() {
 					rollDice();
 				}
-			} , 5000, 5000);
+			} , 5000);
 			
-		} else {
-			getRollView().closeModal();
-		}
+		} 
+
 	}
 
 }
