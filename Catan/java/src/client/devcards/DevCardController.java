@@ -22,6 +22,8 @@ public class DevCardController extends Controller implements IDevCardController,
 	private IBuyDevCardView buyCardView;
 	private IAction soldierAction;
 	private IAction roadAction;
+	private boolean isBuy;
+	private boolean isPlay;
 	
 	/**
 	 * DevCardController constructor
@@ -39,6 +41,8 @@ public class DevCardController extends Controller implements IDevCardController,
 		this.buyCardView = buyCardView;
 		this.soldierAction = soldierAction;
 		this.roadAction = roadAction;
+		isBuy = false;
+		isPlay = false;
 		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 
@@ -54,12 +58,14 @@ public class DevCardController extends Controller implements IDevCardController,
 	public void startBuyCard() {
 		
 		getBuyCardView().showModal();
+		isBuy = true;
 	}
 
 	@Override
 	public void cancelBuyCard() {
 		
 		getBuyCardView().closeModal();
+		isBuy = false;
 	}
 
 	@Override
@@ -75,18 +81,21 @@ public class DevCardController extends Controller implements IDevCardController,
 			e.printStackTrace();
 		}
 		getBuyCardView().closeModal();
+		isBuy = false;
 	}
 
 	@Override
 	public void startPlayCard() {
 		
 		getPlayCardView().showModal();
+		isPlay = true;
 	}
 
 	@Override
 	public void cancelPlayCard() {
 
 		getPlayCardView().closeModal();
+		isPlay = false;
 	}
 
 	@Override
@@ -154,6 +163,12 @@ public class DevCardController extends Controller implements IDevCardController,
 		setCardAmount(DevCardType.ROAD_BUILD);
 		setCardAmount(DevCardType.SOLDIER);
 		setCardAmount(DevCardType.YEAR_OF_PLENTY);
+		if (isBuy){
+			getBuyCardView().showModal();
+		}
+		if (isPlay){
+			getPlayCardView().showModal();
+		}
 	}
 
 	//Checks to see whether player can play card or not, and sets the View accordingly
