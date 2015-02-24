@@ -202,7 +202,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void updateCurrentPlayerInfo(){
 		try {
 			Gson gson = new Gson();
-			JsonObject jo = proxy.model(-1).getAsJsonObject();
+			JsonObject jo = proxy.model(-1).getAsJsonObject(); //forces the server to give us a model
 			JsonArray users = jo.get("players").getAsJsonArray(); //grabs all players in the game model
 			for(int i=0; i<users.size(); ++i){
 				if(users.get(i)==null){
