@@ -25,7 +25,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		ClientManager.instance().getModelFacade().addObserver(this);
 		getView().setAIChoices(new String[]{"Largest Army"});
 		updatePlayers();
-		//getView().showModal();
 	}
 
 	@Override
