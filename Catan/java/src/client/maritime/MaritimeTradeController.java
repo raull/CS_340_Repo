@@ -77,7 +77,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		
+		//only show modal if it's playing phase and user clicked on maritime button
 	}
 
 }

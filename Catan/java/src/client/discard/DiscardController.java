@@ -139,6 +139,9 @@ public class DiscardController extends Controller implements IDiscardController,
 			JsonElement model = cm.getServerProxy().model(-1);
 			cm.getModelFacade().updateModel(model);
 			
+			//reset the cards so next time the cards won't be messed up
+			resetToDiscard();
+			
 			getDiscardView().closeModal();
 			
 		} catch (ProxyException e) {
@@ -225,6 +228,18 @@ public class DiscardController extends Controller implements IDiscardController,
 		else{
 			getDiscardView().setDiscardButtonEnabled(false);
 		}
+	}
+	
+	/**
+	 * resets the cards the users will discard after discarding
+	 */
+	private void resetToDiscard() {
+		brickToDiscard = 0;
+		oreToDiscard = 0;
+		sheepToDiscard = 0;
+		wheatToDiscard = 0;
+		woodToDiscard = 0;
+		needToDiscard = 0;
 	}
 	
 	@Override
