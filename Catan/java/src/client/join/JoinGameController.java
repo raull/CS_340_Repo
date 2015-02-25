@@ -46,7 +46,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		super(view);
 		
 		ClientManager.instance().getModelFacade().addObserver(this);
-
+		
 		setNewGameView(newGameView);
 		setSelectColorView(selectColorView);
 		setMessageView(messageView);

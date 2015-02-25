@@ -104,6 +104,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		}
 	}
 	
+
 	private boolean isFull(){
 		if(ClientManager.instance().getCurrentGameInfo().getPlayers().size()==4){ //modal only closes if there are four players
 			return true;
