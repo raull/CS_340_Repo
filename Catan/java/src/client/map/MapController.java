@@ -75,7 +75,9 @@ public class MapController extends Controller implements IMapController, Observe
 			int number = hex.getNumber();
 			
 			getView().addHex(location, type);
-			getView().addNumber(location, number);
+			if (number > 1) {
+				getView().addNumber(location, number);
+			}
 			
 			//also place the robber if necessary
 			if (hex.hasRobber())
