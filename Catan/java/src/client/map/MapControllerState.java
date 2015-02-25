@@ -1,7 +1,5 @@
 package client.map;
 
-import javax.media.j3d.ImageComponent2D.Updater;
-
 import client.base.IController;
 import client.data.RobPlayerInfo;
 import client.state.State;
@@ -9,7 +7,6 @@ import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.facade.ModelFacade;
 
 public abstract class MapControllerState extends State{
 
