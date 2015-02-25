@@ -158,7 +158,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
 		for(PlayerInfo pi : game.getPlayers()){
-			getSelectColorView().setColorEnabled(pi.getColor(), false);
+			if(pi.getId()!=ClientManager.instance().getCurrentPlayerInfo().getId()){	
+				getSelectColorView().setColorEnabled(pi.getColor(), false);
+			}
 		}
 	}
 
@@ -178,9 +180,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			proxy.join(tempRequest);
 			getSelectColorView().closeModal();
 			getJoinGameView().closeModal();
-			
-			ClientManager.instance().startServerPoller(); //start poller once players join
-			
+			ClientManager.instance().startServerPoller();
+			updateCurrentPlayerInfo();
 			joinAction.execute(); //brings up the waiting modal
 		} catch (ProxyException e) {
 			e.printStackTrace();
@@ -196,6 +197,36 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void updateCurrentPlayerInfo(){
+		try {
+			Gson gson = new Gson();
+			JsonObject jo = proxy.model(-1).getAsJsonObject(); //forces the server to give us a model
+			JsonArray users = jo.get("players").getAsJsonArray(); //grabs all players in the game model
+			for(int i=0; i<users.size(); ++i){
+				if(users.get(i)==null){
+					continue; //helps us ignore null players
+				}
+				else{
+					JsonObject user = users.get(i).getAsJsonObject();
+					String name = user.get("name").getAsString(); //we'll check if it's our player through the name
+					
+					if(name.equals(ClientManager.instance().getCurrentPlayerInfo().getName())){ //if it's our player
+						CatanColor color = gson.fromJson(user.get("color"), CatanColor.class); //get the color
+						int playerIndex = user.get("playerIndex").getAsInt(); //get the playerIndex
+						
+						ClientManager.instance().getCurrentPlayerInfo().setColor(color); //set both in ClientManager
+						ClientManager.instance().getCurrentPlayerInfo().setPlayerIndex(playerIndex);
+						break; //optimizes performance
+					}
+				}
+			}
+		} catch (ProxyException e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Failure updating currentPlayer. " + e.getMessage());
+			getMessageView().showModal();
+		}
 	}
 	
 	private GameInfo[] getGameInfo(JsonElement je){

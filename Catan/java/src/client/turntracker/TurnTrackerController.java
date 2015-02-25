@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.gson.JsonElement;
+
 import shared.model.game.User;
+import shared.proxy.ProxyException;
+import shared.proxy.moves.FinishMove;
 
 import client.base.*;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 
 
 /**
@@ -24,7 +29,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		super(view);
 		//set the local/client player's color
 		ClientManager.instance().getModelFacade().addObserver(this);
-		getView().setLocalPlayerColor(ClientManager.instance().getCurrentPlayerInfo().getColor());
 	}
 	
 	@Override
@@ -38,9 +42,46 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//ending turn would un-highlight current player?
 		//currently just update the players
 		updatePlayers();
+		//if user ends turn, update their booleans
+		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
+		User currUser = ClientManager.instance().getModelFacade().turnManager().getUser(currPlayerId);
+		
+		//probably already reset in server
+//		currUser.setHasPlayedDevCard(false);
+//		currUser.setHasDiscarded(false);
+		
+		if(ClientManager.instance().getModelFacade().canFinishTurn(ClientManager.instance().getModelFacade().turnManager(), currUser)) {
+			
+			try {
+				FinishMove finishMoveReq = new FinishMove(currUser.getTurnIndex());
+				ClientManager.instance().getServerProxy().finishTurn(finishMoveReq);
+				
+				//force an update from model immediately
+				JsonElement model = ClientManager.instance().getServerProxy().model(-1);
+				ClientManager.instance().getModelFacade().updateModel(model);
+			} catch (ProxyException e) {
+				e.printStackTrace();
+				MessageView alertView = new MessageView();
+				alertView.setTitle("Error");
+				alertView.setMessage(e.getLocalizedMessage());
+				alertView.showModal();
+			}
+			
+			
+		}
+		else{
+			//can't finish turn
+		}
+		
+		
+		
 	}
 	
 	private void initFromModel() {
+		
+		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
+		
+		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().getPlayers().get(currPlayerId).getColor());
 		
 		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
@@ -67,7 +108,6 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			//booleans for if user has largest army or longest road
 			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
 			boolean hasLongestRoad = (longestRoadIndex == user.getTurnIndex());
-//			System.out.println( "current player index: " + user.getTurnIndex() + " player: " + " largestArmyIndex" + " has largest army? " + hasLargestArmy);
 			
 			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
 		}
