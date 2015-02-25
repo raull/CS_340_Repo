@@ -39,8 +39,6 @@ public class MapController extends Controller implements IMapController, Observe
 		setRobView(robView);
 		
 		ClientManager.instance().getModelFacade().addObserver(this);
-		
-		initFromModel();
 	}
 	
 	public IMapView getView() 
@@ -59,6 +57,9 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	protected void initFromModel() 
 	{
+		if(ClientManager.instance().getCurrentGameInfo()==null){
+			return;
+		}
 		//TODO add test so the map is only initialized once the specific game is joined
 		//otherwise we are most likely going to get a whole bunch of null pointer exceptions
 				
@@ -68,7 +69,7 @@ public class MapController extends Controller implements IMapController, Observe
 		TurnManager turnManager = facade.turnManager();
 		
 		//getView().addHex for each hex in the model (hextype, number, location)
-		ArrayList<HexTile> hexes = (ArrayList<HexTile>) map.getHexTiles();
+		ArrayList<HexTile> hexes = new ArrayList<HexTile>(map.getHexTiles());
 		for (HexTile hex : hexes)
 		{
 			HexLocation location = hex.getLocation();
