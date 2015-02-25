@@ -88,7 +88,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		
 		int currentID = player.getId();
 		
-		User currentUser = facade.turnManager().getUserFromIndex(currentID);
+		User currentUser = facade.turnManager().getUserFromID(currentID);
 		ResourceCardDeck resourceHand = currentUser.getHand().getResourceCards();
 		DevCardDeck devHand = currentUser.getHand().getUsableDevCards();
 		
