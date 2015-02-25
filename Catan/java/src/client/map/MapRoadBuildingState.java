@@ -122,4 +122,10 @@ public class MapRoadBuildingState extends MapControllerState
 		return;
 	}
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

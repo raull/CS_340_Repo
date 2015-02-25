@@ -1,5 +1,7 @@
 package client.map;
 
+import javax.media.j3d.ImageComponent2D.Updater;
+
 import client.base.IController;
 import client.data.RobPlayerInfo;
 import client.state.State;
@@ -31,6 +33,8 @@ public abstract class MapControllerState extends State{
 	public abstract void startMove(PieceType type, boolean isFree, boolean allowDisconnected);
 	
 	public abstract void placeRobber(HexLocation hexLoc);
+	
+	public abstract void update();
 	
 	@Override
 	public void setState(IController controller, State state) {

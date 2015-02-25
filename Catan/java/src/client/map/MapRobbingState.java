@@ -102,4 +102,10 @@ public class MapRobbingState extends MapControllerState{
 		}
 	}
 
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -1,14 +1,12 @@
 package client.map;
 
-import client.base.IController;
 import client.data.RobPlayerInfo;
-import client.state.State;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
-public class MapInactiveState extends MapControllerState{
+public class MapInactiveState extends MapControllerState {
 
 	public MapInactiveState(MapController mapController) 
 	{
@@ -75,6 +73,12 @@ public class MapInactiveState extends MapControllerState{
 	public void placeRobber(HexLocation hexLoc) 
 	{
 		return;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -126,5 +126,10 @@ public class MapSetUpState extends MapControllerState{
 	{
 		return;
 	}
+	
+	@Override
+	public void update() {
+		
+	}
 
 }

@@ -14,9 +14,6 @@ import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildCity;
-import shared.proxy.moves.BuildRoad;
-import shared.proxy.moves.BuildSettlement;
-import shared.proxy.moves.Soldier_;
 import client.base.*;
 import client.data.*;
 import client.manager.ClientManager;
@@ -269,7 +266,11 @@ public class MapController extends Controller implements IMapController, Observe
 	@Override
 	public void update(Observable o, Object arg) //TODO verify that this is correct
 	{
-		initFromModel();
+		if (state == null) {
+			initFromModel();
+		} else {
+			state.update();
+		}
 	}
 
 	public void setState(State state) 
