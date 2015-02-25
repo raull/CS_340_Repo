@@ -67,6 +67,16 @@ public class TurnManager {
 		return null;
 	}
 	
+	public User getUserFromID(int id) {
+		for (User user : users) {
+			if (user.getPlayerID() == id) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Adds a user to the user array
 	 * @param newUser the user to be added

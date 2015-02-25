@@ -24,6 +24,7 @@ public class ScoreKeeper {
 	 */
 	public ScoreKeeper(ArrayList<User> users) {
 		this.score = new TreeMap<Integer, Integer>();
+		
 		//Set it to 0 for all users
 		for (User user : users) {
 			this.score.put(new Integer(user.getTurnIndex()), new Integer(0));
@@ -36,6 +37,12 @@ public class ScoreKeeper {
 	 */
 	public ScoreKeeper(int users) {
 		this.score = new TreeMap<Integer, Integer>();
+		
+		//initialize all indexes to -1
+		longestRoadUser = -1;
+		largestArmyUser = -1;
+		winner = -1;
+		
 		for (int i = 0; i < users; i++) {
 			this.score.put(new Integer(i), new Integer(0));	
 		}
