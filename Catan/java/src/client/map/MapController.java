@@ -17,6 +17,7 @@ import shared.proxy.moves.BuildCity;
 import client.base.*;
 import client.data.*;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 import client.state.State;
 
 
@@ -218,8 +219,10 @@ public class MapController extends Controller implements IMapController, Observe
 		try {
 			ClientManager.instance().getServerProxy().buildCity(buildCity);
 		} catch (ProxyException e) {
-			// TODO notify the user that there was an error
-			e.printStackTrace();
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to place the city. Please try again later.");
+			errorMessage.showModal();
 		}
 	}
 
