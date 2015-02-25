@@ -24,12 +24,14 @@ public class DiscardController extends Controller implements IDiscardController,
 
 	private IWaitView waitView;
 	
+	private ClientManager cm = ClientManager.instance();
+	
 	private int brickToDiscard = 0;
 	private int oreToDiscard = 0;
 	private int sheepToDiscard = 0;
 	private int wheatToDiscard = 0;
 	private int woodToDiscard = 0;
-	
+	private int needToDiscard = 0;
 	/**
 	 * DiscardController constructor
 	 * 
@@ -41,7 +43,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		super(view);
 		
 		this.waitView = waitView;
-		ClientManager.instance().getModelFacade().addObserver(this);
+		cm.getModelFacade().addObserver(this);
 	}
 
 	public IDiscardView getDiscardView() {
@@ -56,48 +58,68 @@ public class DiscardController extends Controller implements IDiscardController,
 	
 	@Override
 	public void increaseAmount(ResourceType resource) {
+		int amount = 0;
 		switch(resource) {
 			case BRICK:
 				brickToDiscard++;
+				amount = brickToDiscard;
 				break;
 			case ORE:
 				oreToDiscard++;
+				amount = oreToDiscard;
 				break;
 			case SHEEP:
 				sheepToDiscard++;
+				amount = sheepToDiscard;
 				break;
 			case WHEAT:
 				wheatToDiscard++;
+				amount = wheatToDiscard;
 				break;
 			case WOOD:
 				woodToDiscard++;
+				amount = woodToDiscard;
 				break;
 			default: 
 				break;
 		}
+		getDiscardView().setResourceDiscardAmount(resource, amount);
+		setResourceChangeEnabled(resource);
+		getDiscardView().setStateMessage(getTotalDiscardNum() + "/" + needToDiscard);
+		checkCanDiscard();
 	}
 
 	@Override
 	public void decreaseAmount(ResourceType resource) {
+		int amount = 0;
 		switch(resource) {
 			case BRICK:
 				brickToDiscard--;
+				amount = brickToDiscard;
 				break;
-			case ORE:
+			case ORE:	
 				oreToDiscard--;
+				amount = oreToDiscard;
 				break;
 			case SHEEP:
 				sheepToDiscard--;
+				amount = sheepToDiscard;
 				break;
 			case WHEAT:
 				wheatToDiscard--;
+				amount = wheatToDiscard;
 				break;
 			case WOOD:
 				woodToDiscard--;
+				amount = woodToDiscard;
 				break;
 			default: 
 				break;
 		}
+		getDiscardView().setResourceDiscardAmount(resource, amount);
+		setResourceChangeEnabled(resource);
+		getDiscardView().setStateMessage(getTotalDiscardNum() + "/" + needToDiscard);
+		checkCanDiscard();
 	}
 
 	@Override
@@ -106,16 +128,16 @@ public class DiscardController extends Controller implements IDiscardController,
 		try {
 			//called when all conditions are met and user is able and trying to discard the selected cards
 			//make a call to server proxy to discard cards
-			int playerIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
+			int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 			
 			ResourceList toDiscard = new ResourceList(brickToDiscard, oreToDiscard, sheepToDiscard, wheatToDiscard, woodToDiscard);
 			DiscardCards discardReq = new DiscardCards(playerIndex, toDiscard);
 			
-			ClientManager.instance().getServerProxy().discardCards(discardReq);
+			cm.getServerProxy().discardCards(discardReq);
 			
 			//force the model to update right away
-			JsonElement model = ClientManager.instance().getServerProxy().model(-1);
-			ClientManager.instance().getModelFacade().updateModel(model);
+			JsonElement model = cm.getServerProxy().model(-1);
+			cm.getModelFacade().updateModel(model);
 			
 			getDiscardView().closeModal();
 			
@@ -131,7 +153,6 @@ public class DiscardController extends Controller implements IDiscardController,
 	}
 
 	private void initMaxAmounts() {
-		ClientManager cm = ClientManager.instance();
 		
 		//get the current user from client manager
 		User user = cm.getModelFacade().turnManager().getUserFromIndex(cm.getCurrentPlayerInfo().getPlayerIndex());
@@ -150,15 +171,65 @@ public class DiscardController extends Controller implements IDiscardController,
 		getDiscardView().setResourceMaxAmount(ResourceType.WOOD, maxWood);
 	}
 	
+	private void initResourceChangeEnabled() {
+		setResourceChangeEnabled(ResourceType.BRICK);
+		setResourceChangeEnabled(ResourceType.ORE);
+		setResourceChangeEnabled(ResourceType.SHEEP);
+		setResourceChangeEnabled(ResourceType.WHEAT);
+		setResourceChangeEnabled(ResourceType.WOOD);
+	}
+	
+	private void setResourceChangeEnabled(ResourceType resource) {
+		User user = cm.getModelFacade().turnManager().getUser(cm.getCurrentPlayerInfo().getId());
+		boolean increase = false;
+		boolean decrease = false;
+		switch(resource) {
+			case BRICK:
+				increase = (user.getBrickCards() < brickToDiscard);
+				decrease = (brickToDiscard != 0);
+				break;
+			case ORE:
+				increase = (user.getOreCards() < oreToDiscard);
+				decrease = (oreToDiscard != 0);
+				break;
+			case SHEEP:
+				increase = (user.getSheepCards() < sheepToDiscard);
+				decrease = (sheepToDiscard != 0);
+				break;
+			case WHEAT:
+				increase = (user.getWheatCards() < wheatToDiscard);
+				decrease = (wheatToDiscard != 0);
+				break;
+			case WOOD:
+				increase = (user.getWoodCards() < woodToDiscard);
+				decrease = (woodToDiscard != 0);
+				break;
+			default: 
+				break;
+		}
+		getDiscardView().setResourceAmountChangeEnabled(resource, increase, decrease);
+	}
+	
 	private int getTotalDiscardNum() {
 		return (brickToDiscard + oreToDiscard + sheepToDiscard + wheatToDiscard + woodToDiscard);
+	}
+	
+	/**
+	 * checks that a user has set enough cards and can now discard
+	 * @return boolean
+	 */
+	private void checkCanDiscard() {
+		if(getTotalDiscardNum() == needToDiscard) {
+			getDiscardView().setDiscardButtonEnabled(true);
+		}
+		else{
+			getDiscardView().setDiscardButtonEnabled(false);
+		}
 	}
 	
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
-		ClientManager cm = ClientManager.instance();
-		
 		
 		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
 			//show modal when it's in discarding phase
@@ -177,8 +248,9 @@ public class DiscardController extends Controller implements IDiscardController,
 				//initialize the max amounts a player can discard
 				initMaxAmounts();
 				//get how much user has to discard and set in view
-				int needToDiscard = userCardCount/2;
+				needToDiscard = userCardCount/2;
 				getDiscardView().setStateMessage("0/" + needToDiscard);
+				initResourceChangeEnabled();
 				//show modal
 				getDiscardView().showModal();
 				
