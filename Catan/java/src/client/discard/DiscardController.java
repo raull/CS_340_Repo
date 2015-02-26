@@ -244,9 +244,6 @@ public class DiscardController extends Controller implements IDiscardController,
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		if (cm.getCurrentGameInfo().getPlayers().size() == 4)
-			cm.getModelFacade().turnManager().setCurrentPhase(TurnPhase.DISCARDING);
 		
 		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
 			//show modal when it's in discarding phase
