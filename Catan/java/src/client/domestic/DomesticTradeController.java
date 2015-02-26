@@ -123,7 +123,20 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
+		//Enables Domestic Trade Option if necessary
+		if (ClientManager.instance().getModelFacade().turnManager().getCurrentTurn() ==
+				ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex() &&
+				ClientManager.instance().getCurrentTurnPhase().name().equals("PLAYING")){
+			getTradeView().enableDomesticTrade(true);
+		}
+		else {
+			getTradeView().enableDomesticTrade(false);
+		}
+		// Shows the Accept Overlay if necessary
+		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
+				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
+			getAcceptOverlay().showModal();
+		}
 		
 	}
 
