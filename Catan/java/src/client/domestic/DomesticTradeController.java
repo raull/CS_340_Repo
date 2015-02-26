@@ -216,6 +216,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
+		if (ClientManager.instance().hasGameStarted()){
 		//Enables Domestic Trade Option if necessary
 		if (ClientManager.instance().getModelFacade().turnManager().getCurrentTurn() ==
 				ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex() &&
@@ -226,7 +227,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			getTradeView().enableDomesticTrade(false);
 		}
 		// Shows the Accept Overlay if necessary
-		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
+		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() != null
+				&& ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
 				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
 			getAcceptOverlay().showModal();
 		}
@@ -249,7 +251,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		getTradeOverlay().setPlayers(players);
 				
-		
+		}
 	}
 		
 	public boolean canAcceptIt(){
