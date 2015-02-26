@@ -35,8 +35,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 
 	@Override
 	public void start() {
-		forceUpdate();
-		updatePlayers();
+		
 		
 		if (isFull()) {
 			getView().closeModal();
@@ -44,7 +43,10 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		else {
 			getView().showModal();
 		}
-
+		
+		forceUpdate();
+		updatePlayers();
+		
 		
 	}
 
@@ -99,7 +101,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		
 		if(isFull() && getView().isModalShowing()) {
 			getView().closeModal();
-		} else if (updated){
+		} else if (updated && ClientManager.instance().getCurrentGameInfo().getPlayers().size() != 4){
 			getView().showModal();
 		}
 	}
