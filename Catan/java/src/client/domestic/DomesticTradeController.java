@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.gson.JsonElement;
+
 import shared.definitions.*;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
+import shared.proxy.ProxyException;
 import shared.proxy.moves.*;
 import client.base.*;
 import client.data.PlayerInfo;
@@ -165,6 +168,18 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		ResourceList offer = new ResourceList(BRICK.getNum(), ORE.getNum(), SHEEP.getNum(),
 				WHEAT.getNum(), WOOD.getNum());
 		
+		OfferTrade trade = new OfferTrade(ClientManager.instance().getCurrentPlayerInfo()
+				.getPlayerIndex(), offer, tradePlayer);
+		
+		JsonElement json;
+		try {
+			json = ClientManager.instance().getServerProxy().offerTrade(trade);
+			ClientManager.instance().getModelFacade().updateModel(json);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		getTradeOverlay().closeModal();
 		getWaitOverlay().showModal();
 		waiting = true;
@@ -251,7 +266,16 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void acceptTrade(boolean willAccept) {
-
+		AcceptTrade accept = new AcceptTrade(ClientManager.instance().getCurrentPlayerInfo()
+				.getPlayerIndex(), willAccept);
+		
+		try {
+			JsonElement json = ClientManager.instance().getServerProxy().acceptTrade(accept);
+			ClientManager.instance().getModelFacade().updateModel(json);
+		} catch (ProxyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		getAcceptOverlay().closeModal();
 		accepting = false;
 	}
