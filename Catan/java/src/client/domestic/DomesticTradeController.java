@@ -1,5 +1,6 @@
 package client.domestic;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -7,6 +8,7 @@ import shared.definitions.*;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
 import client.base.*;
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 import client.misc.*;
 
@@ -50,7 +52,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		SHEEP = new tradeResource();
 		ORE = new tradeResource();
 		WOOD = new tradeResource();
-	
 	}
 	
 
@@ -236,6 +237,18 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		// Sets the boolean for the Accept Overlay
 		getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 		
+		//Populates the players
+		List<PlayerInfo> playerList = ClientManager.instance().getCurrentGameInfo().getPlayers();
+		PlayerInfo[] players = new PlayerInfo[3];
+		int i = 0;
+		for (PlayerInfo pi : playerList){
+			if (pi.getId() != ClientManager.instance().getCurrentPlayerInfo().getId()){
+				players[i] = pi;
+				i++;
+			}
+		}
+		getTradeOverlay().setPlayers(players);
+				
 		
 	}
 		
