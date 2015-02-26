@@ -95,17 +95,36 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 
 	@Override
 	public void unsetGetValue() {
-
+		//reset the chosen get resource
+		inResource = null;
 	}
 
 	@Override
 	public void unsetGiveValue() {
-
+		//reset the chosen give resource
+		outResource = null;
 	}
 
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * initializes the resource types that the user can give
+	 * ratio is 4 by default, unless user has ports
+	 */
+	private void initGiveOptions() {
+		//call the following function from overlay
+		//showGiveOptions(ResourceType[] enabledResources)
+	}
+	
+	/**
+	 * initializes the resource types that the user can receive
+	 * based on what the bank has available
+	 */
+	private void initGetOptions() {
 		
 	}
 
