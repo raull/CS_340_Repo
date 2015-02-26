@@ -4,6 +4,8 @@ import java.util.Observable;
 import java.util.Observer;
 
 import shared.definitions.*;
+import shared.model.game.TurnManager;
+import shared.model.game.User;
 import client.base.*;
 import client.manager.ClientManager;
 import client.misc.*;
@@ -17,6 +19,14 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private IDomesticTradeOverlay tradeOverlay;
 	private IWaitView waitOverlay;
 	private IAcceptTradeOverlay acceptOverlay;
+	private tradeResource BRICK;
+	private tradeResource SHEEP;
+	private tradeResource ORE;
+	private tradeResource WOOD;
+	private tradeResource WHEAT;
+	//Index of player with whom the trade is
+	private int tradePlayer;
+	
 
 	/**
 	 * DomesticTradeController constructor
@@ -35,8 +45,16 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		setWaitOverlay(waitOverlay);
 		setAcceptOverlay(acceptOverlay);
 		ClientManager.instance().getModelFacade().addObserver(this);
+		BRICK = new tradeResource();
+		WHEAT = new tradeResource();
+		SHEEP = new tradeResource();
+		ORE = new tradeResource();
+		WOOD = new tradeResource();
+	
 	}
 	
+
+
 	public IDomesticTradeView getTradeView() {
 		
 		return (IDomesticTradeView)super.getView();
@@ -74,44 +92,118 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 	@Override
 	public void decreaseResourceAmount(ResourceType resource) {
-
+		switch (resource){
+		case WOOD:
+			WOOD.decrease();
+		case BRICK:
+			BRICK.decrease();
+		case SHEEP:
+			SHEEP.decrease();
+		case ORE:
+			ORE.decrease();
+		case WHEAT:
+			WHEAT.decrease();
+		}
 	}
 
 	@Override
 	public void increaseResourceAmount(ResourceType resource) {
-
+		switch (resource){
+		case WOOD:
+			WOOD.increase();
+		case BRICK:
+			BRICK.increase();
+		case SHEEP:
+			SHEEP.increase();
+		case ORE:
+			ORE.increase();
+		case WHEAT:
+			WHEAT.increase();
+		}
 	}
 
 	@Override
 	public void sendTradeOffer() {
 
+		
 		getTradeOverlay().closeModal();
-//		getWaitOverlay().showModal();
+		getWaitOverlay().showModal();
+	
 	}
 
 	@Override
 	public void setPlayerToTradeWith(int playerIndex) {
 
+		tradePlayer = playerIndex;
 	}
 
 	@Override
 	public void setResourceToReceive(ResourceType resource) {
-
+		switch (resource){
+		case WOOD:
+			WOOD.setNum(0);
+			WOOD.setSend(false);
+		case BRICK:
+			BRICK.setNum(0);
+			BRICK.setSend(false);
+		case SHEEP:
+			SHEEP.setNum(0);
+			SHEEP.setSend(false);
+		case ORE:
+			ORE.setNum(0);
+			ORE.setSend(false);
+		case WHEAT:
+			WHEAT.setNum(0);
+			WHEAT.setSend(false);
+		}
 	}
 
 	@Override
 	public void setResourceToSend(ResourceType resource) {
-
+		switch (resource){
+		case WOOD:
+			WOOD.setNum(0);
+			WOOD.setSend(true);
+		case BRICK:
+			BRICK.setNum(0);
+			BRICK.setSend(true);
+		case SHEEP:
+			SHEEP.setNum(0);
+			SHEEP.setSend(true);
+		case ORE:
+			ORE.setNum(0);
+			ORE.setSend(true);
+		case WHEAT:
+			WHEAT.setNum(0);
+			WHEAT.setSend(true);
+		}
 	}
 
 	@Override
 	public void unsetResource(ResourceType resource) {
-
+		switch (resource){
+		case WOOD:
+			WOOD.setNum(0);
+		case BRICK:
+			BRICK.setNum(0);
+		case SHEEP:
+			SHEEP.setNum(0);
+		case ORE:
+			ORE.setNum(0);
+		case WHEAT:
+			WHEAT.setNum(0);
+		}
 	}
 
 	@Override
 	public void cancelTrade() {
-
+		//Resets all values
+		BRICK = new tradeResource();
+		WHEAT = new tradeResource();
+		SHEEP = new tradeResource();
+		ORE = new tradeResource();
+		WOOD = new tradeResource();
+		
 		getTradeOverlay().closeModal();
 	}
 
@@ -137,8 +229,56 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
 			getAcceptOverlay().showModal();
 		}
+		// Removes Wait Overlay if Trade is accepted or rejected
+		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() == null){
+			getWaitOverlay().closeModal();
+		}
+		// Sets the boolean for the Accept Overlay
+		getAcceptOverlay().setAcceptEnabled(canAcceptIt());
+		
 		
 	}
+		
+	public boolean canAcceptIt(){
+		TurnManager turnMan = ClientManager.instance().getModelFacade().turnManager();
+		User curUser = turnMan.currentUser();
+		
+		return ClientManager.instance().getModelFacade().canAcceptTrade(turnMan, curUser, 
+				ClientManager.instance().getModelFacade().getModel().getTradeOffer());
+		}
 
-}
+	// Class used for tracking how much of a resource is sent or is received
+	private class tradeResource {
+		private int num;
+		private boolean isSend;
+		public int getNum() {
+			return num;
+		}
+		public void setNum(int num) {
+			this.num = num;
+		}
+		public boolean isSend() {
+			return isSend;
+		}
+		public void setSend(boolean isSend) {
+			this.isSend = isSend;
+		}
+		
+		public tradeResource(){
+			setNum(0);
+			setSend(false);
+		}
+		
+		
+		public void increase(){
+			num++;
+		}
+		
+		public void decrease(){
+			num--;
+		}
+	}
+	
+	}
+
 
