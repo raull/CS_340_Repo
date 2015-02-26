@@ -267,6 +267,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			pi.setColor(color);
 			pi.setName(name);
 			pi.setId(id);
+			pi.setPlayerIndex(i);
 			gi.addPlayer(pi);
 		}
 		
