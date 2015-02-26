@@ -97,7 +97,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		}
 		updatePlayers();
 		
-		if(isFull()) {
+		if(isFull() && getView().isModalShowing()) {
 			getView().closeModal();
 		} else if (updated){
 			getView().showModal();
