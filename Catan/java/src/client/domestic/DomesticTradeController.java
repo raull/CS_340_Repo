@@ -28,6 +28,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private tradeResource WHEAT;
 	//Index of player with whom the trade is
 	private int tradePlayer;
+	private boolean playersPopulated;
 	
 
 	/**
@@ -52,6 +53,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		SHEEP = new tradeResource();
 		ORE = new tradeResource();
 		WOOD = new tradeResource();
+		playersPopulated = false;
 	}
 	
 
@@ -88,6 +90,20 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	@Override
 	public void startTrade() {
 
+		//Populates the players
+		if (!playersPopulated){
+			List<PlayerInfo> playerList = ClientManager.instance().getCurrentGameInfo().getPlayers();
+			PlayerInfo[] players = new PlayerInfo[3];
+			int i = 0;
+			for (PlayerInfo pi : playerList){
+				if (pi.getId() != ClientManager.instance().getCurrentPlayerInfo().getId()){
+					players[i] = pi;
+					i++;
+				}
+			}
+				getTradeOverlay().setPlayers(players);
+				playersPopulated = true;
+		}
 		getTradeOverlay().showModal();
 	}
 
@@ -239,18 +255,6 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		// Sets the boolean for the Accept Overlay
 		getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 		
-		//Populates the players
-		List<PlayerInfo> playerList = ClientManager.instance().getCurrentGameInfo().getPlayers();
-		PlayerInfo[] players = new PlayerInfo[3];
-		int i = 0;
-		for (PlayerInfo pi : playerList){
-			if (pi.getId() != ClientManager.instance().getCurrentPlayerInfo().getId()){
-				players[i] = pi;
-				i++;
-			}
-		}
-		getTradeOverlay().setPlayers(players);
-				
 		}
 	}
 		
