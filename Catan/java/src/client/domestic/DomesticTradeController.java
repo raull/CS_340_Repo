@@ -38,6 +38,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private boolean accepting;
 	
 	
+	
 
 	/**
 	 * DomesticTradeController constructor
@@ -123,15 +124,26 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			WOOD.decrease();
+			if (WOOD.isSend && canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
 		case BRICK:
 			BRICK.decrease();
+			if (BRICK.isSend && canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
 		case SHEEP:
 			SHEEP.decrease();
+			if (SHEEP.isSend && canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
 		case ORE:
 			ORE.decrease();
+			if (ORE.isSend && canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
 		case WHEAT:
 			WHEAT.decrease();
+			if (WHEAT.isSend && canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
 		}
+		updateTradeButton();
 	}
 
 	@Override
@@ -158,7 +170,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			if (WHEAT.isSend && !canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
 		}
-		
+		updateTradeButton();
 		
 	}
 
@@ -189,6 +201,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	public void setPlayerToTradeWith(int playerIndex) {
 
 		tradePlayer = playerIndex;
+		updateTradeButton();
 	}
 
 	@Override
@@ -196,19 +209,19 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			WOOD.setNum(0);
-			WOOD.setSend(false);
+			WOOD.setRecieve(true);
 		case BRICK:
 			BRICK.setNum(0);
-			BRICK.setSend(false);
+			BRICK.setRecieve(true);
 		case SHEEP:
 			SHEEP.setNum(0);
-			SHEEP.setSend(false);
+			SHEEP.setRecieve(true);
 		case ORE:
 			ORE.setNum(0);
-			ORE.setSend(false);
+			ORE.setRecieve(true);
 		case WHEAT:
 			WHEAT.setNum(0);
-			WHEAT.setSend(false);
+			WHEAT.setRecieve(true);
 		}
 		
 	}
@@ -252,6 +265,57 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 	}
 
+	//Checks to see if the trade has at least one resource being sent
+	public boolean haveSend(){
+		boolean hasSend = false;
+		if (WOOD.isSend && WOOD.getNum() > 0)
+			hasSend = true;
+		if (BRICK.isSend && BRICK.getNum() > 0)
+			hasSend = true;
+		if (SHEEP.isSend && SHEEP.getNum() > 0)
+			hasSend = true;
+		if (WHEAT.isSend && WHEAT.getNum() > 0)
+			hasSend = true;
+		if (ORE.isSend && ORE.getNum() > 0)
+			hasSend = true;
+		
+		return hasSend;
+	}
+	
+	//Checks to see if the trade has at least one resource to be received
+	public boolean haveRecieve(){
+		boolean hasRecieve = false;
+		if (WOOD.isRecieve && WOOD.getNum() < 0)
+			hasRecieve = true;
+		if (BRICK.isRecieve && BRICK.getNum() < 0)
+			hasRecieve = true;
+		if (SHEEP.isRecieve && SHEEP.getNum() < 0)
+			hasRecieve = true;
+		if (WHEAT.isRecieve && WHEAT.getNum() < 0)
+			hasRecieve = true;
+		if (ORE.isRecieve && ORE.getNum() < 0)
+			hasRecieve = true;
+		return hasRecieve;
+	}
+	
+	//Updates the Trade Button
+	public void updateTradeButton(){
+		if (haveSend() && haveRecieve() && tradePlayer == -1){
+			getTradeOverlay().setStateMessage("Select with whom you will trade");
+			getTradeOverlay().setPlayerSelectionEnabled(true);
+			getTradeOverlay().setTradeEnabled(false);
+		}
+		else if (haveSend() && haveRecieve() && tradePlayer != -1){
+			getTradeOverlay().setStateMessage("Trade!");
+			getTradeOverlay().setPlayerSelectionEnabled(true);
+			getTradeOverlay().setTradeEnabled(true);
+		}
+		else {
+			getTradeOverlay().setStateMessage("Select the trade you want to make");
+			getTradeOverlay().setTradeEnabled(false);
+		}
+		
+	}
 	@Override
 	public void cancelTrade() {
 		//Resets all values
@@ -339,7 +403,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 		}
 	}
-		
+	// Checks to see if player can accept the trade	
 	public boolean canAcceptIt(){
 		TurnManager turnMan = ClientManager.instance().getModelFacade().turnManager();
 		User curUser = turnMan.currentUser();
@@ -352,11 +416,14 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private class tradeResource {
 		private int num;
 		private boolean isSend;
+		private boolean isRecieve;
 		public int getNum() {
+			int amount = 0;
 			if (isSend)
 				return num;
-			else
+			else if (isRecieve)
 				return -num;
+			return amount;
 		}
 		public void setNum(int num) {
 			this.num = num;
@@ -366,11 +433,24 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		public void setSend(boolean isSend) {
 			this.isSend = isSend;
+			if (isSend)
+				isRecieve = false;
+		}
+		
+		public boolean isRecieve(){
+			return isRecieve();
+		}
+		public void setRecieve(boolean recieve){
+			this.isRecieve = recieve;
+			if (isRecieve){
+				isSend = false;
+			}
 		}
 		
 		public tradeResource(){
 			setNum(0);
 			setSend(false);
+			setRecieve(false);
 		}
 		
 		
