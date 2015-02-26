@@ -271,7 +271,7 @@ public class MapController extends Controller implements IMapController, Observe
 	@Override
 	public void update(Observable o, Object arg) //TODO verify that this is correct
 	{
-		if (state == null && ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4) {
+		if (state == null && ClientManager.instance().hasGameStarted()) {
 			initFromModel();
 		} else if (state != null){
 			state.update();

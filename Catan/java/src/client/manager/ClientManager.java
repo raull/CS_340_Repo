@@ -25,6 +25,7 @@ public class ClientManager {
 	private PlayerInfo currentPlayerInfo = new PlayerInfo();
 	private GameInfo currentGameInfo = new GameInfo();
 	private Poller serverPoller = new Poller(serverProxy, modelFacade);
+	private boolean gameStarted = false;
 	
 	private boolean serverPollerRunning = false;
 	
@@ -106,5 +107,11 @@ public class ClientManager {
 		return serverPollerRunning;
 	}
 	
-
+	public void startGame() {
+		gameStarted = true;
+	}
+	
+	public boolean hasGameStarted() {
+		return gameStarted;
+	}
 }
