@@ -29,6 +29,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	//Index of player with whom the trade is
 	private int tradePlayer;
 	private boolean playersPopulated;
+	private boolean tradeEnabled;
+	private boolean waiting;
+	
 	
 
 	/**
@@ -54,6 +57,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		ORE = new tradeResource();
 		WOOD = new tradeResource();
 		playersPopulated = false;
+		tradeEnabled = false;
+		waiting = false;
 	}
 	
 
@@ -145,7 +150,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		
 		getTradeOverlay().closeModal();
 		getWaitOverlay().showModal();
-	
+		waiting = true;
 	}
 
 	@Override
@@ -237,24 +242,35 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		if (ClientManager.instance().getModelFacade().turnManager().getCurrentTurn() ==
 				ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex() &&
 				ClientManager.instance().getCurrentTurnPhase().name().equals("PLAYING")){
-			getTradeView().enableDomesticTrade(true);
+			if (!tradeEnabled){
+				getTradeView().enableDomesticTrade(true);
+				tradeEnabled = true;
+			}
 		}
 		else {
-			getTradeView().enableDomesticTrade(false);
+			if (tradeEnabled){
+				getTradeView().enableDomesticTrade(false);
+				tradeEnabled = false;
+			}
 		}
 		// Shows the Accept Overlay if necessary
 		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() != null
 				&& ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
 				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
-			getAcceptOverlay().showModal();
+			if (!waiting){
+				getAcceptOverlay().showModal();
+			}
 		}
 		// Removes Wait Overlay if Trade is accepted or rejected
 		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() == null){
-			getWaitOverlay().closeModal();
+			if (waiting){
+				getWaitOverlay().closeModal();
+				waiting = false;
+			}
 		}
 		// Sets the boolean for the Accept Overlay
-		getAcceptOverlay().setAcceptEnabled(canAcceptIt());
-		
+		if (waiting)
+			getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 		}
 	}
 		
