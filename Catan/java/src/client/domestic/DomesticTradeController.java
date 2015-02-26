@@ -7,6 +7,7 @@ import java.util.Observer;
 import shared.definitions.*;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
+import shared.proxy.moves.*;
 import client.base.*;
 import client.data.PlayerInfo;
 import client.manager.ClientManager;
@@ -31,6 +32,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private boolean playersPopulated;
 	private boolean tradeEnabled;
 	private boolean waiting;
+	private boolean accepting;
 	
 	
 
@@ -59,6 +61,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		playersPopulated = false;
 		tradeEnabled = false;
 		waiting = false;
+		accepting = false;
 	}
 	
 
@@ -133,20 +136,34 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			WOOD.increase();
+			if (WOOD.isSend && !canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);	
 		case BRICK:
 			BRICK.increase();
+			if (BRICK.isSend && !canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
 		case SHEEP:
 			SHEEP.increase();
+			if (SHEEP.isSend && !canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
 		case ORE:
 			ORE.increase();
+			if (ORE.isSend && !canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
 		case WHEAT:
 			WHEAT.increase();
+			if (WHEAT.isSend && !canIncrease(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
 		}
+		
+		
 	}
 
 	@Override
 	public void sendTradeOffer() {
-
+		
+		ResourceList offer = new ResourceList(BRICK.getNum(), ORE.getNum(), SHEEP.getNum(),
+				WHEAT.getNum(), WOOD.getNum());
 		
 		getTradeOverlay().closeModal();
 		getWaitOverlay().showModal();
@@ -178,6 +195,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			WHEAT.setNum(0);
 			WHEAT.setSend(false);
 		}
+		
 	}
 
 	@Override
@@ -199,6 +217,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			WHEAT.setNum(0);
 			WHEAT.setSend(true);
 		}
+		if (!canIncrease(resource))
+			getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
 	}
 
 	@Override
@@ -233,8 +253,29 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	public void acceptTrade(boolean willAccept) {
 
 		getAcceptOverlay().closeModal();
+		accepting = false;
 	}
 
+	//Checks to see if the user can send more of the resource
+	public boolean canIncrease(ResourceType resource){
+		int inHand;
+		boolean canInc = false;
+		inHand = ClientManager.instance().getModelFacade().turnManager().currentUser()
+				.getHand().getResourceCards().getCountByType(resource);
+		switch (resource){
+		case WOOD:
+			canInc =  WOOD.getNum() < inHand;
+		case BRICK:
+			canInc = BRICK.getNum() < inHand;
+		case ORE:
+			canInc = ORE.getNum() < inHand;
+		case SHEEP:
+			canInc = SHEEP.getNum() < inHand;
+		case WHEAT:
+			canInc = WHEAT.getNum() < inHand;
+		}
+		return canInc;
+	}
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (ClientManager.instance().hasGameStarted()){
@@ -257,8 +298,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() != null
 				&& ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
 				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
-			if (!waiting){
+			if (!accepting){
 				getAcceptOverlay().showModal();
+				accepting = true;
 			}
 		}
 		// Removes Wait Overlay if Trade is accepted or rejected
@@ -287,7 +329,10 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		private int num;
 		private boolean isSend;
 		public int getNum() {
-			return num;
+			if (isSend)
+				return num;
+			else
+				return -num;
 		}
 		public void setNum(int num) {
 			this.num = num;
