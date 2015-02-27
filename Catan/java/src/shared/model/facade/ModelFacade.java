@@ -377,8 +377,17 @@ public class ModelFacade extends Observable{
 					return false;
 				}
 			}
+			if (user.getUnusedSettlements() < 1)
+			{
+				return false;
+			}
 		}
 		else if(type == PieceType.CITY){
+			if (user.getUnusedCities() < 1)
+			{
+				return false;
+			}
+			
 			//user must own a settlement at this location already
 			if(!user.occupiesVertex(location)){
 				return false;
