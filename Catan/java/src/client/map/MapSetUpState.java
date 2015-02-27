@@ -76,6 +76,7 @@ public class MapSetUpState extends MapControllerState{
 		BuildSettlement buildsettlement = new BuildSettlement(client.getPlayerIndex(), vertLoc, true);
 		try {
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			// TODO notify the user that there was an error and restart a settlement drop
 			MessageView errorMessage = new MessageView();
@@ -88,6 +89,7 @@ public class MapSetUpState extends MapControllerState{
 		FinishMove finish = new FinishMove(client.getPlayerIndex());
 		try {
 			ClientManager.instance().getServerProxy().finishTurn(finish);
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
