@@ -258,7 +258,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			CatanColor color = gson.fromJson(player.get("color"), CatanColor.class);
 			String name = gson.fromJson(player.get("name"), String.class);
 			JsonElement idElement = player.get("id");
-			
 			if(idElement==null){
 				continue;
 			}
@@ -268,11 +267,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			pi.setColor(color);
 			pi.setName(name);
 			pi.setId(id);
-			if (ClientManager.instance().hasGameStarted()){
-				int playerIndex = gson.fromJson(player.get("playerIndex"), int.class);
-				pi.setPlayerIndex(playerIndex);
-			}
-			
 			gi.addPlayer(pi);
 		}
 		
