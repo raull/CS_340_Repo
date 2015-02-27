@@ -1,10 +1,14 @@
 package client.maritime;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import shared.definitions.*;
 import shared.model.board.Port;
+import shared.model.cards.Bank;
+import shared.model.cards.ResourceCard;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
@@ -30,6 +34,10 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	private int sheepRatio = 4;
 	private int wheatRatio = 4;
 	private int woodRatio = 4;
+	
+	private List<ResourceType> givingResourceTypes = new ArrayList<ResourceType>();
+	private List<ResourceType> gettingResourceTypes = new ArrayList<ResourceType>();
+	
 	
 	public MaritimeTradeController(IMaritimeTradeView tradeView, IMaritimeTradeOverlay tradeOverlay) {
 		
@@ -57,6 +65,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		
 		//show the overlay
 		getTradeOverlay().showModal();
+		initGiveOptions();
+		initGetOptions();
 	}
 
 	@Override
@@ -119,6 +129,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 
 		// enable maritime trade during playing phase
 		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING) {
+			//update what ratios players can trade at based on ports
+			udpateResourceRatio();
 			getTradeView().enableMaritimeTrade(true);
 		}
 		else{
@@ -193,6 +205,21 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 		User currUser = cm.getModelFacade().turnManager().getUser(playerIndex);
 		
+		if(currUser.getBrickCards() >= brickRatio) {
+			givingResourceTypes.add(ResourceType.BRICK);
+		}
+		if(currUser.getOreCards() >= oreRatio) {
+			givingResourceTypes.add(ResourceType.ORE);
+		}
+		if(currUser.getSheepCards() >= sheepRatio) {
+			givingResourceTypes.add(ResourceType.SHEEP);
+		}
+		if(currUser.getWheatCards() >= wheatRatio) {
+			givingResourceTypes.add(ResourceType.WHEAT);
+		}
+		if(currUser.getWoodCards() >= woodRatio) {
+			givingResourceTypes.add(ResourceType.WOOD);
+		}
 		
 	}
 	
@@ -200,7 +227,25 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 * check that the bank has enough resources (almost never reach?)
 	 */
 	private void checkBankCards() {
+		Bank bank = cm.getModelFacade().bank();
 		
+		//check that the card type exists in bank and enable
+		if(bank.canDrawResourceCard(new ResourceCard(ResourceType.BRICK))) {
+			gettingResourceTypes.add(ResourceType.BRICK);
+		}
+		if(bank.canDrawResourceCard(new ResourceCard(ResourceType.ORE))) {
+			gettingResourceTypes.add(ResourceType.ORE);
+		}
+		if(bank.canDrawResourceCard(new ResourceCard(ResourceType.SHEEP))) {
+			gettingResourceTypes.add(ResourceType.SHEEP);
+		}
+		if(bank.canDrawResourceCard(new ResourceCard(ResourceType.WHEAT))) {
+			gettingResourceTypes.add(ResourceType.WHEAT);
+		}
+		if(bank.canDrawResourceCard(new ResourceCard(ResourceType.WOOD))) {
+			gettingResourceTypes.add(ResourceType.WOOD);
+		}
+
 	}
 	
 	/**
@@ -208,8 +253,12 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 * ratio is 4 by default, unless user has ports
 	 */
 	private void initGiveOptions() {
-		//call the following function from overlay
-		//showGiveOptions(ResourceType[] enabledResources)
+		//check what resources user has
+		checkUserCards();
+		//show ones users have
+		ResourceType[] enabledResources = new ResourceType[givingResourceTypes.size()];
+		givingResourceTypes.toArray(enabledResources);
+		getTradeOverlay().showGiveOptions(enabledResources);
 	}
 	
 	/**
@@ -217,8 +266,12 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 * based on what the bank has available
 	 */
 	private void initGetOptions() {
-
-		//only show modal if it's playing phase and user clicked on maritime button
+		//check what resources bank has
+		checkBankCards();
+		//show the enabled ones
+		ResourceType[] enabledResources = new ResourceType[gettingResourceTypes.size()];
+		gettingResourceTypes.toArray(enabledResources);
+		getTradeOverlay().showGetOptions(enabledResources);
 
 	}
 
