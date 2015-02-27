@@ -78,9 +78,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void initFromModel() {
 		
-		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
+		int currPlayerIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		
-		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().getPlayers().get(currPlayerId).getColor());
+		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().
+				getPlayers().get(currPlayerIndex).getColor());
 		
 		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
@@ -120,8 +121,8 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//also, only initialize when all players have joined
 		if(!updated &&
 				ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4) {
-			updated = true;
 			initFromModel();
+			updated = true;
 		}
 		//else if there are 4 players, update
 		else if(ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4){
