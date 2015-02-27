@@ -116,6 +116,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 
 	@Override
 	public void update(Observable o, Object arg) {
+
 		// enable maritime trade during playing phase
 		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING) {
 			getTradeView().enableMaritimeTrade(true);
@@ -216,7 +217,9 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 * based on what the bank has available
 	 */
 	private void initGetOptions() {
-		
+
+		//only show modal if it's playing phase and user clicked on maritime button
+
 	}
 
 }

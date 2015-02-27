@@ -22,6 +22,7 @@ import client.misc.MessageView;
 public class TurnTrackerController extends Controller implements ITurnTrackerController, Observer {
 	
 	private boolean updated = false;
+	private int PLAYER_COUNT = 4;
 
 	public TurnTrackerController(ITurnTrackerView view) {
 		
@@ -119,13 +120,13 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//update the turntracker view for all players
 		//if users are null, init from model (or, has never been updated yet)
 		//also, only initialize when all players have joined
-		if(!updated &&
-				ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4) {
+		if(!updated && ClientManager.instance().getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT) {
+			updated = true;
 			initFromModel();
 			updated = true;
 		}
 		//else if there are 4 players, update
-		else if(ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4){
+		else if(ClientManager.instance().getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT){
 			updatePlayers();
 		}
 		
