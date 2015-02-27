@@ -316,7 +316,28 @@ public class ModelFacade extends Observable{
 		}
 		
 		//if trying to build something on water, return false
+		VertexLocation normalizedLocation = location.getNormalizedLocation(); //restricts to NW and NE
+		HexTile hex1 = map.getHexTileByLocation(normalizedLocation.getHexLoc()); 
+		HexTile hex2 = map.getHexTileByLocation(normalizedLocation.getHexLoc().getNeighborLoc(EdgeDirection.North));
+		HexTile hex3;
+		switch(normalizedLocation.getDir()){
+			case NorthEast:
+				hex3 = map.getHexTileByLocation(normalizedLocation.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast));
+				break;
+			case NorthWest:
+				hex3 = map.getHexTileByLocation(normalizedLocation.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest));
+				break;
+			default:
+				assert false;
+				return false;
+			
+		}
+		//hex1 is the hex below our vertex, hex2 is the hex above, hex3 
+		if(hex1 == null && hex2 ==null && hex3 ==null){ //if both are water(null), return false
+			return false;
+		}
 		
+		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
 			for(User u : turnManager.getUsers()){
