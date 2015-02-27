@@ -332,8 +332,9 @@ public class ModelFacade extends Observable{
 				return false;
 			
 		}
-		//hex1 is the hex below our vertex, hex2 is the hex above, hex3 
-		if(hex1 == null && hex2 ==null && hex3 ==null){ //if both are water(null), return false
+		
+		if(hex1 == null && hex2 ==null && hex3 ==null){ //if all 3 are water(null), return false
+			/*hex1 is the hex below our vertex, hex2 is the hex above, hex3*/
 			return false;
 		}
 		

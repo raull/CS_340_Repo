@@ -20,7 +20,6 @@ import client.data.*;
 import client.manager.ClientManager;
 import client.misc.MessageView;
 import client.state.State;
-import shared.model.board.*;
 
 
 /**
@@ -132,29 +131,7 @@ public class MapController extends Controller implements IMapController, Observe
 			getView().addPort(loc, type);
 		}
 		
-		//set the state
-		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
-		if (turnManager.getCurrentTurn() != clientIndex)
-		{
-			setState(new MapInactiveState(this));
-		}
-		else if (turnManager.currentTurnPhase() == TurnPhase.ROBBING)
-		{
-			setState(new MapRobbingState(this));
-		}
-		else if (turnManager.currentTurnPhase() == TurnPhase.PLAYING)
-		{
-			setState(new MapPlayingState(this));
-		}
-		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND
-				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
-		{
-			setState(new MapSetUpState(this));
-		}
-		else
-		{
-			setState(new MapInactiveState(this));
-		}
+		determineState(turnManager);
 		
 		state.run();
 	}
@@ -261,6 +238,8 @@ public class MapController extends Controller implements IMapController, Observe
 		if (state == null && ClientManager.instance().hasGameStarted()) {
 			initFromModel();
 		} else if (state != null){
+			TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+			determineState(turnManager);
 			state.update();
 		}
 	}
@@ -296,6 +275,32 @@ public class MapController extends Controller implements IMapController, Observe
 			User owner = turnManager.getUserFromIndex(settle.getOwner());
 			CatanColor color = owner.getCatanColor();
 			getView().placeSettlement(loc, color);
+		}
+	}
+	
+	public void determineState(TurnManager turnManager) {
+		//set the state
+		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
+		if (turnManager.getCurrentTurn() != clientIndex)
+		{
+			setState(new MapInactiveState(this));
+		}
+		else if (turnManager.currentTurnPhase() == TurnPhase.ROBBING)
+		{
+			setState(new MapRobbingState(this));
+		}
+		else if (turnManager.currentTurnPhase() == TurnPhase.PLAYING)
+		{
+			setState(new MapPlayingState(this));
+		}
+		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND
+				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		{
+			setState(new MapSetUpState(this));
+		}
+		else
+		{
+			setState(new MapInactiveState(this));
 		}
 	}
 	
