@@ -78,9 +78,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void initFromModel() {
 		
-		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
+		int currPlayerIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		
-		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().getPlayers().get(currPlayerId).getColor());
+		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().
+				getPlayers().get(currPlayerIndex).getColor());
 		
 		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		

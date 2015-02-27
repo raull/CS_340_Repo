@@ -3,6 +3,8 @@ package shared.model.facade;
 import java.util.ArrayList;
 import java.util.Observable;
 
+import client.manager.ClientManager;
+
 import com.google.gson.JsonElement;
 
 import shared.definitions.PieceType;
@@ -72,16 +74,22 @@ public class ModelFacade extends Observable{
 		map = model.getMap();
 		bank = model.getBank();
 		score = model.getScoreKeeper();
-		//int newModelVersion = model.getVersion();
+		int newModelVersion = model.getVersion();
 		
 		//System.out.println("new model version num: " + newModelVersion);
 		
 		//check that version number has changed, or not
-//		if(modelVersion != newModelVersion) {
-			//update stuff from model
+		if (ClientManager.instance().hasGameStarted()){
+			if(modelVersion != newModelVersion) {
+				//update stuff from model
+				this.setChanged();
+				this.notifyObservers();
+			}
+		}
+		else{
 			this.setChanged();
 			this.notifyObservers();
-//		}
+		}
 		
 	}
 	/**
