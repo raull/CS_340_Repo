@@ -4,6 +4,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import shared.definitions.*;
+import shared.model.board.Port;
+import shared.model.game.TurnPhase;
+import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.MaritimeTrade;
 import client.base.*;
@@ -21,6 +24,12 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	private ResourceType inResource;
 	
 	private ClientManager cm = ClientManager.instance();
+	
+	private int brickRatio = 4;
+	private int oreRatio = 4;
+	private int sheepRatio = 4;
+	private int wheatRatio = 4;
+	private int woodRatio = 4;
 	
 	public MaritimeTradeController(IMaritimeTradeView tradeView, IMaritimeTradeOverlay tradeOverlay) {
 		
@@ -107,7 +116,85 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
+		// enable maritime trade during playing phase
+		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING) {
+			getTradeView().enableMaritimeTrade(true);
+		}
+		else{
+			getTradeView().enableMaritimeTrade(false);
+		}
+		
+	}
+	
+	/**
+	 * helper function to help update the ratios if user has a THREE port
+	 */
+	private void updateResourceRatioTHREE() {
+		//if default ratio of 4, change to 3
+		//if ratio is less than 3, ignore
+		if(brickRatio == 4) {
+			brickRatio = 3;
+		}
+		if(oreRatio == 4) {
+			oreRatio = 3;
+		}
+		if(sheepRatio == 4) {
+			sheepRatio = 3;
+		}
+		if(wheatRatio == 4) {
+			wheatRatio = 3;
+		}
+		if(woodRatio == 4) {
+			woodRatio = 3;
+		}
+		
+	}
+	
+	/**
+	 * checks what ports user has, and change ratio of resources accordingly
+	 * @param resource
+	 */
+	private void udpateResourceRatio() {
+		//go through user ports and call getPortResourceType on each port
+		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
+		User currUser = cm.getModelFacade().turnManager().getUser(playerIndex);
+		
+		for(Port port : currUser.ports()) {
+			switch(port.getType()) {
+				case BRICK:
+					brickRatio = 2;
+					break;
+				case ORE:
+					oreRatio = 2;
+					break;
+				case SHEEP:
+					sheepRatio = 2;
+					break;
+				case WHEAT:
+					wheatRatio = 2;
+					break;
+				case WOOD:
+					woodRatio = 2;
+					break;
+				case THREE:
+					updateResourceRatioTHREE();
+					break;
+			}
+		}
+	}
+	
+	/**
+	 * checks what cards user has
+	 */
+	private void checkUserCards(){
+		//go through cards user has
+		// if user has cards greater than ratio, allow user to give that resource
+	}
+	
+	/**
+	 * check that the bank has enough resources (almost never reach?)
+	 */
+	private void checkBankCards() {
 		
 	}
 	
