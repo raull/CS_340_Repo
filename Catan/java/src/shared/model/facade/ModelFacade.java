@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
 import shared.definitions.DevCardType;
+import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -196,7 +197,13 @@ public class ModelFacade extends Observable{
 		}
 		
 		//if trying to build road on water, return false
-		
+		HexLocation hexLocation1 = location.getHexLoc();
+		HexLocation hexLocation2 = hexLocation1.getNeighborLoc(location.getDir());
+		HexTile neighbor1 = map.getHexTileByLocation(hexLocation1);
+		HexTile neighbor2 = map.getHexTileByLocation(hexLocation2);
+		if(neighbor1==null && neighbor2 ==null){ //if both sides of the edge aren't valid Hexes
+			return false;
+		}
 		
 		//if edge is occupied, return false;
 		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
