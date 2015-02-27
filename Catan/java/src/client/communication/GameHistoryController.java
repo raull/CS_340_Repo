@@ -3,7 +3,12 @@ package client.communication;
 import java.util.*;
 
 import client.base.*;
+import client.manager.ClientManager;
 import shared.definitions.*;
+import shared.model.Model;
+import shared.model.game.MessageLine;
+import shared.model.game.MessageList;
+import shared.model.game.User;
 
 
 /**
@@ -12,42 +17,43 @@ import shared.definitions.*;
 public class GameHistoryController extends Controller implements IGameHistoryController, Observer {
 
 	public GameHistoryController(IGameHistoryView view) {
-		
+
 		super(view);
-		
+		ClientManager.instance().getModelFacade().addObserver(this);
 		initFromModel();
-	}
-	
-	@Override
-	public IGameHistoryView getView() {
-		
-		return (IGameHistoryView)super.getView();
-	}
-	
-	private void initFromModel() {
-		
-		//<temp>
-		
-		List<LogEntry> entries = new ArrayList<LogEntry>();
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		entries.add(new LogEntry(CatanColor.BROWN, "This is a brown message"));
-		entries.add(new LogEntry(CatanColor.ORANGE, "This is an orange message ss x y z w.  This is an orange message.  This is an orange message.  This is an orange message."));
-		
-		getView().setEntries(entries);
-	
-		//</temp>
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-		
+	public IGameHistoryView getView() {
+
+		return (IGameHistoryView)super.getView();
 	}
-	
+
+	private void initFromModel() 
+	{
+		//update();
+	}
+
+	@Override
+	public void update(Observable o, Object arg) 
+	{
+		//retrieve LogEntries from model		
+		Model model = ClientManager.instance().getModelFacade().model;
+		MessageList logList = model.getLog();
+		ArrayList<MessageLine> logs = logList.lines;
+
+		List<LogEntry> entries = new ArrayList<LogEntry>();
+		for (MessageLine line : logs)
+		{
+			String playerName = line.getSource();
+			//get player's color
+			User user = model.turnManager.getUserFromName(playerName);
+
+			entries.add(new LogEntry(user.getCatanColor(), line.getMessage()));
+		}
+
+		getView().setEntries(entries);
+	}
+
 }
 
