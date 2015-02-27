@@ -99,7 +99,7 @@ public class MapController extends Controller implements IMapController, Observe
 		getView().addHex(new HexLocation(0,3), HexType.WATER);
 		getView().addHex(new HexLocation(-1,-2), HexType.WATER);
 		getView().addHex(new HexLocation(-1,3), HexType.WATER);
-		getView().addHex(new HexLocation(-2,-2), HexType.WATER);
+		getView().addHex(new HexLocation(-2,-1), HexType.WATER);
 		getView().addHex(new HexLocation(-2,3), HexType.WATER);
 		getView().addHex(new HexLocation(-3,0), HexType.WATER);
 		getView().addHex(new HexLocation(-3,1), HexType.WATER);
