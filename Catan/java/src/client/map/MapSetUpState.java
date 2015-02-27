@@ -25,6 +25,7 @@ public class MapSetUpState extends MapControllerState{
 	}
 
 	private MapController controller;
+	private boolean activeMove = false;
 	
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
@@ -63,7 +64,8 @@ public class MapSetUpState extends MapControllerState{
 	public void run()
 	{
 		//This will automatically start the user placing a road
-		controller.startMove(PieceType.ROAD, true, true);
+		activeMove = true;
+		startMove(PieceType.ROAD, true, true);
 	}
 
 	@Override
@@ -87,6 +89,7 @@ public class MapSetUpState extends MapControllerState{
 		FinishMove finish = new FinishMove(client.getPlayerIndex());
 		try {
 			ClientManager.instance().getServerProxy().finishTurn(finish);
+			activeMove = false;
 			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
@@ -145,6 +148,10 @@ public class MapSetUpState extends MapControllerState{
 		
 		controller.updateRoads(turnManager, map);
 		controller.updateSettlements(turnManager, map);
+		
+		if (!activeMove) {
+			run();
+		}
 	}
 
 }
