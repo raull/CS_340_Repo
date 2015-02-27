@@ -316,27 +316,45 @@ public class ModelFacade extends Observable{
 		}
 		
 		//if trying to build something on water, return false
-		VertexLocation normalizedLocation = location.getNormalizedLocation(); //restricts to NW and NE
-		HexTile hex1 = map.getHexTileByLocation(normalizedLocation.getHexLoc()); 
-		HexTile hex2 = map.getHexTileByLocation(normalizedLocation.getHexLoc().getNeighborLoc(EdgeDirection.North));
+		location = location.getNormalizedLocation(); //restricts to NW and NE
+		HexTile hex1 = map.getHexTileByLocation(location.getHexLoc()); 
+		HexTile hex2 = map.getHexTileByLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North));
 		HexTile hex3;
-		switch(normalizedLocation.getDir()){
+		switch(location.getDir()){
 			case NorthEast:
-				hex3 = map.getHexTileByLocation(normalizedLocation.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast));
+				hex3 = map.getHexTileByLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast));
 				break;
 			case NorthWest:
-				hex3 = map.getHexTileByLocation(normalizedLocation.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest));
+				hex3 = map.getHexTileByLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest));
 				break;
 			default:
 				assert false;
 				return false;
 			
 		}
-		
 		if(hex1 == null && hex2 ==null && hex3 ==null){ //if all 3 are water(null), return false
 			/*hex1 is the hex below our vertex, hex2 is the hex above, hex3*/
 			return false;
 		}
+		
+		//determines whether a road is already connected to here
+		EdgeLocation edgeLoc1 = null;
+		EdgeLocation edgeLoc2 = null;
+		EdgeLocation edgeLoc3 = null;
+		if(location.getDir()==VertexDirection.NorthEast){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.North);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.NorthEast);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthEast);
+		}
+		else if(location.getDir()==VertexDirection.NorthWest){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.North);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.NorthWest);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthWest);
+		}
+		if(!user.occupiesEdge(edgeLoc1) && !user.occupiesEdge(edgeLoc2) && !user.occupiesEdge(edgeLoc3)){
+			return false; //returns false if user does not occupy any of the three locations
+		}
+		
 		
 		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
@@ -361,7 +379,7 @@ public class ModelFacade extends Observable{
 		}
 
 		//building cannot be placed adjacent to other buildings
-		location = location.getNormalizedLocation();
+		
 		VertexLocation vLoc1 = null;
 		VertexLocation vLoc2 = null;
 		VertexLocation vLoc3 = null;
