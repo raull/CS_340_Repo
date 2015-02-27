@@ -40,21 +40,27 @@ public enum VertexDirection
 		switch (this) {
 		case West:
 			letters = "W";
+			break;
 			
 		case NorthWest:
 			letters = "NW";
+			break;
 		
 		case East:
 			letters = "E";
+			break;
 		
 		case NorthEast:
 			letters = "NE";
+			break;
 			
 		case SouthEast:
 			letters = "SE";
+			break;
 			
 		case SouthWest:
 			letters = "SW";
+			break;
 		}
 		return letters;
 	}
