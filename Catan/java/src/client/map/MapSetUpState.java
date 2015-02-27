@@ -17,6 +17,7 @@ import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildRoad;
 import shared.proxy.moves.BuildSettlement;
+import shared.proxy.moves.FinishMove;
 
 public class MapSetUpState extends MapControllerState{
 
@@ -84,7 +85,15 @@ public class MapSetUpState extends MapControllerState{
 			controller.startMove(PieceType.SETTLEMENT, true, false);
 		}
 		
-		//maybe also need to call finishTurn on ServerProxy??
+		FinishMove finish = new FinishMove(client.getPlayerIndex());
+		try {
+			ClientManager.instance().getServerProxy().finishTurn(finish);
+		} catch (ProxyException e) {
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Error");
+			errorMessage.setMessage("Something wrong happened while trying to end your turn. Please try again later.");
+			errorMessage.showModal();
+		}
 	}
 
 	@Override
