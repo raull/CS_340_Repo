@@ -39,6 +39,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private boolean waiting;
 	private boolean accepting;
 	private boolean acceptSet;
+	private boolean trading;
 	
 	
 	
@@ -67,6 +68,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		WOOD = new tradeResource();
 		playersPopulated = false;
 		tradeEnabled = false;
+		trading = false;
+		
 		waiting = false;
 		accepting = false;
 		acceptSet = false;
@@ -121,6 +124,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				playersPopulated = true;
 		}
 		getTradeOverlay().showModal();
+		trading = true;
 	}
 
 	@Override
@@ -386,6 +390,11 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				getTradeView().enableDomesticTrade(false);
 				tradeEnabled = false;
 			}
+		}
+		
+		//If trading, keeps modal up
+		if (trading){
+			getTradeOverlay().showModal();
 		}
 		// Shows the Accept Overlay if necessary
 		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() != null
