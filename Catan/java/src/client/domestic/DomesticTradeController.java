@@ -38,6 +38,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	private boolean tradeEnabled;
 	private boolean waiting;
 	private boolean accepting;
+	private boolean acceptSet;
 	
 	
 	
@@ -68,6 +69,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		tradeEnabled = false;
 		waiting = false;
 		accepting = false;
+		acceptSet = false;
 	}
 	
 
@@ -344,6 +346,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		getAcceptOverlay().closeModal();
 		accepting = false;
+		acceptSet = false;
 	}
 
 	//Checks to see if the user can send more of the resource
@@ -389,7 +392,10 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				&& ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
 				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
 		//	if (!accepting){
-				setAcceptWindow();
+				if (!acceptSet){
+					setAcceptWindow();
+					acceptSet = true;
+				}
 				getAcceptOverlay().showModal();
 				accepting = true;
 		//	}
@@ -401,15 +407,14 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				waiting = false;
 			}
 		}
-		// Sets the boolean for the Accept Overlay
-		if (accepting)
-			getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 		}
+		// Sets the boolean for the Accept Overlay
+		
 	}
 	// Checks to see if player can accept the trade	
 	public boolean canAcceptIt(){
 		TurnManager turnMan = ClientManager.instance().getModelFacade().turnManager();
-		User curUser = turnMan.currentUser();
+		User curUser = turnMan.getUserFromIndex(ClientManager.instance().getCurrentPlayerInfo().getId());
 		
 		return ClientManager.instance().getModelFacade().canAcceptTrade(turnMan, curUser, 
 				ClientManager.instance().getModelFacade().getModel().getTradeOffer());
@@ -420,6 +425,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	public void setAcceptWindow(){
 		TradeOffer trade = ClientManager.instance().getModelFacade().getModel().getTradeOffer();
 		
+		//Clears any previous info
+		getAcceptOverlay().reset();
 		//Populates the offered resources
 		ResourceCardDeck sendDeck = trade.getSendingDeck();
 		
@@ -467,6 +474,8 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		String sendingName = sendingUser.getName();
 		
 		getAcceptOverlay().setPlayerName(sendingName);
+		// Enables the accept button
+		getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 	}
 	
 	
