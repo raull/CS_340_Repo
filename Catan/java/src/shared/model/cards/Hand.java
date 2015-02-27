@@ -1,10 +1,5 @@
 package shared.model.cards;
 
-import java.util.ArrayList;
-
-import shared.model.exception.InvalidMoveException;
-import shared.model.exception.ModelException;
-
 /**
  * The user's hand. Contains a deck of DevCards and a deck of ResourceCards. 
  * @author thyer
@@ -23,7 +18,7 @@ public class Hand {
 	/**
 	 * The resource cards deck
 	 */
-	private ResourceCardDeck resourceCardDeck;
+	private ResourceCardDeck resourceCardDeck = new ResourceCardDeck();
 	
 	public Hand (DevCardDeck oldDevCards, DevCardDeck newDevCards, ResourceCardDeck resourceCards){
 		devCardDeck = oldDevCards; 

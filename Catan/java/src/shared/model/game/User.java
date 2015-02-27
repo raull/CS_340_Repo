@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import client.data.PlayerInfo;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
@@ -103,8 +104,21 @@ public class User {
 		return this.name.getName();
 	}
 	
+	// Returns this user's info as PlayerInfo
+	public PlayerInfo getPlayerInfo(){
+		PlayerInfo pInfo = new PlayerInfo();
+		pInfo.setId(playerID);
+		pInfo.setColor(getCatanColor());
+		pInfo.setName(getName());
+		pInfo.setPlayerIndex(turnIndex);
+		
+		return pInfo;
+	}
+	
 	public CatanColor getCatanColor() {
+		
 		return color;
+
 	}
 	
 	public Color getColor() {

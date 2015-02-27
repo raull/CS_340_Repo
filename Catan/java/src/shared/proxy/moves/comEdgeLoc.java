@@ -5,12 +5,11 @@ import shared.locations.VertexLocation;
 
 public class comEdgeLoc {
 
-private int x;
-	
+	private int x;
 	private int y;
-	
 	private String direction;
 	
+	//constructor
 	public comEdgeLoc(EdgeLocation edge){
 		x = edge.getHexLoc().getX();
 		y = edge.getHexLoc().getY();
