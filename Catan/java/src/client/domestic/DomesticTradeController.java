@@ -414,7 +414,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 	// Checks to see if player can accept the trade	
 	public boolean canAcceptIt(){
 		TurnManager turnMan = ClientManager.instance().getModelFacade().turnManager();
-		User curUser = turnMan.getUserFromIndex(ClientManager.instance().getCurrentPlayerInfo().getId());
+		User curUser = turnMan.getUserFromIndex(ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex());
 		
 		return ClientManager.instance().getModelFacade().canAcceptTrade(turnMan, curUser, 
 				ClientManager.instance().getModelFacade().getModel().getTradeOffer());
