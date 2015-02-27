@@ -67,7 +67,7 @@ public class MapController extends Controller implements IMapController, Observe
 		Map map = facade.map();
 		TurnManager turnManager = facade.turnManager();
 		
-		//getView().addHex for each hex in the model (hextype, number, location)
+		//Update Hex Tiles
 		ArrayList<HexTile> hexes = new ArrayList<HexTile>(map.getHexTiles());
 		for (HexTile hex : hexes)
 		{
@@ -87,7 +87,7 @@ public class MapController extends Controller implements IMapController, Observe
 			}
 		}
 		
-		//hardcode in the water tiles
+		//Hard code in the water tiles
 		getView().addHex(new HexLocation(3,0), HexType.WATER);
 		getView().addHex(new HexLocation(3,-1), HexType.WATER);
 		getView().addHex(new HexLocation(3,-2), HexType.WATER);
@@ -108,21 +108,14 @@ public class MapController extends Controller implements IMapController, Observe
 		getView().addHex(new HexLocation(-3,3), HexType.WATER);
 
 		
+		//Update Pieces
 		updateRoads(turnManager, map);
 		
 		updateSettlements(turnManager, map);
 					
-		//getView().placeCity for each city
-		ArrayList<Building> cities = map.getCitiesOnMap();
-		for (Building city : cities)
-		{
-			VertexLocation loc = city.getVertex().getLocation();
-			User owner = turnManager.getUserFromIndex(city.getOwner());
-			CatanColor color = owner.getCatanColor();
-			getView().placeCity(loc, color);
-		}
+		updateCities(turnManager, map);
 		
-		//getView().placePort for each port
+		//Update Ports
 		ArrayList<Port> ports = map.getPortsOnMap();
 		for (Port port : ports)
 		{
@@ -270,6 +263,31 @@ public class MapController extends Controller implements IMapController, Observe
 			User owner = turnManager.getUserFromIndex(settle.getOwner());
 			CatanColor color = owner.getCatanColor();
 			getView().placeSettlement(loc, color);
+		}
+	}
+	
+	public void updateCities(TurnManager turnManager, Map map) {
+		ArrayList<Building> cities = map.getCitiesOnMap();
+		for (Building city : cities)
+		{
+			VertexLocation loc = city.getVertex().getLocation();
+			User owner = turnManager.getUserFromIndex(city.getOwner());
+			CatanColor color = owner.getCatanColor();
+			getView().placeCity(loc, color);
+		}
+	}
+	
+	public void updateRobber(TurnManager turnManager, Map map) {
+		//Update Hex Tiles
+		ArrayList<HexTile> hexes = new ArrayList<HexTile>(map.getHexTiles());
+		for (HexTile hex : hexes)
+		{
+			HexLocation location = hex.getLocation();
+			//Update Robber
+			if (hex.hasRobber())
+			{
+				getView().placeRobber(location);
+			}
 		}
 	}
 	
