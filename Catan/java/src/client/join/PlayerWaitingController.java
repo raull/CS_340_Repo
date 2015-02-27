@@ -45,7 +45,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			getView().showModal();
 		}
 		
-		forceUpdate();
+		ClientManager.instance().forceUpdate();
 		updatePlayers();
 		
 		
@@ -58,7 +58,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			AddAIRequest req = new AddAIRequest("LARGEST_ARMY"); //only type of AI supported by current server
 			//add AI from proxy
 			ClientManager.instance().getServerProxy().addAI(req);
-			forceUpdate();
+			ClientManager.instance().forceUpdate();
 			
 		} catch (ProxyException e) {
 			MessageView alertView = new MessageView();
@@ -100,7 +100,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		}
 		updatePlayers();
 		
-		if(isFull() && getView().isModalShowing()) {
+		if(isFull() && getView().isModalShowing() && !ClientManager.instance().hasGameStarted()) {
 			ClientManager.instance().startGame();
 			getView().closeModal();
 		} else if (updated && !ClientManager.instance().hasGameStarted()){
@@ -120,20 +120,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		ArrayList<PlayerInfo> players =  new ArrayList<PlayerInfo>(ClientManager.instance().getCurrentGameInfo().getPlayers());
 		PlayerInfo [] playerArray = players.toArray(new PlayerInfo[players.size()]);
 		getView().setPlayers(playerArray);
-	}
-	
-	private void forceUpdate(){
-		JsonElement model;
-		try {
-			model = ClientManager.instance().getServerProxy().model(-1);
-			ClientManager.instance().getModelFacade().updateModel(model);
-
-		} catch (ProxyException e) {
-			MessageView alertView = new MessageView();
-			alertView.setTitle("Error");
-			alertView.setMessage(e.getLocalizedMessage());
-			alertView.showModal();
-		}
 	}
 
 }
