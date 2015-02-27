@@ -30,7 +30,15 @@ public class MapController extends Controller implements IMapController, Observe
 	private IRobView robView;
 	private MapControllerState state;
 	private HexLocation robberLoc;
-		
+	
+	//States
+	private MapSetUpState setUpState = new MapSetUpState(this);
+	private MapInactiveState inactiveState = new MapInactiveState(this);
+	private MapPlayingState playingState = new MapPlayingState(this);
+	private MapRoadBuildingState roadBuildingState = new MapRoadBuildingState(this);
+	private MapRobbingState robbingState = new MapRobbingState(this);
+	
+	
 	public MapController(IMapView view, IRobView robView) {
 		
 		super(view);
@@ -296,24 +304,24 @@ public class MapController extends Controller implements IMapController, Observe
 		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		if (turnManager.getCurrentTurn() != clientIndex)
 		{
-			setState(new MapInactiveState(this));
+			setState(inactiveState);
 		}
 		else if (turnManager.currentTurnPhase() == TurnPhase.ROBBING)
 		{
-			setState(new MapRobbingState(this));
+			setState(robbingState);
 		}
 		else if (turnManager.currentTurnPhase() == TurnPhase.PLAYING)
 		{
-			setState(new MapPlayingState(this));
+			setState(playingState);
 		}
 		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND
 				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
 		{
-			setState(new MapSetUpState(this));
+			setState(setUpState);
 		}
 		else
 		{
-			setState(new MapInactiveState(this));
+			setState(inactiveState);
 		}
 	}
 	
