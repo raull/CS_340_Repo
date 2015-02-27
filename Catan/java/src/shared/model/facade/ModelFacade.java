@@ -323,6 +323,11 @@ public class ModelFacade extends Observable{
 			return false;
 		}
 		
+		if (user.getUnusedRoads() < 1)
+		{
+			return false;
+		}
+		
 		//if trying to build something on water, return false
 		location = location.getNormalizedLocation(); //restricts to NW and NE
 		HexTile hex1 = map.getHexTileByLocation(location.getHexLoc()); 
