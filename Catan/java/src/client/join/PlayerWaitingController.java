@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import com.google.gson.JsonElement;
-
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.game.AddAIRequest;

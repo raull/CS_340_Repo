@@ -249,11 +249,6 @@ public class MapController extends Controller implements IMapController, Observe
 		this.state = (MapControllerState) state;
 	}
 	
-	private void run() //TODO provide functionality in setup and robbing
-	{
-		state.run();
-	}
-	
 	//Update methods
 	
 	public void updateRoads(TurnManager turnManager, Map map) {

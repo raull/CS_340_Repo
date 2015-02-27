@@ -1,11 +1,9 @@
 package client.map;
 
-import client.base.IController;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
 import client.misc.MessageView;
-import client.state.State;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
