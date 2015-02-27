@@ -7,6 +7,8 @@ import java.util.Observer;
 import com.google.gson.JsonElement;
 
 import shared.definitions.*;
+import shared.model.cards.ResourceCardDeck;
+import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
@@ -104,12 +106,12 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 
 		//Populates the players
 		if (!playersPopulated){
-			List<PlayerInfo> playerList = ClientManager.instance().getCurrentGameInfo().getPlayers();
+			List<User> playerList = ClientManager.instance().getModelFacade().turnManager().getUsers();
 			PlayerInfo[] players = new PlayerInfo[3];
 			int i = 0;
-			for (PlayerInfo pi : playerList){
-				if (pi.getId() != ClientManager.instance().getCurrentPlayerInfo().getId()){
-					players[i] = pi;
+			for (User pi : playerList){
+				if (pi.getPlayerID() != ClientManager.instance().getCurrentPlayerInfo().getId()){
+					players[i] = pi.getPlayerInfo();
 					i++;
 				}
 			}
@@ -386,10 +388,11 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() != null
 				&& ClientManager.instance().getModelFacade().getModel().getTradeOffer().getReceiverIndex() 
 				== ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex()){
-			if (!accepting){
+		//	if (!accepting){
+				setAcceptWindow();
 				getAcceptOverlay().showModal();
 				accepting = true;
-			}
+		//	}
 		}
 		// Removes Wait Overlay if Trade is accepted or rejected
 		if (ClientManager.instance().getModelFacade().getModel().getTradeOffer() == null){
@@ -399,7 +402,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			}
 		}
 		// Sets the boolean for the Accept Overlay
-		if (waiting)
+		if (accepting)
 			getAcceptOverlay().setAcceptEnabled(canAcceptIt());
 		}
 	}
@@ -412,6 +415,61 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 				ClientManager.instance().getModelFacade().getModel().getTradeOffer());
 		}
 
+	
+	// Sets the Accept Window
+	public void setAcceptWindow(){
+		TradeOffer trade = ClientManager.instance().getModelFacade().getModel().getTradeOffer();
+		
+		//Populates the offered resources
+		ResourceCardDeck sendDeck = trade.getSendingDeck();
+		
+		int bricks = sendDeck.getCountByType(ResourceType.BRICK);
+		int ores = sendDeck.getCountByType(ResourceType.ORE);
+		int wheats = sendDeck.getCountByType(ResourceType.WHEAT);
+		int sheeps = sendDeck.getCountByType(ResourceType.SHEEP);
+		int woods = sendDeck.getCountByType(ResourceType.WOOD);
+		
+		if (bricks > 0)
+			getAcceptOverlay().addGetResource(ResourceType.BRICK, bricks);
+		if (ores > 0)
+			getAcceptOverlay().addGetResource(ResourceType.ORE, ores);
+		if (wheats > 0)
+			getAcceptOverlay().addGetResource(ResourceType.WHEAT, wheats);
+		if (sheeps > 0)
+			getAcceptOverlay().addGetResource(ResourceType.SHEEP, sheeps);
+		if (woods > 0)
+			getAcceptOverlay().addGetResource(ResourceType.WOOD, woods);
+		
+		//Populates the requested resources
+		ResourceCardDeck recDeck = trade.getReceivingDeck();
+		
+		int brickr = recDeck.getCountByType(ResourceType.BRICK);
+		int orer = recDeck.getCountByType(ResourceType.ORE);
+		int wheatr = recDeck.getCountByType(ResourceType.WHEAT);
+		int sheepr = recDeck.getCountByType(ResourceType.SHEEP);
+		int woodr = recDeck.getCountByType(ResourceType.WOOD);
+		
+		if (brickr > 0)
+			getAcceptOverlay().addGiveResource(ResourceType.BRICK, brickr);
+		if (orer > 0)
+			getAcceptOverlay().addGiveResource(ResourceType.ORE, orer);
+		if (wheatr > 0)
+			getAcceptOverlay().addGiveResource(ResourceType.WHEAT, wheatr);
+		if (sheepr > 0)
+			getAcceptOverlay().addGiveResource(ResourceType.SHEEP, sheepr);
+		if (woodr > 0)
+			getAcceptOverlay().addGiveResource(ResourceType.WHEAT, woodr);
+		
+		//Gets the sender's name
+		User sendingUser = ClientManager.instance().getModelFacade().turnManager()
+				.getUserFromIndex(trade.getSenderIndex());
+		
+		String sendingName = sendingUser.getName();
+		
+		getAcceptOverlay().setPlayerName(sendingName);
+	}
+	
+	
 	// Class used for tracking how much of a resource is sent or is received
 	private class tradeResource {
 		private int num;
