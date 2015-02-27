@@ -5,6 +5,7 @@ import java.util.*;
 import shared.definitions.*;
 import shared.locations.*;
 import shared.model.board.HexTile;
+import shared.model.board.Map;
 import shared.model.board.Port;
 import shared.model.board.piece.Building;
 import shared.model.board.piece.Road;
@@ -19,6 +20,7 @@ import client.data.*;
 import client.manager.ClientManager;
 import client.misc.MessageView;
 import client.state.State;
+import shared.model.board.*;
 
 
 /**
@@ -29,7 +31,7 @@ public class MapController extends Controller implements IMapController, Observe
 	private IRobView robView;
 	private MapControllerState state;
 	private HexLocation robberLoc;
-	
+		
 	public MapController(IMapView view, IRobView robView) {
 		
 		super(view);
@@ -63,7 +65,7 @@ public class MapController extends Controller implements IMapController, Observe
 				
 		//access the model 
 		ModelFacade facade = ClientManager.instance().getModelFacade();
-		shared.model.board.Map map = facade.map();
+		Map map = facade.map();
 		TurnManager turnManager = facade.turnManager();
 		
 		//getView().addHex for each hex in the model (hextype, number, location)
@@ -107,25 +109,9 @@ public class MapController extends Controller implements IMapController, Observe
 		getView().addHex(new HexLocation(-3,3), HexType.WATER);
 
 		
-		//getView().placeRoad for each road
-		ArrayList<Road> roads = map.getRoadsOnMap();
-		for (Road road : roads)
-		{
-			EdgeLocation loc = road.getEdge().getLocation();
-			User owner = turnManager.getUserFromIndex(road.getOwner());
-			CatanColor color = owner.getCatanColor();
-			getView().placeRoad(loc, color);
-		}
+		updateRoads(turnManager, map);
 		
-		//getView().placeSettlement for each settlement
-		ArrayList<Building> settles = map.getSettlementsOnMap();
-		for (Building settle : settles)
-		{
-			VertexLocation loc = settle.getVertex().getLocation();
-			User owner = turnManager.getUserFromIndex(settle.getOwner());
-			CatanColor color = owner.getCatanColor();
-			getView().placeSettlement(loc, color);
-		}
+		updateSettlements(turnManager, map);
 					
 		//getView().placeCity for each city
 		ArrayList<Building> cities = map.getCitiesOnMap();
@@ -286,6 +272,30 @@ public class MapController extends Controller implements IMapController, Observe
 	private void run() //TODO provide functionality in setup and robbing
 	{
 		state.run();
+	}
+	
+	//Update methods
+	
+	public void updateRoads(TurnManager turnManager, Map map) {
+		ArrayList<Road> roads = map.getRoadsOnMap();
+		for (Road road : roads)
+		{
+			EdgeLocation loc = road.getEdge().getLocation();
+			User owner = turnManager.getUserFromIndex(road.getOwner());
+			CatanColor color = owner.getCatanColor();
+			getView().placeRoad(loc, color);
+		}
+	}
+	
+	public void updateSettlements(TurnManager turnManager, Map map) {
+		ArrayList<Building> settles = map.getSettlementsOnMap();
+		for (Building settle : settles)
+		{
+			VertexLocation loc = settle.getVertex().getLocation();
+			User owner = turnManager.getUserFromIndex(settle.getOwner());
+			CatanColor color = owner.getCatanColor();
+			getView().placeSettlement(loc, color);
+		}
 	}
 	
 }

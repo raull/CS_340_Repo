@@ -10,6 +10,7 @@ import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.board.Map;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
@@ -94,6 +95,7 @@ public class MapSetUpState extends MapControllerState{
 		
 		try {
 			ClientManager.instance().getServerProxy().buildRoad(buildroad);
+			ClientManager.instance().forceUpdate();
 			controller.startMove(PieceType.SETTLEMENT, true, false);
 		} catch (ProxyException e) {
 			// TODO probably want to notify the client that there was an error and then restart a road drop
@@ -129,7 +131,11 @@ public class MapSetUpState extends MapControllerState{
 	
 	@Override
 	public void update() {
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+		Map map = ClientManager.instance().getModelFacade().map();
 		
+		controller.updateRoads(turnManager, map);
+		controller.updateSettlements(turnManager, map);
 	}
 
 }
