@@ -93,6 +93,7 @@ public class MapRoadBuildingState extends MapControllerState
 			
 			try {
 				ClientManager.instance().getServerProxy().Road_Building(move);
+				ClientManager.instance().forceUpdate();
 			} catch (ProxyException e) {
 				MessageView errorMessage = new MessageView();
 				errorMessage.setTitle("Error");

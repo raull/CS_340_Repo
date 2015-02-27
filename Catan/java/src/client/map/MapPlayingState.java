@@ -79,6 +79,7 @@ public class MapPlayingState extends MapControllerState
 		
 		try {
 			ClientManager.instance().getServerProxy().Soldier(move);
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
@@ -99,6 +100,7 @@ public class MapPlayingState extends MapControllerState
 		BuildSettlement buildsettlement = new BuildSettlement(client.getTurnIndex(), vertLoc, false);
 		try {
 			ClientManager.instance().getServerProxy().buildSettlement(buildsettlement);
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
@@ -118,6 +120,7 @@ public class MapPlayingState extends MapControllerState
 		
 		try {
 			ClientManager.instance().getServerProxy().buildRoad(buildroad);
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");

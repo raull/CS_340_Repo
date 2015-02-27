@@ -206,6 +206,7 @@ public class MapController extends Controller implements IMapController, Observe
 		BuildCity buildCity = new BuildCity(client.getPlayerIndex(), vertLoc);
 		try {
 			ClientManager.instance().getServerProxy().buildCity(buildCity);
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
