@@ -198,6 +198,7 @@ public class ModelFacade extends Observable{
 		//if trying to build road on water, return false
 		
 		
+		
 		//if edge is occupied, return false;
 		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
 		for (User u : users){
