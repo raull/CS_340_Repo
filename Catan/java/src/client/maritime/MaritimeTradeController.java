@@ -189,6 +189,10 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	private void checkUserCards(){
 		//go through cards user has
 		// if user has cards greater than ratio, allow user to give that resource
+		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
+		User currUser = cm.getModelFacade().turnManager().getUser(playerIndex);
+		
+		
 	}
 	
 	/**
