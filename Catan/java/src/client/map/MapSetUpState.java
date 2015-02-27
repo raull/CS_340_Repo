@@ -116,7 +116,6 @@ public class MapSetUpState extends MapControllerState{
 			errorMessage.setMessage("Something wrong happened while trying to place the road. Please try again later.");
 			errorMessage.showModal();
 			controller.startMove(PieceType.ROAD, true, true);
-			//e.printStackTrace();
 		}
 		
 		
