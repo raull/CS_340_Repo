@@ -79,17 +79,17 @@ public class ModelFacade extends Observable{
 		//System.out.println("new model version num: " + newModelVersion);
 		
 		//check that version number has changed, or not
-		if (ClientManager.instance().hasGameStarted()){
+		/*if (ClientManager.instance().hasGameStarted()){
 			if(modelVersion != newModelVersion) {
 				//update stuff from model
 				this.setChanged();
 				this.notifyObservers();
 			}
 		}
-		else{
+		else{ */
 			this.setChanged();
 			this.notifyObservers();
-		}
+		//}
 		
 	}
 	/**
