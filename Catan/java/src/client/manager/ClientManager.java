@@ -1,12 +1,16 @@
 package client.manager;
 
 
+import com.google.gson.JsonElement;
+
 import client.data.GameInfo;
 import client.data.PlayerInfo;
+import client.misc.MessageView;
 import client.poller.Poller;
 import shared.definitions.CatanColor;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnPhase;
+import shared.proxy.ProxyException;
 import shared.proxy.ServerProxy;
 
 
@@ -25,6 +29,8 @@ public class ClientManager {
 	private PlayerInfo currentPlayerInfo = new PlayerInfo();
 	private GameInfo currentGameInfo = new GameInfo();
 	private Poller serverPoller = new Poller(serverProxy, modelFacade);
+	private boolean gameStarted = false;
+	private boolean isUserRolling = false;
 	
 	private boolean serverPollerRunning = false;
 	
@@ -106,5 +112,34 @@ public class ClientManager {
 		return serverPollerRunning;
 	}
 	
+	public void startGame() {
+		gameStarted = true;
+	}
+	
+	public boolean hasGameStarted() {
+		return gameStarted;
+	}
+	
+	public void forceUpdate() {
+		JsonElement model;
+		try {
+			model = ClientManager.instance().getServerProxy().model(-1);
+			ClientManager.instance().getModelFacade().updateModel(model);
 
+		} catch (ProxyException e) {
+			MessageView alertView = new MessageView();
+			alertView.setTitle("Error");
+			alertView.setMessage("Network Error. Please check your connection.");
+			alertView.showModal();
+		}
+	}
+
+	public boolean isUserRolling() {
+		return isUserRolling;
+	}
+
+	public void setUserRolling(boolean isUserRolling) {
+		this.isUserRolling = isUserRolling;
+	}
+	
 }

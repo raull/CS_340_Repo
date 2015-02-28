@@ -3,10 +3,13 @@ package client.resources;
 import java.util.*;
 
 import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
+import shared.model.cards.Bank;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 import client.base.*;
 import client.data.PlayerInfo;
@@ -45,7 +48,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 	}
 
 	@Override
-	public void buildRoad() {
+	public void buildRoad() {				
 		executeElementAction(ResourceBarElement.ROAD);
 	}
 
@@ -85,12 +88,14 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		ClientManager cm = ClientManager.instance();
 		PlayerInfo player = cm.getCurrentPlayerInfo();
 		ModelFacade facade = cm.getModelFacade();
+		TurnManager turnManager = facade.turnManager();
 		
 		int currentID = player.getId();
 		
 		User currentUser = facade.turnManager().getUserFromID(currentID);
 		ResourceCardDeck resourceHand = currentUser.getHand().getResourceCards();
 		DevCardDeck devHand = currentUser.getHand().getUsableDevCards();
+		Bank bank = facade.bank();
 		
 		//Update view
 		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.BRICK));
@@ -104,6 +109,11 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		getView().setElementAmount(ResourceBarElement.SETTLEMENT, currentUser.getUnusedSettlements());
 		getView().setElementAmount(ResourceBarElement.CITY, currentUser.getUnusedCities());
 		
+		//Enable Buttons
+		getView().setElementEnabled(ResourceBarElement.ROAD, facade.canBuyPiece(turnManager, currentUser, PieceType.ROAD));
+		getView().setElementEnabled(ResourceBarElement.SETTLEMENT, facade.canBuyPiece(turnManager, currentUser, PieceType.SETTLEMENT));
+		getView().setElementEnabled(ResourceBarElement.CITY, facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		getView().setElementEnabled(ResourceBarElement.BUY_CARD, facade.canBuyDevCard(turnManager, currentUser, bank.getDevCardDeck()));
 	}
 
 }

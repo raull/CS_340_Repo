@@ -633,6 +633,7 @@ public class Model {
 		
 		int currentTurn = jsonTurnManager.get("currentTurn").getAsInt();
 		
+		String turn = gson.fromJson(jsonTurnManager.get("status"), String.class);
 		TurnPhase currTurnPhase = gson.fromJson(jsonTurnManager.get("status"), TurnPhase.class);
 
 		//index of user with longest road, -1 if none
