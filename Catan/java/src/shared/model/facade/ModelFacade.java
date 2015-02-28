@@ -63,7 +63,7 @@ public class ModelFacade extends Observable{
 	private Bank bank;
 	
 	private int modelVersion;
-	
+	private int winnerIndex;
 	/**
 	 * updates the model class with the JSON response
 	 * @param jsonResponse
@@ -74,7 +74,12 @@ public class ModelFacade extends Observable{
 		map = model.getMap();
 		bank = model.getBank();
 		score = model.getScoreKeeper();
+
 		int newModelVersion = model.getVersion();
+
+		winnerIndex = model.getWinner();
+		//int newModelVersion = model.getVersion();
+
 		
 		//System.out.println("new model version num: " + newModelVersion);
 		
@@ -816,6 +821,13 @@ public class ModelFacade extends Observable{
 	 */
 	public TradeManager tradeManager() {
 		return tradeManager;
+	}
+	
+	public int getWinnerIndex() {
+		return winnerIndex;
+	}
+	public void setWinnerIndex(int winnerIndex) {
+		this.winnerIndex = winnerIndex;
 	}
 	
 	//getters/setters for model version

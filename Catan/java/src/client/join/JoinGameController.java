@@ -182,6 +182,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getJoinGameView().closeModal();
 			ClientManager.instance().startServerPoller();
 			updateCurrentPlayerInfo();
+
 			joinAction.execute(); //brings up the waiting modal
 		} catch (ProxyException e) {
 			e.printStackTrace();
