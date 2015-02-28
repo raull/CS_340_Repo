@@ -334,6 +334,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		WOOD = new tradeResource();
 		
 		getTradeOverlay().closeModal();
+		trading = false;
 	}
 
 	@Override
@@ -386,10 +387,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			}
 		}
 		else {
-			if (tradeEnabled){
 				getTradeView().enableDomesticTrade(false);
 				tradeEnabled = false;
-			}
+			
 		}
 		
 		//If trading, keeps modal up
