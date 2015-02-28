@@ -5,7 +5,10 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
+import shared.model.game.User;
 import shared.proxy.moves.RollNumber;
 import client.base.*;
 import client.manager.ClientManager;
@@ -20,6 +23,7 @@ public class RollController extends Controller implements IRollController, Obser
 
 	private IRollResultView resultView;
 	private Timer rollTimer = new Timer(false);
+	private boolean isRolling = false;
 
 	/**
 	 * RollController constructor
@@ -63,6 +67,7 @@ public class RollController extends Controller implements IRollController, Obser
 			getResultView().setRollValue(total);
 			getResultView().showModal();
 			rollTimer.cancel();
+			isRolling = false;
 			ClientManager.instance().forceUpdate();
 		} catch (Exception e) {
 			MessageView errorMessage = new MessageView();
@@ -75,9 +80,14 @@ public class RollController extends Controller implements IRollController, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.ROLLING && 
-				!getRollView().isModalShowing() && !getResultView().isModalShowing()) {
+		ClientManager cm = ClientManager.instance();
+		TurnManager turnManager = cm.getModelFacade().turnManager();
+		User currentUser = turnManager.getUserFromID(cm.getCurrentPlayerInfo().getId());
+		
+		if (cm.getModelFacade().canRollNumber(turnManager, currentUser) &&
+				!isRolling) {
 			getRollView().showModal();
+			isRolling = true;
 			rollTimer.schedule( new TimerTask() {
 				@Override
 				public void run() {
