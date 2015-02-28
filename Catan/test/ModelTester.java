@@ -150,7 +150,7 @@ public class ModelTester
 		//wrong turn phase
 		testModelFacade.updateModel(testMoxy.getModel("finishTurn.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		VertexLocation validLocation = new VertexLocation(new HexLocation(2,2),VertexDirection.SouthWest);
+		VertexLocation validLocation = new VertexLocation(new HexLocation(0,0),VertexDirection.SouthWest);
 		VertexLocation invalidLocation = new VertexLocation(new HexLocation(-1,-1), VertexDirection.West);
 		VertexLocation validCityLocationForUser0 = new VertexLocation(new HexLocation(1,-1), VertexDirection.SouthEast);
 
@@ -176,6 +176,7 @@ public class ModelTester
 		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, validCityLocationForUser0, turnManager.currentUser(), PieceType.CITY));
 
 		//true test case
+		System.out.println("testing true");
 		assertTrue(testModelFacade.canPlaceBuildingAtLoc(turnManager, validLocation, turnManager.currentUser(), PieceType.SETTLEMENT));
 	}
 
