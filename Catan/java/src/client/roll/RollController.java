@@ -59,9 +59,11 @@ public class RollController extends Controller implements IRollController, Obser
 		
 		try {
 			ClientManager.instance().getServerProxy().rollNumber(param);
+			getRollView().closeModal();
 			getResultView().setRollValue(total);
 			getResultView().showModal();
 			rollTimer.cancel();
+			ClientManager.instance().forceUpdate();
 		} catch (Exception e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
@@ -83,7 +85,7 @@ public class RollController extends Controller implements IRollController, Obser
 				}
 			} , 5000);
 			
-		} 
+		}
 
 	}
 
