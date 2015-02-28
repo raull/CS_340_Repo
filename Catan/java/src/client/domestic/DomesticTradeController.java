@@ -134,22 +134,27 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			WOOD.decrease();
 			if (WOOD.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			break;
 		case BRICK:
 			BRICK.decrease();
 			if (BRICK.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			break;
 		case SHEEP:
 			SHEEP.decrease();
 			if (SHEEP.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			break;
 		case ORE:
 			ORE.decrease();
 			if (ORE.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			break;
 		case WHEAT:
 			WHEAT.decrease();
 			if (WHEAT.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			break;
 		}
 		updateTradeButton();
 	}
@@ -161,22 +166,27 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			WOOD.increase();
 			if (WOOD.isSend && !canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);	
+			break;
 		case BRICK:
 			BRICK.increase();
 			if (BRICK.isSend && !canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			break;
 		case SHEEP:
 			SHEEP.increase();
 			if (SHEEP.isSend && !canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			break;
 		case ORE:
 			ORE.increase();
 			if (ORE.isSend && !canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			break;
 		case WHEAT:
 			WHEAT.increase();
 			if (WHEAT.isSend && !canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			break;
 		}
 		updateTradeButton();
 		
@@ -218,20 +228,26 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case WOOD:
 			WOOD.setNum(0);
 			WOOD.setRecieve(true);
+			break;
 		case BRICK:
 			BRICK.setNum(0);
 			BRICK.setRecieve(true);
+			break;
 		case SHEEP:
 			SHEEP.setNum(0);
 			SHEEP.setRecieve(true);
+			break;
 		case ORE:
 			ORE.setNum(0);
 			ORE.setRecieve(true);
+			break;
 		case WHEAT:
 			WHEAT.setNum(0);
 			WHEAT.setRecieve(true);
+			break;
 		}
-		
+		getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+		updateTradeButton();
 	}
 
 	@Override
@@ -240,21 +256,27 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		case WOOD:
 			WOOD.setNum(0);
 			WOOD.setSend(true);
+			break;
 		case BRICK:
 			BRICK.setNum(0);
 			BRICK.setSend(true);
+			break;
 		case SHEEP:
 			SHEEP.setNum(0);
 			SHEEP.setSend(true);
+			break;
 		case ORE:
 			ORE.setNum(0);
 			ORE.setSend(true);
+			break;
 		case WHEAT:
 			WHEAT.setNum(0);
 			WHEAT.setSend(true);
+			break;
 		}
 		if (!canIncrease(resource))
 			getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+		updateTradeButton();
 	}
 
 	@Override
@@ -262,14 +284,19 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			WOOD.setNum(0);
+			break;
 		case BRICK:
 			BRICK.setNum(0);
+			break;
 		case SHEEP:
 			SHEEP.setNum(0);
+			break;
 		case ORE:
 			ORE.setNum(0);
+			break;
 		case WHEAT:
 			WHEAT.setNum(0);
+			break;
 		}
 	}
 
@@ -323,6 +350,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			getTradeOverlay().setTradeEnabled(false);
 		}
 		
+		
 	}
 	@Override
 	public void cancelTrade() {
@@ -363,14 +391,19 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			canInc =  WOOD.getNum() < inHand;
+			break;
 		case BRICK:
 			canInc = BRICK.getNum() < inHand;
+			break;
 		case ORE:
 			canInc = ORE.getNum() < inHand;
+			break;
 		case SHEEP:
 			canInc = SHEEP.getNum() < inHand;
+			break;
 		case WHEAT:
 			canInc = WHEAT.getNum() < inHand;
+			break;
 		}
 		return canInc;
 	}
@@ -414,6 +447,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			if (waiting){
 				getWaitOverlay().closeModal();
 				waiting = false;
+				cancelTrade();
 			}
 		}
 		}
