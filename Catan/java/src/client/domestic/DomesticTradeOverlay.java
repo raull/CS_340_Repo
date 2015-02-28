@@ -172,7 +172,7 @@ public class DomesticTradeOverlay extends OverlayView implements IDomesticTradeO
 			
 			JPanel upDownButtonsPanel = this.setupUpDownButtonsPanel(resourceType);
 			this.upDownPanelByResourceType.put(resourceType, upDownButtonsPanel);
-//			upDownButtonsPanel.setVisible(false);
+			upDownButtonsPanel.setVisible(false);
 			
 			ButtonGroup toggleButtonGroup = new ButtonGroup();
 			
@@ -184,6 +184,7 @@ public class DomesticTradeOverlay extends OverlayView implements IDomesticTradeO
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					resourceCounts.get(resourceType).setText("0");
 					upDownPanelByResourceType.get(resourceType).setVisible(true);
 					getController().setResourceToSend(resourceType);
 				}
@@ -217,6 +218,7 @@ public class DomesticTradeOverlay extends OverlayView implements IDomesticTradeO
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					resourceCounts.get(resourceType).setText("0");
 					upDownPanelByResourceType.get(resourceType).setVisible(true);
 					getController().setResourceToReceive(resourceType);
 				}

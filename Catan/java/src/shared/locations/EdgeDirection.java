@@ -41,16 +41,22 @@ public enum EdgeDirection
 		
 		case NorthWest:
 			letters = "NW";
+			break;
 		case North:
 			letters = "N";
+			break;
 		case NorthEast:
 			letters = "NE";
+			break;
 		case SouthEast:
 			letters = "SE";
+			break;
 		case South:
 			letters = "S";
+			break;
 		case SouthWest:
 			letters = "SW";
+			break;
 		}
 		return letters;
 	}
