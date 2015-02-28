@@ -182,6 +182,10 @@ public class Model {
 				JsonObject jsonTradeOffer = jsonObject.get("tradeOffer").getAsJsonObject();
 				updateTradeOffer(jsonTradeOffer);
 			}
+			
+			else {
+				tradeOffer = null;
+			}
 
 			//turn manager
 			JsonObject jsonTurnManager = jsonModel.getAsJsonObject().get("turnTracker").getAsJsonObject();
