@@ -23,6 +23,7 @@ public class RollController extends Controller implements IRollController, Obser
 
 	private IRollResultView resultView;
 	private Timer rollTimer = new Timer(false);
+	private boolean isRolling = false;
 
 	/**
 	 * RollController constructor
@@ -66,6 +67,7 @@ public class RollController extends Controller implements IRollController, Obser
 			getResultView().setRollValue(total);
 			getResultView().showModal();
 			rollTimer.cancel();
+			isRolling = false;
 			ClientManager.instance().forceUpdate();
 		} catch (Exception e) {
 			MessageView errorMessage = new MessageView();
@@ -83,8 +85,9 @@ public class RollController extends Controller implements IRollController, Obser
 		User currentUser = turnManager.getUserFromID(cm.getCurrentPlayerInfo().getId());
 		
 		if (cm.getModelFacade().canRollNumber(turnManager, currentUser) &&
-				!getRollView().isModalShowing() && !getResultView().isModalShowing()) {
+				!isRolling) {
 			getRollView().showModal();
+			isRolling = true;
 			rollTimer.schedule( new TimerTask() {
 				@Override
 				public void run() {
