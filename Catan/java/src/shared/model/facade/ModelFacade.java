@@ -352,7 +352,7 @@ public class ModelFacade extends Observable{
 	 */
 	private boolean meetsBuildingConstraints(VertexLocation location,
 			User user, PieceType type) {
-		System.out.println("Entering meetsBuildingConstraints in ModelFacade");
+//		System.out.println("Entering meetsBuildingConstraints in ModelFacade");
 		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
