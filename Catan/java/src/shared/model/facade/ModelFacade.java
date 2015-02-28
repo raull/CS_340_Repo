@@ -200,6 +200,8 @@ public class ModelFacade extends Observable{
 	 */
 	
 	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, EdgeLocation location, User user) {
+		location = location.getNormalizedLocation();
+		
 		//if it's not user's turn, return false
 		if(user != turnManager.currentUser()) {
 			return false;
@@ -318,12 +320,12 @@ public class ModelFacade extends Observable{
 		if(location.getDir() == VertexDirection.NorthEast){
 			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
 			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
-			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.West);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.NorthWest);
 		}
 		else if(location.getDir() == VertexDirection.NorthWest){
 			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
 			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
-			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.East);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.NorthEast);
 		}
 		else{
 			assert(false); //means the normalization broke and all is lost
