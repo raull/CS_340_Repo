@@ -293,7 +293,59 @@ public class ModelFacade extends Observable{
 		return false;
 	}
 	
+	/**
+	 * Does basic adjacency checks
+	 * @param location
+	 * @param user
+	 * @param type
+	 * @return
+	 */
 	private boolean isValidBuildLocation(VertexLocation location, User user, PieceType type) {
+		if(!this.meetsBuildingConstraints(location, user, type)){
+			return false;
+		}
+		else if(type.equals(PieceType.CITY)){
+			return true; //if we're dealing with a city, we don't need to do adjacenty checking
+		}
+		//settlement cannot be placed adjacent to other buildings
+		
+		VertexLocation vLoc1 = null;
+		VertexLocation vLoc2 = null;
+		VertexLocation vLoc3 = null;
+
+		if(location.getDir() == VertexDirection.NorthEast){
+			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
+			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.West);
+		}
+		else if(location.getDir() == VertexDirection.NorthWest){
+			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
+			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.East);
+		}
+		else{
+			assert(false); //means the normalization broke and all is lost
+		}
+		
+		for(User u : turnManager.getUsers()){
+			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
+				return false;
+			}
+		}
+
+		
+		return true;
+	}
+	
+	/**
+	 * Verifies that the individual piece constraints are met for building
+	 * @param location
+	 * @param user
+	 * @param type
+	 * @return
+	 */
+	private boolean meetsBuildingConstraints(VertexLocation location,
+			User user, PieceType type) {
 		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
@@ -324,34 +376,6 @@ public class ModelFacade extends Observable{
 		else{
 			assert(false); //means the method was called incorrectly
 		}
-
-		//building cannot be placed adjacent to other buildings
-		
-		VertexLocation vLoc1 = null;
-		VertexLocation vLoc2 = null;
-		VertexLocation vLoc3 = null;
-
-		if(location.getDir() == VertexDirection.NorthEast){
-			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
-			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
-			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.West);
-		}
-		else if(location.getDir() == VertexDirection.NorthWest){
-			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
-			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
-			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.East);
-		}
-		else{
-			assert(false); //means the normalization broke and all is lost
-		}
-		
-		for(User u : turnManager.getUsers()){
-			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
-				return false;
-			}
-		}
-
-		
 		return true;
 	}
 	public Boolean canPlaceRobberAtLoc(HexLocation hexLoc)
@@ -389,15 +413,6 @@ public class ModelFacade extends Observable{
 		//if it's not the right phase (either playing or setup rounds)
 		if(!(turnManager.currentTurnPhase()==TurnPhase.PLAYING || 
 				turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND || turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)){
-			return false;
-		}
-		
-		if (type.equals(PieceType.SETTLEMENT) && user.getUnusedSettlements() < 1)
-		{
-			return false;
-		}
-		else if (type.equals(PieceType.CITY) && user.getUnusedCities() < 1)
-		{
 			return false;
 		}
 		
