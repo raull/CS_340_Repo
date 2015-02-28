@@ -196,20 +196,6 @@ public class User {
 	}
 	
 	/**
-	 * Removes an edge with the given location from the user's occupied edges
-	 * @param location the location to be removed
-	 */
-	public void removeOccupiedEdge(EdgeLocation location){
-		for( Edge edge : occupiedEdges){
-			for(int i=0; i<occupiedEdges.size(); ++i){
-				if(occupiedEdges.get(i).getLocation().equals(location)){
-					occupiedEdges.remove(i);
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Adds the given vertex to the <code>User</code>'s inventory
 	 */
 	public void addOccupiedVertex(Vertex vertex){
