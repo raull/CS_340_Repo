@@ -301,8 +301,9 @@ public class ModelFacade extends Observable{
 	 * @return
 	 */
 	private boolean isValidBuildLocation(VertexLocation location, User user, PieceType type) {
+		location = location.getNormalizedLocation();
+		
 		if(!this.meetsBuildingConstraints(location, user, type)){
-			System.out.println("Failed on constraints");
 			return false;
 		}
 		else if(type.equals(PieceType.CITY)){
@@ -329,8 +330,10 @@ public class ModelFacade extends Observable{
 		}
 		
 		for(User u : turnManager.getUsers()){
+			if(vLoc1==null || vLoc2==null || vLoc3==null){
+				System.out.println("PROBLEM: In ModelFacade method isValidBuildingLoc, a vertexLocation was null (~line 334)");
+			}
 			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
-				System.out.println("Failed on vertex adjacency");
 				return false;
 			}
 		}
@@ -348,7 +351,6 @@ public class ModelFacade extends Observable{
 	 */
 	private boolean meetsBuildingConstraints(VertexLocation location,
 			User user, PieceType type) {
-		System.out.println("Entering meetsBuildingConstraints in ModelFacade");
 		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
@@ -410,14 +412,12 @@ public class ModelFacade extends Observable{
 	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, VertexLocation location, User user, PieceType type) {
 		//if it isn't user's turn
 		if(user != turnManager.currentUser()) {
-			System.out.println("failed on user's turn");
 			return false;
 		}
 		
 		//if it's not the right phase (either playing or setup rounds)
 		if(!(turnManager.currentTurnPhase()==TurnPhase.PLAYING || 
 				turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND || turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)){
-			System.out.println("Failed at phase");
 			return false;
 		}
 		
@@ -440,7 +440,6 @@ public class ModelFacade extends Observable{
 		}
 		if(hex1 == null && hex2 ==null && hex3 ==null){ //if all 3 are water(null), return false
 			/*hex1 is the hex below our vertex, hex2 is the hex above, hex3*/
-			System.out.println("Fails on water test");
 			return false;
 		}
 		
@@ -459,7 +458,6 @@ public class ModelFacade extends Observable{
 			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthWest);
 		}
 		if(!user.occupiesEdge(edgeLoc1) && !user.occupiesEdge(edgeLoc2) && !user.occupiesEdge(edgeLoc3)){
-			System.out.println("Failed on adjacent road");
 			return false; //returns false if user does not occupy any of the three locations
 		}
 		
