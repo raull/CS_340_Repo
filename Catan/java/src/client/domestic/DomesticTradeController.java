@@ -298,6 +298,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			WHEAT.setNum(0);
 			break;
 		}
+		updateTradeButton();
 	}
 
 	//Checks to see if the trade has at least one resource being sent
