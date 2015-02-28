@@ -25,7 +25,7 @@ public enum TurnPhase {
 	DISCARDING,
 	@SerializedName("FirstRound")
 	FIRSTROUND,
-	@SerializedName("SecondROund")
+	@SerializedName("SecondRound")
 	SECONDROUND
 	
 }

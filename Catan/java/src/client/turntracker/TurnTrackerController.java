@@ -7,10 +7,10 @@ import java.util.Observer;
 
 import com.google.gson.JsonElement;
 
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.FinishMove;
-
 import client.base.*;
 import client.manager.ClientManager;
 import client.misc.MessageView;
@@ -78,9 +78,10 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	
 	private void initFromModel() {
 		
-		int currPlayerId = ClientManager.instance().getCurrentPlayerInfo().getId();
+		int currPlayerIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		
-		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().getPlayers().get(currPlayerId).getColor());
+		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().
+				getPlayers().get(currPlayerIndex).getColor());
 		
 		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
@@ -120,12 +121,18 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//also, only initialize when all players have joined
 		if(!updated &&
 				ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4) {
-			updated = true;
 			initFromModel();
+			updated = true;
 		}
 		//else if there are 4 players, update
 		else if(ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4){
 			updatePlayers();
+		}
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+		int id = ClientManager.instance().getCurrentPlayerInfo().getId();
+		if(ClientManager.instance().getModelFacade().canFinishTurn(turnManager, turnManager.getUserFromID(id))){
+			System.out.println("Can end turn, setting button");
+			this.getView().updateGameState("End Turn", true);
 		}
 		
 		
