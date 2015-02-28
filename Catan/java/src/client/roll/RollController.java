@@ -62,12 +62,12 @@ public class RollController extends Controller implements IRollController, Obser
 		int dice2 = (int)(Math.random()*6) + 1;
 		int total = dice1 + dice2;
 		
-		RollNumber param = new RollNumber(ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex(), total);
+		RollNumber param = new RollNumber(ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex(), 7);
 		
 		try {
 			ClientManager.instance().getServerProxy().rollNumber(param);
 			getRollView().closeModal();
-			getResultView().setRollValue(total);
+			getResultView().setRollValue(param.getNumber());
 			getResultView().showModal();
 			rollTimer.cancel();
 			rollTimer = new Timer(false);

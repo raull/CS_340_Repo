@@ -202,8 +202,33 @@ public class MapController extends Controller implements IMapController, Observe
 		
 		robberLoc = hexLoc;
 		
-		//TODO determine which players should be displayed in the robview
+		//set the robView with the potential robbing victims
+		ModelFacade facade = ClientManager.instance().getModelFacade();
 		
+		//identify the hextile associated with the hexlocation
+		HexTile tile = facade.getHexTileFromHexLoc(robberLoc);
+		
+		TurnManager turnManager = facade.turnManager();
+		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
+		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
+		User currentUser = turnManager.getUserFromIndex(clientIndex);
+		
+		ArrayList<RobPlayerInfo> victims = new ArrayList<RobPlayerInfo>();
+		
+		for (User victim : users)
+		{
+			if (facade.canRobPlayer(tile, currentUser, victim))
+			{
+				RobPlayerInfo victimInfo = new RobPlayerInfo();
+				victimInfo.setName(victim.getName());
+				victimInfo.setColor(victim.getCatanColor());
+				victimInfo.setNumCards(victim.getHand().getResourceCards().getAllResourceCards().size());
+				victims.add(victimInfo);
+			}
+		}
+		RobPlayerInfo[] candidateVictims = victims.toArray(new RobPlayerInfo[victims.size()]);
+		
+		getRobView().setPlayers(candidateVictims);
 		getRobView().showModal();
 	}
 	
