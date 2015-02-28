@@ -22,6 +22,7 @@ public class MapRobbingState extends MapControllerState{
 	}
 	
 	private MapController controller;
+	private boolean activeMove = false;
 
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
@@ -54,6 +55,7 @@ public class MapRobbingState extends MapControllerState{
 	@Override
 	public void run() 
 	{
+		activeMove = true;
 		//will automatically start the player moving the robber
 		controller.startMove(PieceType.ROBBER, true, true);		
 	}
@@ -91,6 +93,7 @@ public class MapRobbingState extends MapControllerState{
 		RobPlayer robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
 		try {
 			ClientManager.instance().getServerProxy().robPlayer(robplayer);
+			activeMove = false;
 			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			// TODO notify the client of the error and restart a robber drop
@@ -104,9 +107,12 @@ public class MapRobbingState extends MapControllerState{
 	}
 
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
+	public void update() 
+	{
+		if (!activeMove) 
+		{
+			run();
+		}
 	}
 
 }

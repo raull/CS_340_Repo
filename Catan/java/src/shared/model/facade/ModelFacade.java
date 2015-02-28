@@ -492,7 +492,18 @@ public class ModelFacade extends Observable{
 			return false;
 		}
 		
+		//can't steal from yourself
+		if (currUser == victim)
+		{
+			return false;
+		}
+		
 		return true;
+	}
+	
+	public HexTile getHexTileFromHexLoc(HexLocation hexLoc)
+	{
+		return this.map().getHexTileByLocation(hexLoc);
 	}
 	
 	/**

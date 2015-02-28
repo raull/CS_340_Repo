@@ -141,7 +141,8 @@ public class MapSetUpState extends MapControllerState{
 	}
 	
 	@Override
-	public void update() {
+	public void update() 
+	{
 		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
 		Map map = ClientManager.instance().getModelFacade().map();
 		
