@@ -18,6 +18,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.cards.Bank;
@@ -225,7 +226,16 @@ public class ModelFacade extends Observable{
 		if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND 
 				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
 		{
-			return true;
+			//user can't build a road during setup if no building can be attached to it
+			ArrayList<VertexLocation> adjacent = Map.getAdjacentVertices(location);
+			for(VertexLocation vl : adjacent){
+				user.addOccupiedEdge(new Edge(location));
+				if(this.canPlaceBuildingAtLoc(turnManager, vl, user, PieceType.SETTLEMENT)){
+					return true;
+				}
+				user.removeOccupiedEdge(location);
+			}
+			return false;
 		}
 		
 		//check whether the user has a building connecting to new location
