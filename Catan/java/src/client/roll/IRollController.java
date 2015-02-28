@@ -13,5 +13,9 @@ public interface IRollController extends IController
 	 */
 	void rollDice();
 	
+	/**
+	 * Called when the modal dismisses the Result View
+	 */
+	void endRoll();
 }
 
