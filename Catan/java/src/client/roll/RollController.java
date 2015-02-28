@@ -5,7 +5,10 @@ import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
+import shared.model.game.User;
 import shared.proxy.moves.RollNumber;
 import client.base.*;
 import client.manager.ClientManager;
@@ -75,7 +78,11 @@ public class RollController extends Controller implements IRollController, Obser
 
 	@Override
 	public void update(Observable o, Object arg) {
-		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.ROLLING && 
+		ClientManager cm = ClientManager.instance();
+		TurnManager turnManager = cm.getModelFacade().turnManager();
+		User currentUser = turnManager.getUserFromID(cm.getCurrentPlayerInfo().getId());
+		
+		if (cm.getModelFacade().canRollNumber(turnManager, currentUser) &&
 				!getRollView().isModalShowing() && !getResultView().isModalShowing()) {
 			getRollView().showModal();
 			rollTimer.schedule( new TimerTask() {
