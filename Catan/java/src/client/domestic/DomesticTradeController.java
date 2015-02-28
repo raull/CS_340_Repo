@@ -209,7 +209,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		trading = false;
 		getTradeOverlay().closeModal();
 		getWaitOverlay().showModal();
 		waiting = true;
@@ -447,7 +447,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			if (waiting){
 				getWaitOverlay().closeModal();
 				waiting = false;
-				cancelTrade();
+				//cancelTrade();
 			}
 		}
 		}
