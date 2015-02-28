@@ -10,12 +10,15 @@ import com.google.gson.JsonElement;
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
 import shared.definitions.DevCardType;
+import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.cards.Bank;
@@ -77,17 +80,17 @@ public class ModelFacade extends Observable{
 		//System.out.println("new model version num: " + newModelVersion);
 		
 		//check that version number has changed, or not
-		if (ClientManager.instance().hasGameStarted()){
+		/*if (ClientManager.instance().hasGameStarted()){
 			if(modelVersion != newModelVersion) {
 				//update stuff from model
 				this.setChanged();
 				this.notifyObservers();
 			}
 		}
-		else{
+		else{ */
 			this.setChanged();
 			this.notifyObservers();
-		}
+		//}
 		
 	}
 	/**
@@ -203,6 +206,13 @@ public class ModelFacade extends Observable{
 		}
 		
 		//if trying to build road on water, return false
+		HexLocation hexLocation1 = location.getHexLoc();
+		HexLocation hexLocation2 = hexLocation1.getNeighborLoc(location.getDir());
+		HexTile neighbor1 = map.getHexTileByLocation(hexLocation1);
+		HexTile neighbor2 = map.getHexTileByLocation(hexLocation2);
+		if(neighbor1==null && neighbor2 ==null){ //if both sides of the edge aren't valid Hexes
+			return false;
+		}
 		
 		
 		//if edge is occupied, return false;
@@ -211,6 +221,19 @@ public class ModelFacade extends Observable{
 			if(u.occupiesEdge(location)){
 				return false;
 			}
+		}
+		
+		if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND 
+				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		{
+			//user can't build a road during setup if no building can be attached to it
+			ArrayList<VertexLocation> adjacent = Map.getAdjacentVertices(location);
+			for(VertexLocation vl : adjacent){
+				if(this.isValidBuildLocation(vl, user, PieceType.SETTLEMENT)){
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		//check whether the user has a building connecting to new location
@@ -265,59 +288,28 @@ public class ModelFacade extends Observable{
 			return true;
 		}
 		
+		
+		
 		return false;
 	}
 	
-	
-	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
-		return (canBuyPiece(turnManager, user, PieceType.ROAD) && canPlaceRoadAtLoc(turnManager, location, user));
-	}
-	
 	/**
-	 * if user can build a settlement at given location
-	 * @param turnManager -- if it is user's turn, and phase is on playing
-	 * @param location -- if location is valid
-	 * @param user 
-	 * @param free -- if it is set up round
+	 * Does basic adjacency checks
+	 * @param location
+	 * @param user
+	 * @param type
 	 * @return
 	 */
-	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, VertexLocation location, User user, PieceType type) {
-		//if it isn't user's turn
-		if(user != turnManager.currentUser()) {
+	private boolean isValidBuildLocation(VertexLocation location, User user, PieceType type) {
+		if(!this.meetsBuildingConstraints(location, user, type)){
+			System.out.println("Failed on constraints");
 			return false;
 		}
+		else if(type.equals(PieceType.CITY)){
+			return true; //if we're dealing with a city, we don't need to do adjacenty checking
+		}
+		//settlement cannot be placed adjacent to other buildings
 		
-		//if it's not the right phase (either playing or setup rounds)
-		if(!(turnManager.currentTurnPhase()==TurnPhase.PLAYING || 
-				turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND || turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)){
-			return false;
-		}
-		
-		//if trying to build something on water, return false
-		
-		if(type == PieceType.SETTLEMENT){
-			//if the location is already occupied
-			for(User u : turnManager.getUsers()){
-				if(u.occupiesVertex(location)){
-					return false;
-				}
-			}
-		}
-		else if(type == PieceType.CITY){
-			//user must own a settlement at this location already
-			if(!user.occupiesVertex(location)){
-				return false;
-			}
-			else{
-				return true;
-			}
-		}
-		else{
-			assert(false); //means the method was called incorrectly
-		}
-
-		//building cannot be placed adjacent to other buildings
-		location = location.getNormalizedLocation();
 		VertexLocation vLoc1 = null;
 		VertexLocation vLoc2 = null;
 		VertexLocation vLoc3 = null;
@@ -338,12 +330,141 @@ public class ModelFacade extends Observable{
 		
 		for(User u : turnManager.getUsers()){
 			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
+				System.out.println("Failed on vertex adjacency");
 				return false;
 			}
 		}
 
 		
 		return true;
+	}
+	
+	/**
+	 * Verifies that the individual piece constraints are met for building
+	 * @param location
+	 * @param user
+	 * @param type
+	 * @return
+	 */
+	private boolean meetsBuildingConstraints(VertexLocation location,
+			User user, PieceType type) {
+		System.out.println("Entering meetsBuildingConstraints in ModelFacade");
+		//checks for individual piece constrains
+		if(type == PieceType.SETTLEMENT){
+			//if the location is already occupied
+			for(User u : turnManager.getUsers()){
+				if(u.occupiesVertex(location)){
+					return false;
+				}
+			}
+			if (user.getUnusedSettlements() < 1)
+			{
+				return false;
+			}
+		}
+		else if(type == PieceType.CITY){
+			if (user.getUnusedCities() < 1)
+			{
+				return false;
+			}
+			
+			//user must own a settlement at this location already
+			if(!user.occupiesVertex(location)){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		else{
+			assert(false); //means the method was called incorrectly
+		}
+		return true;
+	}
+	public Boolean canPlaceRobberAtLoc(HexLocation hexLoc)
+	{
+		//account for water spaces?
+		
+		HexTile hex = map.getHexTileByLocation(hexLoc);
+		
+		if (hex.canMoveRobberHere())
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
+		return (canBuyPiece(turnManager, user, PieceType.ROAD) && canPlaceRoadAtLoc(turnManager, location, user));
+	}
+	
+	/**
+	 * if user can build a settlement at given location
+	 * @param turnManager -- if it is user's turn, and phase is on playing
+	 * @param location -- if location is valid
+	 * @param user 
+	 * @param free -- if it is set up round
+	 * @return
+	 */
+	public Boolean canPlaceBuildingAtLoc(TurnManager turnManager, VertexLocation location, User user, PieceType type) {
+		//if it isn't user's turn
+		if(user != turnManager.currentUser()) {
+			System.out.println("failed on user's turn");
+			return false;
+		}
+		
+		//if it's not the right phase (either playing or setup rounds)
+		if(!(turnManager.currentTurnPhase()==TurnPhase.PLAYING || 
+				turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND || turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)){
+			System.out.println("Failed at phase");
+			return false;
+		}
+		
+		//if trying to build something on water, return false
+		location = location.getNormalizedLocation(); //restricts to NW and NE
+		HexTile hex1 = map.getHexTileByLocation(location.getHexLoc()); 
+		HexTile hex2 = map.getHexTileByLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North));
+		HexTile hex3;
+		switch(location.getDir()){
+			case NorthEast:
+				hex3 = map.getHexTileByLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast));
+				break;
+			case NorthWest:
+				hex3 = map.getHexTileByLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest));
+				break;
+			default:
+				assert false;
+				return false;
+			
+		}
+		if(hex1 == null && hex2 ==null && hex3 ==null){ //if all 3 are water(null), return false
+			/*hex1 is the hex below our vertex, hex2 is the hex above, hex3*/
+			System.out.println("Fails on water test");
+			return false;
+		}
+		
+		//determines whether a road is already connected to here
+		EdgeLocation edgeLoc1 = null;
+		EdgeLocation edgeLoc2 = null;
+		EdgeLocation edgeLoc3 = null;
+		if(location.getDir()==VertexDirection.NorthEast){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.North);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.NorthEast);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthEast);
+		}
+		else if(location.getDir()==VertexDirection.NorthWest){
+			edgeLoc1 = new EdgeLocation(location.getHexLoc(), EdgeDirection.North);
+			edgeLoc2 = new EdgeLocation(location.getHexLoc(), EdgeDirection.NorthWest);
+			edgeLoc3 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.North), EdgeDirection.SouthWest);
+		}
+		if(!user.occupiesEdge(edgeLoc1) && !user.occupiesEdge(edgeLoc2) && !user.occupiesEdge(edgeLoc3)){
+			System.out.println("Failed on adjacent road");
+			return false; //returns false if user does not occupy any of the three locations
+		}
+		
+		
+		return this.isValidBuildLocation(location, user, type);
 	}
 	
 	/**
@@ -388,7 +509,9 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canRobPlayer(HexTile hexTile,User currUser, User victim) {
 		//if it isn't user's turn or if model status is not on playing
-		if(currUser != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		if(currUser != turnManager.currentUser() 
+				|| (turnManager.currentTurnPhase() != TurnPhase.PLAYING 
+				&& turnManager.currentTurnPhase() != TurnPhase.ROBBING)) {
 			return false;
 		}
 		//if new location already has robber, robber is being kept in the same location 
