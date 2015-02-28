@@ -387,6 +387,10 @@ public class ModelFacade extends Observable{
 		
 		HexTile hex = map.getHexTileByLocation(hexLoc);
 		
+		if (hex == null) {
+			return false;
+		}
+		
 		if (hex.canMoveRobberHere())
 		{
 			return true;

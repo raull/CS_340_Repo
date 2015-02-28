@@ -209,7 +209,7 @@ public class MapController extends Controller implements IMapController, Observe
 		HexTile tile = facade.getHexTileFromHexLoc(robberLoc);
 		
 		TurnManager turnManager = facade.turnManager();
-		ArrayList<User> users = (ArrayList<User>) turnManager.getUsers();
+		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
 		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		User currentUser = turnManager.getUserFromIndex(clientIndex);
 		
@@ -226,7 +226,7 @@ public class MapController extends Controller implements IMapController, Observe
 				victims.add(victimInfo);
 			}
 		}
-		RobPlayerInfo[] candidateVictims = (RobPlayerInfo[]) victims.toArray();
+		RobPlayerInfo[] candidateVictims = victims.toArray(new RobPlayerInfo[victims.size()]);
 		
 		getRobView().setPlayers(candidateVictims);
 		getRobView().showModal();

@@ -1,10 +1,15 @@
 package client.map;
 
+import java.util.ArrayList;
+
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.board.HexTile;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
+import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.RobPlayer;
 import client.base.IController;
@@ -84,6 +89,7 @@ public class MapRobbingState extends MapControllerState{
 	{
 		// placeRobber on view
 		//initialize robview
+		
 	}
 	
 	@Override
@@ -109,7 +115,7 @@ public class MapRobbingState extends MapControllerState{
 	@Override
 	public void update() 
 	{
-		if (!activeMove) 
+		if (!activeMove && !ClientManager.instance().isUserRolling()) 
 		{
 			run();
 		}
