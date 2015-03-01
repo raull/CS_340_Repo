@@ -85,7 +85,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		}
 		getDiscardView().setResourceDiscardAmount(resource, amount);
 		setResourceChangeEnabled(resource);
-		getDiscardView().setStateMessage(getTotalDiscardNum() + "/" + needToDiscard);
+		getDiscardView().setStateMessage("Discard: " + getTotalDiscardNum() + "/" + needToDiscard);
 		checkCanDiscard();
 	}
 
@@ -118,7 +118,7 @@ public class DiscardController extends Controller implements IDiscardController,
 		}
 		getDiscardView().setResourceDiscardAmount(resource, amount);
 		setResourceChangeEnabled(resource);
-		getDiscardView().setStateMessage(getTotalDiscardNum() + "/" + needToDiscard);
+		getDiscardView().setStateMessage("Discard: " + getTotalDiscardNum() + "/" + needToDiscard);
 		checkCanDiscard();
 	}
 
@@ -194,23 +194,23 @@ public class DiscardController extends Controller implements IDiscardController,
 		boolean decrease = false;
 		switch(resource) {
 			case BRICK:
-				increase = (user.getBrickCards() < brickToDiscard);
+				increase = (user.getBrickCards() > brickToDiscard);
 				decrease = (brickToDiscard != 0);
 				break;
 			case ORE:
-				increase = (user.getOreCards() < oreToDiscard);
+				increase = (user.getOreCards() > oreToDiscard);
 				decrease = (oreToDiscard != 0);
 				break;
 			case SHEEP:
-				increase = (user.getSheepCards() < sheepToDiscard);
+				increase = (user.getSheepCards() > sheepToDiscard);
 				decrease = (sheepToDiscard != 0);
 				break;
 			case WHEAT:
-				increase = (user.getWheatCards() < wheatToDiscard);
+				increase = (user.getWheatCards() > wheatToDiscard);
 				decrease = (wheatToDiscard != 0);
 				break;
 			case WOOD:
-				increase = (user.getWoodCards() < woodToDiscard);
+				increase = (user.getWoodCards() > woodToDiscard);
 				decrease = (woodToDiscard != 0);
 				break;
 			default: 
@@ -271,7 +271,7 @@ public class DiscardController extends Controller implements IDiscardController,
 
 			int userCardCount = user.getHand().getResourceCards().getAllResourceCards().size();
 			
-			System.out.println("user?? current id: " + currPlayerId + " turn index: " + user.getTurnIndex() + " current player info index: " + cm.getCurrentPlayerInfo().getPlayerIndex());
+			System.out.println("user?? current id: " + currPlayerId + " turn index: " + user.getTurnIndex() + " current player info index: " + cm.getCurrentPlayerInfo().getPlayerIndex() + " " + cm.getCurrentPlayerInfo().getName());
 			
 			System.out.println("user card count: " + userCardCount);
 			System.out.println("has user discarded? " + user.getHasDiscarded());
@@ -284,7 +284,7 @@ public class DiscardController extends Controller implements IDiscardController,
 				initMaxAmounts();
 				//get how much user has to discard and set in view
 				needToDiscard = userCardCount/2;
-				getDiscardView().setStateMessage("0/" + needToDiscard);
+				getDiscardView().setStateMessage("Discard: 0/" + needToDiscard);
 				initResourceChangeEnabled();
 				
 			}
