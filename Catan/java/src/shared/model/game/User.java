@@ -237,6 +237,10 @@ public class User {
 	 * @return true if the User occupies the Vertex, false otherwise
 	 */
 	public boolean occupiesVertex(VertexLocation location){
+		if(location == null){
+			System.out.println("PROBLEM: In User method occupiesVertex() the location was null");
+			assert false;
+		}
 		for (Vertex vertex : occupiedVertices){
 			if(vertex.getLocation().getNormalizedLocation().equals(location.getNormalizedLocation())){
 				return true;
