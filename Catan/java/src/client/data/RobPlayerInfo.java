@@ -18,6 +18,7 @@ public class RobPlayerInfo extends PlayerInfo
 	
 	private int numCards;
 	
+	
 	public RobPlayerInfo()
 	{
 		super();

@@ -161,7 +161,7 @@
     ],
     "roads": [
       {
-        "owner": 0,
+        "owner": 1,
         "location": {
           "direction": "SW",
           "x": 2,
@@ -169,7 +169,7 @@
         }
       },
       {
-        "owner": 0,
+        "owner": 1,
         "location": {
           "direction": "SW",
           "x": 1,
@@ -177,7 +177,7 @@
         }
       },
       {
-        "owner": 2,
+        "owner": 1,
         "location": {
           "direction": "NW",
           "x": -1,
@@ -187,16 +187,16 @@
       {
         "owner": 1,
         "location": {
-          "direction": "SE",
-          "x": 0,
-          "y": 2
+          "direction": “NW”,
+          "x": 1,
+          "y": 0
         }
       },
       {
         "owner": 1,
         "location": {
           "direction": "SW",
-          "x": 2,
+          "x": 0,
           "y": 0
         }
       }

@@ -52,6 +52,7 @@ public class ServerProxy implements Proxy{
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
 	}
 	
+
 	public JsonElement getJson(InputStream input) throws UnsupportedEncodingException{
 		
 		JsonElement element = gson.fromJson (getString(input), JsonElement.class);

@@ -7,10 +7,10 @@ import java.util.Observer;
 
 import com.google.gson.JsonElement;
 
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.FinishMove;
-
 import client.base.*;
 import client.manager.ClientManager;
 import client.misc.MessageView;
@@ -127,6 +127,15 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//else if there are 4 players, update
 		else if(ClientManager.instance().getCurrentGameInfo().getPlayers().size() == 4){
 			updatePlayers();
+		}
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+		int id = ClientManager.instance().getCurrentPlayerInfo().getId();
+		if(ClientManager.instance().getModelFacade().canFinishTurn(turnManager, turnManager.getUserFromID(id))){
+			System.out.println("Can end turn, setting button");
+			this.getView().updateGameState("End Turn", true);
+		}
+		else {
+			this.getView().updateGameState("Waiting for other players", false);
 		}
 		
 		
