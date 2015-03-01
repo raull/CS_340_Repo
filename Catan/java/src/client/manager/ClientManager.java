@@ -30,6 +30,7 @@ public class ClientManager {
 	private GameInfo currentGameInfo = new GameInfo();
 	private Poller serverPoller = new Poller(serverProxy, modelFacade);
 	private boolean gameStarted = false;
+	private boolean isUserRolling = false;
 	
 	private boolean serverPollerRunning = false;
 	
@@ -131,6 +132,14 @@ public class ClientManager {
 			alertView.setMessage("Network Error. Please check your connection.");
 			alertView.showModal();
 		}
+	}
+
+	public boolean isUserRolling() {
+		return isUserRolling;
+	}
+
+	public void setUserRolling(boolean isUserRolling) {
+		this.isUserRolling = isUserRolling;
 	}
 	
 }

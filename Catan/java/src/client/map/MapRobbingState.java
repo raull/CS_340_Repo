@@ -1,10 +1,15 @@
 package client.map;
 
+import java.util.ArrayList;
+
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.board.HexTile;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
+import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.RobPlayer;
 import client.base.IController;
@@ -22,6 +27,7 @@ public class MapRobbingState extends MapControllerState{
 	}
 	
 	private MapController controller;
+	private boolean activeMove = false;
 
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
@@ -54,6 +60,7 @@ public class MapRobbingState extends MapControllerState{
 	@Override
 	public void run() 
 	{
+		activeMove = true;
 		//will automatically start the player moving the robber
 		controller.startMove(PieceType.ROBBER, true, true);		
 	}
@@ -82,6 +89,7 @@ public class MapRobbingState extends MapControllerState{
 	{
 		// placeRobber on view
 		//initialize robview
+		
 	}
 	
 	@Override
@@ -91,6 +99,7 @@ public class MapRobbingState extends MapControllerState{
 		RobPlayer robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
 		try {
 			ClientManager.instance().getServerProxy().robPlayer(robplayer);
+			activeMove = false;
 			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			// TODO notify the client of the error and restart a robber drop
@@ -104,9 +113,12 @@ public class MapRobbingState extends MapControllerState{
 	}
 
 	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-		
+	public void update() 
+	{
+		if (!activeMove && !ClientManager.instance().isUserRolling()) 
+		{
+			run();
+		}
 	}
 
 }

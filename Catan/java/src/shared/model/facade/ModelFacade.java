@@ -18,6 +18,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.cards.Bank;
@@ -81,7 +82,7 @@ public class ModelFacade extends Observable{
 		//int newModelVersion = model.getVersion();
 
 		
-		//System.out.println("new model version num: " + newModelVersion);
+		System.out.println("Current State: " + turnManager.currentTurnPhase().toString());
 		
 		//check that version number has changed, or not
 		/*if (ClientManager.instance().hasGameStarted()){
@@ -204,6 +205,8 @@ public class ModelFacade extends Observable{
 	 */
 	
 	public Boolean canPlaceRoadAtLoc(TurnManager turnManager, EdgeLocation location, User user) {
+		location = location.getNormalizedLocation();
+		
 		//if it's not user's turn, return false
 		if(user != turnManager.currentUser()) {
 			return false;
@@ -230,7 +233,14 @@ public class ModelFacade extends Observable{
 		if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND 
 				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
 		{
-			return true;
+			//user can't build a road during setup if no building can be attached to it
+			ArrayList<VertexLocation> adjacent = Map.getAdjacentVertices(location);
+			for(VertexLocation vl : adjacent){
+				if(this.isValidBuildLocation(vl, user, PieceType.SETTLEMENT)){
+					return true;
+				}
+			}
+			return false;
 		}
 		
 		//check whether the user has a building connecting to new location
@@ -290,11 +300,105 @@ public class ModelFacade extends Observable{
 		return false;
 	}
 	
+	/**
+	 * Does basic adjacency checks
+	 * @param location
+	 * @param user
+	 * @param type
+	 * @return
+	 */
+	private boolean isValidBuildLocation(VertexLocation location, User user, PieceType type) {
+		location = location.getNormalizedLocation();
+		
+		if(!this.meetsBuildingConstraints(location, user, type)){
+			return false;
+		}
+		else if(type.equals(PieceType.CITY)){
+			return true; //if we're dealing with a city, we don't need to do adjacenty checking
+		}
+		//settlement cannot be placed adjacent to other buildings
+		
+		VertexLocation vLoc1 = null;
+		VertexLocation vLoc2 = null;
+		VertexLocation vLoc3 = null;
+
+		if(location.getDir() == VertexDirection.NorthEast){
+			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
+			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.NorthWest);
+		}
+		else if(location.getDir() == VertexDirection.NorthWest){
+			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
+			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
+			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.NorthEast);
+		}
+		else{
+			assert(false); //means the normalization broke and all is lost
+		}
+		
+		for(User u : turnManager.getUsers()){
+			if(vLoc1==null || vLoc2==null || vLoc3==null){
+				System.out.println("PROBLEM: In ModelFacade method isValidBuildingLoc, a vertexLocation was null (~line 334)");
+			}
+			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
+				return false;
+			}
+		}
+
+		
+		return true;
+	}
+	
+	/**
+	 * Verifies that the individual piece constraints are met for building
+	 * @param location
+	 * @param user
+	 * @param type
+	 * @return
+	 */
+	private boolean meetsBuildingConstraints(VertexLocation location,
+			User user, PieceType type) {
+		//checks for individual piece constrains
+		if(type == PieceType.SETTLEMENT){
+			//if the location is already occupied
+			for(User u : turnManager.getUsers()){
+				if(u.occupiesVertex(location)){
+					return false;
+				}
+			}
+			if (user.getUnusedSettlements() < 1)
+			{
+				return false;
+			}
+		}
+		else if(type == PieceType.CITY){
+			if (user.getUnusedCities() < 1)
+			{
+				return false;
+			}
+			
+			//user must own a settlement at this location already
+			if(!user.occupiesVertex(location)){
+				return false;
+			}
+			else{
+				return true;
+			}
+		}
+		else{
+			assert(false); //means the method was called incorrectly
+		}
+		return true;
+	}
 	public Boolean canPlaceRobberAtLoc(HexLocation hexLoc)
 	{
 		//account for water spaces?
 		
 		HexTile hex = map.getHexTileByLocation(hexLoc);
+		
+		if (hex == null) {
+			return false;
+		}
 		
 		if (hex.canMoveRobberHere())
 		{
@@ -325,11 +429,6 @@ public class ModelFacade extends Observable{
 		//if it's not the right phase (either playing or setup rounds)
 		if(!(turnManager.currentTurnPhase()==TurnPhase.PLAYING || 
 				turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND || turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)){
-			return false;
-		}
-		
-		if (user.getUnusedRoads() < 1)
-		{
 			return false;
 		}
 		
@@ -374,65 +473,7 @@ public class ModelFacade extends Observable{
 		}
 		
 		
-		//checks for individual piece constrains
-		if(type == PieceType.SETTLEMENT){
-			//if the location is already occupied
-			for(User u : turnManager.getUsers()){
-				if(u.occupiesVertex(location)){
-					return false;
-				}
-			}
-			if (user.getUnusedSettlements() < 1)
-			{
-				return false;
-			}
-		}
-		else if(type == PieceType.CITY){
-			if (user.getUnusedCities() < 1)
-			{
-				return false;
-			}
-			
-			//user must own a settlement at this location already
-			if(!user.occupiesVertex(location)){
-				return false;
-			}
-			else{
-				return true;
-			}
-		}
-		else{
-			assert(false); //means the method was called incorrectly
-		}
-
-		//building cannot be placed adjacent to other buildings
-		
-		VertexLocation vLoc1 = null;
-		VertexLocation vLoc2 = null;
-		VertexLocation vLoc3 = null;
-
-		if(location.getDir() == VertexDirection.NorthEast){
-			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.East);
-			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthWest);
-			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthEast), VertexDirection.West);
-		}
-		else if(location.getDir() == VertexDirection.NorthWest){
-			vLoc1 = new VertexLocation(location.getHexLoc(), VertexDirection.West);
-			vLoc2 = new VertexLocation(location.getHexLoc(), VertexDirection.NorthEast);
-			vLoc3 = new VertexLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), VertexDirection.East);
-		}
-		else{
-			assert(false); //means the normalization broke and all is lost
-		}
-		
-		for(User u : turnManager.getUsers()){
-			if (u.occupiesVertex(vLoc1) || u.occupiesVertex(vLoc2) || u.occupiesVertex(vLoc3)){
-				return false;
-			}
-		}
-
-		
-		return true;
+		return this.isValidBuildLocation(location, user, type);
 	}
 	
 	/**
@@ -497,7 +538,18 @@ public class ModelFacade extends Observable{
 			return false;
 		}
 		
+		//can't steal from yourself
+		if (currUser == victim)
+		{
+			return false;
+		}
+		
 		return true;
+	}
+	
+	public HexTile getHexTileFromHexLoc(HexLocation hexLoc)
+	{
+		return this.map().getHexTileByLocation(hexLoc);
 	}
 	
 	/**
@@ -680,7 +732,8 @@ public class ModelFacade extends Observable{
 	 * @param newRobberLoc -- dev card will move robber
 	 * @return
 	 */
-	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, HexTile newRobberLoc) {
+	public Boolean canPlaySoldier(TurnManager turnManager, User user, User victim, 
+			HexTile newRobberLoc) {
 		DevCard soldierCard = new DevCard(DevCardType.SOLDIER);
 		//if it isn't user's turn or if model status is not on playing or if user does not have soldier card
 		//if user has already played dev card
@@ -689,6 +742,7 @@ public class ModelFacade extends Observable{
 		}
 		return canRobPlayer(newRobberLoc, user, victim);
 	}
+	
 	
 	/**
 	 * if user can play year of plenty dev card 

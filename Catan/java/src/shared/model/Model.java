@@ -182,6 +182,10 @@ public class Model {
 				JsonObject jsonTradeOffer = jsonObject.get("tradeOffer").getAsJsonObject();
 				updateTradeOffer(jsonTradeOffer);
 			}
+			
+			else {
+				tradeOffer = null;
+			}
 
 			//turn manager
 			JsonObject jsonTurnManager = jsonModel.getAsJsonObject().get("turnTracker").getAsJsonObject();
@@ -616,9 +620,6 @@ public class Model {
 		
 		String turn = gson.fromJson(jsonTurnManager.get("status"), String.class);
 		TurnPhase currTurnPhase = gson.fromJson(jsonTurnManager.get("status"), TurnPhase.class);
-		System.out.println("Turn Phase: ");
-		System.out.println("\t as String: " + turn);
-		System.out.println("\t TurnPhase:" + currTurnPhase);
 
 		//index of user with longest road, -1 if none
 		int longestRoad = jsonTurnManager.get("longestRoad").getAsInt();

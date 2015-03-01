@@ -138,6 +138,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			System.out.println("Can end turn, setting button");
 			this.getView().updateGameState("End Turn", true);
 		}
+		else {
+			this.getView().updateGameState("Waiting for other players", false);
+		}
 		
 		
 	}
