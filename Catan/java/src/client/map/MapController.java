@@ -223,6 +223,8 @@ public class MapController extends Controller implements IMapController, Observe
 				victimInfo.setName(victim.getName());
 				victimInfo.setColor(victim.getCatanColor());
 				victimInfo.setNumCards(victim.getHand().getResourceCards().getAllResourceCards().size());
+				victimInfo.setPlayerIndex(victim.getTurnIndex());
+				victimInfo.setId(victim.getPlayerID());
 				victims.add(victimInfo);
 			}
 		}
@@ -326,6 +328,12 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 	
 	public void determineState(TurnManager turnManager) {
+		
+		if (state instanceof MapRoadBuildingState)
+		{
+			return;
+		}
+		
 		//set the state
 		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		if (turnManager.getCurrentTurn() != clientIndex)

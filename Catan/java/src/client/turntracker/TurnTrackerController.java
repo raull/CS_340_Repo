@@ -122,7 +122,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//also, only initialize when all players have joined
 		if(!updated &&
 				ClientManager.instance().getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT) {
-
+			
 			initFromModel();
 			updated = true;
 		}

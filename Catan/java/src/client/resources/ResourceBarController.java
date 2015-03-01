@@ -2,11 +2,9 @@ package client.resources;
 
 import java.util.*;
 
-import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.cards.Bank;
-import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
@@ -94,18 +92,17 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		
 		User currentUser = facade.turnManager().getUserFromID(currentID);
 		ResourceCardDeck resourceHand = currentUser.getHand().getResourceCards();
-		DevCardDeck devHand = currentUser.getHand().getUsableDevCards();
 		Bank bank = facade.bank();
 		
 		//Update view
-		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.BRICK));
+		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.WOOD));
 		getView().setElementAmount(ResourceBarElement.BRICK, resourceHand.getCountByType(ResourceType.BRICK));
 		getView().setElementAmount(ResourceBarElement.SHEEP, resourceHand.getCountByType(ResourceType.SHEEP));
 		getView().setElementAmount(ResourceBarElement.WHEAT, resourceHand.getCountByType(ResourceType.WHEAT));
 		getView().setElementAmount(ResourceBarElement.ORE, resourceHand.getCountByType(ResourceType.ORE));
 
 		getView().setElementAmount(ResourceBarElement.ROAD, currentUser.getUnusedRoads());
-		getView().setElementAmount(ResourceBarElement.SOLDIERS, devHand.getCountByType(DevCardType.SOLDIER));
+		getView().setElementAmount(ResourceBarElement.SOLDIERS, currentUser.getSoldiers());
 		getView().setElementAmount(ResourceBarElement.SETTLEMENT, currentUser.getUnusedSettlements());
 		getView().setElementAmount(ResourceBarElement.CITY, currentUser.getUnusedCities());
 		

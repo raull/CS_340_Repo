@@ -103,10 +103,8 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		if(isFull() && getView().isModalShowing() && !ClientManager.instance().hasGameStarted()) {
 			ClientManager.instance().startGame();
 			getView().closeModal();
-		} 
-		else if (updated && !ClientManager.instance().hasGameStarted()){
+		} else if (updated && !ClientManager.instance().hasGameStarted()){
 			getView().closeModal();
-			System.out.println("calling show modal in player waiting2");
 			getView().showModal();
 		}
 		

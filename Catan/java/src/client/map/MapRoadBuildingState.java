@@ -79,6 +79,8 @@ public class MapRoadBuildingState extends MapControllerState
 			//place it on the screen
 			controller.getView().placeRoad(edgeLoc, client.getColor());	
 			
+			//TODO temporarily give the user that edge??
+			
 			//start another drop
 			controller.startMove(PieceType.ROAD, true, false);
 		}
@@ -124,7 +126,8 @@ public class MapRoadBuildingState extends MapControllerState
 	}
 
 	@Override
-	public void update() {
+	public void update() 
+	{
 		// TODO Auto-generated method stub
 		
 	}

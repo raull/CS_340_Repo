@@ -127,13 +127,13 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void playRoadBuildCard() {
-		
+		isPlay = false;
 		roadAction.execute();
 	}
 
 	@Override
 	public void playSoldierCard() {
-		
+		isPlay = false;
 		soldierAction.execute();
 	}
 
@@ -163,10 +163,10 @@ public class DevCardController extends Controller implements IDevCardController,
 		setCardAmount(DevCardType.ROAD_BUILD);
 		setCardAmount(DevCardType.SOLDIER);
 		setCardAmount(DevCardType.YEAR_OF_PLENTY);
-		if (isBuy){
+		if (isBuy && !getBuyCardView().isModalShowing()){
 			getBuyCardView().showModal();
 		}
-		if (isPlay){
+		if (isPlay && !getPlayCardView().isModalShowing()){
 			getPlayCardView().showModal();
 		}
 	}
