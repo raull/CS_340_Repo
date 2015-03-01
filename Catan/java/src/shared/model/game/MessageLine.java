@@ -10,4 +10,14 @@ public class MessageLine {
 		this.source = source;
 	}
 	
+	public String getMessage()
+	{
+		return message;
+	}
+	
+	public String getSource()
+	{
+		return source;
+	}
+	
 }
