@@ -134,6 +134,8 @@ public class DiscardController extends Controller implements IDiscardController,
 			DiscardCards discardReq = new DiscardCards(playerIndex, toDiscard);
 			
 			cm.getServerProxy().discardCards(discardReq);
+			//once discard is called, set user has discarded to true
+			cm.getModelFacade().turnManager().getUserFromIndex(playerIndex).setHasDiscarded(true);
 			
 			//force the model to update right away
 			JsonElement model = cm.getServerProxy().model(-1);
@@ -252,34 +254,32 @@ public class DiscardController extends Controller implements IDiscardController,
 			//if player has more than 8 cards, must discard
 			//check that the user hasn't discarded yet
 			
-//			int currPlayerId = cm.getCurrentPlayerInfo().getId();
-			int currPlayerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
+			int currPlayerId = cm.getCurrentPlayerInfo().getId();
+//			int currPlayerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 			
 			TurnManager turnManager = cm.getModelFacade().turnManager();
 			
-//			User user = turnManager.getUser(currPlayerId);
-			User user = turnManager.getUserFromIndex(currPlayerIndex);
+			User user = turnManager.getUser(currPlayerId);
+//			User user = turnManager.getUserFromIndex(currPlayerIndex);
 
 			int userCardCount = user.getHand().getResourceCards().getAllResourceCards().size();
 			
+			System.out.println("user?? current id: " + currPlayerId + " turn index: " + user.getTurnIndex() + " current player info index: " + cm.getCurrentPlayerInfo().getPlayerIndex());
+			
 			System.out.println("user card count: " + userCardCount);
-
+			System.out.println("has user discarded? " + user.getHasDiscarded());
 			
 			if(userCardCount > 7 && !user.getHasDiscarded()) {
+				//show modal
+				getDiscardView().showModal();
+				
 				//initialize the max amounts a player can discard
 				initMaxAmounts();
 				//get how much user has to discard and set in view
 				needToDiscard = userCardCount/2;
 				getDiscardView().setStateMessage("0/" + needToDiscard);
 				initResourceChangeEnabled();
-				//show modal
-				getDiscardView().showModal();
 				
-				//once discard is called, set user has discarded to true
-				user.setHasDiscarded(true);
-				
-				//show the wait view modal if it's still discard phase but user has already discarded
-				getWaitView().showModal();
 			}
 			//else show the wait view while other players discard
 			else{
