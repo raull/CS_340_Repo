@@ -9,6 +9,7 @@ import shared.definitions.*;
 import shared.model.board.Port;
 import shared.model.cards.Bank;
 import shared.model.cards.ResourceCard;
+import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
@@ -85,6 +86,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 			cm.getServerProxy().maritimeTrade(tradeMaritimeReq);
 			//close overlay after trade
 			getTradeOverlay().closeModal();
+			getTradeOverlay().reset();
 		} catch (ProxyException e) {
 			e.printStackTrace();
 			MessageView alertView = new MessageView();
@@ -134,9 +136,11 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 
 	@Override
 	public void update(Observable o, Object arg) {
-
+		TurnManager tm = cm.instance().getModelFacade().turnManager();
+		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 		// enable maritime trade during playing phase
-		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING) {
+		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING && tm.getCurrentTurn() ==
+				playerIndex) {
 			//update what ratios players can trade at based on ports
 			udpateResourceRatio();
 			getTradeView().enableMaritimeTrade(true);

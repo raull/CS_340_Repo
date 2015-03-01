@@ -211,6 +211,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		trading = false;
 		getTradeOverlay().closeModal();
+		getTradeOverlay().reset();
 		getWaitOverlay().showModal();
 		waiting = true;
 	}
@@ -363,6 +364,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		WOOD = new tradeResource();
 		
 		getTradeOverlay().closeModal();
+		getTradeOverlay().reset();
 		trading = false;
 	}
 
