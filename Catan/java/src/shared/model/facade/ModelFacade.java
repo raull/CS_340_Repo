@@ -77,7 +77,7 @@ public class ModelFacade extends Observable{
 		score = model.getScoreKeeper();
 		int newModelVersion = model.getVersion();
 		
-		//System.out.println("new model version num: " + newModelVersion);
+		System.out.println("Current State: " + turnManager.currentTurnPhase().toString());
 		
 		//check that version number has changed, or not
 		/*if (ClientManager.instance().hasGameStarted()){

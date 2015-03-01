@@ -262,6 +262,7 @@ public class MapController extends Controller implements IMapController, Observe
 	public void update(Observable o, Object arg) //TODO verify that this is correct
 	{
 		if (state == null && ClientManager.instance().hasGameStarted()) {
+			OverlayView.closeAllModals();
 			initFromModel();
 		} else if (state != null){
 			TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
