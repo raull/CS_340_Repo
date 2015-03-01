@@ -11,6 +11,7 @@ import shared.locations.VertexLocation;
 import shared.model.board.Map;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
+import shared.model.game.TurnPhase;
 import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.BuildRoad;
@@ -26,6 +27,8 @@ public class MapSetUpState extends MapControllerState{
 
 	private MapController controller;
 	private boolean activeMove = false;
+	private final int MAX_ROADS = 15;
+	private final int MAX_SETTLEMENTS = 5;
 	
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
@@ -65,7 +68,39 @@ public class MapSetUpState extends MapControllerState{
 	{
 		//This will automatically start the user placing a road
 		activeMove = true;
-		startMove(PieceType.ROAD, true, true);
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+
+		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.FIRSTROUND)
+		{
+			if (turnManager.currentUser().getUnusedRoads() == MAX_ROADS)
+			{
+				startMove(PieceType.ROAD, true, true);
+			}
+			else if (turnManager.currentUser().getUnusedSettlements() == MAX_SETTLEMENTS)
+			{
+				controller.startMove(PieceType.SETTLEMENT, true, false);
+			}
+			else
+			{
+				assert false;
+			}
+		}
+		if (ClientManager.instance().getCurrentTurnPhase() == TurnPhase.SECONDROUND)
+		{
+			if (turnManager.currentUser().getUnusedRoads() == MAX_ROADS - 1)
+			{
+				startMove(PieceType.ROAD, true, true);
+			}
+			else if (turnManager.currentUser().getUnusedSettlements() == MAX_SETTLEMENTS -1)
+			{
+				controller.startMove(PieceType.SETTLEMENT, true, false);
+			}
+			else
+			{
+				assert false;
+			}
+		}
+		
 	}
 
 	@Override
