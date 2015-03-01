@@ -32,7 +32,7 @@ public class SendChat {
 		return playerIndex;
 	}
 	public void setPlayerIndex(int playerIndex) {
-		playerIndex = playerIndex;
+		this.playerIndex = playerIndex;
 	}
 	public String getContent() {
 		return content;

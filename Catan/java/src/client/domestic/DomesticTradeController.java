@@ -439,6 +439,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 					setAcceptWindow();
 					acceptSet = true;
 				}
+				if (!getTradeOverlay().isModalShowing())
 				getAcceptOverlay().showModal();
 				accepting = true;
 		//	}
