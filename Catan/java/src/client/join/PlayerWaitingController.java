@@ -102,8 +102,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			ClientManager.instance().startGame();
 			getView().closeModal();
 		} else if (updated && !ClientManager.instance().hasGameStarted()){
+			getView().closeModal();
 			getView().showModal();
 		}
+		
+		OverlayView.printStack();
 	}
 	
 
