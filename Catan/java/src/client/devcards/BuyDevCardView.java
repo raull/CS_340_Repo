@@ -31,6 +31,7 @@ public class BuyDevCardView extends OverlayView implements IBuyDevCardView {
     private JLabel imageLabel;
 	private JPanel buttonPanel;
 
+	
 	public BuyDevCardView() {
 
 		this.setOpaque(true);
@@ -48,10 +49,13 @@ public class BuyDevCardView extends OverlayView implements IBuyDevCardView {
             imageLabel = new JLabel(new ImageIcon(devCardImg));
             this.setBackground(Color.WHITE);
             this.add(imageLabel, BorderLayout.CENTER);
+            
         } catch (IOException ex) {
             // Handle Exception Here
         }
 
+        
+        
 		acceptButton = new JButton("Buy Card");
 		acceptButton.addActionListener(actionListener);
 		Font buttonFont = acceptButton.getFont();
@@ -69,6 +73,24 @@ public class BuyDevCardView extends OverlayView implements IBuyDevCardView {
 		buttonPanel.setBackground(Color.WHITE);
 		this.add(buttonPanel, BorderLayout.SOUTH);
 	}
+	
+	// Function for checking to see if user can buy a dev card; belongs in ResourceBar 
+	// controller.
+	/*public void checkPhase(){
+        if (ClientManager.instance().getCurrentTurnPhase().name() != "PLAYING")
+        	imageLabel.setEnabled(false);
+        //If the phase is good, checks to see if user can buy a DevCard
+        else if (ClientManager.instance().getCurrentTurnPhase().name() == "PLAYING" && 
+        		ClientManager.instance().getModelFacade().canBuyDevCard(
+        		ClientManager.instance().getModelFacade().turnManager(),
+        		ClientManager.instance().getModelFacade().turnManager().currentUser(), 
+        		ClientManager.instance().getModelFacade().bank().getDevCardDeck())){
+            	imageLabel.setEnabled(true);
+        	}
+            else{
+            	imageLabel.setEnabled(false);
+            }
+    }*/
 	
 	@Override
 	public IDevCardController getController() {

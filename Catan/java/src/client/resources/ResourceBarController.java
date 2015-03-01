@@ -98,7 +98,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		Bank bank = facade.bank();
 		
 		//Update view
-		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.BRICK));
+		getView().setElementAmount(ResourceBarElement.WOOD, resourceHand.getCountByType(ResourceType.WOOD));
 		getView().setElementAmount(ResourceBarElement.BRICK, resourceHand.getCountByType(ResourceType.BRICK));
 		getView().setElementAmount(ResourceBarElement.SHEEP, resourceHand.getCountByType(ResourceType.SHEEP));
 		getView().setElementAmount(ResourceBarElement.WHEAT, resourceHand.getCountByType(ResourceType.WHEAT));
