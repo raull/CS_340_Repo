@@ -142,6 +142,7 @@ public class DiscardController extends Controller implements IDiscardController,
 			//reset the cards so next time the cards won't be messed up
 			resetToDiscard();
 			
+			//close the modal
 			getDiscardView().closeModal();
 			
 		} catch (ProxyException e) {
@@ -276,10 +277,12 @@ public class DiscardController extends Controller implements IDiscardController,
 				
 				//once discard is called, set user has discarded to true
 				user.setHasDiscarded(true);
-				//close the discard modal
-				getDiscardView().closeModal();
 				
 				//show the wait view modal if it's still discard phase but user has already discarded
+				getWaitView().showModal();
+			}
+			//else show the wait view while other players discard
+			else{
 				getWaitView().showModal();
 			}
 			
