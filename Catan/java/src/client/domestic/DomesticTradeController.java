@@ -427,7 +427,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		
 		//If trading, keeps modal up
-		if (trading){
+		if (trading && !getTradeOverlay().isModalShowing()){
 			getTradeOverlay().showModal();
 		}
 		// Shows the Accept Overlay if necessary
