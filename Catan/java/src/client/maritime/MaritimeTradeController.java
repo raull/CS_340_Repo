@@ -66,6 +66,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		//show the overlay
 		getTradeOverlay().showModal();
 		initGiveOptions();
+		getTradeOverlay().setTradeEnabled(false);
 		//initGetOptions();
 	}
 
@@ -105,7 +106,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		//sets the resource user is getting
 		getTradeOverlay().selectGetOption(resource, 1);
 		inResource = resource;
-		
+		getTradeOverlay().setTradeEnabled(true);
 	}
 
 	@Override
