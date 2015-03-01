@@ -24,7 +24,7 @@ public class SendChat {
 	 */
 	public SendChat(int playerIndex, String content) {
 		super();
-		playerIndex = playerIndex;
+		this.playerIndex = playerIndex;
 		this.content = content;
 		type = "sendChat";
 	}
@@ -32,7 +32,7 @@ public class SendChat {
 		return playerIndex;
 	}
 	public void setPlayerIndex(int playerIndex) {
-		playerIndex = playerIndex;
+		this.playerIndex = playerIndex;
 	}
 	public String getContent() {
 		return content;

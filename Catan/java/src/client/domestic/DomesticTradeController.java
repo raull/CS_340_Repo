@@ -427,7 +427,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		
 		//If trading, keeps modal up
-		if (trading){
+		if (trading && !getTradeOverlay().isModalShowing()){
 			getTradeOverlay().showModal();
 		}
 		// Shows the Accept Overlay if necessary
@@ -439,6 +439,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 					setAcceptWindow();
 					acceptSet = true;
 				}
+				if (!getAcceptOverlay().isModalShowing())
 				getAcceptOverlay().showModal();
 				accepting = true;
 		//	}
@@ -448,6 +449,12 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			if (waiting){
 				getWaitOverlay().closeModal();
 				waiting = false;
+				
+				BRICK = new tradeResource();
+				WHEAT = new tradeResource();
+				SHEEP = new tradeResource();
+				ORE = new tradeResource();
+				WOOD = new tradeResource();
 				//cancelTrade();
 			}
 		}

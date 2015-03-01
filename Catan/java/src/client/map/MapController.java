@@ -223,6 +223,8 @@ public class MapController extends Controller implements IMapController, Observe
 				victimInfo.setName(victim.getName());
 				victimInfo.setColor(victim.getCatanColor());
 				victimInfo.setNumCards(victim.getHand().getResourceCards().getAllResourceCards().size());
+				victimInfo.setPlayerIndex(victim.getTurnIndex());
+				victimInfo.setId(victim.getPlayerID());
 				victims.add(victimInfo);
 			}
 		}
