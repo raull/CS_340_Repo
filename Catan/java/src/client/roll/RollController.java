@@ -67,7 +67,7 @@ public class RollController extends Controller implements IRollController, Obser
 		try {
 			ClientManager.instance().getServerProxy().rollNumber(param);
 			getRollView().closeModal();
-			getResultView().setRollValue(total);
+			getResultView().setRollValue(param.getNumber());
 			getResultView().showModal();
 			rollTimer.cancel();
 			rollTimer = new Timer(false);

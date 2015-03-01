@@ -1,15 +1,14 @@
 package client.map;
 
-import client.base.IController;
 import client.data.PlayerInfo;
 import client.data.RobPlayerInfo;
 import client.manager.ClientManager;
 import client.misc.MessageView;
-import client.state.State;
 import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.board.Map;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
@@ -145,7 +144,14 @@ public class MapPlayingState extends MapControllerState
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+		Map map = ClientManager.instance().getModelFacade().map();
+		
+		controller.updateRobber(turnManager, map);
+		controller.updateCities(turnManager, map);
+		controller.updateSettlements(turnManager, map);
+		controller.updateRoads(turnManager, map);
 		
 	}
 

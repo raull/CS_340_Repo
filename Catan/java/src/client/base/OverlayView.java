@@ -123,6 +123,7 @@ public class OverlayView extends PanelView implements IOverlayView
 				System.out.println(info.getOverlayView().getClass().getName());
 			}
 		}
+		
 	}
 	
 	/**
@@ -142,6 +143,21 @@ public class OverlayView extends PanelView implements IOverlayView
 		}
 		
 		return false;
+	}
+	
+	
+	public static void printStack() {
+		System.out.println("Stack size: " + overlayStack.size());
+	}
+	
+	public static void closeAllModals() {
+		
+		OverlayView view = new OverlayView();
+		
+		while (!overlayStack.isEmpty()) {
+			view.closeModal();	
+		}
+		
 	}
 	
 	private static class OverlayInfo
