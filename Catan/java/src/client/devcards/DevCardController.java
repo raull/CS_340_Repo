@@ -127,13 +127,13 @@ public class DevCardController extends Controller implements IDevCardController,
 
 	@Override
 	public void playRoadBuildCard() {
-		
+		isPlay = false;
 		roadAction.execute();
 	}
 
 	@Override
 	public void playSoldierCard() {
-		
+		isPlay = false;
 		soldierAction.execute();
 	}
 

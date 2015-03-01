@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.gson.JsonElement;
+
 import shared.definitions.*;
 import shared.model.board.Port;
 import shared.model.cards.Bank;
@@ -65,6 +67,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	public void startTrade() {
 		
 		//show the overlay
+		getTradeOverlay().reset();
 		getTradeOverlay().showModal();
 		initGiveOptions();
 		getTradeOverlay().setTradeEnabled(false);
@@ -84,9 +87,12 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 			MaritimeTrade tradeMaritimeReq = new MaritimeTrade(playerIndex, ratio, outputResource, inputResource);
 			//get proxy to maritime trade
 			cm.getServerProxy().maritimeTrade(tradeMaritimeReq);
+			cm.forceUpdate();
 			//close overlay after trade
 			getTradeOverlay().closeModal();
 			getTradeOverlay().reset();
+			gettingResourceTypes.clear();
+			givingResourceTypes.clear();
 		} catch (ProxyException e) {
 			e.printStackTrace();
 			MessageView alertView = new MessageView();
@@ -148,7 +154,8 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		else{
 			getTradeView().enableMaritimeTrade(false);
 		}
-		
+		gettingResourceTypes.clear();
+		givingResourceTypes.clear();
 	}
 	
 	/**
