@@ -40,8 +40,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			ClientManager.instance().startGame();
 		} 
 		else {
-			System.out.println("calling show modal in player waiting");
-			getView().closeModal();
 			getView().showModal();
 		}
 		
