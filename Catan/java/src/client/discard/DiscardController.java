@@ -177,6 +177,9 @@ public class DiscardController extends Controller implements IDiscardController,
 		getDiscardView().setResourceMaxAmount(ResourceType.WOOD, maxWood);
 	}
 	
+	/**
+	 * helper function to initialize all resource change
+	 */
 	private void initResourceChangeEnabled() {
 		setResourceChangeEnabled(ResourceType.BRICK);
 		setResourceChangeEnabled(ResourceType.ORE);
@@ -216,6 +219,10 @@ public class DiscardController extends Controller implements IDiscardController,
 		getDiscardView().setResourceAmountChangeEnabled(resource, increase, decrease);
 	}
 	
+	/**
+	 * calculates the total number user has chosen to discard
+	 * @return 
+	 */
 	private int getTotalDiscardNum() {
 		return (brickToDiscard + oreToDiscard + sheepToDiscard + wheatToDiscard + woodToDiscard);
 	}
