@@ -66,16 +66,16 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		//show the overlay
 		getTradeOverlay().showModal();
 		initGiveOptions();
-		initGetOptions();
+		//initGetOptions();
 	}
 
 	@Override
 	public void makeTrade() {
 		
 		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
-		int ratio = 4; //change after checking for ports
-		String outputResource = outResource.toString();
-		String inputResource = inResource.toString();
+		int ratio = getRatio(inResource); //change after checking for ports
+		String outputResource = inResource.toString().toLowerCase();
+		String inputResource = outResource.toString().toLowerCase();
 
 		try {
 			
@@ -103,24 +103,31 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	@Override
 	public void setGetResource(ResourceType resource) {
 		//sets the resource user is getting
+		getTradeOverlay().selectGetOption(resource, 1);
 		inResource = resource;
+		
 	}
 
 	@Override
 	public void setGiveResource(ResourceType resource) {
 		//sets the resource user is giving
+		int ratio = getRatio(resource);
+		getTradeOverlay().selectGiveOption(resource, ratio);
+		initGetOptions();
 		outResource = resource;
 	}
 
 	@Override
 	public void unsetGetValue() {
 		//reset the chosen get resource
+		initGetOptions();
 		inResource = null;
 	}
 
 	@Override
 	public void unsetGiveValue() {
 		//reset the chosen give resource
+		initGiveOptions();
 		outResource = null;
 	}
 
@@ -161,6 +168,30 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 			woodRatio = 3;
 		}
 		
+	}
+	
+	//returns the current ratio of the resource type
+	public int getRatio(ResourceType resource){
+		int ratio = 0;
+		switch (resource){
+		case BRICK:
+			ratio = brickRatio;
+			break;
+		case WOOD:
+			ratio = woodRatio;
+			break;
+		case ORE:
+			ratio = oreRatio;
+			break;
+		case SHEEP:
+			ratio = sheepRatio;
+			break;
+		case WHEAT:
+			ratio = wheatRatio;
+			break;
+		}
+		
+		return ratio;
 	}
 	
 	/**

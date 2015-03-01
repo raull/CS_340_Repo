@@ -288,6 +288,7 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 
 				else if (e.getSource() == giveore) 
 				{getController().setGiveResource(ResourceType.ORE);}
+				
 			}
 		};
 		getActionListener = new ActionListener() {
@@ -311,6 +312,7 @@ public class MaritimeTradeOverlay extends OverlayView implements IMaritimeTradeO
 
 				else if (e.getSource() == getore) 
 				{getController().setGetResource(ResourceType.ORE);}
+				
 			}
 		};
 	}
