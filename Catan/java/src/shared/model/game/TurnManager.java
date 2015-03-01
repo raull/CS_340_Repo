@@ -77,6 +77,18 @@ public class TurnManager {
 		return null;
 	}
 	
+	public User getUserFromName(String name)
+	{
+		for (User user : users)
+		{
+			if (user.getName().equals(name))
+			{
+				return user;
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Adds a user to the user array
 	 * @param newUser the user to be added

@@ -24,7 +24,7 @@ public class SendChat {
 	 */
 	public SendChat(int playerIndex, String content) {
 		super();
-		playerIndex = playerIndex;
+		this.playerIndex = playerIndex;
 		this.content = content;
 		type = "sendChat";
 	}
