@@ -26,6 +26,8 @@ public class DiscardController extends Controller implements IDiscardController,
 	
 	private ClientManager cm = ClientManager.instance();
 	
+	private boolean isDiscarding = false;
+	
 	private int brickToDiscard = 0;
 	private int oreToDiscard = 0;
 	private int sheepToDiscard = 0;
@@ -194,23 +196,25 @@ public class DiscardController extends Controller implements IDiscardController,
 		boolean decrease = false;
 		switch(resource) {
 			case BRICK:
-				increase = (user.getBrickCards() > brickToDiscard);
+				//check that the user still has more cards for increasing, 
+				//and that the total number of cards to discard is not yet reached
+				increase = (user.getBrickCards() > brickToDiscard && !hasEnoughForDiscarding());
 				decrease = (brickToDiscard != 0);
 				break;
 			case ORE:
-				increase = (user.getOreCards() > oreToDiscard);
+				increase = (user.getOreCards() > oreToDiscard && !hasEnoughForDiscarding());
 				decrease = (oreToDiscard != 0);
 				break;
 			case SHEEP:
-				increase = (user.getSheepCards() > sheepToDiscard);
+				increase = (user.getSheepCards() > sheepToDiscard && !hasEnoughForDiscarding());
 				decrease = (sheepToDiscard != 0);
 				break;
 			case WHEAT:
-				increase = (user.getWheatCards() > wheatToDiscard);
+				increase = (user.getWheatCards() > wheatToDiscard && !hasEnoughForDiscarding());
 				decrease = (wheatToDiscard != 0);
 				break;
 			case WOOD:
-				increase = (user.getWoodCards() > woodToDiscard);
+				increase = (user.getWoodCards() > woodToDiscard && !hasEnoughForDiscarding());
 				decrease = (woodToDiscard != 0);
 				break;
 			default: 
@@ -224,7 +228,21 @@ public class DiscardController extends Controller implements IDiscardController,
 	 * @return 
 	 */
 	private int getTotalDiscardNum() {
-		return (brickToDiscard + oreToDiscard + sheepToDiscard + wheatToDiscard + woodToDiscard);
+		
+		return brickToDiscard + oreToDiscard + sheepToDiscard + wheatToDiscard + woodToDiscard;
+	}
+	
+	/**
+	 * checks that the user has total amount enough for discarding
+	 * @return
+	 */
+	private boolean hasEnoughForDiscarding() {
+		if(getTotalDiscardNum() == needToDiscard) {
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	/**
@@ -255,8 +273,10 @@ public class DiscardController extends Controller implements IDiscardController,
 	@Override
 	public void update(Observable o, Object arg) {
 		
-		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
+		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING && !isDiscarding) {
 			System.out.println("---------------------DISCARDING---------------------");
+			//boolean to keep track that user is currently discarding, or else poller keeps updating
+			isDiscarding = true;
 			//show modal when it's in discarding phase
 			//if player has more than 8 cards, must discard
 			//check that the user hasn't discarded yet
@@ -277,6 +297,7 @@ public class DiscardController extends Controller implements IDiscardController,
 			System.out.println("has user discarded? " + user.getHasDiscarded());
 			
 			if(userCardCount > 7 && !user.getHasDiscarded()) {
+				
 				//show modal
 				getDiscardView().showModal();
 				
@@ -297,6 +318,10 @@ public class DiscardController extends Controller implements IDiscardController,
 		//close the wait view modal if it's showing and it's not discard phase anymore
 		else if(cm.getCurrentTurnPhase() != TurnPhase.DISCARDING && getWaitView().isModalShowing()) {
 			getWaitView().closeModal();
+		}
+		
+		if(cm.getCurrentTurnPhase() != TurnPhase.DISCARDING) {
+			isDiscarding = false;
 		}
 		
 	}
