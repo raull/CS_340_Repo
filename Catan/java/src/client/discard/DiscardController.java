@@ -246,17 +246,22 @@ public class DiscardController extends Controller implements IDiscardController,
 	public void update(Observable o, Object arg) {
 		
 		if(cm.getCurrentTurnPhase() == TurnPhase.DISCARDING) {
+			System.out.println("---------------------DISCARDING---------------------");
 			//show modal when it's in discarding phase
 			//if player has more than 8 cards, must discard
 			//check that the user hasn't discarded yet
 			
-			int currPlayerId = cm.getCurrentPlayerInfo().getId();
+//			int currPlayerId = cm.getCurrentPlayerInfo().getId();
+			int currPlayerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 			
 			TurnManager turnManager = cm.getModelFacade().turnManager();
 			
-			User user = turnManager.getUser(currPlayerId);
+//			User user = turnManager.getUser(currPlayerId);
+			User user = turnManager.getUserFromIndex(currPlayerIndex);
 			
-			int userCardCount = user.getHand().getResourceCards().getAllResourceCards().size(); 
+			int userCardCount = user.getHand().getResourceCards().getAllResourceCards().size();
+			
+			System.out.println("user card count: " + userCardCount);
 			
 			if(userCardCount > 7 && !user.getHasDiscarded()) {
 				//initialize the max amounts a player can discard
