@@ -106,7 +106,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			getView().showModal();
 		}
 		
-		OverlayView.printStack();
 	}
 	
 
