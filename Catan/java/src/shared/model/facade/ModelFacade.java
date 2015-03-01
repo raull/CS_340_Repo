@@ -76,13 +76,11 @@ public class ModelFacade extends Observable{
 		bank = model.getBank();
 		score = model.getScoreKeeper();
 
-
 		winnerIndex = model.getWinner();
 		//int newModelVersion = model.getVersion();
 
 		//System.out.println("new model version num: " + newModelVersion);
 
-		int newModelVersion = model.getVersion();
 		
 		System.out.println("Current State: " + turnManager.currentTurnPhase().toString());
 
@@ -361,6 +359,9 @@ public class ModelFacade extends Observable{
 	 */
 	private boolean meetsBuildingConstraints(VertexLocation location,
 			User user, PieceType type) {
+
+//		System.out.println("Entering meetsBuildingConstraints in ModelFacade");
+
 		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
