@@ -1,11 +1,14 @@
 package client.communication;
 
 import client.base.PanelView;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 /**
@@ -76,7 +79,15 @@ public class ChatView extends PanelView implements IChatView {
 
     @Override
     public void setEntries(final List<LogEntry> entries) {
-        chatPanel.setEntries(entries);
+        //chatPanel.setEntries(entries);
+    	javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run()
+			{
+				chatPanel.setEntries(entries);
+				JScrollBar vertical = chatScrollPane.getVerticalScrollBar();
+				vertical.setValue(vertical.getMaximum());
+			}
+		});
     }
     
     /**
