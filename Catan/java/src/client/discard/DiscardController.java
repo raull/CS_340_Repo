@@ -86,7 +86,9 @@ public class DiscardController extends Controller implements IDiscardController,
 				break;
 		}
 		getDiscardView().setResourceDiscardAmount(resource, amount);
-		setResourceChangeEnabled(resource);
+		//setResourceChangeEnabled(resource);
+		//go through all resourcs to set enable/disable
+		initResourceChangeEnabled();
 		getDiscardView().setStateMessage("Discard: " + getTotalDiscardNum() + "/" + needToDiscard);
 		checkCanDiscard();
 	}
@@ -119,7 +121,9 @@ public class DiscardController extends Controller implements IDiscardController,
 				break;
 		}
 		getDiscardView().setResourceDiscardAmount(resource, amount);
-		setResourceChangeEnabled(resource);
+		//setResourceChangeEnabled(resource);
+		//go through all resourcs to set enable/disable
+		initResourceChangeEnabled();
 		getDiscardView().setStateMessage("Discard: " + getTotalDiscardNum() + "/" + needToDiscard);
 		checkCanDiscard();
 	}
