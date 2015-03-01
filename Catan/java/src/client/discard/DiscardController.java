@@ -258,10 +258,11 @@ public class DiscardController extends Controller implements IDiscardController,
 			
 //			User user = turnManager.getUser(currPlayerId);
 			User user = turnManager.getUserFromIndex(currPlayerIndex);
-			
+
 			int userCardCount = user.getHand().getResourceCards().getAllResourceCards().size();
 			
 			System.out.println("user card count: " + userCardCount);
+
 			
 			if(userCardCount > 7 && !user.getHasDiscarded()) {
 				//initialize the max amounts a player can discard

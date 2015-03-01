@@ -110,6 +110,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		try {
 			JsonElement je = ClientManager.instance().getServerProxy().list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
+			getJoinGameView().closeModal();
 			getJoinGameView().showModal();
 		} catch (ProxyException e) {
 			getMessageView().setTitle("Error");
