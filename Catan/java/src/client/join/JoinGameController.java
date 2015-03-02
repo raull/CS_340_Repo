@@ -173,7 +173,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void joinGame(CatanColor color) {
 		
-		
+		if(!this.canChooseColor(color)){
+			getSelectColorView().setColorEnabled(color, false);
+			getMessageView().setTitle("Color already chosen");
+			getMessageView().setMessage("That color was just barely chosen by somebody else, please try another one");
+			getMessageView().showModal();
+			return;
+		}
 		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
 		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
 		try {
@@ -271,6 +277,24 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			gi.addPlayer(pi);
 		}
 		
+	}
+	
+	private boolean canChooseColor(CatanColor color) throws ProxyException{
+		Gson gson = new Gson();
+		JsonObject jo = proxy.model(-1).getAsJsonObject(); //forces the server to give us a model
+		JsonArray users = jo.get("players").getAsJsonArray(); //grabs all players in the game model
+		for(int i=0; i<users.size(); ++i){
+			if(users.get(i)==null){
+				continue; //helps us ignore null players
+			}
+			else{
+				JsonObject user = users.get(i).getAsJsonObject();
+				if(color.equals(gson.fromJson(user.get("color"), CatanColor.class))){
+					return false; //means color is already chosen
+				}
+			}
+		}
+		return true; //means nobody has already chosen that color
 	}
 
 }
