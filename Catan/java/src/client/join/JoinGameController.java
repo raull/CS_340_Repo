@@ -173,11 +173,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void joinGame(CatanColor color) {
 		
-		// If join succeeded
+		
 		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
 		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
 		try {
 			proxy.join(tempRequest);
+			// If join succeeded
 			getSelectColorView().closeModal();
 			getJoinGameView().closeModal();
 			updateCurrentPlayerInfo();
