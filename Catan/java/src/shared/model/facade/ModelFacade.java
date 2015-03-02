@@ -489,7 +489,10 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canBuyDevCard(TurnManager turnManager, User user, DevCardDeck devCardDeck) {
 		//if it's not user's turn, or if turn phase is not on playing, or dev card deck is empty, or if user cannot buy dev card
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || devCardDeck.getAllCards().size() == 0 || !user.canBuyDevCard()) {
+		if(user != turnManager.currentUser() 
+				|| turnManager.currentTurnPhase() != TurnPhase.PLAYING 
+				|| devCardDeck.getAllCards().size() == 0 
+				|| !user.canBuyDevCard()) {
 			return false;
 		}
 //		if(user != turnManager.currentUser()){
