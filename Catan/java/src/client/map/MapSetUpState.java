@@ -183,7 +183,7 @@ public class MapSetUpState extends MapControllerState{
 		
 		controller.updateRoads(turnManager, map);
 		controller.updateSettlements(turnManager, map);
-		
+		System.out.println(activeMove);
 		if (!activeMove && ClientManager.instance().hasGameStarted()) {
 			run();
 		}
