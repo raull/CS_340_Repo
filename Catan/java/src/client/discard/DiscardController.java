@@ -163,7 +163,9 @@ public class DiscardController extends Controller implements IDiscardController,
 		}
 		
 	}
-
+	/**
+	 * initialize the max amounts when discard view shows up
+	 */
 	private void initMaxAmounts() {
 		
 		//get the current user from client manager
@@ -274,6 +276,17 @@ public class DiscardController extends Controller implements IDiscardController,
 		needToDiscard = 0;
 	}
 	
+	/**
+	 * initialize the cards user plans to discard to all 0
+	 */
+	private void initDiscardAmount0() {
+		getDiscardView().setResourceDiscardAmount(ResourceType.BRICK, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.ORE, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.SHEEP, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.WHEAT, 0);
+		getDiscardView().setResourceDiscardAmount(ResourceType.WOOD, 0);
+	}
+	
 	@Override
 	public void update(Observable o, Object arg) {
 		
@@ -304,6 +317,9 @@ public class DiscardController extends Controller implements IDiscardController,
 				
 				//show modal
 				getDiscardView().showModal();
+				
+				//set all cards user plans to discard to 0
+				initDiscardAmount0();
 				
 				//initialize the max amounts a player can discard
 				initMaxAmounts();
