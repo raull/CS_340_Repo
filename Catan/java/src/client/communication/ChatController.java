@@ -41,7 +41,7 @@ public class ChatController extends Controller implements IChatController, Obser
 		
 		try {
 			ClientManager.instance().getServerProxy().sendChat(chat);
-			//ClientManager.instance().forceUpdate();
+			ClientManager.instance().forceUpdate();
 		} catch (ProxyException e) {
 			// TODO Auto-generated catch block
 			MessageView errorMessage = new MessageView();

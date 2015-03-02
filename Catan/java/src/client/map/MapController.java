@@ -328,6 +328,12 @@ public class MapController extends Controller implements IMapController, Observe
 	}
 	
 	public void determineState(TurnManager turnManager) {
+		
+		if (state instanceof MapRoadBuildingState)
+		{
+			return;
+		}
+		
 		//set the state
 		int clientIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		if (turnManager.getCurrentTurn() != clientIndex)

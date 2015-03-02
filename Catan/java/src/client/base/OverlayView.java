@@ -104,7 +104,6 @@ public class OverlayView extends PanelView implements IOverlayView
 		
 		if(overlayStack.size() > 0)
 		{
-			
 			overlayStack.pop().getOverlayPanel().setVisible(false);
 			
 			if(overlayStack.size() > 0)
@@ -117,6 +116,11 @@ public class OverlayView extends PanelView implements IOverlayView
 			{
 				window.setGlassPane(defaultGlassPane);
 				window.getGlassPane().setVisible(false);
+			}
+			
+			System.out.println("overlay stack size: " + overlayStack.size());
+			for(OverlayInfo info : overlayStack) {
+				System.out.println(info.getOverlayView().getClass().getName());
 			}
 		}
 		

@@ -76,13 +76,13 @@ public class ModelFacade extends Observable{
 		bank = model.getBank();
 		score = model.getScoreKeeper();
 
-		int newModelVersion = model.getVersion();
-
 		winnerIndex = model.getWinner();
 		//int newModelVersion = model.getVersion();
 
+		//System.out.println("new model version num: " + newModelVersion);
 		
 		System.out.println("Current State: " + turnManager.currentTurnPhase().toString());
+
 		
 		//check that version number has changed, or not
 		/*if (ClientManager.instance().hasGameStarted()){
@@ -358,6 +358,9 @@ public class ModelFacade extends Observable{
 	 */
 	private boolean meetsBuildingConstraints(VertexLocation location,
 			User user, PieceType type) {
+
+//		System.out.println("Entering meetsBuildingConstraints in ModelFacade");
+
 		//checks for individual piece constrains
 		if(type == PieceType.SETTLEMENT){
 			//if the location is already occupied
@@ -485,7 +488,10 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canBuyDevCard(TurnManager turnManager, User user, DevCardDeck devCardDeck) {
 		//if it's not user's turn, or if turn phase is not on playing, or dev card deck is empty, or if user cannot buy dev card
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING || devCardDeck.getAllCards().size() == 0 || !user.canBuyDevCard()) {
+		if(user != turnManager.currentUser() 
+				|| turnManager.currentTurnPhase() != TurnPhase.PLAYING 
+				|| devCardDeck.getAllCards().size() == 0 
+				|| !user.canBuyDevCard()) {
 			return false;
 		}
 //		if(user != turnManager.currentUser()){

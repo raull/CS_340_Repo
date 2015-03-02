@@ -2,11 +2,9 @@ package client.resources;
 
 import java.util.*;
 
-import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.cards.Bank;
-import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
@@ -94,7 +92,6 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		
 		User currentUser = facade.turnManager().getUserFromID(currentID);
 		ResourceCardDeck resourceHand = currentUser.getHand().getResourceCards();
-		DevCardDeck devHand = currentUser.getHand().getUsableDevCards();
 		Bank bank = facade.bank();
 		
 		//Update view
@@ -105,14 +102,43 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		getView().setElementAmount(ResourceBarElement.ORE, resourceHand.getCountByType(ResourceType.ORE));
 
 		getView().setElementAmount(ResourceBarElement.ROAD, currentUser.getUnusedRoads());
-		getView().setElementAmount(ResourceBarElement.SOLDIERS, devHand.getCountByType(DevCardType.SOLDIER));
+		getView().setElementAmount(ResourceBarElement.SOLDIERS, currentUser.getSoldiers());
 		getView().setElementAmount(ResourceBarElement.SETTLEMENT, currentUser.getUnusedSettlements());
 		getView().setElementAmount(ResourceBarElement.CITY, currentUser.getUnusedCities());
 		
 		//Enable Buttons
-		getView().setElementEnabled(ResourceBarElement.ROAD, facade.canBuyPiece(turnManager, currentUser, PieceType.ROAD));
-		getView().setElementEnabled(ResourceBarElement.SETTLEMENT, facade.canBuyPiece(turnManager, currentUser, PieceType.SETTLEMENT));
-		getView().setElementEnabled(ResourceBarElement.CITY, facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		if (currentUser.getUnusedRoads() == 0)
+		{
+			getView().setElementEnabled(ResourceBarElement.ROAD, false);
+		}
+		else
+		{
+			getView().setElementEnabled(ResourceBarElement.ROAD, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.ROAD));
+		}
+		
+		if (currentUser.getUnusedSettlements() == 0)
+		{
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, false);
+		}
+		else
+		{
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.SETTLEMENT));
+		}
+		
+		
+		if (currentUser.getUnusedCities() == 0)
+		{
+			getView().setElementEnabled(ResourceBarElement.CITY, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		}
+		else
+		{
+			getView().setElementEnabled(ResourceBarElement.CITY, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		}
+			
 		getView().setElementEnabled(ResourceBarElement.BUY_CARD, facade.canBuyDevCard(turnManager, currentUser, bank.getDevCardDeck()));
 	}
 

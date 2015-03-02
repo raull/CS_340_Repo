@@ -461,6 +461,7 @@ public class Model {
 		int numCities = jsonUser.get("cities").getAsInt();
 		CatanColor userColor = gson.fromJson(jsonUser.get("color"), CatanColor.class);
 		//discarded -- whether or not user has already discarded cards this turn
+		boolean hasDiscarded = jsonUser.get("discarded").getAsBoolean();
 				
 		String name = jsonUser.get("name").getAsString();
 		
@@ -511,6 +512,10 @@ public class Model {
 		currUser.getHand().setDevCardDeck(oldDevCardDeck);
 		currUser.getHand().setResourceCardDeck(resourceDeck);
 		
+		currUser.setHasDiscarded(hasDiscarded);
+		
+		populateUserResourceInfo(jsonUser.get("resources").getAsJsonObject(), currUser);
+		
 		currUser.setUnusedRoads(roads);
 		currUser.setUnusedSettlements(settlements);
 		
@@ -560,6 +565,20 @@ public class Model {
 				}
 			}
 		}
+	}
+	
+	public void populateUserResourceInfo(JsonObject jsonDeck, User user) {
+		int brickCount = jsonDeck.get("brick").getAsInt();
+		int oreCount = jsonDeck.get("ore").getAsInt();
+		int sheepCount = jsonDeck.get("sheep").getAsInt();
+		int wheatCount = jsonDeck.get("wheat").getAsInt();
+		int woodCount = jsonDeck.get("wood").getAsInt();
+		
+		user.setBrickCards(brickCount);
+		user.setOreCards(oreCount);
+		user.setSheepCards(sheepCount);
+		user.setWheatCards(wheatCount);
+		user.setWoodCards(woodCount);
 	}
 	
 	//2nd array for when populating tradeOffer
