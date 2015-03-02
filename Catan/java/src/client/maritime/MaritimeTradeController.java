@@ -78,7 +78,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	public void makeTrade() {
 		
 		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
-		int ratio = getRatio(inResource); //change after checking for ports
+		int ratio = getRatio(outResource); //change after checking for ports
 		String outputResource = inResource.toString().toLowerCase();
 		String inputResource = outResource.toString().toLowerCase();
 
