@@ -49,7 +49,9 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 			//get player's color
 			User user = model.turnManager.getUserFromName(playerName);
 
-			entries.add(new LogEntry(user.getCatanColor(), line.getMessage()));
+			assert (user != null) : "the user was null for a particular history message";
+
+			entries.add(new LogEntry(user.getCatanColor(), line.getMessage())); //possibly null pointer exceptions being thrown here?
 		}
 
 		getView().setEntries(entries);
