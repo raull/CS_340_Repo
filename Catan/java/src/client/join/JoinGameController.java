@@ -172,17 +172,17 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
-		
-		if(!this.canChooseColor(color)){
-			getSelectColorView().setColorEnabled(color, false);
-			getMessageView().setTitle("Color already chosen");
-			getMessageView().setMessage("That color was just barely chosen by somebody else, please try another one");
-			getMessageView().showModal();
-			return;
-		}
-		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
-		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
 		try {
+			if(!this.canChooseColor(color)){
+				getSelectColorView().setColorEnabled(color, false);
+				getMessageView().setTitle("Color already chosen");
+				getMessageView().setMessage("That color was just barely chosen by somebody else, please try another one");
+				getMessageView().showModal();
+				return;
+			}
+			int gameId = ClientManager.instance().getCurrentGameInfo().getId();
+			JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
+		
 			proxy.join(tempRequest);
 			// If join succeeded
 			getSelectColorView().closeModal();
@@ -191,7 +191,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			ClientManager.instance().startServerPoller();
 			joinAction.execute(); //brings up the waiting modal
 		} catch (ProxyException e) {
-			e.printStackTrace();
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Error joining game: " + e.getMessage());
+			getMessageView().showModal();
 		}
 	}
 
