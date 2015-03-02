@@ -109,7 +109,7 @@ public class DevCardController extends Controller implements IDevCardController,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		cancelPlayCard();
 	}
 
 	@Override
@@ -123,6 +123,7 @@ public class DevCardController extends Controller implements IDevCardController,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		cancelPlayCard();
 	}
 
 	@Override
@@ -148,6 +149,7 @@ public class DevCardController extends Controller implements IDevCardController,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		cancelPlayCard();
 	}
 
 	@Override

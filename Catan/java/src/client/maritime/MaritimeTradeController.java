@@ -212,7 +212,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 */
 	private void udpateResourceRatio() {
 		//go through user ports and call getPortResourceType on each port
-		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
+		int playerIndex = cm.getModelFacade().turnManager().currentUser().getTurnIndex();
 		User currUser = cm.getModelFacade().turnManager().getUser(playerIndex);
 		
 		for(Port port : currUser.ports()) {
