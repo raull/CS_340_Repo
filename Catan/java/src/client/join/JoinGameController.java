@@ -281,22 +281,28 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 	}
 	
-	private boolean canChooseColor(CatanColor color) throws ProxyException{
-		Gson gson = new Gson();
-		JsonObject jo = proxy.model(-1).getAsJsonObject(); //forces the server to give us a model
-		JsonArray users = jo.get("players").getAsJsonArray(); //grabs all players in the game model
-		for(int i=0; i<users.size(); ++i){
-			if(users.get(i)==null){
-				continue; //helps us ignore null players
-			}
-			else{
-				JsonObject user = users.get(i).getAsJsonObject();
-				if(color.equals(gson.fromJson(user.get("color"), CatanColor.class))){
-					return false; //means color is already chosen
+	/**
+	 * This method quickly queries the server to find out if the color has already been chosen
+	 * @param color The color desired by the user
+	 * @return true if the color is still available, false otherwise
+	 */
+	private boolean canChooseColor(CatanColor color){
+		try {
+			JsonElement je = proxy.list();
+			GameInfo[] updatedGames = this.getGameInfo(je);
+			for(GameInfo gi : updatedGames){
+				if(gi.getId()==ClientManager.instance().getCurrentGameInfo().getId()){
+					for(PlayerInfo pi : gi.getPlayers()){
+						if(pi.getColor().equals(color)){
+							return false;
+						}
+					}
 				}
 			}
+		} catch (ProxyException e) {
+			e.printStackTrace();
 		}
-		return true; //means nobody has already chosen that color
+		return true;
 	}
 
 }
