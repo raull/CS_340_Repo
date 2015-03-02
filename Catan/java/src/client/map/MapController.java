@@ -242,6 +242,7 @@ public class MapController extends Controller implements IMapController, Observe
 	public void cancelMove() //TODO need to figure out what, if anything, this needs to do
 	{
 		setState(new MapPlayingState(this));
+		ClientManager.instance().forceUpdate();
 	}
 	
 	public void playSoldierCard() 
