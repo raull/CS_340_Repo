@@ -120,8 +120,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		//update the turntracker view for all players
 		//if users are null, init from model (or, has never been updated yet)
 		//also, only initialize when all players have joined
-		if(!updated && ClientManager.instance().getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT) {
-			updated = true;
+		if(!updated &&
+				ClientManager.instance().getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT) {
+			
 			initFromModel();
 			updated = true;
 		}
@@ -132,7 +133,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
 		int id = ClientManager.instance().getCurrentPlayerInfo().getId();
 		if(ClientManager.instance().getModelFacade().canFinishTurn(turnManager, turnManager.getUserFromID(id))){
-			System.out.println("Can end turn, setting button");
+//			System.out.println("Can end turn, setting button");
 			this.getView().updateGameState("End Turn", true);
 		}
 		else {
