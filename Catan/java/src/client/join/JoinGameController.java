@@ -180,19 +180,28 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void joinGame(CatanColor color) {
-		
-		// If join succeeded
-		int gameId = ClientManager.instance().getCurrentGameInfo().getId();
-		JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
 		try {
+			if(!this.canChooseColor(color)){
+				getSelectColorView().setColorEnabled(color, false);
+				getMessageView().setTitle("Color already chosen");
+				getMessageView().setMessage("That color was just barely chosen by somebody else, please try another one");
+				getMessageView().showModal();
+				return;
+			}
+			int gameId = ClientManager.instance().getCurrentGameInfo().getId();
+			JoinGameRequest tempRequest = new JoinGameRequest(gameId, color.toString().toLowerCase());
+		
 			proxy.join(tempRequest);
+			// If join succeeded
 			getSelectColorView().closeModal();
 			getJoinGameView().closeModal();
 			updateCurrentPlayerInfo();
 			ClientManager.instance().startServerPoller();
 			joinAction.execute(); //brings up the waiting modal
 		} catch (ProxyException e) {
-			e.printStackTrace();
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Error joining game: " + e.getMessage());
+			getMessageView().showModal();
 		}
 	}
 
@@ -278,6 +287,33 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			gi.addPlayer(pi);
 		}
 		
+	}
+	
+	/**
+	 * This method quickly queries the server to find out if the color has already been chosen
+	 * @param color The color desired by the user
+	 * @return true if the color is still available, false otherwise
+	 */
+	private boolean canChooseColor(CatanColor color){
+		try {
+			JsonElement je = proxy.list();
+			GameInfo[] updatedGames = this.getGameInfo(je); //gets all the games
+			for(GameInfo gi : updatedGames){
+				if(gi.getId()==ClientManager.instance().getCurrentGameInfo().getId()){ //finds our current game
+					for(PlayerInfo pi : gi.getPlayers()){ //queries all players in our current game
+						if(pi.getColor().equals(color)){  //if one of those players has our same color, fail immediately
+							return false;
+						}
+					}
+				}
+			}
+		} catch (ProxyException e) { //probably won't happen unless the server goes down
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Failure joining game, please check your connection (Error: " + e.getMessage() + ")");
+			getMessageView().showModal();
+		}
+		//only gets here if the connection succeeded and nobody in our current game already has the current color
+		return true;
 	}
 
 }
