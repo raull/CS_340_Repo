@@ -285,7 +285,7 @@ public class User {
 	 * @return A Collection of ports
 	 */
 	public Collection<Port> ports() {
-		
+		/*
 		ArrayList<Port> ports = new ArrayList<Port>();
 		
 		for (Vertex vertex : occupiedVertices) {
@@ -293,7 +293,7 @@ public class User {
 				ports.add(vertex.getPort());
 			}
 		}
-		
+		*/
 		return ports;
 	}
 
