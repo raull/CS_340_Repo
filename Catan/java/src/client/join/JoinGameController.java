@@ -289,19 +289,22 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private boolean canChooseColor(CatanColor color){
 		try {
 			JsonElement je = proxy.list();
-			GameInfo[] updatedGames = this.getGameInfo(je);
+			GameInfo[] updatedGames = this.getGameInfo(je); //gets all the games
 			for(GameInfo gi : updatedGames){
-				if(gi.getId()==ClientManager.instance().getCurrentGameInfo().getId()){
-					for(PlayerInfo pi : gi.getPlayers()){
-						if(pi.getColor().equals(color)){
+				if(gi.getId()==ClientManager.instance().getCurrentGameInfo().getId()){ //finds our current game
+					for(PlayerInfo pi : gi.getPlayers()){ //queries all players in our current game
+						if(pi.getColor().equals(color)){  //if one of those players has our same color, fail immediately
 							return false;
 						}
 					}
 				}
 			}
-		} catch (ProxyException e) {
-			e.printStackTrace();
+		} catch (ProxyException e) { //probably won't happen unless the server goes down
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Failure joining game, please check your connection (Error: " + e.getMessage() + ")");
+			getMessageView().showModal();
 		}
+		//only gets here if the connection succeeded and nobody in our current game already has the current color
 		return true;
 	}
 
