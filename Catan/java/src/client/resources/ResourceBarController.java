@@ -107,9 +107,38 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		getView().setElementAmount(ResourceBarElement.CITY, currentUser.getUnusedCities());
 		
 		//Enable Buttons
-		getView().setElementEnabled(ResourceBarElement.ROAD, facade.canBuyPiece(turnManager, currentUser, PieceType.ROAD));
-		getView().setElementEnabled(ResourceBarElement.SETTLEMENT, facade.canBuyPiece(turnManager, currentUser, PieceType.SETTLEMENT));
-		getView().setElementEnabled(ResourceBarElement.CITY, facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		if (currentUser.getUnusedRoads() == 0)
+		{
+			getView().setElementEnabled(ResourceBarElement.ROAD, false);
+		}
+		else
+		{
+			getView().setElementEnabled(ResourceBarElement.ROAD, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.ROAD));
+		}
+		
+		if (currentUser.getUnusedSettlements() == 0)
+		{
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, false);
+		}
+		else
+		{
+			getView().setElementEnabled(ResourceBarElement.SETTLEMENT, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.SETTLEMENT));
+		}
+		
+		
+		if (currentUser.getUnusedCities() == 0)
+		{
+			getView().setElementEnabled(ResourceBarElement.CITY, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		}
+		else
+		{
+			getView().setElementEnabled(ResourceBarElement.CITY, 
+					facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+		}
+			
 		getView().setElementEnabled(ResourceBarElement.BUY_CARD, facade.canBuyDevCard(turnManager, currentUser, bank.getDevCardDeck()));
 	}
 
