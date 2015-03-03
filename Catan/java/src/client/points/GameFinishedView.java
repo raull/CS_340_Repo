@@ -90,6 +90,7 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 
 	@Override
 	public void setWinner(String name, boolean isLocalPlayer) {
+		System.out.println("==============setting winner===================");
 		String field = "";
 		String imagePath = "";
 
