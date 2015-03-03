@@ -84,6 +84,7 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
 																							playerWaitingView);
 		playerWaitingView.setController(playerWaitingController);
+		
 		JoinGameView joinView = new JoinGameView();
 		NewGameView newGameView = new NewGameView();
 		SelectColorView selectColorView = new SelectColorView();
@@ -93,7 +94,17 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 																		 newGameView,
 																		 selectColorView,
 																		 joinMessageView);
-		joinController.start();
+		joinController.setJoinAction(new IAction() {
+			@Override
+			public void execute()
+			{
+				playerWaitingController.start();
+			}
+		});
+		joinView.setController(joinController);
+		newGameView.setController(joinController);
+		selectColorView.setController(joinController);
+		joinMessageView.setController(joinController);
 	}
 	
 	private ActionListener actionListener = new ActionListener() {
