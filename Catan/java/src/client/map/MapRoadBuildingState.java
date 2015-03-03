@@ -5,6 +5,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
+import shared.model.board.Map;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
@@ -103,6 +104,7 @@ public class MapRoadBuildingState extends MapControllerState
 			try {
 				ClientManager.instance().getServerProxy().Road_Building(move);
 				ClientManager.instance().forceUpdate();
+				controller.setState(new MapPlayingState(controller));
 			} catch (ProxyException e) {
 				MessageView errorMessage = new MessageView();
 				errorMessage.setTitle("Error");
@@ -135,7 +137,13 @@ public class MapRoadBuildingState extends MapControllerState
 	@Override
 	public void update() 
 	{
-		// TODO Auto-generated method stub
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+		Map map = ClientManager.instance().getModelFacade().map();
+		
+		controller.updateCities(turnManager, map);
+		controller.updateRoads(turnManager, map);
+		controller.updateSettlements(turnManager, map);
+		controller.updateRobber(turnManager, map);
 		
 	}
 

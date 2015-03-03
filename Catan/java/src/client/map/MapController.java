@@ -254,6 +254,7 @@ public class MapController extends Controller implements IMapController, Observe
 	{	
 		setState(new MapRoadBuildingState(this));
 		startMove(PieceType.ROAD, true, false);
+		
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) 
