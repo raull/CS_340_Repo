@@ -130,7 +130,7 @@ public class Model {
 		//would model be better as jsonElement?
 		if(jsonModel.isJsonObject()) {
 			
-			
+			map = new Map(new ArrayList<HexTile>());
 			JsonObject jsonObject = jsonModel.getAsJsonObject();
 			
 			//get bank resource cards
@@ -492,6 +492,8 @@ public class Model {
 		int victoryPoints = jsonUser.get("victoryPoints").getAsInt();
 		
 		User currUser = turnManager.getUser(playerID);
+		
+		
 		if (currUser == null) {
 			currUser = new User();
 			currUser.setPlayerID(playerID);
@@ -530,7 +532,7 @@ public class Model {
 	
 	public void updateUserPieces(User user) {
 		ArrayList<Road> roads = map.getRoadsOnMap();
-		
+		user.resetOccupiedEdges();
 		for(Road road : roads) {
 			//user owns the road
 			if(road.getOwner() == user.getTurnIndex()) {
@@ -649,6 +651,10 @@ public class Model {
 		turnManager.setCurrentPhase(currTurnPhase);
 		turnManager.setLongestRoadIndex(longestRoad);
 		turnManager.setLargestArmyIndex(largestArmy);
+		
+		//update in score keeper
+		scoreKeeper.setLongestRoadUser(longestRoad);
+		scoreKeeper.setLargestArmyUser(largestArmy);
 		
 	}
 	

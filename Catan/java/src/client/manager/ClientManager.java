@@ -59,6 +59,7 @@ public class ClientManager {
 		if (instance != null) {
 			return instance;
 		} else {
+			System.out.println("creating client manager on specific host and port");
 			instance = new ClientManager(host, port);
 			return instance;
 		}
@@ -109,7 +110,9 @@ public class ClientManager {
 		currentGameInfo.setId(gi.getId());
 		currentGameInfo.setTitle(gi.getTitle());
 		for(PlayerInfo pi : gi.getPlayers()){
-			currentGameInfo.addPlayer(pi);
+			if(!currentGameInfo.getPlayers().contains(pi)){
+				currentGameInfo.addPlayer(pi);
+			}
 		}
 	}
 	

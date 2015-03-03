@@ -524,7 +524,7 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canRobPlayer(HexTile hexTile,User currUser, User victim) {
 		//if it isn't user's turn or if model status is not on playing
-		if(currUser != turnManager.currentUser() 
+		if(currUser.getPlayerID() != ClientManager.instance().getCurrentPlayerInfo().getId() 
 				|| (turnManager.currentTurnPhase() != TurnPhase.PLAYING 
 				&& turnManager.currentTurnPhase() != TurnPhase.ROBBING)) {
 			return false;

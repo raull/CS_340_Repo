@@ -139,10 +139,18 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
 		boolean randomPorts = getNewGameView().getUseRandomPorts();
 		
+		
+		
 		//sets up the request and transmits it through the proxy
 		CreateGameRequest cr = new CreateGameRequest(randomHexes, randomNumbers, randomPorts, title);
+		
 		try {
+			JsonElement je = ClientManager.instance().getServerProxy().list();
+			GameInfo[] gameInfo = getGameInfo(je);
+			int gameID = gameInfo.length;
 			ClientManager.instance().getServerProxy().create(cr);
+			JoinGameRequest jg = new JoinGameRequest(gameID, "red");
+			proxy.join(jg);
 			getNewGameView().closeModal();
 			this.start();
 		} catch (ProxyException e) {
@@ -168,6 +176,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void cancelJoinGame() {
 	
 		getJoinGameView().closeModal();
+		//ClientManager.instance().setCurrentGameInfo(null);
 	}
 
 	@Override
