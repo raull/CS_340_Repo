@@ -7,6 +7,11 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
+import client.join.JoinGameController;
+import client.join.JoinGameView;
+import client.join.NewGameView;
+import client.join.SelectColorView;
+import client.misc.MessageView;
 import client.utils.*;
 
 
@@ -72,12 +77,26 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		this.add(okButton, BorderLayout.PAGE_END);
 	}
 
+	public void goHome(){
+		JoinGameView joinView = new JoinGameView();
+		NewGameView newGameView = new NewGameView();
+		SelectColorView selectColorView = new SelectColorView();
+		MessageView joinMessageView = new MessageView();
+		final JoinGameController joinController = new JoinGameController(
+																		 joinView,
+																		 newGameView,
+																		 selectColorView,
+																		 joinMessageView);
+		joinController.start();
+	}
+	
 	private ActionListener actionListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
 			if (e.getSource() == okButton) {
 				closeModal();
+				goHome();
 			}
 		}	
 	};

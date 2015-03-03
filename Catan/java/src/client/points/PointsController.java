@@ -4,9 +4,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 import shared.model.game.User;
-
 import client.base.*;
+import client.join.JoinGameController;
+import client.join.JoinGameView;
+import client.join.NewGameView;
+import client.join.SelectColorView;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 
 
 /**
@@ -52,6 +56,18 @@ public class PointsController extends Controller implements IPointsController, O
 		
 	}
 	
+	public void goHome(){
+		JoinGameView joinView = new JoinGameView();
+		NewGameView newGameView = new NewGameView();
+		SelectColorView selectColorView = new SelectColorView();
+		MessageView joinMessageView = new MessageView();
+		final JoinGameController joinController = new JoinGameController(
+																		 joinView,
+																		 newGameView,
+																		 selectColorView,
+																		 joinMessageView);
+		joinController.start();
+	}
 	private void updatePoints(boolean hasWinner) {
 		ClientManager cm = ClientManager.instance();
 		
