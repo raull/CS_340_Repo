@@ -105,6 +105,8 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		newGameView.setController(joinController);
 		selectColorView.setController(joinController);
 		joinMessageView.setController(joinController);
+		
+		joinController.start();
 	}
 	
 	private ActionListener actionListener = new ActionListener() {

@@ -20,6 +20,7 @@ public class PointsController extends Controller implements IPointsController, O
 
 	private IGameFinishedView finishedView;
 	private int PLAYER_COUNT = 4;
+	private boolean displayed;
 	/**
 	 * PointsController constructor
 	 * 
@@ -33,6 +34,8 @@ public class PointsController extends Controller implements IPointsController, O
 		setFinishedView(finishedView);
 		
 		initFromModel();
+		
+		displayed = false;
 		
 		ClientManager.instance().getModelFacade().addObserver(this);
 	}
@@ -78,7 +81,11 @@ public class PointsController extends Controller implements IPointsController, O
 			String winnerName = cm.getModelFacade().turnManager().getUserFromIndex(winnerIndex).getName();
 			System.out.println("winner: " + winnerName + " local player?? " + isLocalPlayer);
 			getFinishedView().setWinner(winnerName, isLocalPlayer);
-			getFinishedView().showModal();
+			if (!displayed){
+				getFinishedView().showModal();
+				displayed = true;
+			}
+			
 		}
 		
 	}
