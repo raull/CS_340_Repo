@@ -142,6 +142,8 @@ public class DiscardController extends Controller implements IDiscardController,
 			cm.getServerProxy().discardCards(discardReq);
 			//once discard is called, set user has discarded to true
 			cm.getModelFacade().turnManager().getUserFromIndex(playerIndex).setHasDiscarded(true);
+			//close the modal
+			getDiscardView().closeModal();
 			
 			//force the model to update right away
 			JsonElement model = cm.getServerProxy().model(-1);
@@ -149,9 +151,6 @@ public class DiscardController extends Controller implements IDiscardController,
 			
 			//reset the cards so next time the cards won't be messed up
 			resetToDiscard();
-			
-			//close the modal
-			getDiscardView().closeModal();
 			
 		} catch (ProxyException e) {
 			// TODO Auto-generated catch block

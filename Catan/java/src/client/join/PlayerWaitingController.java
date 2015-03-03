@@ -37,6 +37,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		
 		if (isFull()) {
 			getView().closeModal();
+			OverlayView.closeAllModals();
 			ClientManager.instance().startGame();
 		} 
 		else {
@@ -99,6 +100,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		updatePlayers();
 		
 		if(isFull() && getView().isModalShowing() && !ClientManager.instance().hasGameStarted()) {
+			OverlayView.closeAllModals();
 			ClientManager.instance().startGame();
 			getView().closeModal();
 		} else if (updated && !ClientManager.instance().hasGameStarted()){
