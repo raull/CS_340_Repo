@@ -83,10 +83,13 @@ public class PointsController extends Controller implements IPointsController, O
 		getPointsView().setPoints(user.getVictoryPoints());
 		
 		if(hasWinner) {
+			System.out.println("has winner");
 			int winnerIndex = cm.getModelFacade().getWinnerIndex();
 			boolean isLocalPlayer = (winnerIndex == currPlayerIndex);
 			String winnerName = cm.getModelFacade().turnManager().getUserFromIndex(winnerIndex).getName();
+			System.out.println("winner: " + winnerName + " local player?? " + isLocalPlayer);
 			getFinishedView().setWinner(winnerName, isLocalPlayer);
+			getFinishedView().showModal();
 		}
 		
 	}
@@ -99,7 +102,8 @@ public class PointsController extends Controller implements IPointsController, O
 			
 			//if there is a winner
 			boolean hasWinner = false;
-			if(cm.getModelFacade().getModel().getWinner() != -1) {
+			System.out.println("winner???? " + cm.getModelFacade().score().getWinner());
+			if(cm.getModelFacade().score().getWinner() != -1) {
 				hasWinner = true;
 			}
 			updatePoints(hasWinner);
