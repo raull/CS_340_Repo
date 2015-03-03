@@ -67,6 +67,7 @@ public class MapSetUpState extends MapControllerState{
 	public void run()
 	{
 		//This will automatically start the user placing a road
+		System.out.println("Setting active move to true");
 		activeMove = true;
 		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
 
@@ -74,6 +75,7 @@ public class MapSetUpState extends MapControllerState{
 		{
 			if (turnManager.currentUser().getUnusedRoads() == MAX_ROADS)
 			{
+				System.out.println("starting first round drop");
 				startMove(PieceType.ROAD, true, true);
 			}
 			else if (turnManager.currentUser().getUnusedSettlements() == MAX_SETTLEMENTS)
@@ -89,6 +91,7 @@ public class MapSetUpState extends MapControllerState{
 		{
 			if (turnManager.currentUser().getUnusedRoads() == MAX_ROADS - 1)
 			{
+				System.out.println("starting second round drop");
 				startMove(PieceType.ROAD, true, true);
 			}
 			else if (turnManager.currentUser().getUnusedSettlements() == MAX_SETTLEMENTS -1)
@@ -124,8 +127,9 @@ public class MapSetUpState extends MapControllerState{
 		FinishMove finish = new FinishMove(client.getPlayerIndex());
 		try {
 			ClientManager.instance().getServerProxy().finishTurn(finish);
-			activeMove = false;
+			System.out.println("setting active move to false");
 			ClientManager.instance().forceUpdate();
+			activeMove = false;
 		} catch (ProxyException e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
@@ -183,7 +187,7 @@ public class MapSetUpState extends MapControllerState{
 		
 		controller.updateRoads(turnManager, map);
 		controller.updateSettlements(turnManager, map);
-		
+		System.out.println("Setup State active move: " + activeMove);
 		if (!activeMove && ClientManager.instance().hasGameStarted()) {
 			run();
 		}

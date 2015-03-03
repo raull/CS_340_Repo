@@ -86,6 +86,7 @@ public class TurnManager {
 				return user;
 			}
 		}
+		System.out.println("User.getUserFromName returning null!!");
 		return null;
 	}
 	
