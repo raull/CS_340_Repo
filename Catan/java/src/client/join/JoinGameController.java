@@ -1,6 +1,7 @@
 package client.join;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
@@ -128,14 +129,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * Forces the update of the game list, called only by our timer
 	 */
 	private void updateGames() {
-		if(!this.getJoinGameView().isModalShowing()){
-			return;
-		}
 		if(this.getNewGameView().isModalShowing()){
 			this.getNewGameView().closeModal();
-		}
-		if(this.getJoinGameView().isModalShowing()){
-			this.getJoinGameView().closeModal();
 		}
 		JsonElement je = null;
 		try {
@@ -146,9 +141,50 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
 			getMessageView().showModal();
 		}
-		this.getJoinGameView().closeModal();
-		this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
-		this.getJoinGameView().showModal();	
+		GameInfo[] updatedInfo = this.getGameInfo(je);
+		if(needsUpdate(updatedInfo)){
+			this.getJoinGameView().closeModal();
+			this.getJoinGameView().setGames(updatedInfo, ClientManager.instance().getCurrentPlayerInfo());
+			this.getJoinGameView().showModal();
+		}
+			
+	}
+
+	private boolean needsUpdate(GameInfo[] updatedInfo) {
+		System.out.print("JoinGameController asks, \"Need update?\": ");
+		GameInfo [] oldInfo = this.getJoinGameView().getGames();
+		if(oldInfo.length!=updatedInfo.length){
+			System.out.println("TRUE1");
+			return true;
+		}
+		else{
+			for(int i = 0; i < updatedInfo.length; ++i){
+				GameInfo current = updatedInfo[i];
+				GameInfo old = oldInfo[i];
+				if(current.getId()!=old.getId()){
+					System.out.println("TRUE2");
+					return true;
+				}
+				List<PlayerInfo> oldPlayerInfo = old.getPlayers();
+				List<PlayerInfo> currentPlayerInfo = current.getPlayers();
+				if(oldPlayerInfo.size()!=currentPlayerInfo.size()){
+					return true;
+				}
+				for(int j = 0; j< currentPlayerInfo.size(); ++j){
+					if(!oldPlayerInfo.get(j).equals(currentPlayerInfo.get(j))){
+						System.out.println("TRUE3");
+						return true;
+					}
+					else if(!oldPlayerInfo.get(j).getColor().equals(currentPlayerInfo.get(j).getColor())){
+						System.out.println("TRUE4");
+						return true;
+					}
+				}
+				
+			}
+			System.out.println("FALSE");
+			return false;
+		}
 	}
 
 	@Override
