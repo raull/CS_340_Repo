@@ -150,11 +150,15 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			
 	}
 
+	/**
+	 * Determines whether the updatedInfo is equivalent to existing game information in the view
+	 * @param updatedInfo the information to be potentially updated
+	 * @return true if the information should be updated, otherwise false
+	 */
 	private boolean needsUpdate(GameInfo[] updatedInfo) {
 		System.out.print("JoinGameController asks, \"Need update?\": ");
 		GameInfo [] oldInfo = this.getJoinGameView().getGames();
 		if(oldInfo.length!=updatedInfo.length){
-			System.out.println("TRUE1");
 			return true;
 		}
 		else{
@@ -162,7 +166,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				GameInfo current = updatedInfo[i];
 				GameInfo old = oldInfo[i];
 				if(current.getId()!=old.getId()){
-					System.out.println("TRUE2");
 					return true;
 				}
 				List<PlayerInfo> oldPlayerInfo = old.getPlayers();
@@ -172,17 +175,14 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				}
 				for(int j = 0; j< currentPlayerInfo.size(); ++j){
 					if(!oldPlayerInfo.get(j).equals(currentPlayerInfo.get(j))){
-						System.out.println("TRUE3");
 						return true;
 					}
 					else if(!oldPlayerInfo.get(j).getColor().equals(currentPlayerInfo.get(j).getColor())){
-						System.out.println("TRUE4");
 						return true;
 					}
 				}
 				
 			}
-			System.out.println("FALSE");
 			return false;
 		}
 	}
