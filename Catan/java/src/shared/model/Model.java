@@ -650,6 +650,10 @@ public class Model {
 		turnManager.setLongestRoadIndex(longestRoad);
 		turnManager.setLargestArmyIndex(largestArmy);
 		
+		//update in score keeper
+		scoreKeeper.setLongestRoadUser(longestRoad);
+		scoreKeeper.setLargestArmyUser(largestArmy);
+		
 	}
 	
 	public void updateScoreKeeper() {

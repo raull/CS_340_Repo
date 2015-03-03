@@ -101,10 +101,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		int largestArmyIndex = cm.getModelFacade().score().getLargestArmyUser();
 		int longestRoadIndex = cm.getModelFacade().score().getLongestRoadUser();
+		System.out.println("longest road person: " + longestRoadIndex);
 		
 		for(User user : users) {
 			//user is highlighted if it's currently their turn
-			boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == user.getPlayerID());
+			boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == user.getTurnIndex());
 			
 			//booleans for if user has largest army or longest road
 			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
