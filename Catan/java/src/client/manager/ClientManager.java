@@ -59,6 +59,7 @@ public class ClientManager {
 		if (instance != null) {
 			return instance;
 		} else {
+			System.out.println("creating client manager on specific host and port");
 			instance = new ClientManager(host, port);
 			return instance;
 		}
