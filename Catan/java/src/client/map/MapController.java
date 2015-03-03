@@ -134,7 +134,7 @@ public class MapController extends Controller implements IMapController, Observe
 		
 		determineState(turnManager);
 		
-		state.run();
+		state.update();
 	}
 
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) //done
@@ -264,6 +264,7 @@ public class MapController extends Controller implements IMapController, Observe
 	@Override
 	public void update(Observable o, Object arg) //TODO verify that this is correct
 	{
+		System.out.println("current turn phase: " + ClientManager.instance().getCurrentTurnPhase());
 		if (state == null && ClientManager.instance().hasGameStarted()) {
 			OverlayView.closeAllModals();
 			initFromModel();

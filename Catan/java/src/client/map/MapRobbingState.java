@@ -93,8 +93,8 @@ public class MapRobbingState extends MapControllerState{
 		RobPlayer robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
 		try {
 			ClientManager.instance().getServerProxy().robPlayer(robplayer);
-			activeMove = false;
 			ClientManager.instance().forceUpdate();
+			activeMove = false;
 		} catch (ProxyException e) {
 			// TODO notify the client of the error and restart a robber drop
 			MessageView errorMessage = new MessageView();
