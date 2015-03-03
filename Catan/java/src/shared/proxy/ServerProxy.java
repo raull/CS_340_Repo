@@ -47,6 +47,7 @@ public class ServerProxy implements Proxy{
 	
 	public ServerProxy(String host, String port){
 
+		System.out.println(host + " " + port);
 		SERVER_HOST = host;
 		SERVER_PORT = Integer.parseInt(port);
 		URL_PREFIX = "http://" + SERVER_HOST + ":" + SERVER_PORT;
