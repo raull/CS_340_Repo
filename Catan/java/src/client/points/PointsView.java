@@ -45,7 +45,7 @@ public class PointsView extends ComponentView implements IPointsView
 	public void setPoints(int points)
 	{
 		
-		if(0 <= points && points <= MAX_POINTS)
+		if(0 <= points)
 		{
 			this.points = points;
 			this.repaint();
@@ -69,8 +69,14 @@ public class PointsView extends ComponentView implements IPointsView
 		
 		int y = TOP_MARGIN;
 		y = drawImages(g2, fullPointImage, FULL_IMAGE_SCALE, points, y);
+		if (points <= MAX_POINTS){
 		y = drawImages(g2, emptyPointImage, EMPTY_IMAGE_SCALE, MAX_POINTS
 															   - points, y);
+		}
+		else if (points > MAX_POINTS){
+			y = drawImages(g2, emptyPointImage, EMPTY_IMAGE_SCALE, MAX_POINTS
+					   , y);
+		}
 		
 	}
 	

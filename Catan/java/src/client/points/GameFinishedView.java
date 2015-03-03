@@ -10,6 +10,8 @@ import client.base.*;
 import client.join.JoinGameController;
 import client.join.JoinGameView;
 import client.join.NewGameView;
+import client.join.PlayerWaitingController;
+import client.join.PlayerWaitingView;
 import client.join.SelectColorView;
 import client.misc.MessageView;
 import client.utils.*;
@@ -78,6 +80,10 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 	}
 
 	public void goHome(){
+		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
+		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
+																							playerWaitingView);
+		playerWaitingView.setController(playerWaitingController);
 		JoinGameView joinView = new JoinGameView();
 		NewGameView newGameView = new NewGameView();
 		SelectColorView selectColorView = new SelectColorView();
