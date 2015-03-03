@@ -113,12 +113,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			JsonElement je = ClientManager.instance().getServerProxy().list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
 			getJoinGameView().showModal();
-			gameTimer.schedule( new TimerTask() {
-				@Override
-				public void run() {
-					updateGames();
-				}
-			} , 5000);
+			gameTimer.cancel();
+			startTimer();
 		} catch (ProxyException e) {
 			getMessageView().setTitle("Error");
 			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
@@ -152,13 +148,8 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void cancelCreateNewGame() {
-		gameTimer.schedule( new TimerTask() {
-			@Override
-			public void run() {
-				updateGames();
-			}
-		} , 5000);
-		getNewGameView().closeModal();
+		gameTimer.cancel();
+		startTimer();
 	}
 
 	@Override
@@ -181,12 +172,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getMessageView().showModal();
 		}
 		gameTimer.cancel();
-		gameTimer.schedule( new TimerTask() {
-			@Override
-			public void run() {
-				updateGames();
-			}
-		} , 5000);
+		startTimer();
 		
 	}
 
@@ -205,13 +191,18 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void cancelJoinGame() {
 		gameTimer.cancel();
-		gameTimer.schedule( new TimerTask() {
+		startTimer();
+		getJoinGameView().closeModal();
+	}
+
+	private void startTimer() {
+		gameTimer.scheduleAtFixedRate( new TimerTask() {
 			@Override
 			public void run() {
 				updateGames();
 			}
-		} , 5000);
-		getJoinGameView().closeModal();
+		} , 0, 5000);
+		
 	}
 
 	@Override
