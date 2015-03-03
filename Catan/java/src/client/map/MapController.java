@@ -265,7 +265,6 @@ public class MapController extends Controller implements IMapController, Observe
 	{
 		System.out.println("current turn phase: " + ClientManager.instance().getCurrentTurnPhase());
 		if (state == null && ClientManager.instance().hasGameStarted()) {
-			OverlayView.closeAllModals();
 			initFromModel();
 		} else if (state != null){
 			TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
