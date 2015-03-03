@@ -101,10 +101,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		int largestArmyIndex = cm.getModelFacade().score().getLargestArmyUser();
 		int longestRoadIndex = cm.getModelFacade().score().getLongestRoadUser();
+		System.out.println("longest road person: " + longestRoadIndex);
 		
 		for(User user : users) {
 			//user is highlighted if it's currently their turn
-			boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == user.getPlayerID());
+			boolean isHighlighted = (cm.getModelFacade().turnManager().getCurrentTurn() == user.getTurnIndex());
 			
 			//booleans for if user has largest army or longest road
 			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
@@ -134,10 +135,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		int id = ClientManager.instance().getCurrentPlayerInfo().getId();
 		if(ClientManager.instance().getModelFacade().canFinishTurn(turnManager, turnManager.getUserFromID(id))){
 //			System.out.println("Can end turn, setting button");
-			this.getView().updateGameState("End Turn", true);
+			System.out.println("local player color?? " + ClientManager.instance().getCurrentPlayerInfo().getColor().toString());
+			this.getView().updateGameState("End Turn", true, ClientManager.instance().getCurrentPlayerInfo().getColor());
 		}
 		else {
-			this.getView().updateGameState("Waiting for other players", false);
+			this.getView().updateGameState("Waiting for other players", false, null);
 		}
 		
 		
