@@ -112,8 +112,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		try {
 			JsonElement je = ClientManager.instance().getServerProxy().list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
-			getJoinGameView().showModal();
-			gameTimer.cancel();
+			if(!this.getJoinGameView().isModalShowing()){
+				getJoinGameView().showModal();
+			}	
 			startTimer();
 		} catch (ProxyException e) {
 			getMessageView().setTitle("Error");
@@ -127,28 +128,41 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * Forces the update of the game list, called only by our timer
 	 */
 	private void updateGames() {
-		this.getJoinGameView().closeModal();
-		JsonElement je;
+		if(!this.getJoinGameView().isModalShowing()){
+			return;
+		}
+		JsonElement je = null;
 		try {
 			je = ClientManager.instance().getServerProxy().list();
-			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
+			
 		} catch (ProxyException e) {
 			getMessageView().setTitle("Error");
 			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
 			getMessageView().showModal();
 		}
+		this.getJoinGameView().closeModal();
+		this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
 		this.getJoinGameView().showModal();	
 	}
 
 	@Override
 	public void startCreateNewGame() {
-		gameTimer.cancel();
+		killTimer();
 		getNewGameView().showModal();
+	}
+
+	/**
+	 * Allows us to cancel a timer without getting an exception next time we want to schedule an identical task
+	 */
+	private void killTimer() {
+		gameTimer.cancel();
+		gameTimer = new Timer(false);
+		
 	}
 
 	@Override
 	public void cancelCreateNewGame() {
-		gameTimer.cancel();
+		this.getNewGameView().closeModal();
 		startTimer();
 	}
 
@@ -171,14 +185,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getMessageView().setMessage("New game could not be created. " + e.getMessage());
 			getMessageView().showModal();
 		}
-		gameTimer.cancel();
-		startTimer();
-		
+
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
-		gameTimer.cancel();
+		killTimer();
 		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
 		for(PlayerInfo pi : game.getPlayers()){
@@ -190,7 +202,6 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void cancelJoinGame() {
-		gameTimer.cancel();
 		startTimer();
 		getJoinGameView().closeModal();
 	}
