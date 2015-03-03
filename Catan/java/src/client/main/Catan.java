@@ -5,6 +5,7 @@ import javax.swing.*;
 import client.catan.*;
 import client.login.*;
 import client.join.*;
+import client.manager.ClientManager;
 import client.misc.*;
 import client.base.*;
 
@@ -56,6 +57,13 @@ public class Catan extends JFrame
 			public void run()
 			{
 				new Catan();
+				
+				if (args.length == 2)
+				{
+					String host = args[0];
+					String port = args[1];
+					ClientManager.instance(host, port);
+				}
 				
 				PlayerWaitingView playerWaitingView = new PlayerWaitingView();
 				final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
