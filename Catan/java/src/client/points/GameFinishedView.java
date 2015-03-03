@@ -7,6 +7,13 @@ import java.awt.image.*;
 import javax.swing.*;
 
 import client.base.*;
+import client.join.JoinGameController;
+import client.join.JoinGameView;
+import client.join.NewGameView;
+import client.join.PlayerWaitingController;
+import client.join.PlayerWaitingView;
+import client.join.SelectColorView;
+import client.misc.MessageView;
 import client.utils.*;
 
 
@@ -72,12 +79,43 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		this.add(okButton, BorderLayout.PAGE_END);
 	}
 
+	public void goHome(){
+		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
+		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
+																							playerWaitingView);
+		playerWaitingView.setController(playerWaitingController);
+		
+		JoinGameView joinView = new JoinGameView();
+		NewGameView newGameView = new NewGameView();
+		SelectColorView selectColorView = new SelectColorView();
+		MessageView joinMessageView = new MessageView();
+		final JoinGameController joinController = new JoinGameController(
+																		 joinView,
+																		 newGameView,
+																		 selectColorView,
+																		 joinMessageView);
+		joinController.setJoinAction(new IAction() {
+			@Override
+			public void execute()
+			{
+				playerWaitingController.start();
+			}
+		});
+		joinView.setController(joinController);
+		newGameView.setController(joinController);
+		selectColorView.setController(joinController);
+		joinMessageView.setController(joinController);
+		
+		joinController.start();
+	}
+	
 	private ActionListener actionListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
 			if (e.getSource() == okButton) {
 				closeModal();
+				goHome();
 			}
 		}	
 	};
@@ -90,6 +128,7 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 
 	@Override
 	public void setWinner(String name, boolean isLocalPlayer) {
+		System.out.println("==============setting winner===================");
 		String field = "";
 		String imagePath = "";
 
