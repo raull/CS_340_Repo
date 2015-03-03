@@ -131,6 +131,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		if(!this.getJoinGameView().isModalShowing()){
 			return;
 		}
+		if(this.getNewGameView().isModalShowing()){
+			this.getNewGameView().closeModal();
+		}
+		if(this.getJoinGameView().isModalShowing()){
+			this.getJoinGameView().closeModal();
+		}
 		JsonElement je = null;
 		try {
 			je = ClientManager.instance().getServerProxy().list();
