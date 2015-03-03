@@ -204,6 +204,9 @@ public class User {
 		this.occupiedEdges.add(edge);
 	}
 	
+	public void resetOccupiedEdges(){
+		this.occupiedEdges.clear();
+	}
 	/**
 	 * Adds the given vertex to the <code>User</code>'s inventory
 	 */

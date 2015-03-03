@@ -4,6 +4,8 @@ import shared.definitions.PieceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.board.Edge;
+import shared.model.board.Map;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
 import shared.model.game.User;
@@ -27,13 +29,20 @@ public class MapRoadBuildingState extends MapControllerState
 	private EdgeLocation firstRoad;
 	
 	@Override
-	public boolean canPlaceRoad(EdgeLocation edgeLoc) //TODO may also have to account for the placing a road connected to the first road
+	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
 	{
 		ModelFacade facade = ClientManager.instance().getModelFacade();
 		PlayerInfo info = ClientManager.instance().getCurrentPlayerInfo();
 		TurnManager turnManager = facade.turnManager();
 		User user = turnManager.getUserFromIndex(info.getPlayerIndex());
-		return facade.canPlaceRoadAtLoc(facade.turnManager(), edgeLoc, user);
+		
+		//Checks for the first road
+		if (firstRoad == null)
+			return facade.canPlaceRoadAtLoc(facade.turnManager(), edgeLoc, user);
+		else {
+			user.addOccupiedEdge(new Edge(firstRoad));
+			return facade.canPlaceRoadAtLoc(facade.turnManager(), edgeLoc, user);
+		}
 	}
 
 	@Override
@@ -79,7 +88,6 @@ public class MapRoadBuildingState extends MapControllerState
 			//place it on the screen
 			controller.getView().placeRoad(edgeLoc, client.getColor());	
 			
-			//TODO temporarily give the user that edge??
 			
 			//start another drop
 			controller.startMove(PieceType.ROAD, true, false);
@@ -96,6 +104,7 @@ public class MapRoadBuildingState extends MapControllerState
 			try {
 				ClientManager.instance().getServerProxy().Road_Building(move);
 				ClientManager.instance().forceUpdate();
+				controller.setState(new MapPlayingState(controller));
 			} catch (ProxyException e) {
 				MessageView errorMessage = new MessageView();
 				errorMessage.setTitle("Error");
@@ -128,7 +137,13 @@ public class MapRoadBuildingState extends MapControllerState
 	@Override
 	public void update() 
 	{
-		// TODO Auto-generated method stub
+		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
+		Map map = ClientManager.instance().getModelFacade().map();
+		
+		controller.updateCities(turnManager, map);
+		controller.updateRoads(turnManager, map);
+		controller.updateSettlements(turnManager, map);
+		controller.updateRobber(turnManager, map);
 		
 	}
 

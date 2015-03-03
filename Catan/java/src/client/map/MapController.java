@@ -255,6 +255,7 @@ public class MapController extends Controller implements IMapController, Observe
 	public void cancelMove() //TODO need to figure out what, if anything, this needs to do
 	{
 		setState(new MapPlayingState(this));
+		ClientManager.instance().forceUpdate();
 	}
 	
 	public void playSoldierCard() 
@@ -266,6 +267,7 @@ public class MapController extends Controller implements IMapController, Observe
 	{	
 		setState(new MapRoadBuildingState(this));
 		startMove(PieceType.ROAD, true, false);
+		
 	}
 	
 	public void robPlayer(RobPlayerInfo victim) 
@@ -282,6 +284,7 @@ public class MapController extends Controller implements IMapController, Observe
 		} else if (state != null){
 			TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
 			determineState(turnManager);
+			initFromModel();
 			state.update();
 		}
 	}
