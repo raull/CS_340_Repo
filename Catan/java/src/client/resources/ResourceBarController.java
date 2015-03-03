@@ -131,7 +131,7 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		if (currentUser.getUnusedCities() == 0)
 		{
 			getView().setElementEnabled(ResourceBarElement.CITY, 
-					facade.canBuyPiece(turnManager, currentUser, PieceType.CITY));
+					false);
 		}
 		else
 		{
