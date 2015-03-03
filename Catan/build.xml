@@ -28,7 +28,7 @@
   	<property name="java.dir" location="java"/>
 
 	<property name="java.src" location="${java.dir}/src"/>
-	<property name="java.images" location="${java.dir}/images"/>
+	<property name="java.images" location="images"/>
 	<property name="java.build" location="${java.dir}/build"/>
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
@@ -175,20 +175,10 @@
 			</assertions>		
 		</java>
 	</target>
-    
-	<target name="make-tester-zip" depends="package">
-		<zip destfile="./tester.zip" basedir="${java.dist}" />
-	    <java classname="${main-class}" fork="true" >
-	        <classpath>
-	            <path refid="classpath" />
-	            <path location="${jar.dir}/${ant.project.name}.jar" />
-	        </classpath>
-	    </java>
-	</target>
 	
-    <!--<target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
+    <target name="make-tester-zip" depends="package" description="makes a zip file for your testing team">
         <zip destfile="./tester.zip" basedir="${java.dist}" />
-    </target>-->
+    </target>
   
 </project>
 

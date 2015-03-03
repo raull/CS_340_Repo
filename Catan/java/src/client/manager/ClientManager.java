@@ -110,7 +110,9 @@ public class ClientManager {
 		currentGameInfo.setId(gi.getId());
 		currentGameInfo.setTitle(gi.getTitle());
 		for(PlayerInfo pi : gi.getPlayers()){
-			currentGameInfo.addPlayer(pi);
+			if(!currentGameInfo.getPlayers().contains(pi)){
+				currentGameInfo.addPlayer(pi);
+			}
 		}
 	}
 	
