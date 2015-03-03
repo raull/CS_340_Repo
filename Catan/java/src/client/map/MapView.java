@@ -169,12 +169,16 @@ public class MapView extends PanelView implements IMapView
 			assert false;
 		}
 		
+		public void resetRoads(){
+			map.resetRoads();
+		}
 		@Override
 		public void cancelMove()
 		{
-			
+			resetRoads();
 			closeModal();
 			getController().cancelMove();
+			
 		}
 		
 		@Override

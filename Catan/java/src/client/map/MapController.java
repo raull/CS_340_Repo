@@ -270,6 +270,7 @@ public class MapController extends Controller implements IMapController, Observe
 		} else if (state != null){
 			TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
 			determineState(turnManager);
+			initFromModel();
 			state.update();
 		}
 	}
