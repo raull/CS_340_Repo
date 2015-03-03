@@ -3,6 +3,8 @@ package client.join;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -29,7 +31,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	private ISelectColorView selectColorView;
 	private IMessageView messageView;
 	private IAction joinAction;
-	
+	private Timer gameTimer = new Timer(false);
 	private ServerProxy proxy = ClientManager.instance().getServerProxy();
 	
 	/**
@@ -111,6 +113,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			JsonElement je = ClientManager.instance().getServerProxy().list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
 			getJoinGameView().showModal();
+			gameTimer.schedule( new TimerTask() {
+				@Override
+				public void run() {
+					updateGames();
+				}
+			} , 5000);
 		} catch (ProxyException e) {
 			getMessageView().setTitle("Error");
 			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
@@ -119,15 +127,37 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 		
 	}
 
+	/**
+	 * Forces the update of the game list, called only by our timer
+	 */
+	private void updateGames() {
+		this.getJoinGameView().closeModal();
+		JsonElement je;
+		try {
+			je = ClientManager.instance().getServerProxy().list();
+			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
+		} catch (ProxyException e) {
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("Something went wrong while fetching active games. " + e.getMessage());
+			getMessageView().showModal();
+		}
+		this.getJoinGameView().showModal();	
+	}
+
 	@Override
 	public void startCreateNewGame() {
-		
+		gameTimer.cancel();
 		getNewGameView().showModal();
 	}
 
 	@Override
 	public void cancelCreateNewGame() {
-		
+		gameTimer.schedule( new TimerTask() {
+			@Override
+			public void run() {
+				updateGames();
+			}
+		} , 5000);
 		getNewGameView().closeModal();
 	}
 
@@ -150,11 +180,19 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 			getMessageView().setMessage("New game could not be created. " + e.getMessage());
 			getMessageView().showModal();
 		}
+		gameTimer.cancel();
+		gameTimer.schedule( new TimerTask() {
+			@Override
+			public void run() {
+				updateGames();
+			}
+		} , 5000);
 		
 	}
 
 	@Override
 	public void startJoinGame(GameInfo game) {
+		gameTimer.cancel();
 		ClientManager.instance().setCurrentGameInfo(game); //sets the currentGameInfo, which we use to save the gameID
 		getSelectColorView().showModal();
 		for(PlayerInfo pi : game.getPlayers()){
@@ -166,7 +204,13 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 
 	@Override
 	public void cancelJoinGame() {
-	
+		gameTimer.cancel();
+		gameTimer.schedule( new TimerTask() {
+			@Override
+			public void run() {
+				updateGames();
+			}
+		} , 5000);
 		getJoinGameView().closeModal();
 	}
 
