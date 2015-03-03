@@ -56,14 +56,15 @@ public class Catan extends JFrame
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run()
 			{
-				new Catan();
-				
+				System.out.println("number of commandline args: " + args.length);
 				if (args.length == 2)
 				{
 					String host = args[0];
 					String port = args[1];
 					ClientManager.instance(host, port);
 				}
+				new Catan();
+				
 				
 				PlayerWaitingView playerWaitingView = new PlayerWaitingView();
 				final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
