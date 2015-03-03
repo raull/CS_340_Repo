@@ -295,7 +295,9 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 				if(gi.getId()==ClientManager.instance().getCurrentGameInfo().getId()){ //finds our current game
 					for(PlayerInfo pi : gi.getPlayers()){ //queries all players in our current game
 						if(pi.getColor().equals(color)){  //if one of those players has our same color, fail immediately
-							return false;
+							if(!pi.getName().equals(ClientManager.instance().getCurrentPlayerInfo().getName())){
+								return false;
+							}
 						}
 					}
 				}

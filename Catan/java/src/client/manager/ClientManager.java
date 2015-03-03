@@ -24,17 +24,25 @@ import shared.proxy.ServerProxy;
 public class ClientManager {
 	
 	private static ClientManager instance;
-	private ServerProxy serverProxy = new ServerProxy();
+	private ServerProxy serverProxy; 
 	private ModelFacade modelFacade = new ModelFacade();
 	private PlayerInfo currentPlayerInfo = new PlayerInfo();
 	private GameInfo currentGameInfo = new GameInfo();
-	private Poller serverPoller = new Poller(serverProxy, modelFacade);
+	private Poller serverPoller;
 	private boolean gameStarted = false;
 	private boolean isUserRolling = false;
 	
 	private boolean serverPollerRunning = false;
 	
 	private ClientManager() {
+		serverProxy = new ServerProxy();
+		serverPoller = new Poller(serverProxy, modelFacade);
+	}
+	
+	private ClientManager(String host, String port)
+	{
+		serverProxy = new ServerProxy(host, port);
+		serverPoller = new Poller(serverProxy, modelFacade);
 	}
 	
 	public static ClientManager instance(){
@@ -42,6 +50,16 @@ public class ClientManager {
 			return instance;
 		} else {
 			instance = new ClientManager();
+			return instance;
+		}
+	}
+	
+	public static ClientManager instance(String host, String port)
+	{
+		if (instance != null) {
+			return instance;
+		} else {
+			instance = new ClientManager(host, port);
 			return instance;
 		}
 	}
