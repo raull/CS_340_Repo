@@ -176,6 +176,7 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void cancelJoinGame() {
 	
 		getJoinGameView().closeModal();
+		ClientManager.instance().setCurrentGameInfo(null);
 	}
 
 	@Override
