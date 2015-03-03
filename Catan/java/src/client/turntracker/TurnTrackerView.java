@@ -129,9 +129,9 @@ public class TurnTrackerView extends PanelView implements ITurnTrackerView {
 	}
 
 	@Override
-	public void updateGameState(String stateMessage, boolean enable) {
+	public void updateGameState(String stateMessage, boolean enable, CatanColor localColor) {
 
-		gameStatePanel.updateGameState(stateMessage, enable);
+		gameStatePanel.updateGameState(stateMessage, enable, localColor);
 	}
 	
 }
