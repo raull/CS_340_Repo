@@ -135,10 +135,11 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		int id = ClientManager.instance().getCurrentPlayerInfo().getId();
 		if(ClientManager.instance().getModelFacade().canFinishTurn(turnManager, turnManager.getUserFromID(id))){
 //			System.out.println("Can end turn, setting button");
-			this.getView().updateGameState("End Turn", true);
+			System.out.println("local player color?? " + ClientManager.instance().getCurrentPlayerInfo().getColor().toString());
+			this.getView().updateGameState("End Turn", true, ClientManager.instance().getCurrentPlayerInfo().getColor());
 		}
 		else {
-			this.getView().updateGameState("Waiting for other players", false);
+			this.getView().updateGameState("Waiting for other players", false, null);
 		}
 		
 		

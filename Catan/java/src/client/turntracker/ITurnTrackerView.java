@@ -55,7 +55,9 @@ public interface ITurnTrackerView extends IView
 	 *            The new message to be displayed in the game state button
 	 * @param enable
 	 *            Whether or not the game state button should be enabled
+	 * @param localColor
+	 * 				The local color of the player
 	 */
-	void updateGameState(String stateMessage, boolean enable);
+	void updateGameState(String stateMessage, boolean enable, CatanColor localColor);
 }
 
