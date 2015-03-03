@@ -156,34 +156,33 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	 * @return true if the information should be updated, otherwise false
 	 */
 	private boolean needsUpdate(GameInfo[] updatedInfo) {
-		System.out.print("JoinGameController asks, \"Need update?\": ");
 		GameInfo [] oldInfo = this.getJoinGameView().getGames();
-		if(oldInfo.length!=updatedInfo.length){
+		if(oldInfo.length!=updatedInfo.length){ //new game
 			return true;
 		}
 		else{
 			for(int i = 0; i < updatedInfo.length; ++i){
 				GameInfo current = updatedInfo[i];
 				GameInfo old = oldInfo[i];
-				if(current.getId()!=old.getId()){
+				if(current.getId()!=old.getId()){ //game ID changed (deletion and addition)
 					return true;
 				}
 				List<PlayerInfo> oldPlayerInfo = old.getPlayers();
 				List<PlayerInfo> currentPlayerInfo = current.getPlayers();
-				if(oldPlayerInfo.size()!=currentPlayerInfo.size()){
+				if(oldPlayerInfo.size()!=currentPlayerInfo.size()){ //new player added
 					return true;
 				}
 				for(int j = 0; j< currentPlayerInfo.size(); ++j){
-					if(!oldPlayerInfo.get(j).equals(currentPlayerInfo.get(j))){
+					if(!oldPlayerInfo.get(j).equals(currentPlayerInfo.get(j))){ //player info updated
 						return true;
 					}
-					else if(!oldPlayerInfo.get(j).getColor().equals(currentPlayerInfo.get(j).getColor())){
+					else if(!oldPlayerInfo.get(j).getColor().equals(currentPlayerInfo.get(j).getColor())){ //color change
 						return true;
 					}
 				}
 				
 			}
-			return false;
+			return false; //no update needed
 		}
 	}
 
