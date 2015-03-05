@@ -364,10 +364,13 @@ public class MapController extends Controller implements IMapController, Observe
 		{
 			setState(playingState);
 		}
-		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND
-				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND)
 		{
 			setState(setUpState);
+		}
+		else if (turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		{
+			setState(new MapSetUpState(this));
 		}
 		else
 		{
