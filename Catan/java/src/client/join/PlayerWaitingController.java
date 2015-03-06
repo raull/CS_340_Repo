@@ -1,6 +1,7 @@
 package client.join;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -76,28 +77,62 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		boolean updated = false;
 		
 		ClientManager cm = ClientManager.instance();
-		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
+//		for(User u : cm.getModelFacade().turnManager().getUsers()){ //iterates through all players
+//			PlayerInfo newPlayer = new PlayerInfo();
+//			newPlayer.setColor(u.getCatanColor());
+//			newPlayer.setId(u.getPlayerID());
+//			newPlayer.setName(u.getName());
+//			System.out.println("player waiting...curr user's turn index: " + u.getTurnIndex());
+//			newPlayer.setPlayerIndex(u.getTurnIndex());
+//			
+//			for(PlayerInfo pi : cm.getCurrentGameInfo().getPlayers()){ //checks all players already known about
+//				if(pi.getName().equals(u.getName())){ //if that player is already known, we don't need to add them
+//					newPlayer = null;
+//					if(!pi.getColor().equals(u.getCatanColor())){
+//						updated = true;
+//						pi.setColor(u.getCatanColor()); //in case colors have changed
+//					}
+//					break;
+//				}
+//			}
+//			if(newPlayer!=null){ //if the player wasn't found, add him/her to the game
+//				updated = true;
+//				cm.getCurrentGameInfo().addPlayer(newPlayer);
+//			}
+//		}
+		
+		for(User u : cm.getModelFacade().turnManager().getUsers()) { //iterate through all players
 			PlayerInfo newPlayer = new PlayerInfo();
 			newPlayer.setColor(u.getCatanColor());
 			newPlayer.setId(u.getPlayerID());
 			newPlayer.setName(u.getName());
+			System.out.println("player waiting...curr user's turn index: " + u.getTurnIndex());
 			newPlayer.setPlayerIndex(u.getTurnIndex());
 			
-			for(PlayerInfo pi : cm.getCurrentGameInfo().getPlayers()){ //checks all players already known about
-				if(pi.getName().equals(u.getName())){ //if that player is already known, we don't need to add them
-					newPlayer = null;
-					if(!pi.getColor().equals(u.getCatanColor())){
-						updated = true;
-						pi.setColor(u.getCatanColor()); //in case colors have changed
-					}
-					break;
-				}
+			//check if this new player already exists in current game info
+			List<PlayerInfo> currPlayers = cm.getCurrentGameInfo().getPlayers();
+			
+			int currPlayerIndex = currPlayers.indexOf(newPlayer);
+			//if current player already exists
+			if(currPlayerIndex != -1) {
+				//set color again just in case it changed
+				currPlayers.get(currPlayerIndex).setColor(u.getCatanColor());
+				//also set turn index if it changed? not sure why it would but
+				currPlayers.get(currPlayerIndex).setPlayerIndex(u.getTurnIndex());
 			}
-			if(newPlayer!=null){ //if the player wasn't found, add him/her to the game
-				updated = true;
+			else{
+				//add new player to current game info
 				cm.getCurrentGameInfo().addPlayer(newPlayer);
+				updated = true;
 			}
+					
 		}
+		
+		//temp stuff, print out what players look like
+		for(PlayerInfo p : cm.getCurrentGameInfo().getPlayers()) {
+			System.out.println("player waiting, player: " + p.getId() + " " + p.getName() + " " + p.getPlayerIndex());
+		}
+		
 		updatePlayers();
 		
 		if(isFull() && getView().isModalShowing() && !ClientManager.instance().hasGameStarted()) {
