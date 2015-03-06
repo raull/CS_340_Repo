@@ -1,14 +1,16 @@
 package client.points;
 
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import shared.model.game.User;
-
 import client.base.*;
-import client.data.PlayerInfo;
+import client.join.JoinGameController;
+import client.join.JoinGameView;
+import client.join.NewGameView;
+import client.join.SelectColorView;
 import client.manager.ClientManager;
+import client.misc.MessageView;
 
 
 /**
@@ -18,6 +20,7 @@ public class PointsController extends Controller implements IPointsController, O
 
 	private IGameFinishedView finishedView;
 	private int PLAYER_COUNT = 4;
+	private boolean displayed;
 	/**
 	 * PointsController constructor
 	 * 
@@ -31,6 +34,8 @@ public class PointsController extends Controller implements IPointsController, O
 		setFinishedView(finishedView);
 		
 		initFromModel();
+		
+		displayed = false;
 		
 		ClientManager.instance().getModelFacade().addObserver(this);
 	}
@@ -54,23 +59,33 @@ public class PointsController extends Controller implements IPointsController, O
 		
 	}
 	
+	
 	private void updatePoints(boolean hasWinner) {
 		ClientManager cm = ClientManager.instance();
 		
 		//get information of what client user's turn index is
+//		int currPlayerID = cm.getCurrentPlayerInfo().getId();
 		int currPlayerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
-		
 		//get the user from the turn index
-		User user = cm.getModelFacade().turnManager().getUser(currPlayerIndex);
-		
+//		
+		//get user by id
+//		User user = cm.getModelFacade().turnManager().getUser(currPlayerID);
+		User user = cm.getModelFacade().turnManager().getUserFromIndex(currPlayerIndex);
 		//set the user's number of points
 		getPointsView().setPoints(user.getVictoryPoints());
 		
 		if(hasWinner) {
+			System.out.println("has winner");
 			int winnerIndex = cm.getModelFacade().getWinnerIndex();
 			boolean isLocalPlayer = (winnerIndex == currPlayerIndex);
 			String winnerName = cm.getModelFacade().turnManager().getUserFromIndex(winnerIndex).getName();
+			System.out.println("winner: " + winnerName + " local player?? " + isLocalPlayer);
 			getFinishedView().setWinner(winnerName, isLocalPlayer);
+			if (!displayed){
+				getFinishedView().showModal();
+				displayed = true;
+			}
+			
 		}
 		
 	}
@@ -80,9 +95,11 @@ public class PointsController extends Controller implements IPointsController, O
 		ClientManager cm = ClientManager.instance();
 		//when there are 4 players that has joined, then update
 		if(cm.getCurrentGameInfo().getPlayers().size() == PLAYER_COUNT) {
+			
 			//if there is a winner
 			boolean hasWinner = false;
-			if(cm.getModelFacade().getModel().getWinner() != -1) {
+			System.out.println("winner???? " + cm.getModelFacade().score().getWinner());
+			if(cm.getModelFacade().score().getWinner() != -1) {
 				hasWinner = true;
 			}
 			updatePoints(hasWinner);

@@ -33,6 +33,7 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	//States
 	private MapSetUpState setUpState = new MapSetUpState(this);
+	private MapSetUpState secondRoundState = new MapSetUpState(this);
 	private MapInactiveState inactiveState = new MapInactiveState(this);
 	private MapPlayingState playingState = new MapPlayingState(this);
 	private MapRoadBuildingState roadBuildingState = new MapRoadBuildingState(this);
@@ -364,10 +365,13 @@ public class MapController extends Controller implements IMapController, Observe
 		{
 			setState(playingState);
 		}
-		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND
-				|| turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		else if (turnManager.currentTurnPhase() == TurnPhase.FIRSTROUND)
 		{
 			setState(setUpState);
+		}
+		else if (turnManager.currentTurnPhase() == TurnPhase.SECONDROUND)
+		{
+			setState(secondRoundState);
 		}
 		else
 		{

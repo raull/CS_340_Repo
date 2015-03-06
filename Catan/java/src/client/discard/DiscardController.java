@@ -317,14 +317,19 @@ public class DiscardController extends Controller implements IDiscardController,
 				//show modal
 				getDiscardView().showModal();
 				
+				//disable discard first
+				getDiscardView().setDiscardButtonEnabled(false);
+				
+				//get how much user has to discard and set in view
+				needToDiscard = userCardCount/2;
+				getDiscardView().setStateMessage("Discard: 0/" + needToDiscard);
+				
 				//set all cards user plans to discard to 0
 				initDiscardAmount0();
 				
 				//initialize the max amounts a player can discard
 				initMaxAmounts();
-				//get how much user has to discard and set in view
-				needToDiscard = userCardCount/2;
-				getDiscardView().setStateMessage("Discard: 0/" + needToDiscard);
+				
 				initResourceChangeEnabled();
 				
 			}

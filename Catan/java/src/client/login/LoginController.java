@@ -101,19 +101,34 @@ public class LoginController extends Controller implements ILoginController, Obs
 		String password1 = getLoginView().getRegisterPassword();
 		String password2 = getLoginView().getRegisterPasswordRepeat();
 		
-		if (password2.length() == 0) {
+		if (username.length() < 3 || username.length() > 7) {
 			getMessageView().setTitle("Warning");
-			getMessageView().setMessage("Please confirm the password");
+			getMessageView().setMessage("Username should be between 3 and 7 characters long.");
+			getMessageView().showModal();
+		} else if(!hasValidCharacters(username)) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Username has invalid characters. Input should be alphanumeric values, underscores or hyphens.");
+			getMessageView().showModal();
+		} else if (password1.length() < 5) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Password should be more than 4 characters long.");
+			getMessageView().showModal();
+		} else if (password2.length() == 0) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Please confirm the password.");
 			getMessageView().showModal();
 		} else if (!password1.equals(password2)) {
 			getMessageView().setTitle("Warning");
-			getMessageView().setMessage("Passwords don't match");
+			getMessageView().setMessage("Passwords don't match.");
 			getMessageView().showModal();
-			
 		} else if (password1.length() == 0) {
 			getMessageView().setTitle("Warning");
-			getMessageView().setMessage("Password cannot be blank");
+			getMessageView().setMessage("Password cannot be blank.");
 			getMessageView().showModal(); 
+		} else if(!hasValidCharacters(password1)) {
+			getMessageView().setTitle("Warning");
+			getMessageView().setMessage("Password has invalid characters. Input should be alphanumeric values, underscores or hyphens.");
+			getMessageView().showModal();
 		} else {
 			Credentials cred = new Credentials(username,password1);
 			
@@ -132,6 +147,10 @@ public class LoginController extends Controller implements ILoginController, Obs
 		}
 		
 		
+	}
+	
+	private boolean hasValidCharacters(String input) {
+		return input.matches("[A-Za-z0-9_-]+");
 	}
 
 	@Override
