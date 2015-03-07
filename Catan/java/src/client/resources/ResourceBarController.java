@@ -2,9 +2,11 @@ package client.resources;
 
 import java.util.*;
 
+import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.cards.Bank;
+import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 import shared.model.game.TurnManager;
@@ -140,7 +142,31 @@ public class ResourceBarController extends Controller implements IResourceBarCon
 		}
 			
 		getView().setElementEnabled(ResourceBarElement.BUY_CARD, facade.canBuyDevCard(turnManager, currentUser, bank.getDevCardDeck()));
+		
+		setPlayDev();
 	}
 
+	public void setPlayDev(){
+		boolean canPlay = false;
+		ClientManager cm = ClientManager.instance();
+		ModelFacade facade = cm.getModelFacade();
+		PlayerInfo player = cm.getCurrentPlayerInfo();
+		TurnManager turnManager = facade.turnManager();
+		int currentID = player.getId();
+		User currentUser = facade.turnManager().getUserFromID(currentID);
+		
+		if (facade.canPlayDevCard(turnManager, currentUser, new DevCard(DevCardType.MONOPOLY)))
+			canPlay = true;
+		if (facade.canPlayDevCard(turnManager, currentUser, new DevCard(DevCardType.MONUMENT)))
+			canPlay = true;
+		if (facade.canPlayDevCard(turnManager, currentUser, new DevCard(DevCardType.ROAD_BUILD)))
+			canPlay = true;
+		if (facade.canPlayDevCard(turnManager, currentUser, new DevCard(DevCardType.SOLDIER)))
+			canPlay = true;
+		if (facade.canPlayDevCard(turnManager, currentUser, new DevCard(DevCardType.YEAR_OF_PLENTY)))
+			canPlay = true;
+		
+		getView().setElementEnabled(ResourceBarElement.PLAY_CARD, canPlay);
+	}
 }
 
