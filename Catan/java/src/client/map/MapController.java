@@ -229,18 +229,18 @@ public class MapController extends Controller implements IMapController, Observe
 				victims.add(victimInfo);
 			}
 		}
-		//Set myself as the victim to not rob anyone
-		if (victims.size() == 0) {
-			RobPlayerInfo victim = new RobPlayerInfo();
-			PlayerInfo myself = ClientManager.instance().getCurrentPlayerInfo();
-			User me = ClientManager.instance().getModelFacade().turnManager().getUser(myself.getId());
-			victim.setName(myself.getName());
-			victim.setColor(myself.getColor());
-			victim.setPlayerIndex(myself.getPlayerIndex());
-			victim.setId(myself.getId());
-			victim.setNumCards(me.getHand().getResourceCards().getAllResourceCards().size());
-			victims.add(victim);
-		}
+//		//Set myself as the victim to not rob anyone
+//		if (victims.size() == 0) {
+//			RobPlayerInfo victim = new RobPlayerInfo();
+//			PlayerInfo myself = ClientManager.instance().getCurrentPlayerInfo();
+//			User me = ClientManager.instance().getModelFacade().turnManager().getUser(myself.getId());
+//			victim.setName(myself.getName());
+//			victim.setColor(myself.getColor());
+//			victim.setPlayerIndex(myself.getPlayerIndex());
+//			victim.setId(myself.getId());
+//			victim.setNumCards(me.getHand().getResourceCards().getAllResourceCards().size());
+//			victims.add(victim);
+//		}
 		
 		RobPlayerInfo[] candidateVictims = victims.toArray(new RobPlayerInfo[victims.size()]);
 		
@@ -273,7 +273,15 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void robPlayer(RobPlayerInfo victim) 
 	{	
-		state.robPlayer(victim, robberLoc);
+		try{
+			state.robPlayer(victim, robberLoc);
+		}
+		catch (Exception e){ //displaying this message just for transparency, also keeps output clean
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Notice");
+			errorMessage.setMessage("You moved the robber, but didn't rob anyone");
+			errorMessage.showModal();
+		}
 	}
 
 	@Override
