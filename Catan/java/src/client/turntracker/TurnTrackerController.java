@@ -12,6 +12,7 @@ import shared.model.game.User;
 import shared.proxy.ProxyException;
 import shared.proxy.moves.FinishMove;
 import client.base.*;
+import client.data.PlayerInfo;
 import client.manager.ClientManager;
 import client.misc.MessageView;
 
@@ -27,7 +28,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 	public TurnTrackerController(ITurnTrackerView view) {
 		
 		super(view);
-		//set the local/client player's color
+		
 		ClientManager.instance().getModelFacade().addObserver(this);
 	}
 	
@@ -77,12 +78,16 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 	}
 	
+	//set the local/client player's color
 	private void initFromModel() {
+		
+		System.out.println("---------------initializing from model, turn tracker---------------");
 		
 		int currPlayerIndex = ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex();
 		
 		getView().setLocalPlayerColor(ClientManager.instance().getCurrentGameInfo().
 				getPlayers().get(currPlayerIndex).getColor());
+//		getView().setLocalPlayerColor(ClientManager.instance().getModelFacade().turnManager().getUserFromIndex(currPlayerIndex).getCatanColor());
 		
 		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
@@ -90,9 +95,17 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		for(User user : users) {
 			getView().initializePlayer(user.getTurnIndex(), user.getName(), user.getCatanColor());
 		}
-
+		
+//		List<PlayerInfo> players = ClientManager.instance().getCurrentGameInfo().getPlayers();
+//		
+	//	for(PlayerInfo player : players) {
+	//		System.out.println("player: " + player.getPlayerIndex() + " " + player.getName());
+	//		getView().initializePlayer(player.getPlayerIndex(), player.getName(), player.getColor());
+	//	}
+		
 		
 	}
+	
 	
 	private void updatePlayers() {
 		ClientManager cm = ClientManager.instance();
@@ -111,8 +124,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
 			boolean hasLongestRoad = (longestRoadIndex == user.getTurnIndex());
 			
-			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
+			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad, user.getCatanColor());
 		}
+		
 	}
 	
 	@Override
