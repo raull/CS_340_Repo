@@ -90,19 +90,25 @@ public class MapRobbingState extends MapControllerState{
 	public void robPlayer(RobPlayerInfo victim, HexLocation robberLoc) 
 	{
 		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
-		RobPlayer robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
+		
+		RobPlayer robplayer;
+		
+		if (victim == null) {
+			robplayer = new RobPlayer(client.getPlayerIndex(), client.getPlayerIndex(), robberLoc);
+		} else {
+			robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
+		}
+		
 		try {
 			ClientManager.instance().getServerProxy().robPlayer(robplayer);
 			ClientManager.instance().forceUpdate();
 			activeMove = false;
 		} catch (ProxyException e) {
-			// TODO notify the client of the error and restart a robber drop
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
 			errorMessage.setMessage("Something wrong happened while trying to rob the player. Please try again later.");
 			errorMessage.showModal();
 			controller.startMove(PieceType.ROBBER, true, true);
-			//e.printStackTrace();
 		}
 	}
 
