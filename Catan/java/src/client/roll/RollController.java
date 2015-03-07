@@ -75,7 +75,7 @@ public class RollController extends Controller implements IRollController, Obser
 		} catch (Exception e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
-			errorMessage.setMessage("Something wrong happened while trying to roll dice. Please try again later.");
+			errorMessage.setMessage("Something wrong happened while trying to roll dice. Please try again later. Error: " + e.getMessage());
 			errorMessage.showModal();
 		}
 		
