@@ -69,6 +69,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		playersPopulated = false;
 		tradeEnabled = false;
 		trading = false;
+		tradePlayer = -1;
 		
 		waiting = false;
 		accepting = false;
@@ -132,28 +133,48 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			WOOD.decrease();
-			if (WOOD.isSend && canIncrease(resource))
+			if (WOOD.isSend && canIncrease(resource) && !isZero(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			if (WOOD.isSend && canIncrease(resource) && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
+			if (WOOD.isRecieve && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 			break;
 		case BRICK:
 			BRICK.decrease();
 			if (BRICK.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			if (BRICK.isSend && canIncrease(resource) && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
+			if (BRICK.isRecieve && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 			break;
 		case SHEEP:
 			SHEEP.decrease();
 			if (SHEEP.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			if (SHEEP.isSend && canIncrease(resource) && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
+			if (SHEEP.isRecieve && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 			break;
 		case ORE:
 			ORE.decrease();
 			if (ORE.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			if (ORE.isSend && canIncrease(resource) && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
+			if (ORE.isRecieve && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 			break;
 		case WHEAT:
 			WHEAT.decrease();
 			if (WHEAT.isSend && canIncrease(resource))
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			if (WHEAT.isSend && canIncrease(resource) && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
+			if (WHEAT.isRecieve && isZero(resource))
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 			break;
 		}
 		updateTradeButton();
@@ -164,30 +185,66 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		switch (resource){
 		case WOOD:
 			WOOD.increase();
-			if (WOOD.isSend && !canIncrease(resource))
-				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);	
+			if (WOOD.isSend && !canIncrease(resource)){
+				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			}
+			else{
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			}
 			break;
 		case BRICK:
 			BRICK.increase();
-			if (BRICK.isSend && !canIncrease(resource))
+			if (BRICK.isSend && !canIncrease(resource)){
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			}
+			else{
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			}
 			break;
 		case SHEEP:
 			SHEEP.increase();
-			if (SHEEP.isSend && !canIncrease(resource))
+			if (SHEEP.isSend && !canIncrease(resource)){
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			}
+			else{
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			}
 			break;
 		case ORE:
 			ORE.increase();
-			if (ORE.isSend && !canIncrease(resource))
+			if (ORE.isSend && !canIncrease(resource)){
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			}
+			else{
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			}
 			break;
 		case WHEAT:
 			WHEAT.increase();
-			if (WHEAT.isSend && !canIncrease(resource))
+			if (WHEAT.isSend && !canIncrease(resource)){
 				getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			}
+			else{
+				if (!isZero(resource))
+					getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+			}
 			break;
 		}
+		
 		updateTradeButton();
 		
 	}
@@ -247,7 +304,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			WHEAT.setRecieve(true);
 			break;
 		}
-		getTradeOverlay().setResourceAmountChangeEnabled(resource, true, true);
+		getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 		updateTradeButton();
 	}
 
@@ -276,7 +333,9 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 			break;
 		}
 		if (!canIncrease(resource))
-			getTradeOverlay().setResourceAmountChangeEnabled(resource, false, true);
+			getTradeOverlay().setResourceAmountChangeEnabled(resource, false, false);
+		else
+			getTradeOverlay().setResourceAmountChangeEnabled(resource, true, false);
 		updateTradeButton();
 	}
 
@@ -410,6 +469,29 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		}
 		return canInc;
 	}
+	
+	public boolean isZero(ResourceType resource){
+		boolean iszero = false;
+		switch (resource){
+		case WOOD:
+			iszero = WOOD.getNum() == 0;
+			break;
+		case BRICK:
+			iszero = BRICK.getNum() == 0;
+			break;
+		case ORE:
+			iszero = ORE.getNum() == 0;
+			break;
+		case SHEEP:
+			iszero = SHEEP.getNum() == 0;
+			break;
+		case WHEAT:
+			iszero = WHEAT.getNum() == 0;
+			break;
+		}
+		return iszero;
+	}
+	
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (ClientManager.instance().hasGameStarted()){
