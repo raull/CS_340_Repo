@@ -70,6 +70,11 @@ public class ModelFacade extends Observable{
 	 * @param jsonResponse
 	 */
 	public void updateModel(JsonElement jsonResponse) {
+		
+		if (model.isUpdating()) {
+			return;
+		}
+		
 		model.deserialize(jsonResponse);
 		turnManager = model.getTurnManager();
 		map = model.getMap();
@@ -96,7 +101,6 @@ public class ModelFacade extends Observable{
 			this.setChanged();
 			this.notifyObservers();
 		//}
-		
 	}
 	/**
 	 * gets the current model

@@ -41,13 +41,11 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 		if (isFull()) {
 			OverlayView.closeAllModals();
 			ClientManager.instance().startGame();
+			ClientManager.instance().forceUpdate();
 		} 
 		else {
 			getView().showModal();
 		}
-		
-		
-		
 		
 	}
 
@@ -99,32 +97,6 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 				cm.getCurrentGameInfo().addPlayer(newPlayer);
 			}
 		}
-		
-//		for(User u : cm.getModelFacade().turnManager().getUsers()) { //iterate through all players
-//			PlayerInfo newPlayer = new PlayerInfo();
-//			newPlayer.setColor(u.getCatanColor());
-//			newPlayer.setId(u.getPlayerID());
-//			newPlayer.setName(u.getName());
-//			newPlayer.setPlayerIndex(u.getTurnIndex());
-//			
-//			//check if this new player already exists in current game info
-//			List<PlayerInfo> currPlayers = cm.getCurrentGameInfo().getPlayers();
-//			
-//			int currPlayerIndex = currPlayers.indexOf(newPlayer);
-//			//if current player already exists
-//			if(currPlayerIndex != -1) {
-//				//set color again just in case it changed
-//				currPlayers.get(currPlayerIndex).setColor(u.getCatanColor());
-//				//also set turn index if it changed? not sure why it would but
-//				currPlayers.get(currPlayerIndex).setPlayerIndex(u.getTurnIndex());
-//			}
-//			else{
-//				//add new player to current game info
-//				cm.getCurrentGameInfo().addPlayer(newPlayer);
-//			}
-//			updated = true;
-//					
-//		}
 		
 		updatePlayers();
 		
