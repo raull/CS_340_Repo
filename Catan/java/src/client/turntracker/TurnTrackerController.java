@@ -89,21 +89,23 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 				getPlayers().get(currPlayerIndex).getColor());
 //		getView().setLocalPlayerColor(ClientManager.instance().getModelFacade().turnManager().getUserFromIndex(currPlayerIndex).getCatanColor());
 		
-//		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
-//		
-//		//initialize players from turn manager
-//		for(User user : users) {
-//			getView().initializePlayer(user.getTurnIndex(), user.getName(), user.getCatanColor());
-//		}
-		List<PlayerInfo> players = ClientManager.instance().getCurrentGameInfo().getPlayers();
+		List<User> users = ClientManager.instance().getModelFacade().getModel().getTurnManager().getUsers();
 		
-		for(PlayerInfo player : players) {
-			System.out.println("player: " + player.getPlayerIndex() + " " + player.getName());
-			getView().initializePlayer(player.getPlayerIndex(), player.getName(), player.getColor());
+		//initialize players from turn manager
+		for(User user : users) {
+			getView().initializePlayer(user.getTurnIndex(), user.getName(), user.getCatanColor());
 		}
-
+		
+//		List<PlayerInfo> players = ClientManager.instance().getCurrentGameInfo().getPlayers();
+//		
+	//	for(PlayerInfo player : players) {
+	//		System.out.println("player: " + player.getPlayerIndex() + " " + player.getName());
+	//		getView().initializePlayer(player.getPlayerIndex(), player.getName(), player.getColor());
+	//	}
+		
 		
 	}
+	
 	
 	private void updatePlayers() {
 		ClientManager cm = ClientManager.instance();
@@ -122,8 +124,9 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 			boolean hasLargestArmy = (largestArmyIndex == user.getTurnIndex());
 			boolean hasLongestRoad = (longestRoadIndex == user.getTurnIndex());
 			
-			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad);
+			getView().updatePlayer(user.getTurnIndex(), user.getVictoryPoints(), isHighlighted, hasLargestArmy, hasLongestRoad, user.getCatanColor());
 		}
+		
 	}
 	
 	@Override
