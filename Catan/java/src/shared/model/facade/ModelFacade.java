@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
 import shared.definitions.DevCardType;
-import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -18,7 +17,6 @@ import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 import shared.model.Model;
-import shared.model.board.Edge;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.cards.Bank;
@@ -65,6 +63,7 @@ public class ModelFacade extends Observable{
 	
 	private int modelVersion;
 	private int winnerIndex;
+	private boolean isNotifying = false;
 	/**
 	 * updates the model class with the JSON response
 	 * @param jsonResponse
@@ -89,18 +88,14 @@ public class ModelFacade extends Observable{
 		System.out.println("Current State: " + turnManager.currentTurnPhase().toString());
 
 		
-		//check that version number has changed, or not
-		/*if (ClientManager.instance().hasGameStarted()){
-			if(modelVersion != newModelVersion) {
-				//update stuff from model
-				this.setChanged();
-				this.notifyObservers();
-			}
+		if (isNotifying) {
+			return;
 		}
-		else{ */
-			this.setChanged();
-			this.notifyObservers();
-		//}
+		
+		isNotifying = true;
+		this.setChanged();
+		this.notifyObservers();
+		isNotifying = false;
 	}
 	/**
 	 * gets the current model
@@ -901,6 +896,12 @@ public class ModelFacade extends Observable{
 	
 	public void setModelVersion(int modelVersion) {
 		this.modelVersion = modelVersion;
+	}
+	public boolean isNotifying() {
+		return isNotifying;
+	}
+	public void setNotifying(boolean isNotifying) {
+		this.isNotifying = isNotifying;
 	}
 	
 }
