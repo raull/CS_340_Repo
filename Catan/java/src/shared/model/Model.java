@@ -51,6 +51,8 @@ public class Model {
 	public int winner; //-1 when nobody won yet. when someone wins, it's their order index
 	public ScoreKeeper scoreKeeper;
 	
+	private boolean isUpdating = false;
+	
 	public Model(){
 		this.bank = new Bank(new ArrayList<DevCard>(), new ArrayList<ResourceCard>());
 		this.chat = new MessageList();
@@ -127,6 +129,13 @@ public class Model {
 	 */
 	
 	public void deserialize(JsonElement jsonModel) {
+		//Avoid Multiple updates at the same time
+		if (isUpdating) {
+			return;
+		}
+		
+		isUpdating = true;
+		
 		//would model be better as jsonElement?
 		if(jsonModel.isJsonObject()) {
 			
@@ -200,6 +209,8 @@ public class Model {
 			updateScoreKeeper();
 			
 		}
+		
+		isUpdating = false;
 	}
 	
 	
@@ -664,6 +675,14 @@ public class Model {
 		for(User user : users) {
 			scoreKeeper.setScore(user.getTurnIndex(), user.getVictoryPoints());
 		}
+	}
+
+	public boolean isUpdating() {
+		return isUpdating;
+	}
+
+	public void setUpdating(boolean isUpdating) {
+		this.isUpdating = isUpdating;
 	}
 	
 }
