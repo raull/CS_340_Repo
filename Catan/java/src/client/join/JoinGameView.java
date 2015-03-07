@@ -167,6 +167,10 @@ public class JoinGameView extends OverlayView implements IJoinGameView
 		this.removeAll();
 		this.initialize();
 	}
+	@Override
+	public GameInfo[] getGames(){
+		return games;
+	}
 	
 	private ActionListener actionListener = new ActionListener()
 	{
