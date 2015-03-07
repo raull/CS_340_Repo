@@ -273,7 +273,15 @@ public class MapController extends Controller implements IMapController, Observe
 	
 	public void robPlayer(RobPlayerInfo victim) 
 	{	
-		state.robPlayer(victim, robberLoc);
+		try{
+			state.robPlayer(victim, robberLoc);
+		}
+		catch (Exception e){ //displaying this message just for transparency, also keeps output clean
+			MessageView errorMessage = new MessageView();
+			errorMessage.setTitle("Notice");
+			errorMessage.setMessage("You moved the robber, but didn't rob anyone");
+			errorMessage.showModal();
+		}
 	}
 
 	@Override
