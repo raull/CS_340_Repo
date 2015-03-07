@@ -55,5 +55,10 @@ public class GameInfo
 	{
 		return Collections.unmodifiableList(players);
 	}
+
+	public void clearPlayers() {
+		players = new ArrayList<PlayerInfo>();
+		
+	}
 }
 
