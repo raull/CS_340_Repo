@@ -122,11 +122,7 @@ public class TurnTrackerView extends PanelView implements ITurnTrackerView {
 		
 		//update the colors
 		BorderLayout layout = (BorderLayout) playerPanel[playerIndex].getLayout();
-//		layout.getLayoutComponent(BorderLayout.CENTER).setBackground(playerColor.getJavaColor());
-		playerPanel[playerIndex].remove(layout.getLayoutComponent(BorderLayout.CENTER));
-		JPanel indicatorPanel = new JPanel();
-		indicatorPanel.setBackground(playerColor.getJavaColor());
-		playerPanel[playerIndex].add(indicatorPanel, BorderLayout.CENTER);
+		layout.getLayoutComponent(BorderLayout.CENTER).setBackground(playerColor.getJavaColor());
 		playerPanel[playerIndex].setBackground(playerColor.getJavaColor());
 		
 		if(highlight)
