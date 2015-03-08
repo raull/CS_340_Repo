@@ -146,7 +146,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 		// enable maritime trade during playing phase
 		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING && tm.getCurrentTurn() ==
-				playerIndex) {
+				playerIndex && ClientManager.instance().hasGameStarted()) {
 			//update what ratios players can trade at based on ports
 			udpateResourceRatio();
 			getTradeView().enableMaritimeTrade(true);
@@ -212,8 +212,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	 */
 	private void udpateResourceRatio() {
 		//go through user ports and call getPortResourceType on each port
-		int playerIndex = cm.getModelFacade().turnManager().currentUser().getTurnIndex();
-		User currUser = cm.getModelFacade().turnManager().getUser(playerIndex);
+		User currUser = cm.getModelFacade().turnManager().currentUser();
 		
 		for(Port port : currUser.ports()) {
 			switch(port.getType()) {
@@ -245,8 +244,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 	private void checkUserCards(){
 		//go through cards user has
 		// if user has cards greater than ratio, allow user to give that resource
-		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
-		User currUser = cm.getModelFacade().turnManager().getUser(playerIndex);
+		User currUser = cm.getModelFacade().turnManager().currentUser();
 		
 		if(currUser.getBrickCards() >= brickRatio) {
 			givingResourceTypes.add(ResourceType.BRICK);
