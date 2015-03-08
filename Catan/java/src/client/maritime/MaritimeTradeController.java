@@ -142,7 +142,7 @@ public class MaritimeTradeController extends Controller implements IMaritimeTrad
 
 	@Override
 	public void update(Observable o, Object arg) {
-		TurnManager tm = cm.instance().getModelFacade().turnManager();
+		TurnManager tm = cm.getModelFacade().turnManager();
 		int playerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 		// enable maritime trade during playing phase
 		if(cm.getCurrentTurnPhase() == TurnPhase.PLAYING && tm.getCurrentTurn() ==
