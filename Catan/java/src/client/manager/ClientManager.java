@@ -121,11 +121,17 @@ public class ClientManager {
 		return modelFacade.turnManager().currentTurnPhase();
 	}
 	
+	public Poller getPoller() {
+		return serverPoller;
+	}
+	
 	/**
 	 * Runs the server poller. If it was already running it does nothing
 	 */
 	public void startServerPoller() {
 		if (!serverPollerRunning) {
+			//have poller run
+			serverPoller.stopPoller(false);
 			serverPoller.run();
 		}
 	}
@@ -140,6 +146,10 @@ public class ClientManager {
 	
 	public boolean hasGameStarted() {
 		return gameStarted;
+	}
+	
+	public void setGameStarted(boolean hasGameStarted) {
+		gameStarted = hasGameStarted;
 	}
 	
 	public void forceUpdate() {

@@ -19,6 +19,8 @@ public class Poller {
 	//poll the server at regular intervals
 	private Timer pollerTimer = new Timer(false); //not daemon thread 
 	
+	private boolean runPoller = true;
+	
 	/**
 	 * constructor of poller
 	 * @param proxy pass in proxy or moxy
@@ -40,7 +42,16 @@ public class Poller {
 	public void run() {
 		pollerTimer.scheduleAtFixedRate( 
 			new TimerTask() {
-				public void run() { pollServer(); }
+				public void run() {
+					if(runPoller) {
+						pollServer();
+					}
+					else{
+						System.out.println("canceling poller?");
+						this.cancel();
+					}
+					 
+				}
 			}, 0, 3000 ); //poll the server every 3000ms, or 3s
 	}
 	
@@ -65,6 +76,13 @@ public class Poller {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * stops the poller 
+	 */
+	public void stopPoller(boolean toStop) {
+		runPoller = !toStop;
 	}
 	
 	/**

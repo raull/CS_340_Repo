@@ -111,6 +111,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	@Override
 	public void start() {
 		try {
+			//if this is coming from end of some other game
+			//set game started back to false and stop poller
+			if(ClientManager.instance().hasGameStarted()) {
+				ClientManager.instance().setGameStarted(false);
+				ClientManager.instance().getPoller().stopPoller(true);
+			}
 			JsonElement je = ClientManager.instance().getServerProxy().list();
 			this.getJoinGameView().setGames(this.getGameInfo(je), ClientManager.instance().getCurrentPlayerInfo());
 			if(!this.getJoinGameView().isModalShowing()){
