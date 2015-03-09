@@ -88,9 +88,11 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 			String[] args = new String[3];
 			args[0] = Catan.host;
 			args[1] = Catan.port;
-			int userId = ClientManager.instance().getCurrentPlayerInfo().getId();
-			String loginInfo = ClientManager.instance().getModelFacade().turnManager().getUserFromID(userId).getName() + "-" + 
-					ClientManager.instance().getModelFacade().turnManager().getUserFromID(userId).getPassword();
+//			int userId = ClientManager.instance().getCurrentPlayerInfo().getId();
+//			String loginInfo = ClientManager.instance().getModelFacade().turnManager().getUserFromID(userId).getName() + "." + 
+//					ClientManager.instance().getModelFacade().turnManager().getUserFromID(userId).getPassword();
+			String loginInfo = ClientManager.instance().getCurrentPlayerInfo().getName() + "." + 
+					ClientManager.instance().getCurrentPlayerInfo().getPassword();
 			args[2] = loginInfo;
 			Catan.restartApplication(null, args);
 		} catch (IOException e) {

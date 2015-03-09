@@ -103,14 +103,32 @@ public class Catan extends JFrame
 				selectColorView.setController(joinController);
 				joinMessageView.setController(joinController);
 				
+				LoginView loginView = new LoginView();
+				MessageView loginMessageView = new MessageView();
+				LoginController loginController = new LoginController(
+																	  loginView,
+																	  loginMessageView);
+				
+				loginController.setLoginAction(new IAction() {
+					@Override
+					public void execute()
+					{
+						joinController.start();
+					}
+				});
+				loginView.setController(loginController);
+				loginView.setController(loginController);
 				//if pass in log in reqs, go straight to game hub
 				//else show log in
 				if(args.length == 3) {
-					String username = args[2].split("-")[0];
-					String password = args[2].split("-")[1];
+//					String[] creds = args[2].split("\\.");
+//					System.out.println(creds.length);
+					String username = args[2].split("\\.")[0];
+					String password = args[2].split("\\.")[1];
 					Credentials cred = new Credentials(username, password);
 					try {
 						ClientManager.instance().getServerProxy().login(cred);
+						loginController.getLoginAction().execute();
 					} catch (ProxyException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -118,20 +136,6 @@ public class Catan extends JFrame
 					}
 				}
 				else{
-					LoginView loginView = new LoginView();
-					MessageView loginMessageView = new MessageView();
-					LoginController loginController = new LoginController(
-																		  loginView,
-																		  loginMessageView);
-					loginController.setLoginAction(new IAction() {
-						@Override
-						public void execute()
-						{
-							joinController.start();
-						}
-					});
-					loginView.setController(loginController);
-					loginView.setController(loginController);
 					
 					loginController.start();
 				}

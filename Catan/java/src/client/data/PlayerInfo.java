@@ -20,6 +20,7 @@ public class PlayerInfo
 	private int id;
 	private int playerIndex;
 	private String name;
+	private String password;
 	private CatanColor color;
 	
 	public PlayerInfo()
@@ -58,6 +59,16 @@ public class PlayerInfo
 	public void setName(String name)
 	{
 		this.name = name;
+	}
+	
+	public String getPassword() 
+	{
+		return password;
+	}
+	
+	public void setPassword(String password)
+	{
+		this.password = password;
 	}
 	
 	public CatanColor getColor()
