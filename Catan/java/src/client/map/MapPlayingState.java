@@ -24,9 +24,9 @@ public class MapPlayingState extends MapControllerState
 	{
 		this.controller = controller;
 	}
-	
+
 	private MapController controller;
-	
+
 	@Override
 	public boolean canPlaceRoad(EdgeLocation edgeLoc) 
 	{
@@ -74,8 +74,18 @@ public class MapPlayingState extends MapControllerState
 	public void robPlayer(RobPlayerInfo victim, HexLocation robberLoc) 
 	{
 		PlayerInfo client = ClientManager.instance().getCurrentPlayerInfo();
-		Soldier_ move = new Soldier_(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
-		
+
+		Soldier_ move;
+
+		if (victim == null)
+		{
+			move = new Soldier_(client.getPlayerIndex(), -1, robberLoc);
+		}
+		else
+		{
+			move = new Soldier_(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
+		}
+
 		try {
 			ClientManager.instance().getServerProxy().Soldier(move);
 			ClientManager.instance().forceUpdate();
@@ -116,7 +126,7 @@ public class MapPlayingState extends MapControllerState
 		controller.getView().placeRoad(edgeLoc, client.getColor());	
 		int clientIndex = client.getPlayerIndex();
 		BuildRoad buildroad = new BuildRoad(clientIndex, edgeLoc, false);
-		
+
 		try {
 			ClientManager.instance().getServerProxy().buildRoad(buildroad);
 			ClientManager.instance().forceUpdate();
@@ -139,20 +149,20 @@ public class MapPlayingState extends MapControllerState
 	@Override
 	public void placeRobber(HexLocation hexLoc) 
 	{
-		
+
 	}
 
 	@Override
 	public void update() {
-		
+
 		TurnManager turnManager = ClientManager.instance().getModelFacade().turnManager();
 		Map map = ClientManager.instance().getModelFacade().map();
-		
+
 		controller.updateRobber(turnManager, map);
 		controller.updateCities(turnManager, map);
 		controller.updateSettlements(turnManager, map);
 		controller.updateRoads(turnManager, map);
-		
+
 	}
 
 }
