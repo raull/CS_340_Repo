@@ -129,6 +129,15 @@ public class RobView extends OverlayView implements IRobView {
 				revalidate();
 			}
 		}
+		else
+		{
+			this.remove(buttonPanel);
+			buttonPanel = new JPanel();
+			buttonPanel.setBorder(BorderFactory.createEmptyBorder(25,0,25,0));
+			buttonPanel.add(defaultButton);
+			this.add(buttonPanel, BorderLayout.CENTER);
+			revalidate();
+		}
 	}
 
 }

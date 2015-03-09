@@ -94,7 +94,7 @@ public class MapRobbingState extends MapControllerState{
 		RobPlayer robplayer;
 		
 		if (victim == null) {
-			robplayer = new RobPlayer(client.getPlayerIndex(), client.getPlayerIndex(), robberLoc);
+			robplayer = new RobPlayer(client.getPlayerIndex(), -1, robberLoc);
 		} else {
 			robplayer = new RobPlayer(client.getPlayerIndex(), victim.getPlayerIndex(), robberLoc);
 		}
