@@ -1,7 +1,10 @@
 package client.main;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.ProcessBuilder.Redirect;
 import java.lang.management.ManagementFactory;
 import java.util.List;
 
@@ -55,6 +58,7 @@ public class Catan extends JFrame
 	
 	public static void main(final String[] args)
 	{
+		System.out.println("MAIN");
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -200,16 +204,40 @@ public class Catan extends JFrame
 				public void run() {
 					try {
 						System.out.println("cmd: " + cmd.toString());
-						Runtime.getRuntime().exec(cmd.toString());
+						Process process = Runtime.getRuntime().exec(cmd.toString());
+						
+//						BufferedReader stdInput = new BufferedReader(new 
+//							     InputStreamReader(process.getInputStream()));
+//
+//						BufferedReader stdError = new BufferedReader(new 
+//						     InputStreamReader(process.getErrorStream()));
+//
+//						// read the output from the command
+//						System.out.println("Here is the standard output of the command:\n");
+//						String s = null;
+//						while ((s = stdInput.readLine()) != null) {
+//						    System.out.println(s);
+//						}
+//
+//						// read any errors from the attempted command
+//						System.out.println("Here is the standard error of the command (if any):\n");
+//						while ((s = stdError.readLine()) != null) {
+//						    System.out.println(s);
+//						}
+						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 			});
-			// execute some custom code before restarting
-			if (runBeforeRestart!= null) {
-				runBeforeRestart.run();
-			}
+			
+//			ProcessBuilder builder = new ProcessBuilder(cmd.toString());
+//			builder.start();
+			
+//			// execute some custom code before restarting
+//			if (runBeforeRestart!= null) {
+//				runBeforeRestart.run();
+//			}
 			// exit
 			System.exit(0);
 		} catch (Exception e) {
