@@ -36,9 +36,8 @@ public class GameStatePanel extends JPanel
 	
 	public void updateGameState(String stateMessage, boolean enable, CatanColor localColor)
 	{
-		System.out.println("catan color: " + localColor);
+		//System.out.println("catan color: " + localColor);
 		if(localColor != null) {
-			System.out.println("setting button background color???");
 			button.setBackground(localColor.getJavaColor());
 		}
 		button.setText(stateMessage);

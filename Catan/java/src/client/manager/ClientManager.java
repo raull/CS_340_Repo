@@ -121,12 +121,18 @@ public class ClientManager {
 		return modelFacade.turnManager().currentTurnPhase();
 	}
 	
+	public Poller getPoller() {
+		return serverPoller;
+	}
+	
 	/**
 	 * Runs the server poller. If it was already running it does nothing
 	 */
 	public void startServerPoller() {
 		if (!serverPollerRunning) {
-			serverPoller.run();
+			//have poller run
+			//serverPoller.stopPoller(false);
+			serverPoller.runPoller();
 		}
 	}
 	
@@ -141,6 +147,10 @@ public class ClientManager {
 	public boolean hasGameStarted() {
 		return gameStarted;
 	}
+	
+	//public void setGameStarted(boolean hasGameStarted) {
+		//gameStarted = hasGameStarted;
+	//}
 	
 	public void forceUpdate() {
 		JsonElement model;
@@ -164,4 +174,16 @@ public class ClientManager {
 		this.isUserRolling = isUserRolling;
 	}
 	
+	/**
+	 * resets some vars in client manager
+	 * different model, so new model facade
+	 * new game
+	 */
+	public void resetSelf() {
+		modelFacade = new ModelFacade();
+		currentGameInfo = new GameInfo();
+
+		gameStarted = false;
+		
+	}
 }

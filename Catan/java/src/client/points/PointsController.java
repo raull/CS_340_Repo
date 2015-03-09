@@ -64,7 +64,7 @@ public class PointsController extends Controller implements IPointsController, O
 		ClientManager cm = ClientManager.instance();
 		
 		//get information of what client user's turn index is
-//		int currPlayerID = cm.getCurrentPlayerInfo().getId();
+		int currPlayerId = cm.getCurrentPlayerInfo().getId();
 		int currPlayerIndex = cm.getCurrentPlayerInfo().getPlayerIndex();
 		//get the user from the turn index
 //		
@@ -75,10 +75,17 @@ public class PointsController extends Controller implements IPointsController, O
 		getPointsView().setPoints(user.getVictoryPoints());
 		
 		if(hasWinner) {
+			/////////////////////
+			//winner is returning player id, not turn index, as the specs say
+			////////////////////
 			System.out.println("has winner");
-			int winnerIndex = cm.getModelFacade().getWinnerIndex();
-			boolean isLocalPlayer = (winnerIndex == currPlayerIndex);
-			String winnerName = cm.getModelFacade().turnManager().getUserFromIndex(winnerIndex).getName();
+			//int winnerIndex = cm.getModelFacade().getWinnerIndex();
+			int winnerId = cm.getModelFacade().getWinnerIndex();
+			//boolean isLocalPlayer = (winnerIndex == currPlayerIndex);
+			boolean isLocalPlayer = (winnerId == currPlayerId);
+			
+			//String winnerName = cm.getModelFacade().turnManager().getUserFromIndex(winnerIndex).getName();
+			String winnerName = cm.getModelFacade().turnManager().getUserFromID(winnerId).getName();
 			System.out.println("winner: " + winnerName + " local player?? " + isLocalPlayer);
 			getFinishedView().setWinner(winnerName, isLocalPlayer);
 			if (!displayed){

@@ -78,7 +78,7 @@ public class PlayerWaitingController extends Controller implements IPlayerWaitin
 			newPlayer.setColor(u.getCatanColor());
 			newPlayer.setId(u.getPlayerID());
 			newPlayer.setName(u.getName());
-			System.out.println("player waiting...curr user's turn index: " + u.getTurnIndex());
+			//System.out.println("player waiting...curr user's turn index: " + u.getTurnIndex());
 			newPlayer.setPlayerIndex(u.getTurnIndex());
 			
 			for(PlayerInfo pi : cm.getCurrentGameInfo().getPlayers()){ //checks all players already known about

@@ -18,6 +18,9 @@ public class Poller {
 	
 	//poll the server at regular intervals
 	private Timer pollerTimer = new Timer(false); //not daemon thread 
+	private TimerTask task;
+		
+	private boolean paused = false;
 	
 	/**
 	 * constructor of poller
@@ -37,12 +40,48 @@ public class Poller {
 		this.modelFacade = facade;
 	}
 	
+	public void pausePoller() {
+		paused = true;
+		this.pollerTimer.cancel();
+	}
+	
+	public void resumePoller() {
+		this.pollerTimer = new Timer();
+		pollerTimer.scheduleAtFixedRate(task, 0, 3000);
+	}
+	
+	public void runPoller() {
+		this.pollerTimer = new Timer();
+		this.task = new TimerTask() {
+			public void run() {
+				pollServer();
+			}
+		};
+		pollerTimer.scheduleAtFixedRate(task, 0, 3000);
+//		if(paused) {
+//			resumePoller();
+//		}
+//		else{
+//			pollerTimer.scheduleAtFixedRate(task, 0, 3000);
+//		}
+	}
+	/*
 	public void run() {
+		
 		pollerTimer.scheduleAtFixedRate( 
 			new TimerTask() {
-				public void run() { pollServer(); }
+				public void run() {
+					if(runPoller) {
+						pollServer();
+					}
+					else{
+						System.out.println("canceling poller?");
+						pausePoller();
+					}
+					 
+				}
 			}, 0, 3000 ); //poll the server every 3000ms, or 3s
-	}
+	}*/
 	
 	/**
 	 * Polls server for a possible updated version of model, which is sent to model facade to update
@@ -66,6 +105,13 @@ public class Poller {
 		}
 		
 	}
+	
+	/**
+	 * stops the poller 
+	 */
+	//public void stopPoller(boolean toStop) {
+	//	runPoller = !toStop;
+	//}
 	
 	/**
 	 * updates the model with the JSON response through the model facade

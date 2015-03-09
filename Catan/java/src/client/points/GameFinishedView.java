@@ -13,6 +13,7 @@ import client.join.NewGameView;
 import client.join.PlayerWaitingController;
 import client.join.PlayerWaitingView;
 import client.join.SelectColorView;
+import client.manager.ClientManager;
 import client.misc.MessageView;
 import client.utils.*;
 
@@ -105,6 +106,9 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 		newGameView.setController(joinController);
 		selectColorView.setController(joinController);
 		joinMessageView.setController(joinController);
+		
+		//reset everything in client manager?
+		//ClientManager.instance().resetSelf();
 		
 		joinController.start();
 	}
