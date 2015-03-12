@@ -2,6 +2,9 @@ package server.handlers;
 
 import java.io.IOException;
 
+import server.handlers.factories.UserCommandFactory;
+import client.base.IAction;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -11,7 +14,8 @@ public class UserHandler implements HttpHandler{
 	}
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
-		// TODO Auto-generated method stub
+		IAction event = UserCommandFactory.create(arg0);
+		event.execute();
 		
 	}
 
