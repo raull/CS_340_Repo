@@ -4,6 +4,9 @@ import java.util.List;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
+import shared.definitions.ResourceType;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.model.Model;
 
 public class ServerFacade {
@@ -117,5 +120,91 @@ public class ServerFacade {
 	public Model resetGame(Game game) throws ServerInvalidRequestException {
 		return null;
 	}
-
+	
+	/**
+	 * Sends a chat message
+	 * @param gameThe game were the chat belongs to
+	 * @param playerIndexThe index of the sender
+	 * @param message The message of the chat
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model sendChat(Game game, int playerIndex, String message) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Used to roll a number at the beginning of your turn
+	 * @param game The game where the dice is rolled
+	 * @param playerIndex The index of the player who rolled
+	 * @param rolledNumber The number of the dice
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model rollNumber(Game game, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Moves the robber, selecting the new robber position and player to rob.
+	 * @param game The game where the robbing is taking place.
+	 * @param playerIndex The index of the player robbing.
+	 * @param victimIndex The index of the player being robbed.
+	 * @param location The Location where the robber will be placed.
+	 * @param soldierCard Whether or not the robbing took place with a soldier card or not
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model robPlayer(Game game, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Used to finish a player's turn.
+	 * @param game The game were its taking place.
+	 * @param playerIndex The index of the player ending the turn.
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model finishTurn(Game game, int playerIndex) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Used for a player to buy a development card
+	 * @param game The game where the transaction is being made.
+	 * @param playerIndex THe player doing the transaction
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model buyDevCard(Game game, int playerIndex) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Plays a 'Year of Plenty' card from your hand to gain the two specified resources.
+	 * @param game THe game where the card is being played.
+	 * @param playerIndex The index of the player playing the card.
+	 * @param resource1 The first resource to gain.
+	 * @param resource2 The second resource to gain.
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model playYearOfPlenty(Game game, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Plays a 'Road Building' card from your hand to build two roads at the specified locations
+	 * @param game The game where the card is being played.
+	 * @param playerIndex THe index of the player playing the card.
+	 * @param location1 The location of the first road
+	 * @param location2 The location of the second road
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model playRoadBuilding(Game game, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException {
+		return null;
+	}
+	
 }
