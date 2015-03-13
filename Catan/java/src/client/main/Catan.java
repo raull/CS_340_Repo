@@ -1,6 +1,17 @@
 package client.main;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.ProcessBuilder.Redirect;
+import java.lang.management.ManagementFactory;
+import java.util.List;
+
 import javax.swing.*;
+
+import shared.proxy.ProxyException;
+import shared.proxy.user.Credentials;
 
 import client.catan.*;
 import client.login.*;
@@ -17,6 +28,9 @@ public class Catan extends JFrame
 {
 	
 	private CatanPanel catanPanel;
+	
+	public static String host = "localhost";
+	public static String port = "8081";
 	
 	public Catan()
 	{
@@ -44,6 +58,7 @@ public class Catan extends JFrame
 	
 	public static void main(final String[] args)
 	{
+		System.out.println("MAIN");
 		try
 		{
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -59,8 +74,8 @@ public class Catan extends JFrame
 				System.out.println("number of commandline args: " + args.length);
 				if (args.length == 2)
 				{
-					String host = args[0];
-					String port = args[1];
+					host = args[0];
+					port = args[1];
 					ClientManager.instance(host, port);
 				}
 				new Catan();
@@ -97,6 +112,7 @@ public class Catan extends JFrame
 				LoginController loginController = new LoginController(
 																	  loginView,
 																	  loginMessageView);
+				
 				loginController.setLoginAction(new IAction() {
 					@Override
 					public void execute()
@@ -106,10 +122,128 @@ public class Catan extends JFrame
 				});
 				loginView.setController(loginController);
 				loginView.setController(loginController);
+				//if pass in log in reqs, go straight to game hub
+				//else show log in
+				if(args.length == 3) {
+//					String[] creds = args[2].split("\\.");
+//					System.out.println(creds.length);
+					String username = args[2].split("\\.")[0];
+					String password = args[2].split("\\.")[1];
+					Credentials cred = new Credentials(username, password);
+					try {
+						ClientManager.instance().getServerProxy().login(cred);
+						loginController.getLoginAction().execute();
+					} catch (ProxyException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						System.out.println("log in error after restart??");
+					}
+				}
+				else{
+					
+					loginController.start();
+				}
 				
-				loginController.start();
 			}
 		});
+	}
+	
+	/** 
+	 * Sun property pointing the main class and its arguments. 
+	 * Might not be defined on non Hotspot VM implementations.
+	 */
+	public static final String SUN_JAVA_COMMAND = "sun.java.command";
+
+	/**
+	 * Restart the current Java application
+	 * @param runBeforeRestart some custom code to be run before restarting
+	 * @throws IOException
+	 */
+	public static void restartApplication(Runnable runBeforeRestart, String[] args) throws IOException {
+		try {
+			// java binary
+			String java = System.getProperty("java.home") + "/bin/java";
+			// vm arguments
+			List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+			StringBuffer vmArgsOneLine = new StringBuffer();
+			for (String arg : vmArguments) {
+				// if it's the agent argument : we ignore it otherwise the
+				// address of the old application and the new one will be in conflict
+				if (!arg.contains("-agentlib")) {
+					vmArgsOneLine.append(arg);
+					vmArgsOneLine.append(" ");
+				}
+			}
+			// init the command to execute, add the vm args
+			final StringBuffer cmd = new StringBuffer(java + " " + vmArgsOneLine);
+
+			// program main and program arguments
+			String[] mainCommand = System.getProperty(SUN_JAVA_COMMAND).split(" ");
+			// program main is a jar
+			if (mainCommand[0].endsWith(".jar")) {
+				// if it's a jar, add -jar mainJar
+				cmd.append("-jar " + new File(mainCommand[0]).getPath());
+			} else {
+				// else it's a .class, add the classpath and mainClass
+				cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
+			}
+			// finally add program arguments
+			for (int i = 1; i < mainCommand.length; i++) {
+				cmd.append(" ");
+				cmd.append(mainCommand[i]);
+			}
+
+			for(String arg : args) {
+				cmd.append(" ");
+				cmd.append(arg);
+			}
+			// execute the command in a shutdown hook, to be sure that all the
+			// resources have been disposed before restarting the application
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					try {
+						System.out.println("cmd: " + cmd.toString());
+						Process process = Runtime.getRuntime().exec(cmd.toString());
+						
+//						BufferedReader stdInput = new BufferedReader(new 
+//							     InputStreamReader(process.getInputStream()));
+//
+//						BufferedReader stdError = new BufferedReader(new 
+//						     InputStreamReader(process.getErrorStream()));
+//
+//						// read the output from the command
+//						System.out.println("Here is the standard output of the command:\n");
+//						String s = null;
+//						while ((s = stdInput.readLine()) != null) {
+//						    System.out.println(s);
+//						}
+//
+//						// read any errors from the attempted command
+//						System.out.println("Here is the standard error of the command (if any):\n");
+//						while ((s = stdError.readLine()) != null) {
+//						    System.out.println(s);
+//						}
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
+//			ProcessBuilder builder = new ProcessBuilder(cmd.toString());
+//			builder.start();
+			
+//			// execute some custom code before restarting
+//			if (runBeforeRestart!= null) {
+//				runBeforeRestart.run();
+//			}
+			// exit
+			System.exit(0);
+		} catch (Exception e) {
+			// something went wrong
+			throw new IOException("Error while trying to restart the application", e);
+		}
 	}
 	
 }

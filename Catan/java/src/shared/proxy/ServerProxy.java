@@ -212,7 +212,9 @@ public class ServerProxy implements Proxy{
 		
 		JsonObject userObject = element.getAsJsonObject();
 		
+		System.out.println("server proxy, user cookie: " + userObject.toString());
 		currentUser.setName(userObject.get("name").getAsString());
+		currentUser.setPassword(userObject.get("password").getAsString());
 		currentUser.setId(Integer.parseInt(userObject.get("playerID").getAsString()));
 	}
 	
