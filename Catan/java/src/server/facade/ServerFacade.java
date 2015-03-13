@@ -7,7 +7,9 @@ import server.game.Game;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
+import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.cards.ResourceCardDeck;
 
 public class ServerFacade {
 
@@ -197,13 +199,126 @@ public class ServerFacade {
 	/**
 	 * Plays a 'Road Building' card from your hand to build two roads at the specified locations
 	 * @param game The game where the card is being played.
-	 * @param playerIndex THe index of the player playing the card.
+	 * @param playerIndex The index of the player playing the card.
 	 * @param location1 The location of the first road
 	 * @param location2 The location of the second road
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model playRoadBuilding(Game game, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Plays a 'Monopoly' card from your hand to monopolize the specified resource.
+	 * @param game The game where the card will be played.
+	 * @param playerIndex The index of the player who is playing the card.
+	 * @param resource The resource type to get all the resources
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model playMonopoly(Game game, int playerIndex, ResourceType resource) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Plays a 'Monument' card from your hand to give you a victory point.
+	 * @param game The game where the card will be played
+	 * @param playerIndex The index of the player who is playing the card.
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model playMonument(Game game, int playerIndex) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Builds a road at the specified location. (Set 'free' to true during initial setup.)
+	 * @param game The game where the road will be placed
+	 * @param playerIndex The index of the player who is placing the road.
+	 * @param roadLocation The location where the road will be placed.
+	 * @param free Whether or not the road is build for free
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model buildRoad(Game game, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Builds a settlement at the specified location. (Set 'free' to true during initial setup.)
+	 * @param game The game where the settlement will be placed
+	 * @param playerIndex The index of the player who is placing the settlement.
+	 * @param vertexLocation The vertex location where the settlement will be placed.
+	 * @param free Whether or not the settlement will be placed for free.
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model buildSettlement(Game game, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Builds a city at the specified location.
+	 * @param game The game where the city will be placed.
+	 * @param playerIndex The index of the player who is placing the city.
+	 * @param vertexLocation THe location where the city will be placed.
+	 * @return Returns the client model (identical to getModel)
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model buildCity(Game game, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Offers a domestic trade to another player.
+	 * @param game The game where the offer will be made
+	 * @param playerIndex The index of the player placing the offer.
+	 * @param receiver The index of the player receiving the offer.
+	 * @param senderDeck The deck of resources that the sender is giving.
+	 * @param receiverDeck the deck of resources that the receiver is giving in return.
+	 * @return Returns the client model (identical to getModel).
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model offerTrade(Game game, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Used to accept or reject a trade offered to you.
+	 * @param game The game where the trade was made
+	 * @param playerIndex The index of the player rejecting/accepting the trade.
+	 * @param accept Whether or not the player is accepting the trade.
+	 * @return Returns the client model (identical to getModel).
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model acceptTrade(Game game, int playerIndex, boolean accept) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Used to execute a maritime trade.
+	 * @param game The game where the trade will be made.
+	 * @param playerIndex The index of the player making the offer.
+	 * @param ratio The ratio of the trading (Ex. 3:1, 2:1, 4:1).
+	 * @param sendingResource The resource type being offered.
+	 * @param receivingResource The resource type being received.
+	 * @return Returns the client model (identical to getModel).
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model maritimeTrade(Game game, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
+		return null;
+	}
+	
+	/**
+	 * Discards the specified resource cards.
+	 * @param game The game where the cards will be discarded.
+	 * @param playerIndex The index of the player discarding cards.
+	 * @param resourcesToDiscard The cards to be discarded.
+	 * @return Returns the client model (identical to getModel).
+	 * @throws ServerInvalidRequestException
+	 */
+	public Model discardCards(Game game, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException {
 		return null;
 	}
 	
