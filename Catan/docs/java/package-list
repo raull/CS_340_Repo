@@ -20,6 +20,12 @@ client.roll
 client.state
 client.turntracker
 client.utils
+server
+server.exception
+server.facade
+server.game
+server.handlers
+server.handlers.factories
 shared.definitions
 shared.locations
 shared.model
