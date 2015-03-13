@@ -3,6 +3,7 @@ package client.points;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
+import java.io.IOException;
 
 import javax.swing.*;
 
@@ -13,6 +14,7 @@ import client.join.NewGameView;
 import client.join.PlayerWaitingController;
 import client.join.PlayerWaitingView;
 import client.join.SelectColorView;
+import client.main.Catan;
 import client.manager.ClientManager;
 import client.misc.MessageView;
 import client.utils.*;
@@ -81,36 +83,53 @@ public class GameFinishedView extends OverlayView implements IGameFinishedView {
 	}
 
 	public void goHome(){
-		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
-		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
-																							playerWaitingView);
-		playerWaitingView.setController(playerWaitingController);
-		
-		JoinGameView joinView = new JoinGameView();
-		NewGameView newGameView = new NewGameView();
-		SelectColorView selectColorView = new SelectColorView();
-		MessageView joinMessageView = new MessageView();
-		final JoinGameController joinController = new JoinGameController(
-																		 joinView,
-																		 newGameView,
-																		 selectColorView,
-																		 joinMessageView);
-		joinController.setJoinAction(new IAction() {
-			@Override
-			public void execute()
-			{
-				playerWaitingController.start();
-			}
-		});
-		joinView.setController(joinController);
-		newGameView.setController(joinController);
-		selectColorView.setController(joinController);
-		joinMessageView.setController(joinController);
-		
-		//reset everything in client manager?
-		//ClientManager.instance().resetSelf();
-		
-		joinController.start();
+		try {
+			//pass in commands
+			String[] args = new String[3];
+			args[0] = Catan.host;
+			args[1] = Catan.port;
+//			int userId = ClientManager.instance().getCurrentPlayerInfo().getId();
+//			String loginInfo = ClientManager.instance().getModelFacade().turnManager().getUserFromID(userId).getName() + "." + 
+//					ClientManager.instance().getModelFacade().turnManager().getUserFromID(userId).getPassword();
+			String loginInfo = ClientManager.instance().getCurrentPlayerInfo().getName() + "." + 
+					ClientManager.instance().getCurrentPlayerInfo().getPassword();
+			args[2] = loginInfo;
+			Catan.restartApplication(null, args);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("failed to restart");
+		}
+//		PlayerWaitingView playerWaitingView = new PlayerWaitingView();
+//		final PlayerWaitingController playerWaitingController = new PlayerWaitingController(
+//																							playerWaitingView);
+//		playerWaitingView.setController(playerWaitingController);
+//		
+//		JoinGameView joinView = new JoinGameView();
+//		NewGameView newGameView = new NewGameView();
+//		SelectColorView selectColorView = new SelectColorView();
+//		MessageView joinMessageView = new MessageView();
+//		final JoinGameController joinController = new JoinGameController(
+//																		 joinView,
+//																		 newGameView,
+//																		 selectColorView,
+//																		 joinMessageView);
+//		joinController.setJoinAction(new IAction() {
+//			@Override
+//			public void execute()
+//			{
+//				playerWaitingController.start();
+//			}
+//		});
+//		joinView.setController(joinController);
+//		newGameView.setController(joinController);
+//		selectColorView.setController(joinController);
+//		joinMessageView.setController(joinController);
+//		
+//		//reset everything in client manager?
+//		//ClientManager.instance().resetSelf();
+//		
+//		joinController.start();
 	}
 	
 	private ActionListener actionListener = new ActionListener() {
