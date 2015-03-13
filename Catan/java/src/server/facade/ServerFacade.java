@@ -11,6 +11,11 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
 
+/**
+ * Facade of the server to make all operations to an specific game.
+ * @author raulvillalpando
+ *
+ */
 public class ServerFacade {
 
 	/**
