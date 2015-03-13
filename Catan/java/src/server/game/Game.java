@@ -29,26 +29,50 @@ public class Game {
 		this.modelFacade = modelFacade;
 	}
 
+	/**
+	 * Returns the unique id of the game.
+	 * @return The game id.
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the unique id of the game.
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * Returns the name of the game.
+	 * @return the name of the game.
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name of the game.
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Returns the game's modelFacade object.
+	 * @return The game's modelFacade.
+	 */
 	public ModelFacade getModelFacade() {
 		return modelFacade;
 	}
 
+	/**
+	 * Sets the game's modelFacade object.
+	 * @param modelFacade
+	 */
 	public void setModelFacade(ModelFacade modelFacade) {
 		this.modelFacade = modelFacade;
 	}

@@ -23,6 +23,10 @@ public class Server {
 		}
 	}
 	
+	/**
+	 * Initializes the server's logger object.
+	 * @throws IOException
+	 */
 	private static void initLog() throws IOException {
 		
 		Level logLevel = Level.FINE;
@@ -49,6 +53,9 @@ public class Server {
 		return;
 	}
 	
+	/**
+	 * Starts the server on the specified port (8081 is default).
+	 */
 	private void run() {
 		
 		logger.info("Initializing Model");
