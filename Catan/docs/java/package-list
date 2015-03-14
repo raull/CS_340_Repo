@@ -9,6 +9,7 @@ client.domestic
 client.join
 client.login
 client.main
+client.manager
 client.map
 client.maritime
 client.misc
@@ -16,8 +17,15 @@ client.points
 client.poller
 client.resources
 client.roll
+client.state
 client.turntracker
 client.utils
+server
+server.exception
+server.facade
+server.game
+server.handlers
+server.handlers.factories
 shared.definitions
 shared.locations
 shared.model
@@ -25,8 +33,8 @@ shared.model.board
 shared.model.board.piece
 shared.model.cards
 shared.model.exception
+shared.model.facade
 shared.model.game
-shared.model.model_facade
 shared.proxy
 shared.proxy.game
 shared.proxy.games
