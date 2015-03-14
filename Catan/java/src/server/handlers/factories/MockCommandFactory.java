@@ -9,7 +9,7 @@ public class MockCommandFactory implements CommandFactory {
 
 	@Override
 	public ServerCommand create(HttpExchange arg0) {
-		return new ServerCommand(arg0);
+		return null;
 	}
 
 }

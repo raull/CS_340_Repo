@@ -21,7 +21,7 @@ public class HandlerCommandFactory implements CommandFactory{
 	public ServerCommand create(HttpExchange arg0) {
 		// parse out the HttpExchange object
 		// create appropriate command object
-		return new ServerCommand(arg0);
+		return null;
 	}
 
 }

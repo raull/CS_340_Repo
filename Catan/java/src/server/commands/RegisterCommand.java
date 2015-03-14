@@ -2,11 +2,12 @@ package server.commands;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import client.base.IAction;
+public class RegisterCommand implements ServerCommand {
 
-public class ServerCommand implements IAction {
-	public ServerCommand(HttpExchange arg0){
-		
+	@Override
+	public void load(HttpExchange arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
