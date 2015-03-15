@@ -4,10 +4,14 @@ import com.sun.net.httpserver.HttpExchange;
 
 import client.base.IAction;
 
-public interface ServerCommand extends IAction {
-	public void load(HttpExchange arg0);
+public class ServerCommand{
+	HttpExchange httpObj;
+	public ServerCommand(HttpExchange arg0){
+		httpObj = arg0;
+	}
 
-	@Override
-	public void execute();
+	public void execute(){
+		
+	}
 
 }

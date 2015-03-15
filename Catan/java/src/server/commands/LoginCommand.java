@@ -2,16 +2,15 @@ package server.commands;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class LoginCommand implements ServerCommand{
+public class LoginCommand extends ServerCommand{
 
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
+	public LoginCommand(HttpExchange arg0) {
+		super(arg0);
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void load(HttpExchange arg0) {
+	public void execute() {
 		// TODO Auto-generated method stub
 		
 	}
