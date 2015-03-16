@@ -1,10 +1,12 @@
-package server.commands;
+package server.command.moves;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameAddAICommand extends ServerCommand {
+import server.command.ServerCommand;
 
-	public GameAddAICommand(HttpExchange arg0) {
+public class BuildCityCommand extends ServerCommand {
+
+	public BuildCityCommand(HttpExchange arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}

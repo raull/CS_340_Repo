@@ -1,4 +1,6 @@
-package server.commands;
+package server.command.game;
+
+import server.command.ServerCommand;
 
 import com.sun.net.httpserver.HttpExchange;
 

@@ -1,4 +1,4 @@
-package server.commands;
+package server.command;
 
 import com.sun.net.httpserver.HttpExchange;
 

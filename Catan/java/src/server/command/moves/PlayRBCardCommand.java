@@ -1,10 +1,12 @@
-package server.commands;
+package server.command.moves;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameLoadCommand extends ServerCommand {
+import server.command.ServerCommand;
 
-	public GameLoadCommand(HttpExchange arg0) {
+public class PlayRBCardCommand extends ServerCommand {
+
+	public PlayRBCardCommand(HttpExchange arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}

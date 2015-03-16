@@ -1,10 +1,12 @@
-package server.commands;
+package server.command.moves;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameJoinCommand extends ServerCommand {
+import server.command.ServerCommand;
 
-	public GameJoinCommand(HttpExchange arg0) {
+public class BuildRoadCommand extends ServerCommand {
+
+	public BuildRoadCommand(HttpExchange arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}

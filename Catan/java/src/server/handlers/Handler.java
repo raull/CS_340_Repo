@@ -2,7 +2,7 @@ package server.handlers;
 
 import java.io.IOException;
 
-import server.commands.ServerCommand;
+import server.command.ServerCommand;
 import server.handlers.factories.CommandFactory;
 import server.handlers.factories.HandlerCommandFactory;
 import server.handlers.factories.MockCommandFactory;

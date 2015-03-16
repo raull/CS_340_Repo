@@ -1,10 +1,12 @@
-package server.commands;
+package server.command.moves;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameListAICommand extends ServerCommand {
+import server.command.ServerCommand;
 
-	public GameListAICommand(HttpExchange arg0) {
+public class BuildSettlementCommand extends ServerCommand {
+
+	public BuildSettlementCommand(HttpExchange arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}

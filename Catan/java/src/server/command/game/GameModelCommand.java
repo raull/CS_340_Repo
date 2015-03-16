@@ -1,10 +1,12 @@
-package server.commands;
+package server.command.game;
+
+import server.command.ServerCommand;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class LoginCommand extends ServerCommand{
+public class GameModelCommand extends ServerCommand {
 
-	public LoginCommand(HttpExchange arg0) {
+	public GameModelCommand(HttpExchange arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
@@ -12,7 +14,7 @@ public class LoginCommand extends ServerCommand{
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

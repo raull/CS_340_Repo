@@ -1,10 +1,12 @@
-package server.commands;
+package server.command.game;
+
+import server.command.ServerCommand;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class GameResetCommand extends ServerCommand {
+public class GameSaveCommand extends ServerCommand {
 
-	public GameResetCommand(HttpExchange arg0) {
+	public GameSaveCommand(HttpExchange arg0) {
 		super(arg0);
 		// TODO Auto-generated constructor stub
 	}
