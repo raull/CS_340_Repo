@@ -1,11 +1,11 @@
-package server.handlers;
+package server.handler;
 
 import java.io.IOException;
 
 import server.command.ServerCommand;
-import server.handlers.factories.CommandFactory;
-import server.handlers.factories.HandlerCommandFactory;
-import server.handlers.factories.MockCommandFactory;
+import server.handler.factory.CommandFactory;
+import server.handler.factory.HandlerCommandFactory;
+import server.handler.factory.MockCommandFactory;
 import client.base.IAction;
 
 import com.sun.net.httpserver.HttpExchange;

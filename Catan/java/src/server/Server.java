@@ -4,7 +4,9 @@ import java.io.*;
 import java.net.*;
 import java.rmi.ServerException;
 import java.util.logging.*;
-import server.handlers.Handler;
+
+import server.handler.Handler;
+
 import com.sun.net.httpserver.*;
 
 public class Server {

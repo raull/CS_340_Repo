@@ -1,4 +1,4 @@
-package server.handlers.factories;
+package server.handler.factory;
 
 import server.command.ServerCommand;
 import client.base.IAction;
