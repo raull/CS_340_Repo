@@ -1,3 +1,4 @@
+package main;
 /**
 	This class is intended to be an overall test class that manages
 	and runs all other test classes and their associated JUnit tests.
@@ -10,7 +11,7 @@ public class Tester
 	public static void main(String[] args)
 	{
 		String[] testClasses = new String[]{
-			"ProxyTester", "PollerTester", "ModelTester"	
+			"client.ProxyTester", "client.PollerTester", "shared.ModelTester"	
 		};
 		
 		org.junit.runner.JUnitCore.main(testClasses);
