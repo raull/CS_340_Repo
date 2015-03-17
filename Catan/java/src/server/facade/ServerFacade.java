@@ -4,12 +4,17 @@ import java.util.List;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
+import server.game.GameManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.facade.ModelFacade;
+import shared.model.game.MessageLine;
+import shared.model.game.MessageList;
+import shared.model.game.User;
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -136,8 +141,20 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
-		return null;
+	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException 
+	{
+		//access objects of the specific game
+		Game game = GameManager.instance.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		MessageList chat = model.getChat();
+		
+		User user = modelFacade.turnManager().getUserFromIndex(playerIndex);
+		
+		//add the new chat message to the list of chats
+		chat.addMessage(new MessageLine(message, user.getName()));
+		
+		return getModel(0, gameId); //new version of the model
 	}
 	
 	/**
@@ -148,7 +165,8 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
+	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException 
+	{
 		return null;
 	}
 	
