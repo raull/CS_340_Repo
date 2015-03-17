@@ -111,7 +111,7 @@ public class ServerFacade {
 	 * @return
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model getModel(int version, Game game) throws ServerInvalidRequestException {
+	public Model getModel(int version, int gameId) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -124,7 +124,7 @@ public class ServerFacade {
 	 * @param game The game to reset.
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model resetGame(Game game) throws ServerInvalidRequestException {
+	public Model resetGame(int gameId) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -136,7 +136,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model sendChat(Game game, int playerIndex, String message) throws ServerInvalidRequestException {
+	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -148,7 +148,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model rollNumber(Game game, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
+	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -162,7 +162,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model robPlayer(Game game, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException {
+	public Model robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -173,7 +173,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model finishTurn(Game game, int playerIndex) throws ServerInvalidRequestException {
+	public Model finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -184,7 +184,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buyDevCard(Game game, int playerIndex) throws ServerInvalidRequestException {
+	public Model buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -197,7 +197,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playYearOfPlenty(Game game, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException {
+	public Model playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -210,7 +210,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playRoadBuilding(Game game, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException {
+	public Model playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -222,7 +222,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playMonopoly(Game game, int playerIndex, ResourceType resource) throws ServerInvalidRequestException {
+	public Model playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -233,7 +233,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playMonument(Game game, int playerIndex) throws ServerInvalidRequestException {
+	public Model playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -246,7 +246,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildRoad(Game game, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException {
+	public Model buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -259,7 +259,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildSettlement(Game game, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException {
+	public Model buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -271,7 +271,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildCity(Game game, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException {
+	public Model buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -285,7 +285,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model offerTrade(Game game, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+	public Model offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -297,7 +297,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model acceptTrade(Game game, int playerIndex, boolean accept) throws ServerInvalidRequestException {
+	public Model acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -311,7 +311,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model maritimeTrade(Game game, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
+	public Model maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -323,7 +323,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model discardCards(Game game, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException {
+	public Model discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException {
 		return null;
 	}
 	
