@@ -445,7 +445,17 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException {
+	public Model discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
+	{
+		//if can discard cards
+			//subtract the resources in the given resource card deck from the player
+			//add the same resources to the resource bank
+			//if all players who needed to discard have now discarded (how are we going to determine this)
+				//update turn phase to now be robbing
+		//else
+			//throw exception
+		
+		//return new model
 		return null;
 	}
 	
