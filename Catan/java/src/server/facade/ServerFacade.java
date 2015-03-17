@@ -162,7 +162,27 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException {
+	public Model robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	{
+		//should this be split into rob player and playSoldier?
+		
+		//if can robPlayer
+			//move the robber to the new location
+			//randomly select a resource card from the victim
+			//remove it from the victim and add it to the given player
+			//if soldier card
+				//remove a soldier devcard from the player
+				//add one to the number of soldiers the player has played
+				//check to see if they gained the largest army
+				//if so
+					//set largest army
+					//update points (may involve taking points away from another player)
+				//update game log with appropriate soldier message(s)
+			//else
+				//update game log with appropriate robbing message
+		//else (can't rob player)
+			//throw exception
+		
 		return null;
 	}
 	
