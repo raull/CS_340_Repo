@@ -220,6 +220,7 @@ public class ServerFacade {
 	{
 		//if can buy dev card
 			//subtract 1 sheep, 1 wheat, and 1 ore from the player's resources
+			//add the same resources to the resource bank
 			//randomly add a dev card to the player's new dev cards from the dev card bank
 			//update game history
 		//else
@@ -330,6 +331,18 @@ public class ServerFacade {
 	 */
 	public Model buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
+		//if can buildroad
+			//subtract 1 from the player's available roads
+			//place a road on the given edge
+			//if not free
+				//subtract 1 wood and 1 brick from the player's resources
+				//add those resources to the resource bank
+			//check if player has gained longest road
+			//update game history
+		//else
+			//throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -342,7 +355,20 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException {
+	public Model buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
+	{
+		//if can buildsettlement
+			//subtract 1 from the player's available settlements
+			//place a settlement on the given vertex
+			//if not free
+				//subtract 1 wood, 1 brick, 1 sheep, and 1 wheat from the player's resources
+				//add those resources to the resource bank
+			//add 1 to the player's points
+			//update game history
+		//else
+			//throw exception
+	
+		//return new model
 		return null;
 	}
 	
@@ -354,7 +380,20 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException {
+	public Model buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException 
+	{
+		//if can buildcity
+			//subtract 1 from the player's available cities
+			//place a city on the given vertex
+			//remove the settlement from the given vertex??
+			//subtract 2 wheat and 3 ore from the player's resources
+			//add those resources to the resource bank
+			//add 1 to player's points
+			//update game history
+		//else
+			//throw exception
+	
+		//return new model
 		return null;
 	}
 	
