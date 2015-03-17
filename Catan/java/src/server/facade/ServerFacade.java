@@ -167,7 +167,31 @@ public class ServerFacade {
 	 */
 	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException 
 	{
-		return null;
+		//if can rollNumber
+			//if number is not 7
+				//for each hex
+					//if the hex has the number
+						//store the resource type
+						//for each city or settlement attached to the hex
+							//if its a city
+								//give the person 2 of the resource
+							//else (it is a settlement)
+								//give the person one of the resource
+				//update turnPhase to now be playing
+			//else (number is not a 7)
+				//check if any player has more than 7 resource cards
+				//if so
+					//update turnPhase to now be discarding
+				//else
+					//update turnPhase to now be robbing
+		
+			//also need to update the Game History with a message of what number was rolled
+		//else (can't roll number)
+			//throw exception
+		
+		//return new model
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
