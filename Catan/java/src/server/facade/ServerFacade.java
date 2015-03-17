@@ -163,9 +163,7 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
-	{
-		//should this be split into rob player and playSoldier?
-		
+	{		
 		//if can robPlayer
 			//move the robber to the new location
 			//randomly select a resource card from the victim
@@ -180,8 +178,11 @@ public class ServerFacade {
 				//update game log with appropriate soldier message(s)
 			//else
 				//update game log with appropriate robbing message
+			//set the turn phase to now be playing
 		//else (can't rob player)
 			//throw exception
+		
+		//return new model
 		
 		return null;
 	}
@@ -193,7 +194,18 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException {
+	public Model finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	{
+		//if can finish turn
+			//update the current turn index to be the next index
+				//this should be a separate function that needs to account for the special rules of the first and second rounds
+			//if the player has any dev cards they bought this turn, move them to the old devcards
+			//update the turn phase
+				//could be updated to rolling, firstround, or second round
+		//else
+			//throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -204,7 +216,16 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException {
+	public Model buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	{
+		//if can buy dev card
+			//subtract 1 sheep, 1 wheat, and 1 ore from the player's resources
+			//randomly add a dev card to the player's new dev cards from the dev card bank
+			//update game history
+		//else
+			//throw exception
+		
+		//return new Model
 		return null;
 	}
 	
@@ -217,7 +238,17 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException {
+	public Model playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
+	{
+		//if can play dev card
+			//add 1 of each of the specified resources to the player's resources
+			//subtract the same resources from the resource bank
+			//subtract one from the player's year of plenty cards
+			//update game history
+		//else
+			//throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -230,7 +261,18 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException {
+	public Model playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
+	{
+		//if can play dev card
+			//subtract 2 from the player's available roads
+			//subtract 1 from the player's road building cards
+			//give the player roads on the 2 given edges
+			//check if longest road needs to be updated
+			//update game history
+		//else
+			//throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -242,7 +284,18 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException {
+	public Model playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+	{
+		//if can play dev card
+			//count the total number of cards of the specific resource in any player's hand
+			//set the player to have that number of that resource
+			//set every other player to have 0 of that resource
+			//subtract 1 from the player's monopoly cards
+			//update game history
+		//else
+			//throw exception
+		
+		//return new Model
 		return null;
 	}
 	
@@ -253,7 +306,16 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException {
+	public Model playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	{
+		//if can play dev card
+			//subtract one from the player's monument cards (check if new or old?)
+			//add one to the player's points
+			//update game history
+		//else
+			//throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -266,7 +328,8 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException {
+	public Model buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
+	{
 		return null;
 	}
 	
