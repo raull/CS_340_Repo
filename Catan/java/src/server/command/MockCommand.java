@@ -6,14 +6,18 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 public class MockCommand extends ServerCommand{
+	boolean sendCookie = false;
 
 	public MockCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
+		if(arg0.getRequestHeaders().)
 	}
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		if(sendCookie){
+			//include cookie in JSON
+		}
 		// TODO Auto-generated method stub
 		return null;
 	}
