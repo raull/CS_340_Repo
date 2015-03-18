@@ -13,24 +13,10 @@ public class GameManager {
 	/**
 	 * A list of games stored on the server
 	 */
-	private List<Game> games;
-	
-	public static GameManager instance;
-	
-	private GameManager() {
-		games = new ArrayList<Game>();
-	}
-	
-	/**
-	 * The singleton instance of GameManager
-	 * @return
-	 */
-	public GameManager instance() {
-		if (GameManager.instance == null) {
-			instance = new GameManager();
-		}
+	private List<Game> games = new ArrayList<Game>();
 		
-		return instance;
+	public GameManager() {
+		
 	}
 	
 	/**

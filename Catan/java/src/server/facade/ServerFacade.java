@@ -18,6 +18,26 @@ import shared.model.cards.ResourceCardDeck;
  *
  */
 public class ServerFacade {
+	
+	private static ServerFacade instance;
+	private GameManager gameManager = new GameManager();
+	
+	private ServerFacade() {
+		
+	}
+	
+	/**
+	 * Singleton instance of the Server Facade
+	 * @return
+	 */
+	public ServerFacade instance() {
+		if (instance != null) {
+			return instance;
+		} else {
+			instance = new ServerFacade();
+			return instance;
+		}
+	}
 
 	/**
 	 * Validates the player's credentials, and logs them in to the server.
@@ -80,6 +100,11 @@ public class ServerFacade {
 		
 		//don't have to account for automatically adding the player to the game here
 		//that is done client side
+		
+		//this function should also save the beginning state of the map somewhere
+		//This way if the reset function is called the model can update using this saved file
+		//This also means a Game object should also store the string representing the filename of the intial setup
+		
 		return null;
 	}
 	
@@ -509,4 +534,10 @@ public class ServerFacade {
 		return null;
 	}
 	
+	
+	/////////////Getters and Setters/////////////////
+	
+	public GameManager getGameManager() {
+		return gameManager;
+	}
 }
