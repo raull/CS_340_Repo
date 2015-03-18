@@ -4,6 +4,7 @@ import java.util.List;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
+import server.game.GameManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -17,6 +18,26 @@ import shared.model.cards.ResourceCardDeck;
  *
  */
 public class ServerFacade {
+	
+	private static ServerFacade instance;
+	private GameManager gameManager = new GameManager();
+	
+	private ServerFacade() {
+		
+	}
+	
+	/**
+	 * Singleton instance of the Server Facade
+	 * @return
+	 */
+	public ServerFacade instance() {
+		if (instance != null) {
+			return instance;
+		} else {
+			instance = new ServerFacade();
+			return instance;
+		}
+	}
 
 	/**
 	 * Validates the player's credentials, and logs them in to the server.
@@ -24,8 +45,11 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException 
 	 */
-	public void login(String username, String password) throws ServerInvalidRequestException {
-		
+	public void login(String username, String password) throws ServerInvalidRequestException 
+	{
+		//if a user does not exist in the user manager with the given name and password
+			//throw exception
+		//else the user cookie needs to be set for the client (done in handlers?)
 	}
 	
 	/**
@@ -34,8 +58,15 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException
 	 */
-	public void register(String username, String password) throws ServerInvalidRequestException {
+	public void register(String username, String password) throws ServerInvalidRequestException 
+	{
+		//if a user already exists in the usermanager with the given name and password
+			//throw exception
+		//else
+			//create a new user in the user manager
+			//set the user cookie for the client (done in handlers?)
 		
+		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
 	}
 	
 	/**
@@ -43,7 +74,11 @@ public class ServerFacade {
 	 * @return The list of games currently in progress
 	 * @throws ServerInvalidRequestException
 	 */
-	public List<Game> gameList() throws ServerInvalidRequestException {
+	public List<Game> gameList() throws ServerInvalidRequestException 
+	{
+		//gets the list of games from the game manager
+		//at some point we need to be creating a specific JSON element here
+		//is that going to be done in the handler?
 		return null;
 	}
 	
@@ -56,7 +91,17 @@ public class ServerFacade {
 	 * @return A newly created game.
 	 * @throws ServerInvalidRequestException
 	 */
-	public Game createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException {
+	public Game createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
+	{
+		//have a hard coded list of default tiles, numbers, and ports?
+		
+		//don't have to account for automatically adding the player to the game here
+		//that is done client side
+		
+		//this function should also save the beginning state of the map somewhere
+		//This way if the reset function is called the model can update using this saved file
+		//This also means a Game object should also store the string representing the filename of the intial setup
+		
 		return null;
 	}
 	
@@ -66,7 +111,8 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public void joinGame(int gameId, String color) throws ServerInvalidRequestException {
+	public void joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	{
 		
 	}
 	
@@ -137,6 +183,9 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
+		//get the correct game
+		//add chat to model with player index
+		//return new model
 		return null;
 	}
 	
@@ -408,6 +457,11 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+		//if can offer trade
+			//add a trade offer to model
+		//else throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -420,6 +474,16 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
+		//if user can accept trade
+			//if user accepted trade
+				//current player and player trading swap specified resources
+			//else user rejected trade
+		
+		//else throw exception
+		
+		//trade offer is removed from model
+		
+		//return model
 		return null;
 	}
 	
@@ -434,6 +498,14 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
+		//get the game by id
+		//if can maritime trade
+			//subtract 1 of receiving resource type from bank
+			//bank gets ratio number of sending resource type
+			//user loses ratio number of sending resource type
+			//user gains 1 of receiving resource type
+		//else exception
+		//return new model
 		return null;
 	}
 	
@@ -459,4 +531,10 @@ public class ServerFacade {
 		return null;
 	}
 	
+	
+	/////////////Getters and Setters/////////////////
+	
+	public GameManager getGameManager() {
+		return gameManager;
+	}
 }
