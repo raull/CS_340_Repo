@@ -4,6 +4,7 @@ import java.util.List;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
+import server.game.GameManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -17,6 +18,26 @@ import shared.model.cards.ResourceCardDeck;
  *
  */
 public class ServerFacade {
+	
+	private static ServerFacade instance;
+	private GameManager gameManager = new GameManager();
+	
+	private ServerFacade() {
+		
+	}
+	
+	/**
+	 * Singleton instance of the Server Facade
+	 * @return
+	 */
+	public ServerFacade instance() {
+		if (instance != null) {
+			return instance;
+		} else {
+			instance = new ServerFacade();
+			return instance;
+		}
+	}
 
 	/**
 	 * Validates the player's credentials, and logs them in to the server.
@@ -510,4 +531,10 @@ public class ServerFacade {
 		return null;
 	}
 	
+	
+	/////////////Getters and Setters/////////////////
+	
+	public GameManager getGameManager() {
+		return gameManager;
+	}
 }
