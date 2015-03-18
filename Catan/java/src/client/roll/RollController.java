@@ -65,6 +65,7 @@ public class RollController extends Controller implements IRollController, Obser
 		RollNumber param = new RollNumber(ClientManager.instance().getCurrentPlayerInfo().getPlayerIndex(), total);
 		
 		try {
+			System.out.println("Rolling number now: " + total);
 			ClientManager.instance().getServerProxy().rollNumber(param);
 			getRollView().closeModal();
 			getResultView().setRollValue(param.getNumber());
@@ -75,7 +76,7 @@ public class RollController extends Controller implements IRollController, Obser
 		} catch (Exception e) {
 			MessageView errorMessage = new MessageView();
 			errorMessage.setTitle("Error");
-			errorMessage.setMessage("Something wrong happened while trying to roll dice. Please try again later. Error: " + e.getMessage());
+			errorMessage.setMessage("Something wrong happened while trying to roll dice. Please try again later. Error: " + e.getStackTrace().toString());
 			errorMessage.showModal();
 		}
 		

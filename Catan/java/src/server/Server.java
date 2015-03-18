@@ -5,6 +5,9 @@ import java.net.*;
 import java.rmi.ServerException;
 import java.util.logging.*;
 
+import server.facade.ServerFacade;
+import server.handler.Handler;
+
 import com.sun.net.httpserver.*;
 
 public class Server {
@@ -35,7 +38,7 @@ public class Server {
 		logger.setLevel(logLevel);
 		logger.setUseParentHandlers(false);
 		
-		Handler consoleHandler = new ConsoleHandler();
+		ConsoleHandler consoleHandler = new ConsoleHandler();
 		consoleHandler.setLevel(logLevel);
 		consoleHandler.setFormatter(new SimpleFormatter());
 		logger.addHandler(consoleHandler);
@@ -60,16 +63,16 @@ public class Server {
 		
 		logger.info("Initializing Model");
 		
-		try {
-			//ServerFacade.initialize();	
-			if(1>0){
-				throw new ServerException("new exception");
-			}
-		}
-		catch (ServerException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			return;
-		}
+//		try {
+//			ServerFacade.initialize();	
+//			if(1>0){
+//				throw new ServerException("new exception");
+//			}
+//		}
+//		catch (ServerException e) {
+//			logger.log(Level.SEVERE, e.getMessage(), e);
+//			return;
+//		}
 		
 		logger.info("Initializing HTTP Server");
 		
@@ -84,14 +87,14 @@ public class Server {
 
 		server.setExecutor(null); // use the default executor
 		
-		//server.createContext("/validateUser", validateUserHandler);
+		server.createContext("/", serverHandler);
 		
 		logger.info("Starting HTTP Server");
 
 		server.start();
 	}
 
-	//private ValidateUserHandler validateUserHandler = new ValidateUserHandler();
+	private Handler serverHandler = new Handler(false);
 
 	
 	public static void main(String[] args) {
