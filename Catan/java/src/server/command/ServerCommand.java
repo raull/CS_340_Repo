@@ -1,5 +1,7 @@
 package server.command;
 
+import server.exception.ServerInvalidRequestException;
+
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -19,6 +21,6 @@ public abstract class ServerCommand{
 	/**
 	 * Action to execute. Override this method
 	 */
-	public abstract JsonElement execute();
+	public abstract JsonElement execute() throws ServerInvalidRequestException;
 
 }

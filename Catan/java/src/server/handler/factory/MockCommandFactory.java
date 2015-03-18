@@ -1,5 +1,6 @@
 package server.handler.factory;
 
+import server.command.MockCommand;
 import server.command.ServerCommand;
 import client.base.IAction;
 
@@ -9,7 +10,7 @@ public class MockCommandFactory implements CommandFactory {
 
 	@Override
 	public ServerCommand create(HttpExchange arg0) {
-		return null;
+		return new MockCommand(arg0);
 	}
 
 }
