@@ -10,7 +10,9 @@ public class MockCommand extends ServerCommand{
 
 	public MockCommand(HttpExchange arg0) {
 		super(arg0);
-		if(arg0.getRequestHeaders().)
+		if(arg0.getRequestHeaders() != null){
+			
+		}
 	}
 
 	@Override
