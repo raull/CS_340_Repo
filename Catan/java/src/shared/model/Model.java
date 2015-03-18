@@ -1,6 +1,7 @@
 package shared.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
@@ -37,6 +38,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class Model {
 	
@@ -114,14 +116,133 @@ public class Model {
 	public ScoreKeeper getScoreKeeper() {
 		return scoreKeeper;
 	}
+	
+	public boolean isUpdating() {
+		return isUpdating;
+	}
+
+	public void setUpdating(boolean isUpdating) {
+		this.isUpdating = isUpdating;
+	}
+	
 	/**
 	 * serializes the current model into a JSON object
 	 * @return
 	 */
-	public JsonObject serialize() {
+	public JsonElement serialize() {
+		JsonObject serializedModel = new JsonObject();
+		//first add the bank's resource list
+		JsonElement bankJson = serializeBankResources();
+		serializedModel.add("bank", bankJson);
+		//set the chat messages json
+		JsonElement chatJson = serializeMessageList(chat);
+		serializedModel.add("chat", chatJson);
+		//set the game log messages json
+		JsonElement logJson = serializeMessageList(log);
+		serializedModel.add("log", logJson);
+		//set the map json
+		
 		return null;
 	}
 	
+	/**
+	 * serializes the bank's resources
+	 * @return json element
+	 */
+	public JsonElement serializeBankResources() {
+		JsonObject bankResources = new JsonObject();
+		List<ResourceCard> bankResourceDeck = bank.getResourceDeck().getAllResourceCards();
+		
+		int brickCards = 0;
+		int oreCards = 0;
+		int sheepCards = 0;
+		int wheatCards = 0;
+		int woodCards = 0;
+		
+		for(ResourceCard card : bankResourceDeck) {
+			switch(card.type) {
+				case BRICK:
+					brickCards++;
+					break;
+				case ORE: 
+					oreCards++;
+					break;
+				case SHEEP:
+					sheepCards++;
+					break;
+				case WHEAT:
+					wheatCards++;
+					break;
+				case WOOD:
+					woodCards++;
+					break;
+			}
+		}
+		
+		bankResources.add("brick", new JsonPrimitive(brickCards));
+		bankResources.add("ore", new JsonPrimitive(oreCards));
+		bankResources.add("sheep", new JsonPrimitive(sheepCards));
+		bankResources.add("wheat", new JsonPrimitive(wheatCards));
+		bankResources.add("wood", new JsonPrimitive(woodCards));
+		return bankResources;
+	}
+	
+	/**
+	 * serialize the chat or log message list
+	 * @param messageList message list to be serialized
+	 * @return json element
+	 */
+	public JsonElement serializeMessageList(MessageList messageList) {
+		//message list is array of message lines
+		ArrayList<MessageLine> lines = messageList.getLines();
+		JsonArray jsonMessageLines = new JsonArray();
+		for(MessageLine line : lines) {
+			JsonObject jsonLine = new JsonObject();
+			jsonLine.add("message", new JsonPrimitive(line.getMessage()));
+			jsonLine.add("source", new JsonPrimitive(line.getSource()));
+			jsonMessageLines.add(jsonLine);
+		}
+		return jsonMessageLines;
+	}
+	
+	/**
+	 * serialize the map 
+	 * @return json element of map
+	 */
+	public JsonElement serializeMap() {
+		//array of hexes
+		//array of ports
+		//array of roads
+		//array of settlements
+		//array of cities
+		//radius = 3
+		//robber hex location
+		return null;
+	}
+	
+	/**
+	 * serialize the hex tiles on the map
+	 * @return
+	 */
+	public JsonElement serializeMapHexes() {
+		return null;
+	}
+	
+	/**
+	 * serialize the ports on the map
+	 * @return
+	 */
+	public JsonElement serializeMapPorts() {
+		return null;
+	}
+	
+	/**
+	 * serialize the roads on the map
+	 * @return
+	 */
+	public JsonElement serializeMapRoads() {
+		return null;
+	}
 	
 	/**
 	 * deserialize the model from the JSON response
@@ -213,6 +334,11 @@ public class Model {
 		isUpdating = false;
 	}
 	
+	/**
+	 * get the resource(bank) deck from the model
+	 * @param jsonModel
+	 * @return
+	 */
 	
 	public ArrayList<ResourceCard> extractResourceDeck(JsonObject jsonModel) {
 		ArrayList<ResourceCard> bankResourceCards = new ArrayList<ResourceCard>();
@@ -224,6 +350,11 @@ public class Model {
 		return bankResourceCards;
 	}
 	
+	/**
+	 * get the available developer cards from model
+	 * @param jsonModel
+	 * @return
+	 */
 	public ArrayList<DevCard> extractDevDeck(JsonObject jsonModel) {
 		
 		ArrayList<DevCard> bankDevCards = new ArrayList<DevCard>();
@@ -235,6 +366,11 @@ public class Model {
 		return bankDevCards;
 	}
 	
+	/**
+	 * helper function to populate a dev card deck
+	 * @param jsonDeck
+	 * @param devCards
+	 */
 	public void populateDevCardDeck(JsonObject jsonDeck, ArrayList<DevCard> devCards) {
 		
 		int yopCount = jsonDeck.get("yearOfPlenty").getAsInt();
@@ -250,13 +386,23 @@ public class Model {
 		addDevCardsByNum(devCards, monumentCount, DevCardType.MONUMENT);
 	}
 	
+	/**
+	 * helper function to add dev cards a certain number of times 
+	 * @param deckToAdd
+	 * @param numTimes
+	 * @param cardType
+	 */
 	public void addDevCardsByNum(ArrayList<DevCard> deckToAdd, int numTimes, DevCardType cardType) {
 			for(int i = 0; i < numTimes; i++) {
 				deckToAdd.add(new DevCard(cardType));
 			}
 	}
 	
-	//for chat or log
+	/**
+	 * extracts the list of messages for chat or game log
+	 * @param jsonMessageList
+	 * @return
+	 */
 	public MessageList extractMessageList(JsonObject jsonMessageList) {
 		
 		JsonArray jsonMessageLines = jsonMessageList.get("lines").getAsJsonArray();
@@ -275,6 +421,11 @@ public class Model {
 		return messageList;
 	}
 	
+	/**
+	 * gets the list of map hex tiles from the json map
+	 * @param jsonMap
+	 * @return
+	 */
 	public ArrayList<HexTile> extractHexes(JsonObject jsonMap) {
 		ArrayList<HexTile> mapHexTiles = new ArrayList<HexTile>();
 		
@@ -290,6 +441,11 @@ public class Model {
 		return mapHexTiles;
 	}
 	
+	/**
+	 * populate each individual hex tile with correct info
+	 * @param jsonHexTile
+	 * @return
+	 */
 	public HexTile extractHexTile(JsonObject jsonHexTile) {
 		Gson gson = new Gson();
 		
@@ -308,6 +464,11 @@ public class Model {
 		return hexTile;
 	}
 	
+	/**
+	 * get the ports from json map
+	 * @param jsonMap
+	 * @return
+	 */
 	public ArrayList<Port> extractPorts(JsonObject jsonMap) {
 		ArrayList<Port> portsOnMap = new ArrayList<Port>();
 		
@@ -321,6 +482,11 @@ public class Model {
 		return portsOnMap;
 	}
 	
+	/**
+	 * get the info of each port 
+	 * @param jsonPort
+	 * @return
+	 */
 	public Port extractPort(JsonObject jsonPort) {
 		
 		Gson gson = new Gson();
@@ -677,12 +843,6 @@ public class Model {
 		}
 	}
 
-	public boolean isUpdating() {
-		return isUpdating;
-	}
-
-	public void setUpdating(boolean isUpdating) {
-		this.isUpdating = isUpdating;
-	}
+	
 	
 }
