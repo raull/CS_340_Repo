@@ -24,8 +24,11 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException 
 	 */
-	public void login(String username, String password) throws ServerInvalidRequestException {
-		
+	public void login(String username, String password) throws ServerInvalidRequestException 
+	{
+		//if a user does not exist in the user manager with the given name and password
+			//throw exception
+		//else the user cookie needs to be set for the client (done in handlers?)
 	}
 	
 	/**
@@ -34,8 +37,15 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException
 	 */
-	public void register(String username, String password) throws ServerInvalidRequestException {
+	public void register(String username, String password) throws ServerInvalidRequestException 
+	{
+		//if a user already exists in the usermanager with the given name and password
+			//throw exception
+		//else
+			//create a new user in the user manager
+			//set the user cookie for the client (done in handlers?)
 		
+		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
 	}
 	
 	/**
@@ -43,7 +53,11 @@ public class ServerFacade {
 	 * @return The list of games currently in progress
 	 * @throws ServerInvalidRequestException
 	 */
-	public List<Game> gameList() throws ServerInvalidRequestException {
+	public List<Game> gameList() throws ServerInvalidRequestException 
+	{
+		//gets the list of games from the game manager
+		//at some point we need to be creating a specific JSON element here
+		//is that going to be done in the handler?
 		return null;
 	}
 	
@@ -56,7 +70,12 @@ public class ServerFacade {
 	 * @return A newly created game.
 	 * @throws ServerInvalidRequestException
 	 */
-	public Game createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException {
+	public Game createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
+	{
+		//have a hard coded list of default tiles, numbers, and ports?
+		
+		//don't have to account for automatically adding the player to the game here
+		//that is done client side
 		return null;
 	}
 	
@@ -66,7 +85,8 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public void joinGame(int gameId, String color) throws ServerInvalidRequestException {
+	public void joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	{
 		
 	}
 	
