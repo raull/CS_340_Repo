@@ -19,6 +19,9 @@ public class GameAddAICommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() {
+		
+		
+		
 		return null;
 		// TODO Auto-generated method stub
 

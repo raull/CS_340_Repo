@@ -5,6 +5,7 @@ import java.util.List;
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
+import server.user.UserManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -21,6 +22,7 @@ public class ServerFacade {
 	
 	private static ServerFacade instance;
 	private GameManager gameManager = new GameManager();
+	private UserManager userManager = new UserManager();
 	
 	private ServerFacade() {
 		
@@ -536,5 +538,9 @@ public class ServerFacade {
 	
 	public GameManager getGameManager() {
 		return gameManager;
+	}
+	
+	public UserManager getUserManager() {
+		return userManager;
 	}
 }
