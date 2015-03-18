@@ -1,5 +1,8 @@
 package server.command;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.rmi.ServerException;
 import java.util.List;
 
 import com.sun.net.httpserver.Headers;
@@ -35,7 +38,11 @@ public abstract class ServerCommand{
 			return;
 		}
 		String catanCookie = cookies.get(cookies.size()-1);
-		parseCookie(catanCookie);
+		try {
+			parseCookie(catanCookie);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		
 		try {
 			json = StringUtils.getString(httpObj.getRequestBody());
@@ -47,19 +54,24 @@ public abstract class ServerCommand{
 	/**
 	 * Action to execute. Override this method
 	 */
+	public abstract JsonElement execute() throws ServerInvalidRequestException;
 	
-	private void parseCookie(String cookie) {
+	private void parseCookie(String cookie) throws UnsupportedEncodingException {
 		String[] parameters = cookie.split(";");
 		
 		for (String string : parameters) {
 			if (string.contains("catan.user")) {
-				
+				System.out.println("Catan user cookie received: " + string);
+				String decoded = URLDecoder.decode(string, "UTF-8");
+				System.out.println("Decoded: " + decoded);
 			} else if (string.contains("catan.game")) {
-				
+				System.out.println("Catan game cookie received: " + string);
+				String decoded = URLDecoder.decode(string, "UTF-8");
+				System.out.println("Decoded: " + decoded);
 			}
 		}
 	}
 	
-	public abstract JsonElement execute() throws ServerInvalidRequestException;
+	
 
 }
