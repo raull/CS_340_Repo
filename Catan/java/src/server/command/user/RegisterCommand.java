@@ -1,6 +1,9 @@
 package server.command.user;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.user.Credentials;
 
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,8 +21,10 @@ public class RegisterCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute(){
-		return null;
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		Credentials credentials = gson.fromJson(json, Credentials.class);
+		return ServerFacade.instance().register(credentials.getUsername(), credentials.getPassword());
 		
 	}
 

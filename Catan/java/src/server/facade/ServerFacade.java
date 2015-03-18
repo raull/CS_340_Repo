@@ -63,7 +63,7 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException
 	 */
-	public void register(String username, String password) throws ServerInvalidRequestException 
+	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
 		//if a user already exists in the usermanager with the given name and password
 			//throw exception
@@ -72,6 +72,8 @@ public class ServerFacade {
 			//set the user cookie for the client (done in handlers?)
 		
 		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
+		
+		return null;
 	}
 	
 	/**
