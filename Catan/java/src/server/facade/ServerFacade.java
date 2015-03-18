@@ -32,7 +32,7 @@ public class ServerFacade {
 	 * Singleton instance of the Server Facade
 	 * @return
 	 */
-	public ServerFacade instance() {
+	public static ServerFacade instance() {
 		if (instance != null) {
 			return instance;
 		} else {
