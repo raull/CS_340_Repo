@@ -94,7 +94,7 @@ public class Server {
 		server.start();
 	}
 
-	private Handler serverHandler = new Handler(true);
+	private Handler serverHandler = new Handler(false);
 
 	
 	public static void main(String[] args) {
