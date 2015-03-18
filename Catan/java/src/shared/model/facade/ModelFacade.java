@@ -1,6 +1,7 @@
 package shared.model.facade;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import client.manager.ClientManager;
@@ -911,9 +912,39 @@ public class ModelFacade extends Observable{
 		this.isNotifying = isNotifying;
 	}
 	
+	
+	
+	
 	public void updateTurnPhase(TurnPhase phase)
 	{
 		this.turnManager().setCurrentPhase(phase);
 	}
 	
+	public boolean discardPhaseNeeded()
+	{
+		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
+		boolean needed = false;
+		for (User user : users)
+		{
+			if (user.getResourceCards().getAllResourceCards().size() > 7)
+			{
+				user.setHasDiscarded(false); //IS THIS SUPPOSED TO BE CALLED?
+				needed = true;
+			}
+		}
+		return needed;		
+	}
+	
+	public void givePlayersResourcesFromRoll(int roll) //TODO not finished yet
+	{
+		Collection<HexTile> tiles = this.map.getHexTiles();
+		
+		for (HexTile hex : tiles)
+		{
+			if (hex.getNumber() == roll)
+			{
+				
+			}
+		}
+	}
 }
