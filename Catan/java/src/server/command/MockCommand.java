@@ -18,6 +18,14 @@ public class MockCommand extends ServerCommand{
 		String uri = arg0.getRequestURI().toString();
 		if(uri.equals("/user/register")||uri.equalsIgnoreCase("/user/login")){
 			sendCookie = true;
+			//include cookie in JSON
+			try{
+				String encoded = URLEncoder.encode("{\"name\":\"Sam\",\"password\":\"sam\",\"playerID\":0}", "UTF-8");
+				System.out.println(encoded);
+				arg0.getResponseHeaders().add("set-cookie", encoded);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -26,15 +34,7 @@ public class MockCommand extends ServerCommand{
 		JsonElement output;
 		Gson gson = new Gson();
 		if(sendCookie){
-			//include cookie in JSON
-			try{
-				String encoded = URLEncoder.encode("{\"name\":\"Sam\",\"password\":\"sam\",\"playerID\":0}", "UTF-8");
-				System.out.println(encoded);
-				output = gson.fromJson(encoded,  JsonElement.class);
-				return output;
-			}catch(Exception e){
-				e.printStackTrace();
-			}
+			
 		}
 		// TODO Auto-generated method stub
 		output = gson.fromJson("test", JsonElement.class);

@@ -1,8 +1,8 @@
-Mar 17, 2015 8:50:16 PM server.Server run
+Mar 17, 2015 9:16:15 PM server.Server run
 INFO: Initializing Model
-Mar 17, 2015 8:50:16 PM server.Server run
+Mar 17, 2015 9:16:15 PM server.Server run
 INFO: Initializing HTTP Server
-Mar 17, 2015 8:50:16 PM server.Server run
+Mar 17, 2015 9:16:16 PM server.Server run
 INFO: Starting HTTP Server
-Mar 17, 2015 8:50:16 PM server.Server main
+Mar 17, 2015 9:16:16 PM server.Server main
 INFO: Server running on port: 8081
