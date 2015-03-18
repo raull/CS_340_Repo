@@ -4,12 +4,17 @@ import java.util.List;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
+import server.game.GameManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
+import shared.model.game.TurnPhase;
+import shared.model.game.User;
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -187,11 +192,22 @@ public class ServerFacade {
 	 */
 	public Model robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
-		//if can robPlayer
-			//move the robber to the new location
+		Game game = GameManager.instance.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		//TODO account for if the victim index is -1 (not robbing anyone)
+		User victim = turnManager.getUserFromIndex(victimIndex);
+		
+		if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
+		{
+			modelFacade.map().updateRobberLocation(location);
 			//randomly select a resource card from the victim
 			//remove it from the victim and add it to the given player
-			//if soldier card
+			if (soldierCard)
+			{
 				//remove a soldier devcard from the player
 				//add one to the number of soldiers the player has played
 				//check to see if they gained the largest army
@@ -199,13 +215,17 @@ public class ServerFacade {
 					//set largest army
 					//update points (may involve taking points away from another player)
 				//update game log with appropriate soldier message(s)
-			//else
+			}
+			else
+			{
 				//update game log with appropriate robbing message
-			//set the turn phase to now be playing
-		//else (can't rob player)
-			//throw exception
-		
-		//return new model
+			}
+			modelFacade.updateTurnPhase(TurnPhase.PLAYING);
+		}
+		else
+		{
+			throw new ServerInvalidRequestException();
+		}
 		
 		return null;
 	}
