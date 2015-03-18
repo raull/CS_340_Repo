@@ -1,5 +1,6 @@
 package server.command;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import server.exception.ServerInvalidRequestException;
@@ -14,7 +15,6 @@ import com.sun.net.httpserver.HttpExchange;
  *
  */
 public class MockCommand extends ServerCommand{
-	boolean sendCookie = false;
 
 	public MockCommand(HttpExchange arg0) {
 		super(arg0);
@@ -22,12 +22,10 @@ public class MockCommand extends ServerCommand{
 		System.out.println("URI: " + arg0.getRequestURI().toString());
 		String uri = arg0.getRequestURI().toString();
 		if(uri.equals("/user/register")||uri.equalsIgnoreCase("/user/login")){
-			sendCookie = true;
 			//include cookie in JSON
 			try{
-				String encoded = URLEncoder.encode("{\"name\":\"Sam\",\"password\":\"sam\",\"playerID\":0}", "UTF-8");
-				System.out.println(encoded);
-				arg0.getResponseHeaders().add("set-cookie", encoded);
+				String encoded = getEncodedLoginCookie("Sam", "sam", "0");
+				arg0.getResponseHeaders().add("Set-cookie", encoded);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -38,12 +36,18 @@ public class MockCommand extends ServerCommand{
 	public JsonElement execute() throws ServerInvalidRequestException {
 		JsonElement output;
 		Gson gson = new Gson();
-		if(sendCookie){
-			
-		}
 		// TODO Auto-generated method stub
 		output = gson.fromJson("test", JsonElement.class);
 		return output;
+	}
+	
+	private String getEncodedLoginCookie(String name, String password, String playerID) throws UnsupportedEncodingException{
+		String plaintext = "{\"name\":\"" + name + "\",\"password\":\"" + password + "\",\"playerID\":" + playerID + "}";
+		String encoded = URLEncoder.encode(plaintext, "UTF-8");
+		encoded = "catan.user=" + encoded + ";Path=/;";
+		System.out.println("Plaintext cookie: " + plaintext);
+		System.out.println("Encoded cookie: " + encoded);
+		return encoded;
 	}
 
 }
