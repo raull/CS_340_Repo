@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls build city command on server facade
+ * @author thyer
+ *
+ */
 public class BuildCityCommand extends ServerCommand {
 
 	public BuildCityCommand(HttpExchange arg0) {

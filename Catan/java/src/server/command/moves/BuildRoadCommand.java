@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls build road on server facade
+ * @author thyer
+ *
+ */
 public class BuildRoadCommand extends ServerCommand {
 
 	public BuildRoadCommand(HttpExchange arg0) {

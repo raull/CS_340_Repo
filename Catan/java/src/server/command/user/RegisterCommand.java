@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls register on server facade
+ * @author thyer
+ *
+ */
 public class RegisterCommand extends ServerCommand {
 
 	public RegisterCommand(HttpExchange arg0) {

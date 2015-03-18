@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls play soldier card on server facade
+ * @author thyer
+ *
+ */
 public class PlaySoldierCardCommand extends ServerCommand {
 
 	public PlaySoldierCardCommand(HttpExchange arg0) {

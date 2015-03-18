@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls Add AI on ServerFacade
+ * @author thyer
+ *
+ */
 public class GameAddAICommand extends ServerCommand {
 
 	public GameAddAICommand(HttpExchange arg0) {

@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls reset on ServerFacade
+ * @author thyer
+ *
+ */
 public class GameResetCommand extends ServerCommand {
 
 	public GameResetCommand(HttpExchange arg0) {

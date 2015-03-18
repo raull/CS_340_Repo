@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * calls offer trade on server facade
+ * @author rental
+ *
+ */
 public class OfferTradeCommand extends ServerCommand {
 
 	public OfferTradeCommand(HttpExchange arg0) {

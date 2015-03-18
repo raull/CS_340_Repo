@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls build settlement on server facade
+ * @author thyer
+ *
+ */
 public class BuildSettlementCommand extends ServerCommand {
 
 	public BuildSettlementCommand(HttpExchange arg0) {

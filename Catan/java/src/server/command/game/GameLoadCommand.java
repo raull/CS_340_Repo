@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls load on ServerFacade
+ * @author thyer
+ *
+ */
 public class GameLoadCommand extends ServerCommand {
 
 	public GameLoadCommand(HttpExchange arg0) {

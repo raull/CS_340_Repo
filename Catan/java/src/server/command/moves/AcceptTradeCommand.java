@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls accept trade command on server facade
+ * @author thyer
+ *
+ */
 public class AcceptTradeCommand extends ServerCommand {
 
 	public AcceptTradeCommand(HttpExchange arg0) {

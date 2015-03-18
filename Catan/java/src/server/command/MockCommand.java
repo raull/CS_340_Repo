@@ -8,6 +8,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Mock command class that is used in testing. Created by MockCommandFactory, passes back impostor JSON
+ * @author thyer
+ *
+ */
 public class MockCommand extends ServerCommand{
 	boolean sendCookie = false;
 

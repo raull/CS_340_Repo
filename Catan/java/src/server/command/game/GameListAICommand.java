@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls listAI on ServerFacade
+ * @author thyer
+ *
+ */
 public class GameListAICommand extends ServerCommand {
 
 	public GameListAICommand(HttpExchange arg0) {

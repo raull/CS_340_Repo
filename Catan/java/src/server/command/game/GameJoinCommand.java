@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls joinGame on ServerFacade
+ * @author thyer
+ *
+ */
 public class GameJoinCommand extends ServerCommand {
 
 	public GameJoinCommand(HttpExchange arg0) {
