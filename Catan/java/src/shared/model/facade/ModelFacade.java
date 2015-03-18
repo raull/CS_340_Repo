@@ -24,6 +24,7 @@ import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.MessageLine;
 import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeManager;
 import shared.model.game.TradeOffer;
@@ -839,6 +840,12 @@ public class ModelFacade extends Observable{
 			return false;
 		}
 		return true;
+	}
+	
+	
+	public void addToGameLog(MessageLine logEntry)
+	{
+		model.getLog().addMessage(logEntry);
 	}
 	
 	//Getters and Setters

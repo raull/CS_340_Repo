@@ -14,6 +14,7 @@ import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 
 /**
@@ -187,6 +188,34 @@ public class ServerFacade {
 	 */
 	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException 
 	{
+		//access objects of the specific game
+		Game game = GameManager.instance.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		if (modelFacade.canRollNumber(turnManager, user))
+		{
+			if (rolledNumber != 7)
+			{
+				
+			}
+			else //rolledNumber == 7
+			{
+				
+			}
+			
+			//add to the game log
+			String logSource = user.getName();
+			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else
+		{
+			throw new ServerInvalidRequestException();
+		}
 		//if can rollNumber
 			//if number is not 7
 				//for each hex
