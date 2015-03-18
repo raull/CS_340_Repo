@@ -22,6 +22,25 @@ public class UserManager {
 		this.users.add(newUser);
 	}
 	
+	//Adds a new user to the UserManager
+	public void addNewUser(String username, String password){
+		//Checks to give a unique ID
+		int highestID = 0;
+		for (User u: users){
+			if (u.getPlayerID() > highestID){
+				highestID = u.getPlayerID();
+			}
+		}
+		int newID = highestID + 1;
+		User newUser = new User();
+		newUser.setName(username);
+		newUser.setPassword(password);
+		newUser.setPlayerID(newID);
+		
+		addUser(newUser);
+	}
+	
+	
 	public User getUser(int id) {
 		for (User user : users) {
 			if (user.getPlayerID() == id) {
