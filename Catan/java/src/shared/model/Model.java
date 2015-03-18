@@ -1,6 +1,7 @@
 package shared.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import shared.definitions.CatanColor;
@@ -210,8 +211,11 @@ public class Model {
 	 * @return json element of map
 	 */
 	public JsonElement serializeMap() {
-		//array of hexes
-		//array of ports
+		JsonObject jsonMap = new JsonObject();
+		//set array of hexes
+		JsonElement jsonHexes = serializeMapHexes();
+		jsonMap.add("hexes", jsonHexes);
+		//set array of ports
 		//array of roads
 		//array of settlements
 		//array of cities
@@ -225,7 +229,46 @@ public class Model {
 	 * @return
 	 */
 	public JsonElement serializeMapHexes() {
-		return null;
+		Collection<HexTile> hexTiles = map.getHexTiles();
+		JsonArray jsonHexes = new JsonArray();
+		for(HexTile hexTile: hexTiles) {
+			JsonElement jsonHex = serializeMapHex(hexTile);
+			jsonHexes.add(jsonHex);
+		}
+		return jsonHexes;
+	}
+	/**
+	 * serialize the individual hex tile
+	 * @return
+	 */
+	public JsonElement serializeMapHex(HexTile hexTile) {
+		JsonObject jsonHex = new JsonObject();
+		//add hex location
+		JsonElement jsonHexLoc = serializeHexLocation(hexTile.getLocation());
+		jsonHex.add("location", jsonHexLoc);
+		//add the resource, if desert, don't add
+		HexType resourceType = hexTile.getType();
+		if(resourceType != HexType.DESERT) {
+			jsonHex.add("resource", new JsonPrimitive(resourceType.name()));
+		}
+		//add the number on tile; if desert, don't add --water wouldn't have either
+		if(resourceType != HexType.DESERT && resourceType != HexType.WATER) {
+			jsonHex.add("number", new JsonPrimitive(hexTile.getNumber()));
+		}
+		
+		return jsonHex;
+	}
+	
+	/**
+	 * serializes a hex location
+	 * @param hexLoc
+	 * @return json of hex location
+	 */
+	public JsonElement serializeHexLocation(HexLocation hexLoc) {
+		JsonObject jsonHexLoc = new JsonObject();
+		jsonHexLoc.add("x", new JsonPrimitive(hexLoc.getX()));
+		jsonHexLoc.add("y", new JsonPrimitive(hexLoc.getY()));
+		return jsonHexLoc;
 	}
 	
 	/**
@@ -233,6 +276,28 @@ public class Model {
 	 * @return
 	 */
 	public JsonElement serializeMapPorts() {
+		ArrayList<Port> mapPorts = map.getPortsOnMap();
+		JsonArray jsonPorts = new JsonArray();
+		for(Port port : mapPorts) {
+			
+		}
+		return jsonPorts;
+	}
+	
+	/**
+	 * serialize each port
+	 * @return
+	 */
+	public JsonElement serializeMapPort(Port port) {
+		JsonObject jsonPort = new JsonObject();
+		//resource, optional
+		if(port.getType() != PortType.THREE) {
+			jsonPort.add("resource", new JsonPrimitive(port.getType().name()));
+		}
+		//hex location
+		
+		//direction
+		//ratio
 		return null;
 	}
 	

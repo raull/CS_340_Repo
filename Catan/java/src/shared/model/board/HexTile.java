@@ -73,6 +73,6 @@ public class HexTile {
 	public boolean canMoveRobberHere(){
 		return !robber;
 	}
-
+	
 
 }
