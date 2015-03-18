@@ -25,6 +25,9 @@ public abstract class ServerCommand{
 		
 		Headers headers = httpObj.getRequestHeaders();
 		List<String> cookies = headers.get("Cookie");
+		if (cookies == null) { // No cookie :(
+			return;
+		}
 		String catanCookie = cookies.get(cookies.size());
 		parseCookie(catanCookie);
 	}
