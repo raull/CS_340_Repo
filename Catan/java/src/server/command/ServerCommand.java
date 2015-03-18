@@ -3,6 +3,9 @@ package server.command;
 import java.util.List;
 
 import com.sun.net.httpserver.Headers;
+import server.exception.ServerInvalidRequestException;
+
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -29,8 +32,6 @@ public abstract class ServerCommand{
 	/**
 	 * Action to execute. Override this method
 	 */
-	public abstract void execute();
-	
 	
 	private void parseCookie(String cookie) {
 		String[] parameters = cookie.split(";");
@@ -43,5 +44,7 @@ public abstract class ServerCommand{
 			}
 		}
 	}
+	
+	public abstract JsonElement execute() throws ServerInvalidRequestException;
 
 }

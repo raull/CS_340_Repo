@@ -5,6 +5,7 @@ import java.net.*;
 import java.rmi.ServerException;
 import java.util.logging.*;
 
+import server.facade.ServerFacade;
 import server.handler.Handler;
 
 import com.sun.net.httpserver.*;
@@ -62,16 +63,16 @@ public class Server {
 		
 		logger.info("Initializing Model");
 		
-		try {
-			//ServerFacade.initialize();	
-			if(1>0){
-				throw new ServerException("new exception");
-			}
-		}
-		catch (ServerException e) {
-			logger.log(Level.SEVERE, e.getMessage(), e);
-			return;
-		}
+//		try {
+//			ServerFacade.initialize();	
+//			if(1>0){
+//				throw new ServerException("new exception");
+//			}
+//		}
+//		catch (ServerException e) {
+//			logger.log(Level.SEVERE, e.getMessage(), e);
+//			return;
+//		}
 		
 		logger.info("Initializing HTTP Server");
 		
