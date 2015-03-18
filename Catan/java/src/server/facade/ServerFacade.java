@@ -12,6 +12,8 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
+import shared.model.game.MessageLine;
+import shared.model.game.MessageList;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
@@ -161,11 +163,20 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
-		//get the correct game
-		//add chat to model with player index
-		//return new model
-		return null;
+	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException 
+	{
+		//access objects of the specific game
+		Game game = GameManager.instance.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		MessageList chat = model.getChat();
+		
+		User user = modelFacade.turnManager().getUserFromIndex(playerIndex);
+		
+		//add the new chat message to the list of chats
+		chat.addMessage(new MessageLine(message, user.getName()));
+		
+		return getModel(0, gameId); //new version of the model
 	}
 	
 	/**
@@ -176,8 +187,45 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
-		return null;
+	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException 
+	{
+		//access objects of the specific game
+		Game game = GameManager.instance.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		if (modelFacade.canRollNumber(turnManager, user))
+		{
+			if (rolledNumber != 7)
+			{
+				modelFacade.givePlayersResourcesFromRoll(rolledNumber);
+			}
+			else //rolledNumber == 7
+			{
+				if (modelFacade.discardPhaseNeeded())
+				{
+					modelFacade.updateTurnPhase(TurnPhase.DISCARDING);
+				}
+				else
+				{
+					modelFacade.updateTurnPhase(TurnPhase.ROBBING);
+				}
+			}
+			
+			//add to the game log
+			String logSource = user.getName();
+			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else
+		{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
