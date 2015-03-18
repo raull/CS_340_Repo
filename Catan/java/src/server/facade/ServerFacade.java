@@ -157,6 +157,9 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
+		//get the correct game
+		//add chat to model with player index
+		//return new model
 		return null;
 	}
 	
@@ -428,6 +431,11 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+		//if can offer trade
+			//add a trade offer to model
+		//else throw exception
+		
+		//return new model
 		return null;
 	}
 	
@@ -440,6 +448,16 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
+		//if user can accept trade
+			//if user accepted trade
+				//current player and player trading swap specified resources
+			//else user rejected trade
+		
+		//else throw exception
+		
+		//trade offer is removed from model
+		
+		//return model
 		return null;
 	}
 	
@@ -454,6 +472,14 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
+		//get the game by id
+		//if can maritime trade
+			//subtract 1 of receiving resource type from bank
+			//bank gets ratio number of sending resource type
+			//user loses ratio number of sending resource type
+			//user gains 1 of receiving resource type
+		//else exception
+		//return new model
 		return null;
 	}
 	
