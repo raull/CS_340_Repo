@@ -1,5 +1,6 @@
 package server.command.moves;
 
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
@@ -12,7 +13,8 @@ public class DiscardCardsCommand extends ServerCommand {
 	}
 
 	@Override
-	public void execute() {
+	public JsonElement execute() {
+		return null;
 		// TODO Auto-generated method stub
 
 	}

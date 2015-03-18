@@ -2,6 +2,7 @@ package server.command.game;
 
 import server.command.ServerCommand;
 
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 public class GameJoinCommand extends ServerCommand {
@@ -12,7 +13,8 @@ public class GameJoinCommand extends ServerCommand {
 	}
 
 	@Override
-	public void execute() {
+	public JsonElement execute() {
+		return null;
 		// TODO Auto-generated method stub
 
 	}

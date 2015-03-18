@@ -1,5 +1,6 @@
 package server.command;
 
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -18,6 +19,6 @@ public abstract class ServerCommand{
 	/**
 	 * Action to execute. Override this method
 	 */
-	public abstract void execute();
+	public abstract JsonElement execute();
 
 }

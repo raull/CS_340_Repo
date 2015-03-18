@@ -2,6 +2,7 @@ package server.command.game;
 
 import server.command.ServerCommand;
 
+import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 public class GameCreateCommand extends ServerCommand {
@@ -11,7 +12,8 @@ public class GameCreateCommand extends ServerCommand {
 	}
 
 	@Override
-	public void execute() {
+	public JsonElement execute() {
+		return null;
 		// TODO Auto-generated method stub
 		
 	}
