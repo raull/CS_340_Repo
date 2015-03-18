@@ -10,6 +10,7 @@ import com.google.gson.JsonElement;
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
 import shared.definitions.DevCardType;
+import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -907,6 +908,68 @@ public class ModelFacade extends Observable{
 	public void updateTurnPhase(TurnPhase phase)
 	{
 		this.turnManager().setCurrentPhase(phase);
+	}
+	
+	public ArrayList<Integer> getPossibleTileNumbers()
+	{
+		ArrayList<Integer> tileNumbers = new ArrayList<Integer>();
+		
+		tileNumbers.add(12);
+		tileNumbers.add(11);
+		tileNumbers.add(9);
+		tileNumbers.add(4);
+		tileNumbers.add(6);
+		tileNumbers.add(5);
+		tileNumbers.add(10);
+		tileNumbers.add(3);
+		tileNumbers.add(11);
+		tileNumbers.add(4);
+		tileNumbers.add(8);
+		tileNumbers.add(8);
+		tileNumbers.add(10);
+		tileNumbers.add(9);
+		tileNumbers.add(3);
+		tileNumbers.add(5);
+		tileNumbers.add(2);
+		tileNumbers.add(6);
+		
+		return tileNumbers;
+	}
+	
+	public ArrayList<HexTile> getPossibleHexTiles()
+	{
+		ArrayList<HexTile> hexes = new ArrayList<HexTile>();
+		
+		hexes.add(new HexTile(HexType.DESERT, null, -1));
+		hexes.add(new HexTile(HexType.WOOD, null, -1));
+		hexes.add(new HexTile(HexType.WOOD, null, -1));
+		hexes.add(new HexTile(HexType.WOOD, null, -1));
+		hexes.add(new HexTile(HexType.WOOD, null, -1));
+		hexes.add(new HexTile(HexType.BRICK, null, -1));
+		hexes.add(new HexTile(HexType.BRICK, null, -1));
+		hexes.add(new HexTile(HexType.BRICK, null, -1));
+		hexes.add(new HexTile(HexType.WHEAT, null, -1));
+		hexes.add(new HexTile(HexType.WHEAT, null, -1));
+		hexes.add(new HexTile(HexType.WHEAT, null, -1));
+		hexes.add(new HexTile(HexType.WHEAT, null, -1));
+		hexes.add(new HexTile(HexType.SHEEP, null, -1));
+		hexes.add(new HexTile(HexType.SHEEP, null, -1));
+		hexes.add(new HexTile(HexType.SHEEP, null, -1));
+		hexes.add(new HexTile(HexType.SHEEP, null, -1));
+		hexes.add(new HexTile(HexType.ORE, null, -1));
+		hexes.add(new HexTile(HexType.ORE, null, -1));
+		hexes.add(new HexTile(HexType.ORE, null, -1));
+		
+		return hexes;
+	}
+	
+	public ArrayList<HexLocation> getPossibleHexLocations()
+	{
+		ArrayList<HexLocation> locations = new ArrayList<HexLocation>();
+		
+		//TODO hard code the valid locations of hexTiles
+		
+		return locations;
 	}
 	
 }
