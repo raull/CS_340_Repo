@@ -12,7 +12,6 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
 
 /**
@@ -34,7 +33,7 @@ public class ServerFacade {
 	 * Singleton instance of the Server Facade
 	 * @return
 	 */
-	public ServerFacade instance() {
+	public static ServerFacade instance() {
 		if (instance != null) {
 			return instance;
 		} else {
@@ -49,11 +48,13 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException 
 	 */
-	public void login(String username, String password) throws ServerInvalidRequestException 
+	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
 		//if a user does not exist in the user manager with the given name and password
 			//throw exception
 		//else the user cookie needs to be set for the client (done in handlers?)
+		
+		return null;
 	}
 	
 	/**
