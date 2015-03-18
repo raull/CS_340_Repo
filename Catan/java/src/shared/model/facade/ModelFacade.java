@@ -911,4 +911,9 @@ public class ModelFacade extends Observable{
 		this.isNotifying = isNotifying;
 	}
 	
+	public void updateTurnPhase(TurnPhase phase)
+	{
+		this.turnManager().setCurrentPhase(phase);
+	}
+	
 }
