@@ -216,6 +216,8 @@ public class Model {
 		JsonElement jsonHexes = serializeMapHexes();
 		jsonMap.add("hexes", jsonHexes);
 		//set array of ports
+		JsonElement jsonPorts = serializeMapPorts();
+		jsonMap.add("ports", jsonPorts);
 		//array of roads
 		//array of settlements
 		//array of cities
@@ -279,7 +281,8 @@ public class Model {
 		ArrayList<Port> mapPorts = map.getPortsOnMap();
 		JsonArray jsonPorts = new JsonArray();
 		for(Port port : mapPorts) {
-			
+			JsonElement jsonPort = serializeMapPort(port);
+			jsonPorts.add(jsonPort);
 		}
 		return jsonPorts;
 	}
@@ -295,10 +298,13 @@ public class Model {
 			jsonPort.add("resource", new JsonPrimitive(port.getType().name()));
 		}
 		//hex location
-		
+		JsonElement jsonHexLoc = serializeHexLocation(port.getEdgeLocation().getHexLoc());
+		jsonPort.add("location", jsonHexLoc);
 		//direction
+		jsonPort.add("direction", new JsonPrimitive(port.getEdgeLocation().getDir().name()));
 		//ratio
-		return null;
+		jsonPort.add("ratio", new JsonPrimitive(port.getOfferRate()));
+		return jsonPort;
 	}
 	
 	/**
@@ -306,6 +312,21 @@ public class Model {
 	 * @return
 	 */
 	public JsonElement serializeMapRoads() {
+		ArrayList<Road> roads = map.getRoadsOnMap();
+		JsonArray jsonRoads = new JsonArray();
+		for(Road road : roads) {
+			
+		}
+		return null;
+	}
+	
+	/**
+	 * serialize an individual road
+	 * @return
+	 */
+	public JsonElement serializeMapRoad(Road road) {
+		JsonObject jsonRoad = new JsonObject();
+		
 		return null;
 	}
 	
