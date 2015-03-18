@@ -137,6 +137,9 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
+		//get the correct game
+		//add chat to model with player index
+		//return new model
 		return null;
 	}
 	
@@ -408,6 +411,11 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public Model offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+		//if can offer trade
+			//add a trade offer to model
+		//else throw exception
+		
+		//return new model
 		return null;
 	}
 	
