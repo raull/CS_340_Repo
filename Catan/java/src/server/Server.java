@@ -89,6 +89,10 @@ public class Server {
 		
 		server.createContext("/", serverHandler);
 		
+		
+		server.createContext("/docs/api/data", new Handlers.JSONAppender(""));
+		server.createContext("/docs/api/view", new Handlers.BasicFile(""));
+		
 		logger.info("Starting HTTP Server");
 
 		server.start();
@@ -108,4 +112,5 @@ public class Server {
 		logger.info("Server running on port: " + SERVER_PORT_NUMBER);
 	}
 
+	
 }

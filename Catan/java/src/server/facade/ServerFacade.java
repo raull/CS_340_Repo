@@ -2,6 +2,8 @@ package server.facade;
 
 import java.util.List;
 
+import com.google.gson.JsonElement;
+
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
@@ -33,7 +35,7 @@ public class ServerFacade {
 	 * Singleton instance of the Server Facade
 	 * @return
 	 */
-	public ServerFacade instance() {
+	public static ServerFacade instance() {
 		if (instance != null) {
 			return instance;
 		} else {
@@ -103,7 +105,7 @@ public class ServerFacade {
 	 * @return A newly created game.
 	 * @throws ServerInvalidRequestException
 	 */
-	public Game createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
+	public JsonElement createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
 	{
 		//have a hard coded list of default tiles, numbers, and ports?
 		
@@ -154,7 +156,7 @@ public class ServerFacade {
 	 * @return The game that was previously saved.
 	 * @throws ServerInvalidRequestException
 	 */
-	public Game gameLoad(String fileName) throws ServerInvalidRequestException {
+	public JsonElement gameLoad(String fileName) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -169,7 +171,7 @@ public class ServerFacade {
 	 * @return
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model getModel(int version, int gameId) throws ServerInvalidRequestException {
+	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -182,7 +184,7 @@ public class ServerFacade {
 	 * @param game The game to reset.
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model resetGame(int gameId) throws ServerInvalidRequestException {
+	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -194,7 +196,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
+	public JsonElement sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
 		//get the correct game
 		//add chat to model with player index
 		//return new model
@@ -209,7 +211,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
+	public JsonElement rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
 		return null;
 	}
 	
@@ -223,7 +225,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		//if can robPlayer
 			//move the robber to the new location
@@ -255,7 +257,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	public JsonElement finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
 		//if can finish turn
 			//update the current turn index to be the next index
@@ -277,7 +279,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	public JsonElement buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
 		//if can buy dev card
 			//subtract 1 sheep, 1 wheat, and 1 ore from the player's resources
@@ -300,7 +302,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
+	public JsonElement playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
 	{
 		//if can play dev card
 			//add 1 of each of the specified resources to the player's resources
@@ -323,7 +325,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
+	public JsonElement playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
 	{
 		//if can play dev card
 			//subtract 2 from the player's available roads
@@ -346,7 +348,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
 	{
 		//if can play dev card
 			//count the total number of cards of the specific resource in any player's hand
@@ -368,7 +370,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	public JsonElement playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
 		//if can play dev card
 			//subtract one from the player's monument cards (check if new or old?)
@@ -390,7 +392,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
+	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
 		//if can buildroad
 			//subtract 1 from the player's available roads
@@ -416,7 +418,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
+	public JsonElement buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
 	{
 		//if can buildsettlement
 			//subtract 1 from the player's available settlements
@@ -441,7 +443,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException 
+	public JsonElement buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException 
 	{
 		//if can buildcity
 			//subtract 1 from the player's available cities
@@ -468,7 +470,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+	public JsonElement offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
 		//if can offer trade
 			//add a trade offer to model
 		//else throw exception
@@ -485,7 +487,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
+	public JsonElement acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
 		//if user can accept trade
 			//if user accepted trade
 				//current player and player trading swap specified resources
@@ -509,7 +511,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
+	public JsonElement maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
 		//get the game by id
 		//if can maritime trade
 			//subtract 1 of receiving resource type from bank
@@ -529,7 +531,7 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public Model discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
+	public JsonElement discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
 	{
 		//if can discard cards
 			//subtract the resources in the given resource card deck from the player
