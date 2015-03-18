@@ -20,6 +20,7 @@ public abstract class ServerCommand{
 	protected int playerIndex;
 	
 	public ServerCommand(HttpExchange arg0){
+		System.out.println("Creating ServerCommand object");
 		httpObj = arg0;
 		httpObj.getRequestMethod();
 		
@@ -28,7 +29,7 @@ public abstract class ServerCommand{
 		if (cookies == null) { // No cookie :(
 			return;
 		}
-		String catanCookie = cookies.get(cookies.size());
+		String catanCookie = cookies.get(cookies.size()-1);
 		parseCookie(catanCookie);
 	}
 

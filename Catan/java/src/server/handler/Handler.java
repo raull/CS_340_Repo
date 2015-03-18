@@ -30,14 +30,20 @@ public class Handler implements HttpHandler{
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
+		System.out.println("Handler received request: " + arg0.getRequestURI().toString());
 		ServerCommand event = factory.create(arg0);
+		System.out.println("ServerCommand created");
 		try{
+			System.out.println("Preparing to execute request command");
 			JsonElement response = event.execute();
-			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+			System.out.println("Command executed");
+			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getAsString().length());
+			System.out.println("Success headers sent");
 			xmlStream.toXML(response, arg0.getResponseBody());
 			arg0.getResponseBody().close();
+			arg0.close();
 		} catch(ServerInvalidRequestException e1){
-			//do stuff
+			e1.printStackTrace();
 		}
 	}
 

@@ -15,6 +15,7 @@ import com.sun.net.httpserver.HttpExchange;
  *
  */
 public class MockCommand extends ServerCommand{
+	boolean list = false;
 
 	public MockCommand(HttpExchange arg0) {
 		super(arg0);
@@ -22,9 +23,21 @@ public class MockCommand extends ServerCommand{
 		System.out.println("URI: " + arg0.getRequestURI().toString());
 		String uri = arg0.getRequestURI().toString();
 		if(uri.equals("/user/register")||uri.equalsIgnoreCase("/user/login")){
-			//include cookie in JSON
+			//include login cookie in JSON
 			try{
 				String encoded = getEncodedLoginCookie("Sam", "sam", "0");
+				arg0.getResponseHeaders().add("Set-cookie", encoded);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		else if(uri.equals("games/list")){
+			list = true;
+		}
+		else if(uri.equals("/games/join")){
+			//include join game cookie in JSON
+			try{
+				String encoded = this.getEncodedJoinGameCookie("1");
 				arg0.getResponseHeaders().add("Set-cookie", encoded);
 			}catch(Exception e){
 				e.printStackTrace();
@@ -36,18 +49,37 @@ public class MockCommand extends ServerCommand{
 	public JsonElement execute() throws ServerInvalidRequestException {
 		JsonElement output;
 		Gson gson = new Gson();
-		// TODO Auto-generated method stub
 		output = gson.fromJson("test", JsonElement.class);
+		if(list){
+			output = gson.fromJson(this.getExampleListString(), JsonElement.class);
+		}
 		return output;
 	}
 	
+	/**
+	 * Name pretty much says it all. Creates an encoded cookie for us, the required fields are in the paramaters
+	 * @param name
+	 * @param password
+	 * @param playerID
+	 * @return a string representation of the encoded login cookie
+	 * @throws UnsupportedEncodingException
+	 */
 	private String getEncodedLoginCookie(String name, String password, String playerID) throws UnsupportedEncodingException{
 		String plaintext = "{\"name\":\"" + name + "\",\"password\":\"" + password + "\",\"playerID\":" + playerID + "}";
 		String encoded = URLEncoder.encode(plaintext, "UTF-8");
 		encoded = "catan.user=" + encoded + ";Path=/;";
-		System.out.println("Plaintext cookie: " + plaintext);
-		System.out.println("Encoded cookie: " + encoded);
+		//System.out.println("Plaintext cookie: " + plaintext);
+		//System.out.println("Encoded cookie: " + encoded);
 		return encoded;
+	}
+	
+	private String getEncodedJoinGameCookie(String gameID){
+		return "catan.game=" + gameID + ";Path=/;";
+	}
+	
+	private String getExampleListString(){
+		String output = "[\n\t{\n\t}\n]";
+		return output;
 	}
 
 }
