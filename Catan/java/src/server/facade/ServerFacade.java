@@ -5,12 +5,14 @@ import java.util.List;
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
+import server.user.UserManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.User;
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -21,6 +23,7 @@ public class ServerFacade {
 	
 	private static ServerFacade instance;
 	private GameManager gameManager = new GameManager();
+	private UserManager userManager = new UserManager();
 	
 	private ServerFacade() {
 		
@@ -47,8 +50,17 @@ public class ServerFacade {
 	 */
 	public void login(String username, String password) throws ServerInvalidRequestException 
 	{
-		//if a user does not exist in the user manager with the given name and password
-			//throw exception
+		boolean exists = false;
+		for (User u: userManager.getUsers()){
+			if (u.getName().equals(username)){
+				if (u.getPassword().equals(password))
+					exists = true;	
+			}
+		}
+		
+		if (!exists){
+			throw new ServerInvalidRequestException();
+		}
 		//else the user cookie needs to be set for the client (done in handlers?)
 	}
 	
