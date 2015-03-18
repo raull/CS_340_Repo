@@ -27,10 +27,22 @@ public abstract class ServerCommand{
 	protected Gson gson = new Gson();
 	protected String json;
 	
+	/**
+	 * If subclass use super on child
+	 * @param arg0 
+	 */
 	public ServerCommand(HttpExchange arg0){
+		
 		System.out.println("Creating ServerCommand object");
 		httpObj = arg0;
 		httpObj.getRequestMethod();
+		
+		//Parse request body
+		try {
+			json = StringUtils.getString(httpObj.getRequestBody());
+		} catch (Exception e) {
+			json = "";
+		}
 		
 		Headers headers = httpObj.getRequestHeaders();
 		List<String> cookies = headers.get("Cookie");
@@ -43,12 +55,7 @@ public abstract class ServerCommand{
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
-		
-		try {
-			json = StringUtils.getString(httpObj.getRequestBody());
-		} catch (Exception e) {
-			json = "";
-		}
+
 	}
 
 	/**

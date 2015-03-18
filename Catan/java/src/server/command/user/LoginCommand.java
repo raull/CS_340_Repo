@@ -17,7 +17,6 @@ public class LoginCommand extends ServerCommand{
 
 	public LoginCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
