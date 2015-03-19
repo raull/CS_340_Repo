@@ -142,8 +142,12 @@ public class Model {
 		JsonElement logJson = serializeMessageList(log);
 		serializedModel.add("log", logJson);
 		//set the map json
-		
-		return null;
+		//set the players json
+		//set a trade offer if there is one
+		//set the turn tracker
+		//set the model version number
+		//set the winner
+		return serializedModel;
 	}
 	
 	/**
@@ -219,11 +223,25 @@ public class Model {
 		JsonElement jsonPorts = serializeMapPorts();
 		jsonMap.add("ports", jsonPorts);
 		//array of roads
+		JsonElement jsonRoads = serializeMapRoads();
+		jsonMap.add("roads", jsonRoads);
 		//array of settlements
+		JsonElement jsonSettlements = serializeBuildings(map.getSettlementsOnMap());
+		jsonMap.add("settlements", jsonSettlements);
 		//array of cities
-		//radius = 3
+		JsonElement jsonCities = serializeBuildings(map.getCitiesOnMap());
+		jsonMap.add("cities", jsonCities);
+		//radius is always 3 (and not really used?)
 		//robber hex location
-		return null;
+		for(HexTile hexTile : map.getHexTiles()) {
+			//hex tile that has robber
+			if(hexTile.hasRobber()) {
+				JsonElement jsonLoc = serializeHexLocation(hexTile.getLocation());
+				jsonMap.add("robber", jsonLoc);
+				break;
+			}
+		}
+		return jsonMap;
 	}
 	
 	/**
@@ -315,9 +333,10 @@ public class Model {
 		ArrayList<Road> roads = map.getRoadsOnMap();
 		JsonArray jsonRoads = new JsonArray();
 		for(Road road : roads) {
-			
+			JsonElement jsonRoad = serializeMapRoad(road);
+			jsonRoads.add(jsonRoad);
 		}
-		return null;
+		return jsonRoads;
 	}
 	
 	/**
@@ -326,8 +345,52 @@ public class Model {
 	 */
 	public JsonElement serializeMapRoad(Road road) {
 		JsonObject jsonRoad = new JsonObject();
+		//the owner of road
+		jsonRoad.add("owner", new JsonPrimitive(road.getOwner()));
+		//the location of road
+		JsonObject jsonLoc = new JsonObject();
+		EdgeLocation roadLoc = road.getEdge().getLocation();
+		jsonLoc.add("x", new JsonPrimitive(roadLoc.getHexLoc().getX()));
+		jsonLoc.add("y", new JsonPrimitive(roadLoc.getHexLoc().getY()));
+		jsonLoc.add("direction", new JsonPrimitive(roadLoc.getDir().name()));
 		
-		return null;
+		jsonRoad.add("location", jsonLoc);
+		return jsonRoad;
+	}
+	
+	/**
+	 * serialize buildings, either city or settlement
+	 * @param buildings
+	 * @return
+	 */
+	public JsonElement serializeBuildings(ArrayList<Building> buildings) {
+		JsonArray jsonBuildings = new JsonArray();
+		for(Building building: buildings) {
+			JsonElement jsonBuilding = serializeBuilding(building);
+			jsonBuildings.add(jsonBuilding);
+		}
+		return jsonBuildings;
+	}
+	
+	/**
+	 * serialize an individual building
+	 * @param building
+	 * @return
+	 */
+	public JsonElement serializeBuilding(Building building) {
+		JsonObject jsonBuilding = new JsonObject();
+		//owner
+		jsonBuilding.add("owner", new JsonPrimitive(building.getOwner()));
+		//location
+		JsonObject jsonVertex = new JsonObject();
+		VertexLocation vertexLoc = building.getVertex().getLocation();
+		jsonVertex.add("x", new JsonPrimitive(vertexLoc.getHexLoc().getX()));
+		jsonVertex.add("y", new JsonPrimitive(vertexLoc.getHexLoc().getY()));
+		jsonVertex.add("direction", new JsonPrimitive(vertexLoc.getDir().name()));
+		
+		jsonBuilding.add("location", jsonVertex);
+		
+		return jsonBuilding;
 	}
 	
 	/**
@@ -696,25 +759,18 @@ public class Model {
 		robberTile.setRobber(true);
 	}
 	
-//	public ArrayList<User> extractUsers(JsonObject jsonModel) {
 	public void extractUsers(JsonObject jsonModel){
-//		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
 		
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
 		
-		
-//		for(JsonElement jsonEleUser : jsonUserArray) {
 		for(int i = 0; i < jsonUserArray.size(); i++) {
 			if(jsonUserArray.get(i).isJsonNull()) {
 				continue;
 			}
 			JsonObject jsonUser = jsonUserArray.get(i).getAsJsonObject();
 
-//			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
-//			User user = extractUser(jsonUser);
 			updateUser(jsonUser);
 		}
-//		return currentPlayers;
 	}
 	
 	
@@ -929,6 +985,4 @@ public class Model {
 		}
 	}
 
-	
-	
 }
