@@ -81,7 +81,7 @@ public class ServerFacade {
 	 * @return The list of games currently in progress
 	 * @throws ServerInvalidRequestException
 	 */
-	public List<Game> gameList() throws ServerInvalidRequestException 
+	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
 		//gets the list of games from the game manager
 		//at some point we need to be creating a specific JSON element here
@@ -118,9 +118,9 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public void joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
 	{
-		
+		return null;
 	}
 	
 	/**

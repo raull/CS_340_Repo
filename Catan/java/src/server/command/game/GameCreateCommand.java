@@ -1,6 +1,9 @@
 package server.command.game;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.games.CreateGameRequest;
 
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
@@ -17,9 +20,10 @@ public class GameCreateCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		CreateGameRequest createGame = gson.fromJson(json, CreateGameRequest.class);
+		return ServerFacade.instance().createNewGame(createGame.getName(), createGame.isRandomTiles(), createGame.isRandomNumbers(), createGame.isRandomPorts());
 		
 	}
 

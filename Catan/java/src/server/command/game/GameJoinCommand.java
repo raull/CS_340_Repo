@@ -1,6 +1,9 @@
 package server.command.game;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.games.JoinGameRequest;
 
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,10 +21,11 @@ public class GameJoinCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		JoinGameRequest joinGame = gson.fromJson(json, JoinGameRequest.class);
+		
+		return ServerFacade.instance().joinGame(gameId, joinGame.getColor());
 	}
 
 }
