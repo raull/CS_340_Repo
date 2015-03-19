@@ -40,7 +40,7 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 		//retrieve LogEntries from model		
 		Model model = ClientManager.instance().getModelFacade().model;
 		MessageList logList = model.getLog();
-		ArrayList<MessageLine> logs = logList.lines;
+		ArrayList<MessageLine> logs = logList.getLines();
 
 		List<LogEntry> entries = new ArrayList<LogEntry>();
 		for (MessageLine line : logs)

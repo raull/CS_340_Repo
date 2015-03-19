@@ -57,7 +57,7 @@ public class ChatController extends Controller implements IChatController, Obser
 		//retrieve LogEntries from model		
 		Model model = ClientManager.instance().getModelFacade().model;
 		MessageList chatList = model.getChat();
-		ArrayList<MessageLine> chats = chatList.lines;
+		ArrayList<MessageLine> chats = chatList.getLines();
 		
 		List<LogEntry> entries = new ArrayList<LogEntry>();
 		for (MessageLine line : chats)

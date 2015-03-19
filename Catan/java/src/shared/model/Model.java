@@ -142,6 +142,8 @@ public class Model {
 		JsonElement logJson = serializeMessageList(log);
 		serializedModel.add("log", logJson);
 		//set the map json
+		JsonElement mapJson = serializeMap();
+		serializedModel.add("map", mapJson);
 		//set the players json
 		//set a trade offer if there is one
 		//set the turn tracker
@@ -391,6 +393,63 @@ public class Model {
 		jsonBuilding.add("location", jsonVertex);
 		
 		return jsonBuilding;
+	}
+	
+	/**
+	 * serialize the players 
+	 * @return json array of players
+	 */
+	public JsonElement serializePlayers() {
+		List<User> users = turnManager.getUsers();
+		JsonArray jsonUsers = new JsonArray();
+		for(User user : users) {
+			
+		}
+		return null;
+	}
+	
+	/**
+	 * serialize a single player
+	 * @return json player
+	 */
+	public JsonElement serializePlayer(User user) {
+		JsonObject jsonUser = new JsonObject();
+		//user's unused cities
+		jsonUser.add("cities", new JsonPrimitive(user.getUnusedCities()));
+		//color
+		jsonUser.add("color", new JsonPrimitive(user.getCatanColor().name()));
+		//discarded bool
+		jsonUser.add("discarded", new JsonPrimitive(user.getHasDiscarded()));
+		//monuments played
+		jsonUser.add("monuments", new JsonPrimitive(user.getMonumentsPlayed()));
+		//name
+		jsonUser.add("name", new JsonPrimitive(user.getName()));
+		//dev cards player bought this turn
+		jsonUser.add("newDevCards", serializeDevCards(user.getNewDevCardDeck()));
+		//dev cards player had when turn started
+		jsonUser.add("oldDevCards", serializeDevCards(user.getUsableDevCardDeck()));
+		//player index
+		jsonUser.add("playerIndex", new JsonPrimitive(user.getTurnIndex()));
+		//played dev card boolean
+		jsonUser.add("playedDevCard", new JsonPrimitive(user.getHasPlayedDevCard()));
+		//player id
+		jsonUser.add("playerID", new JsonPrimitive(user.getPlayerID()));
+		//resources player has
+		//user's unused roads
+		//user's unused settlements
+		//user's soldiers
+		//user's victory points
+		return null;
+	}
+	
+	public JsonElement serializeDevCards(DevCardDeck devCards) {
+		JsonObject jsonDevCards = new JsonObject();
+		jsonDevCards.add("monopoly", new JsonPrimitive(devCards.getCountByType(DevCardType.MONOPOLY)));
+		jsonDevCards.add("monument", new JsonPrimitive(devCards.getCountByType(DevCardType.MONUMENT)));
+		jsonDevCards.add("roadBuilding", new JsonPrimitive(devCards.getCountByType(DevCardType.ROAD_BUILD)));
+		jsonDevCards.add("soldier", new JsonPrimitive(devCards.getCountByType(DevCardType.SOLDIER)));
+		jsonDevCards.add("yearOfPlenty", new JsonPrimitive(devCards.getCountByType(DevCardType.YEAR_OF_PLENTY)));
+		return jsonDevCards;
 	}
 	
 	/**
@@ -781,7 +840,9 @@ public class Model {
 		CatanColor userColor = gson.fromJson(jsonUser.get("color"), CatanColor.class);
 		//discarded -- whether or not user has already discarded cards this turn
 		boolean hasDiscarded = jsonUser.get("discarded").getAsBoolean();
-				
+		
+		int monumentsPlayed = jsonUser.get("monuments").getAsInt();
+		
 		String name = jsonUser.get("name").getAsString();
 		
 		ArrayList<DevCard> newDevCards = new ArrayList<DevCard>();
@@ -827,8 +888,8 @@ public class Model {
 		
 		currUser.setUnusedCities(numCities);
 		currUser.setHasPlayedDevCard(playedDevCard);
-//		currUser.setDiscarded(discarded); -- does it matter whether user has already discarded cards?
-//		currUser.setMonuments(monumentsPlayed); -- does user need to keep track of how many monuments are played? maybe in scorekeeper?
+
+		currUser.setMonumentsPlayed(monumentsPlayed); 
 		currUser.getHand().setNewDevCardDeck(newDevCardDeck);
 		currUser.getHand().setDevCardDeck(oldDevCardDeck);
 		currUser.getHand().setResourceCardDeck(resourceDeck);
