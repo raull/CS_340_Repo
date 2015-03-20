@@ -12,6 +12,7 @@ import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
+import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 
