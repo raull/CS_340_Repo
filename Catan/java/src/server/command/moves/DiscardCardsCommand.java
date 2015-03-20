@@ -4,6 +4,10 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.DiscardCards;
+import shared.proxy.moves.ResourceList;
 
 /**
  * Calls discard cards on server facade
@@ -18,10 +22,12 @@ public class DiscardCardsCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		DiscardCards discardCards = gson.fromJson(json, DiscardCards.class);
+		ResourceList list = discardCards.getDiscardedCards();
+						
+		return ServerFacade.instance().discardCards(gameId, playerId, list.getResourceDeck());
 	}
 
 }
