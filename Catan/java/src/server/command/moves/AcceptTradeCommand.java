@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.AcceptTrade;
 
 /**
  * Calls accept trade command on server facade
@@ -14,13 +17,13 @@ public class AcceptTradeCommand extends ServerCommand {
 
 	public AcceptTradeCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
+	public JsonElement execute() throws ServerInvalidRequestException {
+		AcceptTrade accepTrade = gson.fromJson(json, AcceptTrade.class);
+		
+		return ServerFacade.instance().acceptTrade(gameId, playerId, accepTrade.isWillAccept());
 
 	}
 
