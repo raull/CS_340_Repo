@@ -952,10 +952,45 @@ public class ModelFacade extends Observable{
 					if (user.ownsAdjacentBuildingToHex(hex.getLocation()))
 					{
 						//identify what kind of building it was
+						//or if there are multiple buildings on the hex
+						int gainNumber = 1;
+						
 						HexType type = hex.getType();
+						ResourceType resource = identifyResource(type);
+						
+						
 					}
 				}
 			}
 		}
+	}
+	
+	
+	
+	private ResourceType identifyResource(HexType type)
+	{
+		ResourceType resource = null;
+		switch (type)
+		{
+		case ORE:
+			resource = ResourceType.ORE;
+			break;
+		case WOOD:
+			resource = ResourceType.WOOD;
+			break;
+		case WHEAT:
+			resource = ResourceType.WHEAT;
+			break;
+		case BRICK:
+			resource = ResourceType.BRICK;
+			break;
+		case SHEEP:
+			resource = ResourceType.SHEEP;
+			break;
+		default:
+			assert false;	
+		}
+		
+		return resource;
 	}
 }

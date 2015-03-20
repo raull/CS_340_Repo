@@ -253,6 +253,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			this.updateModelVersion(gameId);
 		}
 		else
 		{
