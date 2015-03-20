@@ -9,15 +9,16 @@ import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
+import shared.definitions.DevCardType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
-
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
@@ -423,15 +424,30 @@ public class ServerFacade {
 	 */
 	public JsonElement playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
-		//if can play dev card
-			//subtract one from the player's monument cards (check if new or old?)
-			//add one to the player's points
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new model
-		return null;
+		DevCard devCard = new DevCard(DevCardType.MONUMENT);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayMonument(turnManager, user)) {
+			//if user can play monument
+			//get rid of dev card from usable deck 
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//update user points
+			user.setVictoryPoints(user.getVictoryPoints() + 1);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played a monument and gained a point.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**

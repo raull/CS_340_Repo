@@ -27,6 +27,23 @@ public class DevCardDeck {
 	}
 	
 	/**
+	 * add a card to deck
+	 * @param card
+	 */
+	public void addDevCard(DevCard card) {
+		cards.add(card);
+	}
+	
+	/**
+	 * remove a card from deck
+	 * @param card
+	 */
+	public void removeDevCard(DevCard card) {
+		cards.remove(card);
+	}
+	
+	
+	/**
 	 * 
 	 * @return the remaining size of the cards ArrayList
 	 */
