@@ -14,13 +14,13 @@ public class RollNumber {
 	 */
 	private int playerIndex;
 	/**
-	 * The number roled (2-12)
+	 * The number rolled (2-12)
 	 */
 	private int number;
 	
 	/**
 	 * Constructor to instantiate the RollNumber object
-	 * @param playerIndex
+	 * @param playerId
 	 * @param number
 	 */
 	public RollNumber(int PlayerIndex, int number) {
