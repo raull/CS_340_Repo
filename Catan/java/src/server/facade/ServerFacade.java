@@ -15,7 +15,7 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
-
+import shared.model.facade.ModelFacade;
 /**
  * Facade of the server to make all operations to an specific game.
  * @author raulvillalpando
@@ -50,7 +50,7 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException 
 	 */
-	public void login(String username, String password) throws ServerInvalidRequestException 
+	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
 		boolean exists = false;
 		for (User u: userManager.getUsers()){
@@ -64,6 +64,8 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException();
 		}
 		//else the user cookie needs to be set for the client (done in handlers?)
+		
+		return null;
 	}
 	
 	/**
@@ -72,7 +74,7 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException
 	 */
-	public void register(String username, String password) throws ServerInvalidRequestException 
+	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
 		//if a user already exists in the usermanager with the given name and password
 			//throw exception
@@ -81,6 +83,8 @@ public class ServerFacade {
 			//set the user cookie for the client (done in handlers?)
 		
 		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
+		
+		return null;
 	}
 	
 	/**
@@ -88,7 +92,7 @@ public class ServerFacade {
 	 * @return The list of games currently in progress
 	 * @throws ServerInvalidRequestException
 	 */
-	public List<Game> gameList() throws ServerInvalidRequestException 
+	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
 		//gets the list of games from the game manager
 		//at some point we need to be creating a specific JSON element here
@@ -125,9 +129,9 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public void joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
 	{
-		
+		return null;
 	}
 	
 	/**
@@ -545,10 +549,22 @@ public class ServerFacade {
 		return null;
 	}
 	
+	public void updateModelVersion(int gameId)
+	{
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		model.incrementVersion();
+	}
+	
 	
 	/////////////Getters and Setters/////////////////
 	
 	public GameManager getGameManager() {
 		return gameManager;
+	}
+	
+	public UserManager getUserManager() {
+		return userManager;
 	}
 }

@@ -4,7 +4,16 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.definitions.ResourceType;
+import shared.proxy.moves.MaritimeTrade;
 
+/**
+ * Calls maritime trade on server facade
+ * @author thyer
+ *
+ */
 public class MaritimeTradeCommand extends ServerCommand {
 
 	public MaritimeTradeCommand(HttpExchange arg0) {
@@ -13,10 +22,13 @@ public class MaritimeTradeCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		MaritimeTrade maritimeTrade = gson.fromJson(json, MaritimeTrade.class);
+		
+		ResourceType input = ResourceType.valueOf(maritimeTrade.getInputResource());
+		ResourceType output = ResourceType.valueOf(maritimeTrade.getOutputResource());
+		
+		return ServerFacade.instance().maritimeTrade(gameId, maritimeTrade.getPlayerIndex(), maritimeTrade.getRatio(), input, output);
 	}
 
 }

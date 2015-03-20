@@ -77,7 +77,7 @@
 			<classpath refid="java.lib.classpath" />
 			<packageset dir="${java.src.dir}">
 				<include name="client/**"/>
-        <include name="server/**"/>
+        			<include name="server/**"/>
 				<include name="shared/**"/>
 			</packageset>
 		</javadoc>

@@ -1,8 +1,20 @@
-Mar 18, 2015 4:30:32 PM server.Server run
-INFO: Initializing Model
-Mar 18, 2015 4:30:32 PM server.Server run
+Mar 20, 2015 4:35:56 PM server.Server run
 INFO: Initializing HTTP Server
-Mar 18, 2015 4:30:32 PM server.Server run
+Mar 20, 2015 4:35:56 PM server.Server run
 INFO: Starting HTTP Server
-Mar 18, 2015 4:30:32 PM server.Server main
+Mar 20, 2015 4:35:56 PM server.Server main
 INFO: Server running on port: 8081
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login
+Mar 20, 2015 4:36:18 PM server.handler.Handler logInfo
+INFO: Request: /user/login

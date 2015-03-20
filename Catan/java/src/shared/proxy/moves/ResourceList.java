@@ -1,4 +1,9 @@
 package shared.proxy.moves;
+
+import shared.definitions.ResourceType;
+import shared.model.cards.ResourceCard;
+import shared.model.cards.ResourceCardDeck;
+
 /**
  * Used to offer trades
  * @author Kent
@@ -84,6 +89,65 @@ public class ResourceList {
 		this.wood = wood;
 	}
 	
+	/**
+	 * Converts the resource list to a resource Deck
+	 * @return a ResourceCardDeck with as many cards of each type as there existed positive numbers of them in the ResourceList
+	 */
+	public ResourceCardDeck getResourceDeck() {
+		ResourceCardDeck deck = new ResourceCardDeck();
+		
+		for (int i = 0; i < brick; i++) {
+			deck.addResourceCard(new ResourceCard(ResourceType.BRICK));
+		}
+		
+		for (int i = 0; i < ore; i++) {
+			deck.addResourceCard(new ResourceCard(ResourceType.ORE));
+		}
+		
+		for (int i = 0; i < sheep; i++) {
+			deck.addResourceCard(new ResourceCard(ResourceType.SHEEP));
+		}
+		
+		for (int i = 0; i < wheat; i++) {
+			deck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
+		}
+		
+		for (int i = 0; i < wood; i++) {
+			deck.addResourceCard(new ResourceCard(ResourceType.WOOD));
+		}
+		
+		return deck;
+	}
+
+	/**
+	 * Does the same thing as getResourceDeck except with the negative numbers
+	 * @return a ResourceCardDeck with as many cards of each type as there existed negative cards in the ResourceList
+	 */
+	public ResourceCardDeck getReceiverDeck() {
+		ResourceCardDeck deck = new ResourceCardDeck();
+		
+		for (int i = 0; i > brick; i--) {
+			deck.addResourceCard(new ResourceCard(ResourceType.BRICK));
+		}
+		
+		for (int i = 0; i > ore; i--) {
+			deck.addResourceCard(new ResourceCard(ResourceType.ORE));
+		}
+		
+		for (int i = 0; i > sheep; i--) {
+			deck.addResourceCard(new ResourceCard(ResourceType.SHEEP));
+		}
+		
+		for (int i = 0; i > wheat; i--) {
+			deck.addResourceCard(new ResourceCard(ResourceType.WHEAT));
+		}
+		
+		for (int i = 0; i > wood; i--) {
+			deck.addResourceCard(new ResourceCard(ResourceType.WOOD));
+		}
+		
+		return deck;
+	}
 	
 	
 }
