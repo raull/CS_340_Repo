@@ -14,8 +14,8 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.User;
 import shared.model.facade.ModelFacade;
-
 /**
  * Facade of the server to make all operations to an specific game.
  * @author raulvillalpando
@@ -52,8 +52,17 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
-		//if a user does not exist in the user manager with the given name and password
-			//throw exception
+		boolean exists = false;
+		for (User u: userManager.getUsers()){
+			if (u.getName().equals(username)){
+				if (u.getPassword().equals(password))
+					exists = true;	
+			}
+		}
+		
+		if (!exists){
+			throw new ServerInvalidRequestException();
+		}
 		//else the user cookie needs to be set for the client (done in handlers?)
 		
 		return null;
