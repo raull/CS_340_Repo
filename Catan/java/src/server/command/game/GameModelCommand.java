@@ -1,6 +1,9 @@
 package server.command.game;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.user.Credentials;
 
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
@@ -14,14 +17,12 @@ public class GameModelCommand extends ServerCommand {
 
 	public GameModelCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		int version = gson.fromJson(json, int.class); //Not sure if this will work...
+		return ServerFacade.instance().getModel(version, super.gameId);
 	}
 
 }
