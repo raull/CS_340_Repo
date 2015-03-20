@@ -522,12 +522,25 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
-		//if can offer trade
-			//add a trade offer to model
-		//else throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		User receivingUser = turnManager.getUserFromIndex(receiver);
 		
-		//return new model
-		return null;
+		TradeOffer tradeOffer = new TradeOffer(receiverDeck, senderDeck);
+		
+		if(modelFacade.canOfferTrade(turnManager, user, receivingUser, tradeOffer)) {
+			modelFacade.getModel().setTradeOffer(tradeOffer);
+			String logSource = user.getName();
+			String logMessage = user.getName() + " offered a trade to" + receivingUser.getName() + ".";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		return getModel(0, gameId);
 	}
 	
 	/**
