@@ -117,5 +117,11 @@ public class Map {
 		this.portsOnMap = portsOnMap;
 	}
 	
+	public void addCity(Building city){
+		citiesOnMap.add(city);
+	}
 	
+	public void removeSettlement(Building setllement){
+		settlementsOnMap.remove(setllement);
+	}
 }

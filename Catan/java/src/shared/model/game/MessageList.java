@@ -15,4 +15,7 @@ public class MessageList {
 		lines = messages;
 	}
 	
+	public void addLine(MessageLine line){
+		lines.add(line);
+	}
 }
