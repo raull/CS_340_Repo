@@ -2,6 +2,7 @@ package server.handler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import server.command.ServerCommand;
@@ -41,7 +42,7 @@ public class Handler implements HttpHandler{
 			arg0.getResponseBody().close();
 			arg0.close();
 		} catch(ServerInvalidRequestException e1){
-			e1.printStackTrace();
+			this.logError(e1.getMessage());
 		}
 	}
 	
@@ -52,6 +53,18 @@ public class Handler implements HttpHandler{
 	private void logInfo(String s){
 		if(logger!=null){
 			logger.info(s);
+		}
+		else{
+			System.out.println("WARNING: Logger never intialized");
+		}
+	}
+	
+	private void logError(String s){
+		if(logger!=null){
+			logger.log(Level.SEVERE, s);
+		}
+		else{
+			System.out.println("WARNING: Logger never intialized");
 		}
 	}
 
