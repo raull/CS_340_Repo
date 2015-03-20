@@ -402,17 +402,71 @@ public class ServerFacade {
 	 */
 	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
 	{
-		//if can play dev card
-			//count the total number of cards of the specific resource in any player's hand
-			//set the player to have that number of that resource
-			//set every other player to have 0 of that resource
-			//subtract 1 from the player's monopoly cards
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new Model
+		DevCard devCard = new DevCard(DevCardType.MONOPOLY);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayMonopoly(turnManager, user, resource)) {
+			//get total number of resources from users besides currUser
+			int totalResources = getResourceCount(turnManager.getUsers(), playerIndex, resource);
+			//remove resources from other players
+			removeAllResource(turnManager.getUsers(), playerIndex, resource);
+			//give the user all those cards
+			for(int i = 0; i < totalResources; i++) {
+				user.getResourceCards().addResourceCard(new ResourceCard(resource));
+			}
+			//remove user's monopoly card
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played monopoly.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
 		return null;
+	}
+	
+	/**
+	 * counts the total number of cards of a given resource all users have. 
+	 * used for monopoly
+	 * @param userIndex
+	 * @return
+	 */
+	private int getResourceCount(List<User> users, int userIndex, ResourceType resource) {
+		int total = 0;
+		for(User user : users) {
+			if(user.getTurnIndex() == userIndex) {
+				continue;
+			}
+			total += user.getResourceCards().getCountByType(resource);
+		}
+		return total;
+	}
+	
+	/**
+	 * removes all of one type of resource from user's resource deck
+	 * used for monopoly
+	 * @param users
+	 * @param userIndex
+	 * @param resource
+	 */
+	private void removeAllResource(List<User> users, int userIndex, ResourceType resource) {
+		for(User user : users) {
+			if(user.getTurnIndex() == userIndex) {
+				continue;
+			}
+			for(int i = 0; i < user.getResourceCards().getCountByType(resource); i++) {
+				user.getResourceCards().removeResourceCard(new ResourceCard(resource));
+			}
+		}
 	}
 	
 	/**
