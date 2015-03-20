@@ -77,5 +77,9 @@ public class Game {
 		this.modelFacade = modelFacade;
 	}
 	
+	public int getLongestRoadPlayer() {
+		return -1; //returns -1 when no one has longest road
+	}
+	
 	
 }

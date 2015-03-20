@@ -389,7 +389,32 @@ public class ServerFacade {
 			//throw exception
 		
 		//return new model
-		return null;
+		
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		DevCard devCard = new DevCard(DevCardType.ROAD_BUILD);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayRoadBuilding(turnManager, user)) {
+			//subtract 2 from user's unused roads
+			user.setUnusedRoads(user.getUnusedRoads() - 2);
+			//subtract 1 from player's road building
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//let player build two roads on given edges
+			
+			//re calculate longest road
+			int longestRoadPlayer = game.getLongestRoadPlayer(); 
+			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played road building and built two roads.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -431,7 +456,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException();
 		}
 		
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**
