@@ -23,7 +23,7 @@ public abstract class ServerCommand{
 	
 	protected HttpExchange httpObj;
 	protected int gameId;
-	protected int playerIndex;
+	protected int playerId;
 	protected Gson gson = new Gson();
 	protected String json;
 	
@@ -71,7 +71,7 @@ public abstract class ServerCommand{
 				String finalChunk = decoded.substring(decoded.indexOf("playerID"));
 				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, decoded.indexOf("=") +1);
 				//System.out.println("PlayerIndex : " + id);
-				this.playerIndex = Integer.parseInt(id);
+				this.playerId = Integer.parseInt(id);
 			} else if (string.contains("catan.game")) {
 				String decoded = URLDecoder.decode(string, "UTF-8");
 				//System.out.println("Decoded gameID: " + decoded);
