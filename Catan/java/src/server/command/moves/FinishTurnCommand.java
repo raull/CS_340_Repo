@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls finish turn command on server facade
+ * @author rental
+ *
+ */
 public class FinishTurnCommand extends ServerCommand {
 
 	public FinishTurnCommand(HttpExchange arg0) {
