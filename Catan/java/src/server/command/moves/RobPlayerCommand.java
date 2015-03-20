@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls rob player command on server facade
+ * @author thyer
+ *
+ */
 public class RobPlayerCommand extends ServerCommand {
 
 	public RobPlayerCommand(HttpExchange arg0) {

@@ -1,9 +1,7 @@
 package shared.proxy;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -22,6 +20,7 @@ import shared.proxy.games.*;
 import shared.proxy.moves.*;
 import shared.proxy.user.*;
 import shared.proxy.util.*;
+import shared.utils.StringUtils;
 
 /**
  * Proxy used by the client to send commands to the server
@@ -56,23 +55,8 @@ public class ServerProxy implements Proxy{
 
 	public JsonElement getJson(InputStream input) throws UnsupportedEncodingException{
 		
-		JsonElement element = gson.fromJson (getString(input), JsonElement.class);
+		JsonElement element = gson.fromJson (StringUtils.getString(input), JsonElement.class);
 		return element;
-	}
-	
-	public String getString(InputStream input) throws UnsupportedEncodingException {
-		
-		BufferedReader streamReader = new BufferedReader(new InputStreamReader(input, "UTF-8")); 
-	    StringBuilder responseStrBuilder = new StringBuilder();
-
-	    String inputStr;
-	    try {
-			while ((inputStr = streamReader.readLine()) != null)
-			    responseStrBuilder.append(inputStr);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	    return responseStrBuilder.toString();
 	}
 	
 	private JsonElement doGet(String urlPath) throws ProxyException{
@@ -87,7 +71,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(getString(connection.getErrorStream()));
+				throw new ProxyException(StringUtils.getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("doGet failed: %s (http code %d)",
@@ -117,7 +101,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(getString(connection.getErrorStream()));
+				throw new ProxyException(StringUtils.getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
@@ -157,7 +141,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(getString(connection.getErrorStream()));
+				throw new ProxyException(StringUtils.getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("Request failed: (http code %d)",
@@ -193,7 +177,7 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
-				throw new ProxyException(getString(connection.getErrorStream()));
+				throw new ProxyException(StringUtils.getString(connection.getErrorStream()));
 			}
 			else{
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",

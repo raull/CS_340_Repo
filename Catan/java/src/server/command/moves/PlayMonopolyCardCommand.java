@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * calls play monopolycard on server facade
+ * @author thyer
+ *
+ */
 public class PlayMonopolyCardCommand extends ServerCommand {
 
 	public PlayMonopolyCardCommand(HttpExchange arg0) {

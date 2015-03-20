@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls play monument card on server facade
+ * @author thyer
+ *
+ */
 public class PlayMonumentCardCommand extends ServerCommand {
 
 	public PlayMonumentCardCommand(HttpExchange arg0) {
