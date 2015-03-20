@@ -207,6 +207,8 @@ public class ServerFacade {
 		//add the new chat message to the list of chats
 		chat.addMessage(new MessageLine(message, user.getName()));
 		
+		this.updateModelVersion(gameId);
+		
 		return getModel(0, gameId); //new version of the model
 	}
 	
