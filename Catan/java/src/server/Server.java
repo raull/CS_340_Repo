@@ -43,7 +43,7 @@ public class Server {
 		consoleHandler.setFormatter(new SimpleFormatter());
 		logger.addHandler(consoleHandler);
 
-		FileHandler fileHandler = new FileHandler("log.txt", false);
+		FileHandler fileHandler = new FileHandler("logs/log.txt", false);
 		fileHandler.setLevel(logLevel);
 		fileHandler.setFormatter(new SimpleFormatter());
 		logger.addHandler(fileHandler);
