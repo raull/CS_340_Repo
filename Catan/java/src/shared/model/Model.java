@@ -133,7 +133,7 @@ public class Model {
 	public JsonElement serialize() {
 		JsonObject serializedModel = new JsonObject();
 		//first add the bank's resource list
-		JsonElement bankJson = serializeBankResources();
+		JsonElement bankJson = serializeResourceList(bank.getResourceDeck());
 		serializedModel.add("bank", bankJson);
 		//set the chat messages json
 		JsonElement chatJson = serializeMessageList(chat);
@@ -145,53 +145,41 @@ public class Model {
 		JsonElement mapJson = serializeMap();
 		serializedModel.add("map", mapJson);
 		//set the players json
+		JsonElement usersJson = serializePlayers();
+		serializedModel.add("players", usersJson);
 		//set a trade offer if there is one
+		if(this.tradeOffer != null) {
+			//serialize the trade offer
+			JsonElement tradeJson = serializeTradeOffer();
+			serializedModel.add("tradeOffer", tradeJson);
+		}
 		//set the turn tracker
+		JsonElement turnJson = serializeTurnTracker();
+		serializedModel.add("turnTracker", turnJson);
 		//set the model version number
+		serializedModel.add("version", new JsonPrimitive(this.version));
 		//set the winner
+		serializedModel.add("winner", new JsonPrimitive(scoreKeeper.getWinner()));
 		return serializedModel;
 	}
 	
 	/**
-	 * serializes the bank's resources
-	 * @return json element
+	 * serialize a resource list
+	 * @param resourceDeck 
+	 * @return json resource list
 	 */
-	public JsonElement serializeBankResources() {
-		JsonObject bankResources = new JsonObject();
-		List<ResourceCard> bankResourceDeck = bank.getResourceDeck().getAllResourceCards();
+	public JsonElement serializeResourceList(ResourceCardDeck resourceDeck) {
+		JsonObject jsonResources = new JsonObject();
 		
-		int brickCards = 0;
-		int oreCards = 0;
-		int sheepCards = 0;
-		int wheatCards = 0;
-		int woodCards = 0;
+		jsonResources = new JsonObject();
+		jsonResources.add("brick", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.BRICK)));
+		jsonResources.add("ore", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.ORE)));
+		jsonResources.add("sheep", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.SHEEP)));
+		jsonResources.add("wheat", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.WHEAT)));
+		jsonResources.add("wood", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.WOOD)));
+	
 		
-		for(ResourceCard card : bankResourceDeck) {
-			switch(card.type) {
-				case BRICK:
-					brickCards++;
-					break;
-				case ORE: 
-					oreCards++;
-					break;
-				case SHEEP:
-					sheepCards++;
-					break;
-				case WHEAT:
-					wheatCards++;
-					break;
-				case WOOD:
-					woodCards++;
-					break;
-			}
-		}
-		
-		bankResources.add("brick", new JsonPrimitive(brickCards));
-		bankResources.add("ore", new JsonPrimitive(oreCards));
-		bankResources.add("sheep", new JsonPrimitive(sheepCards));
-		bankResources.add("wheat", new JsonPrimitive(wheatCards));
-		bankResources.add("wood", new JsonPrimitive(woodCards));
-		return bankResources;
+		return jsonResources;
 	}
 	
 	/**
@@ -403,9 +391,10 @@ public class Model {
 		List<User> users = turnManager.getUsers();
 		JsonArray jsonUsers = new JsonArray();
 		for(User user : users) {
-			
+			JsonElement jsonUser = serializePlayer(user);
+			jsonUsers.add(jsonUser);
 		}
-		return null;
+		return jsonUsers;
 	}
 	
 	/**
@@ -414,34 +403,29 @@ public class Model {
 	 */
 	public JsonElement serializePlayer(User user) {
 		JsonObject jsonUser = new JsonObject();
-		//user's unused cities
 		jsonUser.add("cities", new JsonPrimitive(user.getUnusedCities()));
-		//color
 		jsonUser.add("color", new JsonPrimitive(user.getCatanColor().name()));
-		//discarded bool
 		jsonUser.add("discarded", new JsonPrimitive(user.getHasDiscarded()));
-		//monuments played
 		jsonUser.add("monuments", new JsonPrimitive(user.getMonumentsPlayed()));
-		//name
 		jsonUser.add("name", new JsonPrimitive(user.getName()));
-		//dev cards player bought this turn
 		jsonUser.add("newDevCards", serializeDevCards(user.getNewDevCardDeck()));
-		//dev cards player had when turn started
 		jsonUser.add("oldDevCards", serializeDevCards(user.getUsableDevCardDeck()));
-		//player index
 		jsonUser.add("playerIndex", new JsonPrimitive(user.getTurnIndex()));
-		//played dev card boolean
 		jsonUser.add("playedDevCard", new JsonPrimitive(user.getHasPlayedDevCard()));
-		//player id
 		jsonUser.add("playerID", new JsonPrimitive(user.getPlayerID()));
-		//resources player has
-		//user's unused roads
-		//user's unused settlements
-		//user's soldiers
-		//user's victory points
-		return null;
+		jsonUser.add("resources", serializeResourceList(user.getResourceCards()));
+		jsonUser.add("roads", new JsonPrimitive(user.getUnusedRoads()));
+		jsonUser.add("settlements", new JsonPrimitive(user.getUnusedSettlements()));
+		jsonUser.add("soldiers", new JsonPrimitive(user.getSoldiers()));
+		jsonUser.add("victoryPoints", new JsonPrimitive(user.getVictoryPoints()));
+		return jsonUser;
 	}
 	
+	/**
+	 * help serialize the dev card decks
+	 * @param devCards
+	 * @return
+	 */
 	public JsonElement serializeDevCards(DevCardDeck devCards) {
 		JsonObject jsonDevCards = new JsonObject();
 		jsonDevCards.add("monopoly", new JsonPrimitive(devCards.getCountByType(DevCardType.MONOPOLY)));
@@ -451,6 +435,58 @@ public class Model {
 		jsonDevCards.add("yearOfPlenty", new JsonPrimitive(devCards.getCountByType(DevCardType.YEAR_OF_PLENTY)));
 		return jsonDevCards;
 	}
+	
+	/**
+	 * serialize the trade offer
+	 * @return json of trade offer
+	 */
+	public JsonElement serializeTradeOffer() {
+		JsonObject jsonTrade = new JsonObject();
+		jsonTrade.add("sender", new JsonPrimitive(tradeOffer.getSenderIndex()));
+		jsonTrade.add("receiver", new JsonPrimitive(tradeOffer.getReceiverIndex()));
+		//offer resource list, pos = offered, neg = asked for
+		jsonTrade.add("offer", serializeOfferList());
+		return jsonTrade;
+	}
+	
+	public JsonElement serializeOfferList() {
+		int brick = getResourceCount(ResourceType.BRICK, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int ore = getResourceCount(ResourceType.ORE, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int sheep = getResourceCount(ResourceType.SHEEP, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int wheat = getResourceCount(ResourceType.WHEAT, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int wood = getResourceCount(ResourceType.WOOD, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		
+		JsonObject jsonOffer = new JsonObject();
+		
+		jsonOffer.add("brick", new JsonPrimitive(brick));
+		jsonOffer.add("ore", new JsonPrimitive(ore));
+		jsonOffer.add("sheep", new JsonPrimitive(sheep));
+		jsonOffer.add("wheat", new JsonPrimitive(wheat));
+		jsonOffer.add("wood", new JsonPrimitive(wood));
+		
+		return jsonOffer;
+	}
+	
+	public int getResourceCount(ResourceType resource, ResourceCardDeck sendDeck, ResourceCardDeck recDeck) {
+		int sendCount = sendDeck.getCountByType(resource);
+		int recCount = recDeck.getCountByType(resource);
+		if(sendCount >= recCount) {
+			return sendCount;
+		}
+		else{
+			return recCount * -1;
+		}
+	}
+	
+	public JsonElement serializeTurnTracker() {
+		JsonObject jsonTurn = new JsonObject();
+		jsonTurn.add("currentTurn", new JsonPrimitive(turnManager.getCurrentTurn()));
+		jsonTurn.add("status", new JsonPrimitive(turnManager.currentTurnPhase().name()));
+		jsonTurn.add("longestRoad", new JsonPrimitive(scoreKeeper.getLongestRoadUser()));
+		jsonTurn.add("largestArmy", new JsonPrimitive(scoreKeeper.getLargestArmyUser()));
+		return jsonTurn;
+	}
+	
 	
 	/**
 	 * deserialize the model from the JSON response
