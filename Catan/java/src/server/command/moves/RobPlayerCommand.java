@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.RobPlayer;
 
 /**
  * Calls rob player command on server facade
@@ -14,14 +17,13 @@ public class RobPlayerCommand extends ServerCommand {
 
 	public RobPlayerCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		RobPlayer robPlayer = gson.fromJson(json, RobPlayer.class);
+		return ServerFacade.instance().robPlayer(gameId, robPlayer.getPlayerIndex(), robPlayer.getVictimIndex(), robPlayer.getLocation(), false);
 	}
 
 }

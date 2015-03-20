@@ -16,6 +16,7 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.User;
 import shared.model.facade.ModelFacade;
 
 import shared.model.game.MessageLine;
@@ -62,13 +63,35 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
-		//if a user does not exist in the user manager with the given name and password
-			//throw exception
+		if (!isUser(username, password)){
+			throw new ServerInvalidRequestException();
+		}
+		
 		//else the user cookie needs to be set for the client (done in handlers?)
 		
 		return null;
 	}
 	
+	public boolean existsUser(String username, String password){
+		boolean exists = false;
+		for (User u: userManager.getUsers()){
+			if (u.getName().equals(username)){
+					exists = true;	
+			}
+		}
+		return exists;
+	}
+	
+	public boolean isUser(String username, String password){
+		boolean isUser = false;
+		for (User u: userManager.getUsers()){
+			if (u.getName().equals(username)){
+				if (u.getPassword().equals(password))
+					isUser = true;
+			}
+		}
+		return isUser;
+	}
 	/**
 	 * Creates a new player account, and logs them in to the server
 	 * @param username The user's username (case-sensitive)
@@ -77,11 +100,13 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
-		//if a user already exists in the usermanager with the given name and password
-			//throw exception
-		//else
-			//create a new user in the user manager
-			//set the user cookie for the client (done in handlers?)
+		if (existsUser(username, password)){
+			throw new ServerInvalidRequestException();
+		}
+		else{
+			userManager.addNewUser(username, password);
+		}
+			
 		
 		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
 		

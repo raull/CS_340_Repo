@@ -32,7 +32,7 @@ public class BuildSettlementCommand extends ServerCommand {
 		VertexDirection vertexDirection = VertexDirection.valueOf(vertexLocParam.getDirection());
 		VertexLocation vertexLocation = new VertexLocation(hexLoc, vertexDirection);
 		
-		return ServerFacade.instance().buildSettlement(gameId, playerId, vertexLocation, buildSettlement.isFree());
+		return ServerFacade.instance().buildSettlement(gameId, buildSettlement.getPlayerIndex(), vertexLocation, buildSettlement.isFree());
 
 	}
 

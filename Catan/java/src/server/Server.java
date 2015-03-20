@@ -43,7 +43,7 @@ public class Server {
 		consoleHandler.setFormatter(new SimpleFormatter());
 		logger.addHandler(consoleHandler);
 
-		FileHandler fileHandler = new FileHandler("log.txt", false);
+		FileHandler fileHandler = new FileHandler("logs/log.txt", false);
 		fileHandler.setLevel(logLevel);
 		fileHandler.setFormatter(new SimpleFormatter());
 		logger.addHandler(fileHandler);
@@ -86,7 +86,7 @@ public class Server {
 		server.start();
 	}
 
-	private Handler serverHandler = new Handler(true);
+	private Handler serverHandler = new Handler(false);
 
 	
 	public static void main(String[] args) {

@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.Soldier_;
 
 /**
  * Calls play soldier card on server facade
@@ -14,14 +17,13 @@ public class PlaySoldierCardCommand extends ServerCommand {
 
 	public PlaySoldierCardCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		Soldier_ soldier = gson.fromJson(json, Soldier_.class);
+		return ServerFacade.instance().robPlayer(gameId, soldier.getPlayerIndex(), soldier.getVictimIndex(), soldier.getLocation(), true);
 	}
 
 }

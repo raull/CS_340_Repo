@@ -160,6 +160,11 @@ public class User {
 		return password.getPassword();
 	}
 	
+	public void setPassword(String password) {
+		Password pwrd = new Password(password);
+		this.password = pwrd;
+	}
+	
 	public Hand getHand(){
 		return hand;
 	}
