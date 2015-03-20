@@ -1,10 +1,8 @@
 package server.handler.factory;
 
 import server.command.ServerCommand;
-import server.command.game.GameAddAICommand;
 import server.command.game.GameCreateCommand;
 import server.command.game.GameJoinCommand;
-import server.command.game.GameListAICommand;
 import server.command.game.GameListCommand;
 import server.command.game.GameLoadCommand;
 import server.command.game.GameModelCommand;
@@ -70,10 +68,6 @@ public class HandlerCommandFactory implements CommandFactory{
 			return new GameModelCommand(arg0);
 		case "reset":
 			return new GameResetCommand(arg0);
-		case "addAI":
-			return new GameAddAICommand(arg0);
-		case "listAI":
-			return new GameListAICommand(arg0);
 		case "sendChat":
 			return new SendChatCommand(arg0);
 		case "rollNumber":
