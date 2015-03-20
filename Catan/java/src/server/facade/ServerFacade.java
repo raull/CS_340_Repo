@@ -554,15 +554,33 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
-		//get the game by id
+
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		ResourceCard wantedCard = new ResourceCard(receivingResource);
+		ArrayList<ResourceCard> offeredCards = new ArrayList<ResourceCard>();
+		for(int i = 0; i < ratio; i++) {
+			offeredCards.add(new ResourceCard(sendingResource));
+		}
+		ResourceCardDeck offeredCardsDeck = new ResourceCardDeck(offeredCards);
+		
 		//if can maritime trade
-			//subtract 1 of receiving resource type from bank
-			//bank gets ratio number of sending resource type
-			//user loses ratio number of sending resource type
-			//user gains 1 of receiving resource type
-		//else exception
-		//return new model
-		return null;
+		if(modelFacade.canMaritimeTrade(turnManager, modelFacade.bank(), user, wantedCard, offeredCardsDeck)) {
+			modelFacade.bank().getResourceDeck().removeResourceCard(wantedCard);
+			for(ResourceCard card : offeredCards) {
+				modelFacade.bank().getResourceDeck().addResourceCard(card);
+				user.getResourceCards().removeResourceCard(card);
+			}
+			user.getResourceCards().addResourceCard(wantedCard);
+			
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		return getModel(0, gameId);
 	}
 	
 	/**
