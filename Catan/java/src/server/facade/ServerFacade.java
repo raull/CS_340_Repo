@@ -1,5 +1,6 @@
 package server.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
@@ -12,6 +13,7 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
@@ -573,16 +575,45 @@ public class ServerFacade {
 	 */
 	public JsonElement discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
 	{
-		//if can discard cards
-			//subtract the resources in the given resource card deck from the player
-			//add the same resources to the resource bank
-			//if all players who needed to discard have now discarded (how are we going to determine this)
-				//update turn phase to now be robbing
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
 		
-		//return new model
-		return null;
+		if(modelFacade.canDiscardCards(turnManager, user, resources)) {
+			//subtract the resources in the given resource card deck from the player
+			for(ResourceCard card : resources) {
+				user.getResourceCards().removeResourceCard(card);
+			}
+			//add the same resources to the resource bank
+			for(ResourceCard card : resources) {
+				modelFacade.bank().getResourceDeck().addResourceCard(card);
+			}
+			//set the user's discard bool to true
+			user.setHasDiscarded(true);
+			//if all players who needed to discard have discarded
+			if(checkAllDiscarded(turnManager.getUsers())) {
+				modelFacade.updateTurnPhase(TurnPhase.ROBBING);
+			}
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		//need to return a new model?
+		return getModel(0, gameId);
+	}
+	
+	//helper function to check that all users have discarded
+	private boolean checkAllDiscarded(List<User> users) {
+		for(User user : users) {
+			//if user hasn't discarded but has more than 7 cards, return false
+			if(!user.getHasDiscarded() && user.getResourceCards().getAllResourceCards().size() > 7) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	
