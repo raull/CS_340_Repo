@@ -24,7 +24,7 @@ public class RobPlayer {
 	
 	/**
 	 * Constructor to instantiate the RobPlayer object.
-	 * @param playerIndex
+	 * @param playerId
 	 * @param victimIndex
 	 * @param location
 	 */

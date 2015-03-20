@@ -23,7 +23,7 @@ public abstract class ServerCommand{
 	
 	protected HttpExchange httpObj;
 	protected int gameId;
-	protected int playerIndex;
+	protected int playerId;
 	protected Gson gson = new Gson();
 	protected String json;
 	
@@ -33,7 +33,6 @@ public abstract class ServerCommand{
 	 */
 	public ServerCommand(HttpExchange arg0){
 		
-		System.out.println("Creating ServerCommand object");
 		httpObj = arg0;
 		httpObj.getRequestMethod();
 		
@@ -68,13 +67,20 @@ public abstract class ServerCommand{
 		
 		for (String string : parameters) {
 			if (string.contains("catan.user")) {
-				System.out.println("Catan user cookie received: " + string);
 				String decoded = URLDecoder.decode(string, "UTF-8");
-				System.out.println("Decoded: " + decoded);
+				String finalChunk = decoded.substring(decoded.indexOf("playerID"));
+				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, decoded.indexOf("=") +1);
+				//System.out.println("PlayerIndex : " + id);
+				this.playerId = Integer.parseInt(id);
 			} else if (string.contains("catan.game")) {
-				System.out.println("Catan game cookie received: " + string);
 				String decoded = URLDecoder.decode(string, "UTF-8");
-				System.out.println("Decoded: " + decoded);
+				//System.out.println("Decoded gameID: " + decoded);
+				String id = decoded.substring(decoded.indexOf("=") + 1);
+				//System.out.println("GameID: " + id);
+				if(id!=null && !id.equals("") && !id.equals("null")){
+					//System.out.println("Game ID not null");
+					this.gameId = Integer.parseInt(id);
+				}
 			}
 		}
 	}

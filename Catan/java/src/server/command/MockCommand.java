@@ -19,8 +19,6 @@ public class MockCommand extends ServerCommand{
 
 	public MockCommand(HttpExchange arg0) {
 		super(arg0);
-		System.out.println("HttpContext: " + arg0.getHttpContext().getPath());
-		System.out.println("URI: " + arg0.getRequestURI().toString());
 		String uri = arg0.getRequestURI().toString();
 		if(uri.equals("/user/register")||uri.equalsIgnoreCase("/user/login")){
 			//include login cookie in JSON
@@ -68,8 +66,6 @@ public class MockCommand extends ServerCommand{
 		String plaintext = "{\"name\":\"" + name + "\",\"password\":\"" + password + "\",\"playerID\":" + playerID + "}";
 		String encoded = URLEncoder.encode(plaintext, "UTF-8");
 		encoded = "catan.user=" + encoded + ";Path=/;";
-		//System.out.println("Plaintext cookie: " + plaintext);
-		//System.out.println("Encoded cookie: " + encoded);
 		return encoded;
 	}
 	

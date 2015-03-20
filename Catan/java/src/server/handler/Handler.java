@@ -2,6 +2,8 @@ package server.handler;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import server.command.ServerCommand;
 import server.exception.ServerInvalidRequestException;
@@ -20,6 +22,7 @@ public class Handler implements HttpHandler{
 	
 	CommandFactory factory;
 	private XStream xmlStream = new XStream(new DomDriver());
+	private Logger logger = null;
 	
 	public Handler(boolean testing){
 		if(testing)
@@ -30,20 +33,38 @@ public class Handler implements HttpHandler{
 
 	@Override
 	public void handle(HttpExchange arg0) throws IOException {
-		System.out.println("Handler received request: " + arg0.getRequestURI().toString());
 		ServerCommand event = factory.create(arg0);
-		System.out.println("ServerCommand created");
+		this.logInfo("Request: " + arg0.getRequestURI().toString());
 		try{
-			System.out.println("Preparing to execute request command");
 			JsonElement response = event.execute();
-			System.out.println("Command executed");
 			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getAsString().length());
-			System.out.println("Success headers sent");
 			xmlStream.toXML(response, arg0.getResponseBody());
 			arg0.getResponseBody().close();
 			arg0.close();
 		} catch(ServerInvalidRequestException e1){
-			e1.printStackTrace();
+			this.logError(e1.getMessage());
+		}
+	}
+	
+	public void setLogger(Logger l){
+		logger = l;
+	}
+	
+	private void logInfo(String s){
+		if(logger!=null){
+			logger.info(s);
+		}
+		else{
+			System.out.println("WARNING: Logger never intialized");
+		}
+	}
+	
+	private void logError(String s){
+		if(logger!=null){
+			logger.log(Level.SEVERE, s);
+		}
+		else{
+			System.out.println("WARNING: Logger never intialized");
 		}
 	}
 

@@ -60,20 +60,7 @@ public class Server {
 	 * Starts the server on the specified port (8081 is default).
 	 */
 	private void run() {
-		
-		logger.info("Initializing Model");
-		
-//		try {
-//			ServerFacade.initialize();	
-//			if(1>0){
-//				throw new ServerException("new exception");
-//			}
-//		}
-//		catch (ServerException e) {
-//			logger.log(Level.SEVERE, e.getMessage(), e);
-//			return;
-//		}
-		
+			
 		logger.info("Initializing HTTP Server");
 		
 		try {
@@ -88,6 +75,11 @@ public class Server {
 		server.setExecutor(null); // use the default executor
 		
 		server.createContext("/", serverHandler);
+		serverHandler.setLogger(logger);
+		
+		
+		server.createContext("/docs/api/data", new Handlers.JSONAppender(""));
+		server.createContext("/docs/api/view", new Handlers.BasicFile(""));
 		
 		logger.info("Starting HTTP Server");
 
@@ -108,4 +100,5 @@ public class Server {
 		logger.info("Server running on port: " + SERVER_PORT_NUMBER);
 	}
 
+	
 }
