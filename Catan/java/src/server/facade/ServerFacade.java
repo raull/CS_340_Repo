@@ -13,6 +13,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.facade.ModelFacade;
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -531,6 +532,14 @@ public class ServerFacade {
 		
 		//return new model
 		return null;
+	}
+	
+	public void updateModelVersion(int gameId)
+	{
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		model.incrementVersion();
 	}
 	
 	
