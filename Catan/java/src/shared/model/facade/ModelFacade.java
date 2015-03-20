@@ -2,6 +2,7 @@ package shared.model.facade;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Observable;
 
 import client.manager.ClientManager;
@@ -11,6 +12,7 @@ import com.google.gson.JsonElement;
 import shared.definitions.PieceType;
 import shared.locations.EdgeDirection;
 import shared.definitions.DevCardType;
+import shared.definitions.HexType;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
@@ -939,12 +941,20 @@ public class ModelFacade extends Observable{
 	public void givePlayersResourcesFromRoll(int roll) //TODO not finished yet
 	{
 		Collection<HexTile> tiles = this.map.getHexTiles();
+		List<User> users = this.turnManager.getUsers();
 		
 		for (HexTile hex : tiles)
 		{
-			if (hex.getNumber() == roll)
+			if (hex.getNumber() == roll && !hex.hasRobber())
 			{
-				
+				for (User user : users)
+				{
+					if (user.ownsAdjacentBuildingToHex(hex.getLocation()))
+					{
+						//identify what kind of building it was
+						HexType type = hex.getType();
+					}
+				}
 			}
 		}
 	}
