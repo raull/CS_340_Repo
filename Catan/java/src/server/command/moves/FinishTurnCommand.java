@@ -4,19 +4,26 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.FinishMove;
 
+/**
+ * Calls finish turn command on server facade
+ * @author rental
+ *
+ */
 public class FinishTurnCommand extends ServerCommand {
 
 	public FinishTurnCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		FinishMove finishMove = gson.fromJson(json, FinishMove.class);
+		return ServerFacade.instance().finishTurn(gameId, finishMove.getPlayerIndex());
 	}
 
 }

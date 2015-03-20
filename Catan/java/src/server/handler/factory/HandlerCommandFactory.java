@@ -6,7 +6,23 @@ import server.command.game.GameJoinCommand;
 import server.command.game.GameListCommand;
 import server.command.game.GameLoadCommand;
 import server.command.game.GameModelCommand;
+import server.command.game.GameResetCommand;
 import server.command.game.GameSaveCommand;
+import server.command.moves.BuildCityCommand;
+import server.command.moves.BuildRoadCommand;
+import server.command.moves.BuildSettlementCommand;
+import server.command.moves.BuyDevCardCommand;
+import server.command.moves.DiscardCardsCommand;
+import server.command.moves.FinishTurnCommand;
+import server.command.moves.MaritimeTradeCommand;
+import server.command.moves.OfferTradeCommand;
+import server.command.moves.PlayMonopolyCardCommand;
+import server.command.moves.PlayMonumentCardCommand;
+import server.command.moves.PlayRBCardCommand;
+import server.command.moves.PlaySoldierCardCommand;
+import server.command.moves.PlayYOPCardCommand;
+import server.command.moves.RollNumberCommand;
+import server.command.moves.SendChatCommand;
 import server.command.user.LoginCommand;
 import server.command.user.RegisterCommand;
 
@@ -50,6 +66,38 @@ public class HandlerCommandFactory implements CommandFactory{
 			return new GameLoadCommand(arg0);
 		case "model":
 			return new GameModelCommand(arg0);
+		case "reset":
+			return new GameResetCommand(arg0);
+		case "sendChat":
+			return new SendChatCommand(arg0);
+		case "rollNumber":
+			return new RollNumberCommand(arg0);
+		case "finishTurn":
+			return new FinishTurnCommand(arg0);
+		case "buyDevCard":
+			return new BuyDevCardCommand(arg0);
+		case "Year_of_Plenty":
+			return new PlayYOPCardCommand(arg0);
+		case "Road_Building":
+			return new PlayRBCardCommand(arg0);
+		case "Soldier":
+			return new PlaySoldierCardCommand(arg0);
+		case "Monopoly":
+			return new PlayMonopolyCardCommand(arg0);
+		case "Monument":
+			return new PlayMonumentCardCommand(arg0);
+		case "buildRoad":
+			return new BuildRoadCommand(arg0);
+		case "buildSettlement":
+			return new BuildSettlementCommand(arg0);
+		case "buildCity":
+			return new BuildCityCommand(arg0);
+		case "offerTrade":
+			return new OfferTradeCommand(arg0);
+		case "maritimeTrade":
+			return new MaritimeTradeCommand(arg0);
+		case "discardCards":
+			return new DiscardCardsCommand(arg0);
 		default:
 			break;
 		}

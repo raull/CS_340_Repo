@@ -5,6 +5,11 @@ import server.command.ServerCommand;
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
+/**
+ * Calls save on server facade
+ * @author rental
+ *
+ */
 public class GameSaveCommand extends ServerCommand {
 
 	public GameSaveCommand(HttpExchange arg0) {
