@@ -7,11 +7,11 @@ import com.google.gson.JsonElement;
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
+import server.user.UserManager;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
-import shared.model.Model;
 import shared.model.cards.ResourceCardDeck;
 
 /**
@@ -23,6 +23,7 @@ public class ServerFacade {
 	
 	private static ServerFacade instance;
 	private GameManager gameManager = new GameManager();
+	private UserManager userManager = new UserManager();
 	
 	private ServerFacade() {
 		
@@ -47,11 +48,13 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException 
 	 */
-	public void login(String username, String password) throws ServerInvalidRequestException 
+	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
 		//if a user does not exist in the user manager with the given name and password
 			//throw exception
 		//else the user cookie needs to be set for the client (done in handlers?)
+		
+		return null;
 	}
 	
 	/**
@@ -60,7 +63,7 @@ public class ServerFacade {
 	 * @param password The user's password (case-sensitive)
 	 * @throws ServerInvalidRequestException
 	 */
-	public void register(String username, String password) throws ServerInvalidRequestException 
+	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
 		//if a user already exists in the usermanager with the given name and password
 			//throw exception
@@ -69,6 +72,8 @@ public class ServerFacade {
 			//set the user cookie for the client (done in handlers?)
 		
 		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
+		
+		return null;
 	}
 	
 	/**
@@ -76,7 +81,7 @@ public class ServerFacade {
 	 * @return The list of games currently in progress
 	 * @throws ServerInvalidRequestException
 	 */
-	public List<Game> gameList() throws ServerInvalidRequestException 
+	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
 		//gets the list of games from the game manager
 		//at some point we need to be creating a specific JSON element here
@@ -113,9 +118,9 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public void joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
 	{
-		
+		return null;
 	}
 	
 	/**
@@ -538,5 +543,9 @@ public class ServerFacade {
 	
 	public GameManager getGameManager() {
 		return gameManager;
+	}
+	
+	public UserManager getUserManager() {
+		return userManager;
 	}
 }

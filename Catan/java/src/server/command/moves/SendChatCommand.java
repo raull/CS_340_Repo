@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls send chat on server facade
+ * @author thyer
+ *
+ */
 public class SendChatCommand extends ServerCommand {
 
 	public SendChatCommand(HttpExchange arg0) {

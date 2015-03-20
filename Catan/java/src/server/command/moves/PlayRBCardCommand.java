@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls play road building card on server facade
+ * @author thyer
+ *
+ */
 public class PlayRBCardCommand extends ServerCommand {
 
 	public PlayRBCardCommand(HttpExchange arg0) {
