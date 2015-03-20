@@ -64,7 +64,7 @@ public class ChatController extends Controller implements IChatController, Obser
 		{
 			String playerName = line.getSource();
 			//get player's color
-			User user = model.turnManager.getUserFromName(playerName);
+			User user = model.getTurnManager().getUserFromName(playerName);
 			
 			entries.add(new LogEntry(user.getCatanColor(), line.getMessage()));
 		}

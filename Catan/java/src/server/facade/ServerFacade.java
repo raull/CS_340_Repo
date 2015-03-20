@@ -18,6 +18,7 @@ import shared.model.cards.ResourceCardDeck;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
+import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 import shared.model.game.User;
@@ -530,16 +531,50 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
-		//if user can accept trade
-			//if user accepted trade
-				//current player and player trading swap specified resources
-			//else user rejected trade
 		
-		//else throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//trade offer is removed from model
+		TradeOffer tradeOffer = modelFacade.getModel().getTradeOffer();
 		
-		//return model
+		if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
+			if(accept) {
+				//trade offer goes through, swap resources
+				
+				User trader = turnManager.getUserFromIndex(tradeOffer.getSenderIndex());
+				ResourceCardDeck sendDeck = tradeOffer.getSendingDeck(); //deck trader offered
+				ResourceCardDeck receiveDeck = tradeOffer.getReceivingDeck(); // the deck the trader receives
+				
+				addResources(trader.getResourceCards(), receiveDeck);
+				removeResources(user.getResourceCards(), receiveDeck);
+				
+				addResources(user.getResourceCards(), sendDeck);
+				removeResources(trader.getResourceCards(), sendDeck);
+				
+				//update game log
+				String logSource = user.getName();
+				String logMessage = user.getName() + " accepted the trade.";
+				MessageLine logEntry = new MessageLine(logMessage, logSource);
+				modelFacade.addToGameLog(logEntry);
+			}
+			else{
+				//trade not accepted
+				//update game log
+				String logSource = user.getName();
+				String logMessage = user.getName() + " rejected the trade.";
+				MessageLine logEntry = new MessageLine(logMessage, logSource);
+				modelFacade.addToGameLog(logEntry);
+				
+			}
+			//remove trade offer from model
+			modelFacade.getModel().setTradeOffer(null);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
 		return null;
 	}
 	
@@ -570,10 +605,8 @@ public class ServerFacade {
 		//if can maritime trade
 		if(modelFacade.canMaritimeTrade(turnManager, modelFacade.bank(), user, wantedCard, offeredCardsDeck)) {
 			modelFacade.bank().getResourceDeck().removeResourceCard(wantedCard);
-			for(ResourceCard card : offeredCards) {
-				modelFacade.bank().getResourceDeck().addResourceCard(card);
-				user.getResourceCards().removeResourceCard(card);
-			}
+			addResources(modelFacade.bank().getResourceDeck(), offeredCardsDeck);
+			removeResources(user.getResourceCards(), offeredCardsDeck);
 			user.getResourceCards().addResourceCard(wantedCard);
 			
 		}
@@ -581,6 +614,20 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException();
 		}
 		return getModel(0, gameId);
+	}
+	
+	//helper function to remove cards from a resource deck
+	private void removeResources(ResourceCardDeck cardsToRemove, ResourceCardDeck deckToRemoveFrom) {
+		for(ResourceCard card : cardsToRemove.getAllResourceCards()) {
+			deckToRemoveFrom.removeResourceCard(card);
+		}
+	}
+	
+	//helper function to add cards to a resource deck
+	private void addResources(ResourceCardDeck cardsToAdd, ResourceCardDeck deckToAddTo) {
+		for(ResourceCard card : cardsToAdd.getAllResourceCards()) {
+			deckToAddTo.addResourceCard(card);
+		}
 	}
 	
 	/**

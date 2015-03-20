@@ -44,15 +44,15 @@ import com.google.gson.JsonPrimitive;
 public class Model {
 	
 	//mostly according to the client model json spec
-	public Bank bank; //cards available to be distributed to the players
-	public MessageList chat; //all chat messages
-	public MessageList log; //all log messages
-	public Map map; //game map
-	public TradeOffer tradeOffer; //current trade offer, if there is one
-	public TurnManager turnManager; //the turntracker -- tracks who's turn it is
-	public int version; //version of the model, to see if up to date
-	public int winner; //-1 when nobody won yet. when someone wins, it's their order index
-	public ScoreKeeper scoreKeeper;
+	private Bank bank; //cards available to be distributed to the players
+	private MessageList chat; //all chat messages
+	private MessageList log; //all log messages
+	private Map map; //game map
+	private TradeOffer tradeOffer; //current trade offer, if there is one
+	private TurnManager turnManager; //the turntracker -- tracks who's turn it is
+	private int version; //version of the model, to see if up to date
+	private int winner; //-1 when nobody won yet. when someone wins, it's their order index
+	private ScoreKeeper scoreKeeper;
 	
 	private boolean isUpdating = false;
 	
@@ -101,7 +101,11 @@ public class Model {
 	public TradeOffer getTradeOffer() {
 		return tradeOffer;
 	}
-
+	
+	public void setTradeOffer(TradeOffer tradeOffer) {
+		this.tradeOffer = tradeOffer;
+	}
+	
 	public TurnManager getTurnManager() {
 		return turnManager;
 	}

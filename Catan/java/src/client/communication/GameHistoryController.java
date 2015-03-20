@@ -47,7 +47,7 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 		{
 			String playerName = line.getSource();
 			//get player's color
-			User user = model.turnManager.getUserFromName(playerName);
+			User user = model.getTurnManager().getUserFromName(playerName);
 
 			assert (user != null) : "the user was null for a particular history message";
 
