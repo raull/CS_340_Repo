@@ -14,7 +14,6 @@ public class PlayMonumentCardCommand extends ServerCommand {
 
 	public PlayMonumentCardCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.Monopoly_;
 
 /**
  * calls play monopolycard on server facade
@@ -18,10 +21,10 @@ public class PlayMonopolyCardCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException {
+		Monopoly_ monopoly = gson.fromJson(json, Monopoly_.class); 
+		
+		return ServerFacade.instance().playMonopoly(gameId, playerId, monopoly.getResource());
 	}
 
 }
