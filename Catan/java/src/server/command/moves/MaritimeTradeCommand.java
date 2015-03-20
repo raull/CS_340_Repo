@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls maritime trade on server facade
+ * @author thyer
+ *
+ */
 public class MaritimeTradeCommand extends ServerCommand {
 
 	public MaritimeTradeCommand(HttpExchange arg0) {

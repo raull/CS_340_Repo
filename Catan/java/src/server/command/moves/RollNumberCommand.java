@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls roll number on server facade
+ * @author thyer
+ *
+ */
 public class RollNumberCommand extends ServerCommand {
 
 	public RollNumberCommand(HttpExchange arg0) {

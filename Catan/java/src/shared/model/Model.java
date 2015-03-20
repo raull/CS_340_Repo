@@ -106,6 +106,11 @@ public class Model {
 	public int getVersion() {
 		return version;
 	}
+	
+	public void incrementVersion()
+	{
+		version++;
+	}
 
 	public int getWinner() {
 		return winner;
