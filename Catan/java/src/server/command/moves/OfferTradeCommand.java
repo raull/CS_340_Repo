@@ -4,6 +4,11 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.model.cards.ResourceCardDeck;
+import shared.proxy.moves.OfferTrade;
+import shared.proxy.moves.ResourceList;
 
 /**
  * calls offer trade on server facade
@@ -14,13 +19,15 @@ public class OfferTradeCommand extends ServerCommand {
 
 	public OfferTradeCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
+	public JsonElement execute() throws ServerInvalidRequestException {
+		OfferTrade offertrade = gson.fromJson(json, OfferTrade.class);
+		ResourceList rl = offertrade.getOffer();
+		ResourceCardDeck senderDeck = rl.getResourceDeck();
+		ResourceCardDeck receiverDeck = rl.getReceiverDeck();
+		return ServerFacade.instance().offerTrade(gameId, offertrade.getPlayerIndex(), offertrade.getReceiver(), senderDeck, receiverDeck);
 
 	}
 
