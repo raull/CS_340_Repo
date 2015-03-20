@@ -33,7 +33,6 @@ public abstract class ServerCommand{
 	 */
 	public ServerCommand(HttpExchange arg0){
 		
-		System.out.println("Creating ServerCommand object");
 		httpObj = arg0;
 		httpObj.getRequestMethod();
 		
