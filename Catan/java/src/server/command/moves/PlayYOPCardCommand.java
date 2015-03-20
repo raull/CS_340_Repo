@@ -5,6 +5,11 @@ import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 
+/**
+ * Calls play YOP card on server facade
+ * @author rental
+ *
+ */
 public class PlayYOPCardCommand extends ServerCommand {
 
 	public PlayYOPCardCommand(HttpExchange arg0) {

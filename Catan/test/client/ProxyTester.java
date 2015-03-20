@@ -62,6 +62,7 @@ public class ProxyTester
 		}
 		catch (ProxyException e)
 		{
+			e.printStackTrace();
 			fail();
 		}
 		
@@ -80,6 +81,7 @@ public class ProxyTester
 		}
 		catch(ProxyException e)
 		{
+			e.printStackTrace();
 			fail();
 		}
 		

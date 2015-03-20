@@ -3,6 +3,7 @@
 /bin/
 target/
 /Catan/demo/
+/Catan/logs/
  
 # OS Files #
 .DS_Store
@@ -65,4 +66,4 @@ local.properties
 # PDT-specific
 .buildpath
 .recommenders
-Catan/demo/logs/log_2015-01-13_22-30-25.log
+Catan/demo/logs/
