@@ -132,5 +132,4 @@ public class Map {
 	public void removeSettlement(Building setllement){
 		settlementsOnMap.remove(setllement);
 	}
-	
 }
