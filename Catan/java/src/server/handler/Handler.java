@@ -1,6 +1,7 @@
 package server.handler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 public class Handler implements HttpHandler{
 	
 	CommandFactory factory;
-	private XStream xmlStream = new XStream(new DomDriver());
 	private Logger logger = null;
 	
 	public Handler(boolean testing){
@@ -36,14 +36,23 @@ public class Handler implements HttpHandler{
 		ServerCommand event = factory.create(arg0);
 		this.logInfo("Request: " + arg0.getRequestURI().toString());
 		try{
+			System.out.println(event);
 			JsonElement response = event.execute();
-			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getAsString().length());
-			xmlStream.toXML(response, arg0.getResponseBody());
+//			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getAsString().length());
+			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+			//output stream throw in java string
+			PrintWriter writer = new PrintWriter(arg0.getResponseBody());
+			writer.print(response.getAsString());
+			System.out.println("response: " + response.getAsString());
 			arg0.getResponseBody().close();
 			arg0.close();
 		} catch(ServerInvalidRequestException e1){
 			this.logError(e1.getMessage());
 		}
+//		catch(Exception anythingelse) {
+//			anythingelse.printStackTrace();
+//			System.out.println("some sort exception happened: " + anythingelse.getLocalizedMessage());
+//		}
 	}
 	
 	public void setLogger(Logger l){

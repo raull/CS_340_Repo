@@ -13,9 +13,11 @@ import com.sun.net.httpserver.HttpHandler;
 
 public class Handlers {
 	public abstract static class BaseFile implements HttpHandler {
+		
 		private static Logger LOGGER = Logger.getLogger(BaseFile.class.getName());
 		
-		public BaseFile(String rootPath) { 
+		public BaseFile(String rootPath) {
+			System.out.println("handlers rootpath: " + rootPath);
 			this.rootPath = rootPath; 
 		}
 		protected String rootPath;
