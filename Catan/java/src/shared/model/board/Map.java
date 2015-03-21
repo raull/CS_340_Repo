@@ -120,5 +120,16 @@ public class Map {
 	public void addRoad(Road road) {
 		this.roadsOnMap.add(road);
 	}
+
+	public void addCity(Building city){
+		citiesOnMap.add(city);
+	}
 	
+	public void addSettlement(Building settlement){
+		settlementsOnMap.add(settlement);
+	}
+	
+	public void removeSettlement(Building setllement){
+		settlementsOnMap.remove(setllement);
+	}
 }

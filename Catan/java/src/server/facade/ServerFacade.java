@@ -10,16 +10,22 @@ import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
+
 import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
+
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+
 import shared.model.board.Edge;
 import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCard;
+import shared.model.board.Vertex;
+import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
 import shared.model.facade.ModelFacade;
@@ -28,8 +34,6 @@ import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
-import shared.model.game.User;
-
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -639,18 +643,50 @@ public class ServerFacade {
 	 */
 	public JsonElement buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
 	{
-		//if can buildsettlement
-			//subtract 1 from the player's available settlements
-			//place a settlement on the given vertex
-			//if not free
-				//subtract 1 wood, 1 brick, 1 sheep, and 1 wheat from the player's resources
-				//add those resources to the resource bank
-			//add 1 to the player's points
-			//update game history
-		//else
-			//throw exception
-	
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+		PieceType type = null;
+		
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, type.SETTLEMENT)
+				&& facade.canBuyPiece(tm, curUser, type.SETTLEMENT)){
+			
+			//Decrease available Settlements
+			curUser.setUnusedCities(curUser.getUnusedSettlements()-1);
+			
+			Building settlement = new Building();
+			settlement.setVertex(new Vertex(vertexLocation));
+			
+			//Add City to map
+			facade.getModel().getMap().addSettlement(settlement);
+			
+			//Pay the resources
+			curUser.setWheatCards(curUser.getWheatCards()-1);
+			curUser.setBrickCards(curUser.getBrickCards()-1);
+			curUser.setWoodCards(curUser.getWoodCards()-1);
+			curUser.setSheepCards(curUser.getSheepCards()-1);
+			
+			//Give to the bank
+			ResourceCardDeck bankRes = facade.bank().getResourceDeck();
+			ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
+			givenCards.add(ResourceType.BRICK);
+			givenCards.add(ResourceType.SHEEP);
+			givenCards.add(ResourceType.WHEAT);
+			givenCards.add(ResourceType.WOOD);
+			bankRes.addResources(givenCards);
+			
+			//Add points
+			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
+			
+			//Update history
+			String user = curUser.getName();
+			String message = user + "built a settlement";
+			MessageLine line = new MessageLine(message, user);
+			facade.getModel().getLog().addLine(line);
+		}
+		else{	
+			throw new ServerInvalidRequestException();
+		}
 		return null;
 	}
 	
@@ -662,20 +698,57 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException 
+	public JsonElement buildCity(int gameId, int playerIndex, 
+			VertexLocation vertexLocation) throws ServerInvalidRequestException 
 	{
-		//if can buildcity
-			//subtract 1 from the player's available cities
-			//place a city on the given vertex
-			//remove the settlement from the given vertex??
-			//subtract 2 wheat and 3 ore from the player's resources
-			//add those resources to the resource bank
-			//add 1 to player's points
-			//update game history
-		//else
-			//throw exception
-	
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+		PieceType type = null;
+		
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, type.CITY)
+				&& facade.canBuyPiece(tm, curUser, type.CITY)){
+			
+			//Decrease available Cities
+			curUser.setUnusedCities(curUser.getUnusedCities()-1);
+			//Increase available Settlements
+			curUser.setUnusedSettlements(curUser.getUnusedSettlements()+1);
+			
+			Building city = new Building();
+			city.setVertex(new Vertex(vertexLocation));
+			//Remove Settlement from vertex
+			facade.getModel().getMap().removeSettlement(city);
+			//Add City to map
+			facade.getModel().getMap().addCity(city);
+			
+			//Pay the resources
+			curUser.setOreCards(curUser.getOreCards()-3);
+			curUser.setWheatCards(curUser.getWheatCards()-2);
+			
+			//Give to the bank
+			ResourceCardDeck bankRes = facade.bank().getResourceDeck();
+			ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
+			for (int i = 0; i < 3; i++)
+				givenCards.add(ResourceType.ORE);
+			for (int i = 3; i < 5; i++)
+				givenCards.add(ResourceType.WHEAT);
+			bankRes.addResources(givenCards);
+			
+			//Add points
+			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
+			
+			//Update history
+			String user = curUser.getName();
+			String message = user + "built a city";
+			MessageLine line = new MessageLine(message, user);
+			facade.getModel().getLog().addLine(line);
+		}
+		else{	
+			throw new ServerInvalidRequestException();
+		}
+			
+			
+		
 		return null;
 	}
 	

@@ -30,4 +30,7 @@ public class MessageList {
 		lines.add(message);
 	}
 	
+	public void addLine(MessageLine line){
+		lines.add(line);
+	}
 }
