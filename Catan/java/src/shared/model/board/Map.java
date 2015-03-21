@@ -121,6 +121,10 @@ public class Map {
 		citiesOnMap.add(city);
 	}
 	
+	public void addSettlement(Building settlement){
+		settlementsOnMap.add(settlement);
+	}
+	
 	public void removeSettlement(Building setllement){
 		settlementsOnMap.remove(setllement);
 	}

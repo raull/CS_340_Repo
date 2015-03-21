@@ -422,18 +422,50 @@ public class ServerFacade {
 	 */
 	public JsonElement buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
 	{
-		//if can buildsettlement
-			//subtract 1 from the player's available settlements
-			//place a settlement on the given vertex
-			//if not free
-				//subtract 1 wood, 1 brick, 1 sheep, and 1 wheat from the player's resources
-				//add those resources to the resource bank
-			//add 1 to the player's points
-			//update game history
-		//else
-			//throw exception
-	
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+		PieceType type = null;
+		
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, type.SETTLEMENT)
+				&& facade.canBuyPiece(tm, curUser, type.SETTLEMENT)){
+			
+			//Decrease available Settlements
+			curUser.setUnusedCities(curUser.getUnusedSettlements()-1);
+			
+			Building settlement = new Building();
+			settlement.setVertex(new Vertex(vertexLocation));
+			
+			//Add City to map
+			facade.getModel().getMap().addSettlement(settlement);
+			
+			//Pay the resources
+			curUser.setWheatCards(curUser.getWheatCards()-1);
+			curUser.setBrickCards(curUser.getBrickCards()-1);
+			curUser.setWoodCards(curUser.getWoodCards()-1);
+			curUser.setSheepCards(curUser.getSheepCards()-1);
+			
+			//Give to the bank
+			ResourceCardDeck bankRes = facade.bank().getResourceDeck();
+			ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
+			givenCards.add(ResourceType.BRICK);
+			givenCards.add(ResourceType.SHEEP);
+			givenCards.add(ResourceType.WHEAT);
+			givenCards.add(ResourceType.WOOD);
+			bankRes.addResources(givenCards);
+			
+			//Add points
+			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
+			
+			//Update history
+			String user = curUser.getName();
+			String message = user + "built a settlement";
+			MessageLine line = new MessageLine(message, user);
+			facade.getModel().getLog().addLine(line);
+		}
+		else{	
+			throw new ServerInvalidRequestException();
+		}
 		return null;
 	}
 	
