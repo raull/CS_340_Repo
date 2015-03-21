@@ -77,5 +77,20 @@ public class Game {
 		this.modelFacade = modelFacade;
 	}
 	
+	/**
+	 * calculates which user has longest road, or no user
+	 * @return
+	 */
+	public int getLongestRoadPlayer() {
+		return -1; //returns -1 when no one has longest road
+	}
+	
+	/**
+	 * calculates which user has largest army, or no user
+	 * @return
+	 */
+	public int getLargestArmyPlayer() {
+		return -1;
+	}
 	
 }
