@@ -365,6 +365,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + " bought a development card.";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -406,6 +408,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + " played year of plenty.";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -449,6 +453,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + " played road building and built two roads.";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -491,6 +497,7 @@ public class ServerFacade {
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -561,6 +568,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + " played a monument and gained a point.";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -695,6 +704,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + " offered a trade to" + receivingUser.getName() + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -750,6 +761,8 @@ public class ServerFacade {
 			}
 			//remove trade offer from model
 			modelFacade.getModel().setTradeOffer(null);
+			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -794,6 +807,7 @@ public class ServerFacade {
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -846,6 +860,7 @@ public class ServerFacade {
 			if(checkAllDiscarded(turnManager.getUsers())) {
 				modelFacade.updateTurnPhase(TurnPhase.ROBBING);
 			}
+			updateModelVersion(gameId);
 		}
 		else{
 			throw new ServerInvalidRequestException();
