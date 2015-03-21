@@ -23,6 +23,7 @@ import shared.model.Model;
 import shared.model.board.Edge;
 import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
+import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
 
 import shared.model.board.Vertex;
@@ -35,6 +36,10 @@ import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
+
+import shared.model.game.TurnManager;
+import shared.model.game.TurnPhase;
+
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -321,19 +326,58 @@ public class ServerFacade {
 	 */
 	public JsonElement finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
-		//if can finish turn
-			//update the current turn index to be the next index
-				//this should be a separate function that needs to account for the special rules of the first and second rounds
-			//if the player has any dev cards they bought this turn, move them to the old devcards
-			//update the turn phase
-				//could be updated to rolling, firstround, or second round
-		//else
-			//throw exception
-		
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User user = tm.getUserFromIndex(playerIndex);
+		if (facade.canFinishTurn(tm, tm.getUserFromIndex(playerIndex))){
+			TurnPhase currentPhase = tm.currentTurnPhase();
+			
+			switch (currentPhase){
+			case PLAYING:
+				//if curr player has any dev cards they bought, add them to usable
+				user.getHand().moveNewToUsable();
+				
+				//update the user booleans -- hasDiscarded, hasPlayedDevCard
+				user.setHasDiscarded(false);
+				user.setHasPlayedDevCard(false);
+				
+				tm.setCurrentPhase(TurnPhase.ROLLING);
+				tm.setCurrentTurn(nextTurn(playerIndex));
+				break;
+			case FIRSTROUND:
+				if (tm.getCurrentTurn() != 3)
+					tm.setCurrentTurn(nextTurn(playerIndex));
+				else{
+					tm.setCurrentTurn(nextTurn(playerIndex));
+					tm.setCurrentPhase(TurnPhase.SECONDROUND);
+				}
+				break;
+			case SECONDROUND:
+				if (tm.getCurrentTurn() != 3)
+					tm.setCurrentTurn(nextTurn(playerIndex));
+				else{
+					tm.setCurrentTurn(nextTurn(playerIndex));
+					tm.setCurrentPhase(TurnPhase.ROLLING);
+				}
+			}
+			updateModelVersion(gameId);
+			
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
 		return null;
 	}
 	
+	public int nextTurn(int playerIndex){
+		int nextIndex = 0;
+		if (playerIndex == 3)
+			nextIndex = 0;
+		else{
+			nextIndex = playerIndex +1;
+		}
+		return nextIndex;
+	}
 	/**
 	 * Used for a player to buy a development card
 	 * @param game The game where the transaction is being made.
