@@ -117,5 +117,8 @@ public class Map {
 		this.portsOnMap = portsOnMap;
 	}
 	
+	public void addRoad(Road road) {
+		this.roadsOnMap.add(road);
+	}
 	
 }

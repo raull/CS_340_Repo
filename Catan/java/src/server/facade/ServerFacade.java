@@ -15,6 +15,8 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.board.Edge;
+import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
@@ -351,7 +353,8 @@ public class ServerFacade {
 	 * @param playerIndex
 	 * @return
 	 */
-	public JsonElement playSoldier(int gameId, int playerIndex) {
+	public JsonElement playSoldier(int gameId, int playerIndex) throws ServerInvalidRequestException
+	{
 		return null;
 	}
 	
@@ -365,17 +368,35 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
-	{
-		//if can play dev card
-			//add 1 of each of the specified resources to the player's resources
-			//subtract the same resources from the resource bank
-			//subtract one from the player's year of plenty cards
-			//update game history
-		//else
-			//throw exception
+	{	
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new model
-		return null;
+		DevCard devCard = new DevCard(DevCardType.YEAR_OF_PLENTY);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && 
+				modelFacade.canPlayYearofPlenty(turnManager, user, modelFacade.bank(), new ResourceCard(resource1), new ResourceCard(resource2))) {
+			//add 1 of each of the specified resources to the player's resources
+			user.getResourceCards().addResourceCard(new ResourceCard(resource1));
+			user.getResourceCards().addResourceCard(new ResourceCard(resource2));
+			//subtract the same resources from the resource bank
+			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource1));
+			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource2));
+			//subtract one from the player's year of plenty cards
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played year of plenty.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -388,18 +409,7 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
-	{
-		//if can play dev card
-			//subtract 2 from the player's available roads
-			//subtract 1 from the player's road building cards
-			//give the player roads on the 2 given edges
-			//check if longest road needs to be updated
-			//update game history
-		//else
-			//throw exception
-		
-		//return new model
-		
+	{	
 		Game game = gameManager.getGameById(gameId);
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
@@ -413,7 +423,8 @@ public class ServerFacade {
 			//subtract 1 from player's road building
 			user.getUsableDevCardDeck().removeDevCard(devCard);
 			//let player build two roads on given edges
-			
+			buildRoadHelper(modelFacade, playerIndex, location1);
+			buildRoadHelper(modelFacade, playerIndex, location2);
 			//re calculate longest road
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
 			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
@@ -422,6 +433,9 @@ public class ServerFacade {
 			String logMessage = user.getName() + " played road building and built two roads.";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+		}
+		else{
+			throw new ServerInvalidRequestException();
 		}
 		
 		return getModel(0, gameId);
@@ -551,7 +565,11 @@ public class ServerFacade {
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		if(modelFacade.canPlaceRoadAtLoc(turnManager, roadLocation, user)) {
-			
+			//create a new road
+			Road road = new Road();
+			road.setEdge(new Edge(roadLocation));
+			//add road to map
+			modelFacade.map().addRoad(road);
 		}
 		else{
 			throw new ServerInvalidRequestException(); 
@@ -754,6 +772,11 @@ public class ServerFacade {
 			addResources(modelFacade.bank().getResourceDeck(), offeredCardsDeck);
 			removeResources(user.getResourceCards(), offeredCardsDeck);
 			user.getResourceCards().addResourceCard(wantedCard);
+			
+			String logSource = user.getName();
+			String logMessage = user.getName() + " did a maritime trade.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
 			
 		}
 		else{
