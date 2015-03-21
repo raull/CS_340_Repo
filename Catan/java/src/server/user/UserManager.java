@@ -72,4 +72,14 @@ public class UserManager {
 		return Collections.unmodifiableList(users);
 	}
 	
+	public boolean userExists(String username, String password){
+		boolean exists = false;
+		for (User u: users){
+			if (u.getName().equals(username)){
+					exists = true;	
+			}
+		}
+		return exists;
+	}
+	
 }

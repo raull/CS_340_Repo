@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
@@ -18,13 +19,11 @@ import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
 import shared.model.facade.ModelFacade;
-
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
-import shared.model.game.User;
 
 
 /**
@@ -63,35 +62,13 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
-		if (!isUser(username, password)){
-			throw new ServerInvalidRequestException();
+		if (!userManager.userExists(username, password)){
+			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
-		
-		//else the user cookie needs to be set for the client (done in handlers?)
-		
-		return null;
+				
+		return new JsonPrimitive("Success");
 	}
 	
-	public boolean existsUser(String username, String password){
-		boolean exists = false;
-		for (User u: userManager.getUsers()){
-			if (u.getName().equals(username)){
-					exists = true;	
-			}
-		}
-		return exists;
-	}
-	
-	public boolean isUser(String username, String password){
-		boolean isUser = false;
-		for (User u: userManager.getUsers()){
-			if (u.getName().equals(username)){
-				if (u.getPassword().equals(password))
-					isUser = true;
-			}
-		}
-		return isUser;
-	}
 	/**
 	 * Creates a new player account, and logs them in to the server
 	 * @param username The user's username (case-sensitive)
@@ -100,17 +77,14 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
-		if (existsUser(username, password)){
-			throw new ServerInvalidRequestException();
+		if (userManager.userExists(username, password)){
+			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
 		else{
 			userManager.addNewUser(username, password);
 		}
-			
-		
-		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
-		
-		return null;
+					
+		return new JsonPrimitive("Success");
 	}
 	
 	/**
