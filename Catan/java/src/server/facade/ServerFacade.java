@@ -24,6 +24,7 @@ import shared.model.board.Edge;
 import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCard;
+
 import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
@@ -617,12 +618,44 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
-		//if can buildroad
-			//subtract 1 from the player's available roads
-			//place a road on the given edge
-			//if not free
-				//subtract 1 wood and 1 brick from the player's resources
-				//add those resources to the resource bank
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+
+		if (facade.canPlaceRoadAtLoc(tm, roadLocation, curUser) && 
+				facade.canBuyRoadForLoc(tm, roadLocation, curUser, free)){
+			
+			//Reduces by a road
+			curUser.setUnusedRoads(curUser.getUnusedRoads()-1);
+			
+			//Place the road
+			Road road = new Road();
+			road.setEdge(new Edge(roadLocation));
+			facade.getModel().getMap().addRoad(road);
+			
+			//Pay Resources
+			if (!free){
+				curUser.setBrickCards(curUser.getBrickCards()-1);
+				curUser.setWoodCards(curUser.getWoodCards()-1);
+				
+				//Give to the bank
+				ResourceCardDeck bankRes = facade.bank().getResourceDeck();
+				ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
+				givenCards.add(ResourceType.BRICK);
+				givenCards.add(ResourceType.WOOD);
+				bankRes.addResources(givenCards);
+			}
+			
+//			facade.setMostRoads();
+			
+			//Update history
+			String user = curUser.getName();
+			String message = user + "built a road";
+			MessageLine line = new MessageLine(message, user);
+			facade.getModel().getLog().addLine(line);
+			updateModelVersion(gameId);
+		}
+			
 			//check if player has gained longest road
 			//update game history
 		//else
@@ -641,7 +674,8 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
+	public JsonElement buildSettlement(int gameId, int playerIndex, 
+			VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
 	{
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
@@ -661,19 +695,21 @@ public class ServerFacade {
 			facade.getModel().getMap().addSettlement(settlement);
 			
 			//Pay the resources
-			curUser.setWheatCards(curUser.getWheatCards()-1);
-			curUser.setBrickCards(curUser.getBrickCards()-1);
-			curUser.setWoodCards(curUser.getWoodCards()-1);
-			curUser.setSheepCards(curUser.getSheepCards()-1);
+			if (!free){
+				curUser.setWheatCards(curUser.getWheatCards()-1);
+				curUser.setBrickCards(curUser.getBrickCards()-1);
+				curUser.setWoodCards(curUser.getWoodCards()-1);
+				curUser.setSheepCards(curUser.getSheepCards()-1);
 			
-			//Give to the bank
-			ResourceCardDeck bankRes = facade.bank().getResourceDeck();
-			ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
-			givenCards.add(ResourceType.BRICK);
-			givenCards.add(ResourceType.SHEEP);
-			givenCards.add(ResourceType.WHEAT);
-			givenCards.add(ResourceType.WOOD);
-			bankRes.addResources(givenCards);
+				//Give to the bank
+				ResourceCardDeck bankRes = facade.bank().getResourceDeck();
+				ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
+				givenCards.add(ResourceType.BRICK);
+				givenCards.add(ResourceType.SHEEP);
+				givenCards.add(ResourceType.WHEAT);
+				givenCards.add(ResourceType.WOOD);
+				bankRes.addResources(givenCards);
+			}
 			
 			//Add points
 			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
@@ -683,6 +719,8 @@ public class ServerFacade {
 			String message = user + "built a settlement";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
+			
+			updateModelVersion(gameId);
 		}
 		else{	
 			throw new ServerInvalidRequestException();
@@ -742,6 +780,8 @@ public class ServerFacade {
 			String message = user + "built a city";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
+			
+			updateModelVersion(gameId);
 		}
 		else{	
 			throw new ServerInvalidRequestException();
