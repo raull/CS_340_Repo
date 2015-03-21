@@ -1,5 +1,7 @@
 package server.command.user;
 
+import java.io.UnsupportedEncodingException;
+
 import server.command.ServerCommand;
 import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
@@ -24,8 +26,17 @@ public class RegisterCommand extends ServerCommand {
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
 		Credentials credentials = gson.fromJson(json, Credentials.class);
-		return ServerFacade.instance().register(credentials.getUsername(), credentials.getPassword());
-		
+		try {
+			JsonElement response = ServerFacade.instance().register(credentials.getUsername(), credentials.getPassword());
+			String encoded = getEncodedLoginCookie(credentials.getUsername(), credentials.getPassword(), "0");
+			httpObj.getResponseHeaders().add("Set-cookie", encoded);
+			return response;
+		} catch (ServerInvalidRequestException e) {
+			throw e;
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new ServerInvalidRequestException("Internal Error");
+		}
 	}
 
 }
