@@ -355,6 +355,13 @@ public class ServerFacade {
 	 */
 	public JsonElement playSoldier(int gameId, int playerIndex) throws ServerInvalidRequestException
 	{
+		//if can play dev card
+			//remove dev card from player
+			//let user move robber and rob a player
+			//give user a knight/soldier
+			//update largest army if needed
+		//else 
+			//throw exception
 		return null;
 	}
 	
