@@ -359,6 +359,14 @@ public class ServerFacade {
 					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.ROLLING);
 				}
+			case DISCARDING: //error, can't end turn at this phase
+				break;
+			case ROBBING:
+				break;
+			case ROLLING:
+				break;
+			default:
+				break;
 			}
 			updateModelVersion(gameId);
 			
