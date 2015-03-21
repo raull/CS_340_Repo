@@ -441,6 +441,7 @@ public class ServerFacade {
 			buildRoadHelper(modelFacade, playerIndex, location1);
 			buildRoadHelper(modelFacade, playerIndex, location2);
 			//re calculate longest road
+			game.calcLongestRoadPlayer();
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
 			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
 			//update game history
