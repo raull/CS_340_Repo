@@ -24,6 +24,7 @@ import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
+import shared.model.game.User;
 
 
 /**
@@ -213,6 +214,8 @@ public class ServerFacade {
 		//add the new chat message to the list of chats
 		chat.addMessage(new MessageLine(message, user.getName()));
 		
+		this.updateModelVersion(gameId);
+		
 		return getModel(0, gameId); //new version of the model
 	}
 	
@@ -263,7 +266,7 @@ public class ServerFacade {
 		}
 		
 		return getModel(0, gameId);
-	}
+}
 	
 	/**
 	 * Moves the robber, selecting the new robber position and player to rob.
