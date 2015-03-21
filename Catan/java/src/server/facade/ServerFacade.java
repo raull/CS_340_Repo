@@ -335,34 +335,39 @@ public class ServerFacade {
 	 */
 	public JsonElement buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
-		//if can buy dev card
-			//subtract 1 sheep, 1 wheat, and 1 ore from the player's resources
-			//add the same resources to the resource bank
-			//randomly add a dev card to the player's new dev cards from the dev card bank
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new Model
-		return null;
-	}
-	
-	/**
-	 * plays a soldier card 
-	 * @param gameId
-	 * @param playerIndex
-	 * @return
-	 */
-	public JsonElement playSoldier(int gameId, int playerIndex) throws ServerInvalidRequestException
-	{
-		//if can play dev card
-			//remove dev card from player
-			//let user move robber and rob a player
-			//give user a knight/soldier
-			//update largest army if needed
-		//else 
-			//throw exception
-		return null;
+		if(modelFacade.canBuyDevCard(turnManager, user, modelFacade.bank().getDevCardDeck())) {
+			
+			//remove resources from player
+			user.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.ORE));
+			user.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.SHEEP));
+			user.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.WHEAT));
+			
+			//add resources to bank
+			modelFacade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.ORE));
+			modelFacade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.SHEEP));
+			modelFacade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.WHEAT));
+			
+			//randomly give the user a dev card 
+			DevCard devCard = modelFacade.bank().getDevCardDeck().getRandomCard();
+			modelFacade.bank().getDevCardDeck().removeDevCard(devCard);
+			user.getNewDevCardDeck().addDevCard(devCard);
+			
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " bought a development card.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
