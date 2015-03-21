@@ -133,7 +133,4 @@ public class Map {
 		settlementsOnMap.remove(setllement);
 	}
 	
-	public void addRoad(Road road){
-		roadsOnMap.add(road);
-	}
 }
