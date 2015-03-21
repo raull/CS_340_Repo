@@ -909,4 +909,15 @@ public class ModelFacade extends Observable{
 		this.turnManager().setCurrentPhase(phase);
 	}
 	
+	public void setMostRoads(){
+		int mostRoads = 0;
+		User mostUser = null;
+		for (User u: turnManager().getUsers()){
+			if (u.getOccupiedEdges().size() > mostRoads){
+				mostRoads = u.getOccupiedEdges().size();
+				mostUser = u;
+			}	
+		}
+		turnManager.setLongestRoadIndex(mostUser.getTurnIndex());
+	}
 }
