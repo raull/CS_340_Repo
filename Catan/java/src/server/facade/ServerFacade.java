@@ -346,6 +346,16 @@ public class ServerFacade {
 	}
 	
 	/**
+	 * plays a soldier card 
+	 * @param gameId
+	 * @param playerIndex
+	 * @return
+	 */
+	public JsonElement playSoldier(int gameId, int playerIndex) {
+		return null;
+	}
+	
+	/**
 	 * Plays a 'Year of Plenty' card from your hand to gain the two specified resources.
 	 * @param game THe game where the card is being played.
 	 * @param playerIndex The index of the player playing the card.
@@ -527,6 +537,26 @@ public class ServerFacade {
 		}
 		
 		return getModel(0, gameId);
+	}
+	
+	/**
+	 * helper function that can be used by build road and road-build dev card
+	 * checks if user can place road at given edge, and update model
+	 * @param game
+	 * @param playerIndex
+	 * @param roadLocation
+	 * @throws ServerInvalidRequestException 
+	 */
+	private void buildRoadHelper(ModelFacade modelFacade, int playerIndex, EdgeLocation roadLocation) throws ServerInvalidRequestException {
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		if(modelFacade.canPlaceRoadAtLoc(turnManager, roadLocation, user)) {
+			
+		}
+		else{
+			throw new ServerInvalidRequestException(); 
+		}
+		
 	}
 	
 	/**
