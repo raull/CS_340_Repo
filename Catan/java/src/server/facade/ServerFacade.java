@@ -442,13 +442,11 @@ public class ServerFacade {
 		DevCard devCard = new DevCard(DevCardType.ROAD_BUILD);
 		
 		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayRoadBuilding(turnManager, user)) {
-			//subtract 2 from user's unused roads
-			user.setUnusedRoads(user.getUnusedRoads() - 2);
 			//subtract 1 from player's road building
 			user.getUsableDevCardDeck().removeDevCard(devCard);
 			//let player build two roads on given edges
-			buildRoadHelper(modelFacade, playerIndex, location1);
-			buildRoadHelper(modelFacade, playerIndex, location2);
+			buildRoadHelper(modelFacade, playerIndex, location1, true);
+			buildRoadHelper(modelFacade, playerIndex, location2, true);
 			//re calculate longest road
 			game.calcLongestRoadPlayer();
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
@@ -591,10 +589,13 @@ public class ServerFacade {
 	 * @param roadLocation
 	 * @throws ServerInvalidRequestException 
 	 */
-	private void buildRoadHelper(ModelFacade modelFacade, int playerIndex, EdgeLocation roadLocation) throws ServerInvalidRequestException {
+	private void buildRoadHelper(ModelFacade modelFacade, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException {
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
-		if(modelFacade.canPlaceRoadAtLoc(turnManager, roadLocation, user)) {
+		if(modelFacade.canPlaceRoadAtLoc(turnManager, roadLocation, user)
+				&& modelFacade.canBuyRoadForLoc(turnManager, roadLocation, user, free)) {
+			//Reduces by a road
+			user.setUnusedRoads(user.getUnusedRoads()-1);
 			//create a new road
 			Road road = new Road();
 			road.setEdge(new Edge(roadLocation));
@@ -618,48 +619,34 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
-		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User curUser = tm.getUserFromIndex(playerIndex);
-
-		if (facade.canPlaceRoadAtLoc(tm, roadLocation, curUser) && 
-				facade.canBuyRoadForLoc(tm, roadLocation, curUser, free)){
-			
-			//Reduces by a road
-			curUser.setUnusedRoads(curUser.getUnusedRoads()-1);
-			
-			//Place the road
-			Road road = new Road();
-			road.setEdge(new Edge(roadLocation));
-			facade.getModel().getMap().addRoad(road);
-			
-			//Pay Resources
-			if (!free){
-				curUser.setBrickCards(curUser.getBrickCards()-1);
-				curUser.setWoodCards(curUser.getWoodCards()-1);
-				
-				//Give to the bank
-				ResourceCardDeck bankRes = facade.bank().getResourceDeck();
-				ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
-				givenCards.add(ResourceType.BRICK);
-				givenCards.add(ResourceType.WOOD);
-				bankRes.addResources(givenCards);
-			}
-			
-//			facade.setMostRoads();
-			
-			//Update history
-			String user = curUser.getName();
-			String message = user + "built a road";
-			MessageLine line = new MessageLine(message, user);
-			facade.getModel().getLog().addLine(line);
-			updateModelVersion(gameId);
+	
+		buildRoadHelper(facade, playerIndex, roadLocation, free);
+		
+		//Pay Resources
+		if (!free){
+			curUser.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.BRICK));
+			curUser.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.WOOD));
+			//Give to the bank
+			facade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.BRICK));
+			facade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.WOOD));
 		}
-			
-			//check if player has gained longest road
-			//update game history
-		//else
-			//throw exception
+		
+		//re calculate longest road
+		game.calcLongestRoadPlayer();
+		int longestRoadPlayer = game.getLongestRoadPlayer(); 
+		facade.score().setLongestRoadUser(longestRoadPlayer);
+		
+		//Update history
+		String user = curUser.getName();
+		String message = user + "built a road";
+		MessageLine line = new MessageLine(message, user);
+		facade.getModel().getLog().addLine(line);
+		updateModelVersion(gameId);
+		
 		
 		//return new model
 		return null;
@@ -680,13 +667,12 @@ public class ServerFacade {
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User curUser = tm.getUserFromIndex(playerIndex);
-		PieceType type = null;
 		
-		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, type.SETTLEMENT)
-				&& facade.canBuyPiece(tm, curUser, type.SETTLEMENT)){
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.SETTLEMENT)
+				&& facade.canBuyPiece(tm, curUser, PieceType.SETTLEMENT)){
 			
 			//Decrease available Settlements
-			curUser.setUnusedCities(curUser.getUnusedSettlements()-1);
+			curUser.setUnusedSettlements(curUser.getUnusedSettlements()-1);
 			
 			Building settlement = new Building();
 			settlement.setVertex(new Vertex(vertexLocation));
@@ -696,19 +682,19 @@ public class ServerFacade {
 			
 			//Pay the resources
 			if (!free){
-				curUser.setWheatCards(curUser.getWheatCards()-1);
-				curUser.setBrickCards(curUser.getBrickCards()-1);
-				curUser.setWoodCards(curUser.getWoodCards()-1);
-				curUser.setSheepCards(curUser.getSheepCards()-1);
+				ArrayList<ResourceCard> paymentCards = new ArrayList<ResourceCard>();
+				paymentCards.add(new ResourceCard(ResourceType.BRICK));
+				paymentCards.add(new ResourceCard(ResourceType.SHEEP));
+				paymentCards.add(new ResourceCard(ResourceType.WHEAT));
+				paymentCards.add(new ResourceCard(ResourceType.WOOD));
+				
+				ResourceCardDeck payment = new ResourceCardDeck(paymentCards);
+				
+				//user pays the resources
+				removeResources(payment, curUser.getResourceCards());
 			
 				//Give to the bank
-				ResourceCardDeck bankRes = facade.bank().getResourceDeck();
-				ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
-				givenCards.add(ResourceType.BRICK);
-				givenCards.add(ResourceType.SHEEP);
-				givenCards.add(ResourceType.WHEAT);
-				givenCards.add(ResourceType.WOOD);
-				bankRes.addResources(givenCards);
+				addResources(payment, facade.bank().getResourceDeck());
 			}
 			
 			//Add points
@@ -742,10 +728,9 @@ public class ServerFacade {
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User curUser = tm.getUserFromIndex(playerIndex);
-		PieceType type = null;
 		
-		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, type.CITY)
-				&& facade.canBuyPiece(tm, curUser, type.CITY)){
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.CITY)
+				&& facade.canBuyPiece(tm, curUser, PieceType.CITY)){
 			
 			//Decrease available Cities
 			curUser.setUnusedCities(curUser.getUnusedCities()-1);
@@ -759,18 +744,18 @@ public class ServerFacade {
 			//Add City to map
 			facade.getModel().getMap().addCity(city);
 			
+			ArrayList<ResourceCard> paymentCards = new ArrayList<ResourceCard>();
+			for(int i = 0; i < 3; i++)
+				paymentCards.add(new ResourceCard(ResourceType.ORE));
+			for(int i = 0; i < 2; i++)
+				paymentCards.add(new ResourceCard(ResourceType.WHEAT));
+			ResourceCardDeck payment = new ResourceCardDeck(paymentCards);
 			//Pay the resources
-			curUser.setOreCards(curUser.getOreCards()-3);
-			curUser.setWheatCards(curUser.getWheatCards()-2);
+			
+			removeResources(payment, curUser.getResourceCards());
 			
 			//Give to the bank
-			ResourceCardDeck bankRes = facade.bank().getResourceDeck();
-			ArrayList<ResourceType> givenCards = new ArrayList<ResourceType>();
-			for (int i = 0; i < 3; i++)
-				givenCards.add(ResourceType.ORE);
-			for (int i = 3; i < 5; i++)
-				givenCards.add(ResourceType.WHEAT);
-			bankRes.addResources(givenCards);
+			addResources(payment, facade.bank().getResourceDeck());
 			
 			//Add points
 			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
@@ -786,7 +771,6 @@ public class ServerFacade {
 		else{	
 			throw new ServerInvalidRequestException();
 		}
-			
 			
 		
 		return null;
