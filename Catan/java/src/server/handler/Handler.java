@@ -32,20 +32,26 @@ public class Handler implements HttpHandler{
 	}
 
 	@Override
-	public void handle(HttpExchange arg0) throws IOException {
-		ServerCommand event = factory.create(arg0);
-		this.logInfo("Request: " + arg0.getRequestURI().toString());
+	public void handle(HttpExchange exchange) throws IOException {
+		ServerCommand event = factory.create(exchange);
+		this.logInfo("Request: " + exchange.getRequestURI().toString());
 		try{
 			System.out.println(event);
 			JsonElement response = event.execute();
+			System.out.println(response.toString());
 //			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getAsString().length());
-			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
+			//application/text for now, for "success" on login/register
+			//maybe have if statement to switch between the two
+			exchange.getResponseHeaders().add("Content-Type", "application/text");
+//			exchange.getResponseHeaders().add("Content-Type", "application/json");
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, 0);
 			//output stream throw in java string
-			PrintWriter writer = new PrintWriter(arg0.getResponseBody());
-			writer.print(response.getAsString());
+			PrintWriter writer = new PrintWriter(exchange.getResponseBody());
+			writer.println(response.getAsString());
 			System.out.println("response: " + response.getAsString());
-			arg0.getResponseBody().close();
-			arg0.close();
+			writer.close();
+			exchange.getResponseBody().close();
+			exchange.close();
 		} catch(ServerInvalidRequestException e1){
 			this.logError(e1.getMessage());
 		}
