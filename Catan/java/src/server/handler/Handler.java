@@ -53,6 +53,9 @@ public class Handler implements HttpHandler{
 			exchange.close();
 		} catch(ServerInvalidRequestException e1){
 			this.logError(e1.getMessage());
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+			exchange.getResponseBody().close();
+			exchange.close();
 		}
 //		catch(Exception anythingelse) {
 //			anythingelse.printStackTrace();

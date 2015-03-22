@@ -6,7 +6,7 @@ import java.util.List;
 public class MessageList {
 	//list of messages for chat and log
 	
-	private ArrayList<MessageLine> lines;
+	public ArrayList<MessageLine> lines;
 	
 	public MessageList(){
 		lines = new ArrayList<MessageLine>();
