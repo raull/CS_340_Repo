@@ -3,6 +3,8 @@ package server.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
 import shared.model.facade.ModelFacade;
@@ -19,11 +21,13 @@ public class Game {
 	/**
 	 * THe ID of the game
 	 */
+	@Expose
 	private int id; //the game's id
 	/**
 	 * THe name of the game
 	 */
-	private String name; //game's name
+	@Expose
+	private String title; //game's name
 	
 	/**
 	 * The user with longest road
@@ -40,12 +44,13 @@ public class Game {
 	 */
 	private ModelFacade modelFacade;
 	
+	@Expose
 	private Player[] players;
 	
 	public Game(int id, String name, ModelFacade modelFacade) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.title = name;
 		this.modelFacade = modelFacade;
 		this.longestRoadIndex = -1;
 		this.largestArmyIndex = -1;
@@ -85,7 +90,7 @@ public class Game {
 	 * @return the name of the game.
 	 */
 	public String getName() {
-		return name;
+		return title;
 	}
 
 	/**
@@ -93,7 +98,7 @@ public class Game {
 	 * @param name
 	 */
 	public void setName(String name) {
-		this.name = name;
+		this.title = name;
 	}
 
 	/**
