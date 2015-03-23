@@ -20,6 +20,7 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
+import shared.model.board.piece.Building;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -947,4 +948,18 @@ public class ModelFacade extends Observable{
 			}
 		}
 	}
+	
+//=======
+//	public void setMostRoads(){
+//		int mostRoads = 0;
+//		User mostUser = null;
+//		for (User u: turnManager().getUsers()){
+//			if (u.getOccupiedEdges().size() > mostRoads){
+//				mostRoads = u.getOccupiedEdges().size();
+//				mostUser = u;
+//			}	
+//		}
+//		turnManager.setLongestRoadIndex(mostUser.getTurnIndex());
+//	}
+//>>>>>>> origin/buildRoad
 }

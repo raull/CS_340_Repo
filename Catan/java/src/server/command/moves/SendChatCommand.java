@@ -4,6 +4,9 @@ import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.moves.SendChat;
 
 /**
  * Calls send chat on server facade
@@ -18,10 +21,9 @@ public class SendChatCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-		
+	public JsonElement execute() throws ServerInvalidRequestException {
+		SendChat sendChat = gson.fromJson(json, SendChat.class);
+		return ServerFacade.instance().sendChat(gameId, sendChat.getPlayerIndex(), sendChat.getContent());		
 	}
 
 }

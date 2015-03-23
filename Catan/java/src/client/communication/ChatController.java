@@ -57,14 +57,14 @@ public class ChatController extends Controller implements IChatController, Obser
 		//retrieve LogEntries from model		
 		Model model = ClientManager.instance().getModelFacade().model;
 		MessageList chatList = model.getChat();
-		ArrayList<MessageLine> chats = chatList.lines;
+		ArrayList<MessageLine> chats = chatList.getLines();
 		
 		List<LogEntry> entries = new ArrayList<LogEntry>();
 		for (MessageLine line : chats)
 		{
 			String playerName = line.getSource();
 			//get player's color
-			User user = model.turnManager.getUserFromName(playerName);
+			User user = model.getTurnManager().getUserFromName(playerName);
 			
 			entries.add(new LogEntry(user.getCatanColor(), line.getMessage()));
 		}

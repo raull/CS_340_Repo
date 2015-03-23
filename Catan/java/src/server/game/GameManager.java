@@ -32,7 +32,16 @@ public class GameManager {
 	 * @param id The ID of the game to retrieve
 	 * @return
 	 */
-	public Game getGameById(int id) {
+	public Game getGameById(int id) 
+	{
+		for (Game game : games)
+		{
+			if (game.getId() == id)
+			{
+				return game;
+			}
+		}
+		System.out.println("getGameById is returning null");
 		return null;
 	}
 	

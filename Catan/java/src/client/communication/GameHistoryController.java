@@ -40,14 +40,14 @@ public class GameHistoryController extends Controller implements IGameHistoryCon
 		//retrieve LogEntries from model		
 		Model model = ClientManager.instance().getModelFacade().model;
 		MessageList logList = model.getLog();
-		ArrayList<MessageLine> logs = logList.lines;
+		ArrayList<MessageLine> logs = logList.getLines();
 
 		List<LogEntry> entries = new ArrayList<LogEntry>();
 		for (MessageLine line : logs)
 		{
 			String playerName = line.getSource();
 			//get player's color
-			User user = model.turnManager.getUserFromName(playerName);
+			User user = model.getTurnManager().getUserFromName(playerName);
 
 			assert (user != null) : "the user was null for a particular history message";
 

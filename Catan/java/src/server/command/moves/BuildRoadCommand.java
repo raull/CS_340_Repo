@@ -31,7 +31,7 @@ public class BuildRoadCommand extends ServerCommand {
 		HexLocation hexLoc = new HexLocation(edgeLocParam.getX(), edgeLocParam.getY());
 		EdgeDirection edgeDirection = EdgeDirection.valueOf(edgeLocParam.getDirection());
 		EdgeLocation edgeLocation = new EdgeLocation(hexLoc, edgeDirection);
-		return ServerFacade.instance().buildRoad(gameId, playerId, edgeLocation, buildRoad.isFree());
+		return ServerFacade.instance().buildRoad(gameId, buildRoad.getPlayerIndex(), edgeLocation, buildRoad.isFree());
 
 	}
 

@@ -530,10 +530,10 @@ public class ModelTester
 		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
 		turnManager = testModelFacade.turnManager();
 		
-		User sender = turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getSenderIndex());
-		User receiver = turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex());
+		User sender = turnManager.getUserFromIndex(testModelFacade.model.getTradeOffer().getSenderIndex());
+		User receiver = turnManager.getUserFromIndex(testModelFacade.model.getTradeOffer().getReceiverIndex());
 		
-		assertTrue(testModelFacade.canOfferTrade(turnManager, sender, receiver, testModelFacade.model.tradeOffer));
+		assertTrue(testModelFacade.canOfferTrade(turnManager, sender, receiver, testModelFacade.model.getTradeOffer()));
 	}
 	
 	@Test
@@ -544,21 +544,21 @@ public class ModelTester
 		
 		testModelFacade.updateModel(testMoxy.getModel("noTrade.json"));
 		TurnManager turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.tradeOffer));
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.getTradeOffer()));
 		
 		//wrong user (user is not the one receiving the offer)
 		testModelFacade.updateModel(testMoxy.getModel("offerTrade.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.tradeOffer));
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(2), testModelFacade.model.getTradeOffer()));
 		
 		//true test case
-		assertTrue(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex()), testModelFacade.model.tradeOffer));
+		assertTrue(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.getTradeOffer().getReceiverIndex()), testModelFacade.model.getTradeOffer()));
 		
 		//doesn't have the cards required for trade
 
 		testModelFacade.updateModel(testMoxy.getModel("offerTradeNoResources.json"));
 		turnManager = testModelFacade.turnManager();
-		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.tradeOffer.getReceiverIndex()), testModelFacade.model.tradeOffer));
+		assertFalse(testModelFacade.canAcceptTrade(turnManager, turnManager.getUserFromIndex(testModelFacade.model.getTradeOffer().getReceiverIndex()), testModelFacade.model.getTradeOffer()));
 		
 		
 	}
