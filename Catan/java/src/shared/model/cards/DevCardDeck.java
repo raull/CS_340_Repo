@@ -3,6 +3,7 @@ package shared.model.cards;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import shared.definitions.DevCardType;
 import shared.model.exception.InvalidMoveException;
@@ -25,6 +26,33 @@ public class DevCardDeck {
 	public DevCardDeck() {
 		
 	}
+	
+	/**
+	 * add a card to deck
+	 * @param card
+	 */
+	public void addDevCard(DevCard card) {
+		cards.add(card);
+	}
+	
+	/**
+	 * remove a card from deck
+	 * @param card
+	 */
+	public void removeDevCard(DevCard card) {
+		cards.remove(card);
+	}
+	
+	/**
+	 * randomly gets a card from the deck
+	 * @return
+	 */
+	public DevCard getRandomCard() {
+		Random rand = new Random();
+		int randIndex = rand.nextInt(cards.size());
+		return cards.get(randIndex);
+	}
+	
 	
 	/**
 	 * 

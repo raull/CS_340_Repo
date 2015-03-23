@@ -1,5 +1,7 @@
 package shared.model.cards;
 
+import java.util.ArrayList;
+
 /**
  * The user's hand. Contains a deck of DevCards and a deck of ResourceCards. 
  * @author thyer
@@ -75,5 +77,17 @@ public class Hand {
 		else{
 			return false;		//idiot-proofing, prevents incorrect inputs
 		}
+	}
+	
+	/**
+	 * moves the new dev cards to usable deck
+	 */
+	public void moveNewToUsable() {
+		//add each new dev card into devcard deck
+		for(DevCard devCard : this.newDevCardDeck.getAllCards()) {
+			this.devCardDeck.addDevCard(devCard);
+		}
+		//empty out new dev cards
+		this.newDevCardDeck = new DevCardDeck(new ArrayList<DevCard>());
 	}
 }

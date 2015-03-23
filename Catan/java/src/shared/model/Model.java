@@ -1,6 +1,8 @@
 package shared.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
@@ -37,19 +39,20 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class Model {
 	
 	//mostly according to the client model json spec
-	public Bank bank; //cards available to be distributed to the players
-	public MessageList chat; //all chat messages
-	public MessageList log; //all log messages
-	public Map map; //game map
-	public TradeOffer tradeOffer; //current trade offer, if there is one
-	public TurnManager turnManager; //the turntracker -- tracks who's turn it is
-	public int version; //version of the model, to see if up to date
-	public int winner; //-1 when nobody won yet. when someone wins, it's their order index
-	public ScoreKeeper scoreKeeper;
+	private Bank bank; //cards available to be distributed to the players
+	private MessageList chat; //all chat messages
+	private MessageList log; //all log messages
+	private Map map; //game map
+	private TradeOffer tradeOffer; //current trade offer, if there is one
+	private TurnManager turnManager; //the turntracker -- tracks who's turn it is
+	private int version; //version of the model, to see if up to date
+	private int winner; //-1 when nobody won yet. when someone wins, it's their order index
+	private ScoreKeeper scoreKeeper;
 	
 	private boolean isUpdating = false;
 	
@@ -98,13 +101,22 @@ public class Model {
 	public TradeOffer getTradeOffer() {
 		return tradeOffer;
 	}
-
+	
+	public void setTradeOffer(TradeOffer tradeOffer) {
+		this.tradeOffer = tradeOffer;
+	}
+	
 	public TurnManager getTurnManager() {
 		return turnManager;
 	}
 
 	public int getVersion() {
 		return version;
+	}
+	
+	public void incrementVersion()
+	{
+		version++;
 	}
 
 	public int getWinner() {
@@ -114,12 +126,374 @@ public class Model {
 	public ScoreKeeper getScoreKeeper() {
 		return scoreKeeper;
 	}
+	
+	public boolean isUpdating() {
+		return isUpdating;
+	}
+
+	public void setUpdating(boolean isUpdating) {
+		this.isUpdating = isUpdating;
+	}
+	
 	/**
 	 * serializes the current model into a JSON object
 	 * @return
 	 */
-	public JsonObject serialize() {
-		return null;
+	public JsonElement serialize() {
+		JsonObject serializedModel = new JsonObject();
+		//first add the bank's resource list
+		JsonElement bankJson = serializeResourceList(bank.getResourceDeck());
+		serializedModel.add("bank", bankJson);
+		//set the chat messages json
+		JsonElement chatJson = serializeMessageList(chat);
+		serializedModel.add("chat", chatJson);
+		//set the game log messages json
+		JsonElement logJson = serializeMessageList(log);
+		serializedModel.add("log", logJson);
+		//set the map json
+		JsonElement mapJson = serializeMap();
+		serializedModel.add("map", mapJson);
+		//set the players json
+		JsonElement usersJson = serializePlayers();
+		serializedModel.add("players", usersJson);
+		//set a trade offer if there is one
+		if(this.tradeOffer != null) {
+			//serialize the trade offer
+			JsonElement tradeJson = serializeTradeOffer();
+			serializedModel.add("tradeOffer", tradeJson);
+		}
+		//set the turn tracker
+		JsonElement turnJson = serializeTurnTracker();
+		serializedModel.add("turnTracker", turnJson);
+		//set the model version number
+		serializedModel.add("version", new JsonPrimitive(this.version));
+		//set the winner
+		serializedModel.add("winner", new JsonPrimitive(scoreKeeper.getWinner()));
+		return serializedModel;
+	}
+	
+	/**
+	 * serialize a resource list
+	 * @param resourceDeck 
+	 * @return json resource list
+	 */
+	public JsonElement serializeResourceList(ResourceCardDeck resourceDeck) {
+		JsonObject jsonResources = new JsonObject();
+		
+		jsonResources = new JsonObject();
+		jsonResources.add("brick", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.BRICK)));
+		jsonResources.add("ore", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.ORE)));
+		jsonResources.add("sheep", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.SHEEP)));
+		jsonResources.add("wheat", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.WHEAT)));
+		jsonResources.add("wood", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.WOOD)));
+	
+		
+		return jsonResources;
+	}
+	
+	/**
+	 * serialize the chat or log message list
+	 * @param messageList message list to be serialized
+	 * @return json element
+	 */
+	public JsonElement serializeMessageList(MessageList messageList) {
+		//message list is array of message lines
+		ArrayList<MessageLine> lines = messageList.getLines();
+		JsonArray jsonMessageLines = new JsonArray();
+		for(MessageLine line : lines) {
+			JsonObject jsonLine = new JsonObject();
+			jsonLine.add("message", new JsonPrimitive(line.getMessage()));
+			jsonLine.add("source", new JsonPrimitive(line.getSource()));
+			jsonMessageLines.add(jsonLine);
+		}
+		return jsonMessageLines;
+	}
+	
+	/**
+	 * serialize the map 
+	 * @return json element of map
+	 */
+	public JsonElement serializeMap() {
+		JsonObject jsonMap = new JsonObject();
+		//set array of hexes
+		JsonElement jsonHexes = serializeMapHexes();
+		jsonMap.add("hexes", jsonHexes);
+		//set array of ports
+		JsonElement jsonPorts = serializeMapPorts();
+		jsonMap.add("ports", jsonPorts);
+		//array of roads
+		JsonElement jsonRoads = serializeMapRoads();
+		jsonMap.add("roads", jsonRoads);
+		//array of settlements
+		JsonElement jsonSettlements = serializeBuildings(map.getSettlementsOnMap());
+		jsonMap.add("settlements", jsonSettlements);
+		//array of cities
+		JsonElement jsonCities = serializeBuildings(map.getCitiesOnMap());
+		jsonMap.add("cities", jsonCities);
+		//radius is always 3 (and not really used?)
+		//robber hex location
+		for(HexTile hexTile : map.getHexTiles()) {
+			//hex tile that has robber
+			if(hexTile.hasRobber()) {
+				JsonElement jsonLoc = serializeHexLocation(hexTile.getLocation());
+				jsonMap.add("robber", jsonLoc);
+				break;
+			}
+		}
+		return jsonMap;
+	}
+	
+	/**
+	 * serialize the hex tiles on the map
+	 * @return
+	 */
+	public JsonElement serializeMapHexes() {
+		Collection<HexTile> hexTiles = map.getHexTiles();
+		JsonArray jsonHexes = new JsonArray();
+		for(HexTile hexTile: hexTiles) {
+			JsonElement jsonHex = serializeMapHex(hexTile);
+			jsonHexes.add(jsonHex);
+		}
+		return jsonHexes;
+	}
+	/**
+	 * serialize the individual hex tile
+	 * @return
+	 */
+	public JsonElement serializeMapHex(HexTile hexTile) {
+		JsonObject jsonHex = new JsonObject();
+		//add hex location
+		JsonElement jsonHexLoc = serializeHexLocation(hexTile.getLocation());
+		jsonHex.add("location", jsonHexLoc);
+		//add the resource, if desert, don't add
+		HexType resourceType = hexTile.getType();
+		if(resourceType != HexType.DESERT) {
+			jsonHex.add("resource", new JsonPrimitive(resourceType.name()));
+		}
+		//add the number on tile; if desert, don't add --water wouldn't have either
+		if(resourceType != HexType.DESERT && resourceType != HexType.WATER) {
+			jsonHex.add("number", new JsonPrimitive(hexTile.getNumber()));
+		}
+		
+		return jsonHex;
+	}
+	
+	/**
+	 * serializes a hex location
+	 * @param hexLoc
+	 * @return json of hex location
+	 */
+	public JsonElement serializeHexLocation(HexLocation hexLoc) {
+		JsonObject jsonHexLoc = new JsonObject();
+		jsonHexLoc.add("x", new JsonPrimitive(hexLoc.getX()));
+		jsonHexLoc.add("y", new JsonPrimitive(hexLoc.getY()));
+		return jsonHexLoc;
+	}
+	
+	/**
+	 * serialize the ports on the map
+	 * @return
+	 */
+	public JsonElement serializeMapPorts() {
+		ArrayList<Port> mapPorts = map.getPortsOnMap();
+		JsonArray jsonPorts = new JsonArray();
+		for(Port port : mapPorts) {
+			JsonElement jsonPort = serializeMapPort(port);
+			jsonPorts.add(jsonPort);
+		}
+		return jsonPorts;
+	}
+	
+	/**
+	 * serialize each port
+	 * @return
+	 */
+	public JsonElement serializeMapPort(Port port) {
+		JsonObject jsonPort = new JsonObject();
+		//resource, optional
+		if(port.getType() != PortType.THREE) {
+			jsonPort.add("resource", new JsonPrimitive(port.getType().name()));
+		}
+		//hex location
+		JsonElement jsonHexLoc = serializeHexLocation(port.getEdgeLocation().getHexLoc());
+		jsonPort.add("location", jsonHexLoc);
+		//direction
+		jsonPort.add("direction", new JsonPrimitive(port.getEdgeLocation().getDir().name()));
+		//ratio
+		jsonPort.add("ratio", new JsonPrimitive(port.getOfferRate()));
+		return jsonPort;
+	}
+	
+	/**
+	 * serialize the roads on the map
+	 * @return
+	 */
+	public JsonElement serializeMapRoads() {
+		ArrayList<Road> roads = map.getRoadsOnMap();
+		JsonArray jsonRoads = new JsonArray();
+		for(Road road : roads) {
+			JsonElement jsonRoad = serializeMapRoad(road);
+			jsonRoads.add(jsonRoad);
+		}
+		return jsonRoads;
+	}
+	
+	/**
+	 * serialize an individual road
+	 * @return
+	 */
+	public JsonElement serializeMapRoad(Road road) {
+		JsonObject jsonRoad = new JsonObject();
+		//the owner of road
+		jsonRoad.add("owner", new JsonPrimitive(road.getOwner()));
+		//the location of road
+		JsonObject jsonLoc = new JsonObject();
+		EdgeLocation roadLoc = road.getEdge().getLocation();
+		jsonLoc.add("x", new JsonPrimitive(roadLoc.getHexLoc().getX()));
+		jsonLoc.add("y", new JsonPrimitive(roadLoc.getHexLoc().getY()));
+		jsonLoc.add("direction", new JsonPrimitive(roadLoc.getDir().name()));
+		
+		jsonRoad.add("location", jsonLoc);
+		return jsonRoad;
+	}
+	
+	/**
+	 * serialize buildings, either city or settlement
+	 * @param buildings
+	 * @return
+	 */
+	public JsonElement serializeBuildings(ArrayList<Building> buildings) {
+		JsonArray jsonBuildings = new JsonArray();
+		for(Building building: buildings) {
+			JsonElement jsonBuilding = serializeBuilding(building);
+			jsonBuildings.add(jsonBuilding);
+		}
+		return jsonBuildings;
+	}
+	
+	/**
+	 * serialize an individual building
+	 * @param building
+	 * @return
+	 */
+	public JsonElement serializeBuilding(Building building) {
+		JsonObject jsonBuilding = new JsonObject();
+		//owner
+		jsonBuilding.add("owner", new JsonPrimitive(building.getOwner()));
+		//location
+		JsonObject jsonVertex = new JsonObject();
+		VertexLocation vertexLoc = building.getVertex().getLocation();
+		jsonVertex.add("x", new JsonPrimitive(vertexLoc.getHexLoc().getX()));
+		jsonVertex.add("y", new JsonPrimitive(vertexLoc.getHexLoc().getY()));
+		jsonVertex.add("direction", new JsonPrimitive(vertexLoc.getDir().name()));
+		
+		jsonBuilding.add("location", jsonVertex);
+		
+		return jsonBuilding;
+	}
+	
+	/**
+	 * serialize the players 
+	 * @return json array of players
+	 */
+	public JsonElement serializePlayers() {
+		List<User> users = turnManager.getUsers();
+		JsonArray jsonUsers = new JsonArray();
+		for(User user : users) {
+			JsonElement jsonUser = serializePlayer(user);
+			jsonUsers.add(jsonUser);
+		}
+		return jsonUsers;
+	}
+	
+	/**
+	 * serialize a single player
+	 * @return json player
+	 */
+	public JsonElement serializePlayer(User user) {
+		JsonObject jsonUser = new JsonObject();
+		jsonUser.add("cities", new JsonPrimitive(user.getUnusedCities()));
+		jsonUser.add("color", new JsonPrimitive(user.getCatanColor().name()));
+		jsonUser.add("discarded", new JsonPrimitive(user.getHasDiscarded()));
+		jsonUser.add("monuments", new JsonPrimitive(user.getMonumentsPlayed()));
+		jsonUser.add("name", new JsonPrimitive(user.getName()));
+		jsonUser.add("newDevCards", serializeDevCards(user.getNewDevCardDeck()));
+		jsonUser.add("oldDevCards", serializeDevCards(user.getUsableDevCardDeck()));
+		jsonUser.add("playerIndex", new JsonPrimitive(user.getTurnIndex()));
+		jsonUser.add("playedDevCard", new JsonPrimitive(user.getHasPlayedDevCard()));
+		jsonUser.add("playerID", new JsonPrimitive(user.getPlayerID()));
+		jsonUser.add("resources", serializeResourceList(user.getResourceCards()));
+		jsonUser.add("roads", new JsonPrimitive(user.getUnusedRoads()));
+		jsonUser.add("settlements", new JsonPrimitive(user.getUnusedSettlements()));
+		jsonUser.add("soldiers", new JsonPrimitive(user.getSoldiers()));
+		jsonUser.add("victoryPoints", new JsonPrimitive(user.getVictoryPoints()));
+		return jsonUser;
+	}
+	
+	/**
+	 * help serialize the dev card decks
+	 * @param devCards
+	 * @return
+	 */
+	public JsonElement serializeDevCards(DevCardDeck devCards) {
+		JsonObject jsonDevCards = new JsonObject();
+		jsonDevCards.add("monopoly", new JsonPrimitive(devCards.getCountByType(DevCardType.MONOPOLY)));
+		jsonDevCards.add("monument", new JsonPrimitive(devCards.getCountByType(DevCardType.MONUMENT)));
+		jsonDevCards.add("roadBuilding", new JsonPrimitive(devCards.getCountByType(DevCardType.ROAD_BUILD)));
+		jsonDevCards.add("soldier", new JsonPrimitive(devCards.getCountByType(DevCardType.SOLDIER)));
+		jsonDevCards.add("yearOfPlenty", new JsonPrimitive(devCards.getCountByType(DevCardType.YEAR_OF_PLENTY)));
+		return jsonDevCards;
+	}
+	
+	/**
+	 * serialize the trade offer
+	 * @return json of trade offer
+	 */
+	public JsonElement serializeTradeOffer() {
+		JsonObject jsonTrade = new JsonObject();
+		jsonTrade.add("sender", new JsonPrimitive(tradeOffer.getSenderIndex()));
+		jsonTrade.add("receiver", new JsonPrimitive(tradeOffer.getReceiverIndex()));
+		//offer resource list, pos = offered, neg = asked for
+		jsonTrade.add("offer", serializeOfferList());
+		return jsonTrade;
+	}
+	
+	public JsonElement serializeOfferList() {
+		int brick = getResourceCount(ResourceType.BRICK, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int ore = getResourceCount(ResourceType.ORE, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int sheep = getResourceCount(ResourceType.SHEEP, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int wheat = getResourceCount(ResourceType.WHEAT, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		int wood = getResourceCount(ResourceType.WOOD, tradeOffer.getSendingDeck(), tradeOffer.getReceivingDeck());
+		
+		JsonObject jsonOffer = new JsonObject();
+		
+		jsonOffer.add("brick", new JsonPrimitive(brick));
+		jsonOffer.add("ore", new JsonPrimitive(ore));
+		jsonOffer.add("sheep", new JsonPrimitive(sheep));
+		jsonOffer.add("wheat", new JsonPrimitive(wheat));
+		jsonOffer.add("wood", new JsonPrimitive(wood));
+		
+		return jsonOffer;
+	}
+	
+	public int getResourceCount(ResourceType resource, ResourceCardDeck sendDeck, ResourceCardDeck recDeck) {
+		int sendCount = sendDeck.getCountByType(resource);
+		int recCount = recDeck.getCountByType(resource);
+		if(sendCount >= recCount) {
+			return sendCount;
+		}
+		else{
+			return recCount * -1;
+		}
+	}
+	
+	public JsonElement serializeTurnTracker() {
+		JsonObject jsonTurn = new JsonObject();
+		jsonTurn.add("currentTurn", new JsonPrimitive(turnManager.getCurrentTurn()));
+		jsonTurn.add("status", new JsonPrimitive(turnManager.currentTurnPhase().name()));
+		jsonTurn.add("longestRoad", new JsonPrimitive(scoreKeeper.getLongestRoadUser()));
+		jsonTurn.add("largestArmy", new JsonPrimitive(scoreKeeper.getLargestArmyUser()));
+		return jsonTurn;
 	}
 	
 	
@@ -213,6 +587,11 @@ public class Model {
 		isUpdating = false;
 	}
 	
+	/**
+	 * get the resource(bank) deck from the model
+	 * @param jsonModel
+	 * @return
+	 */
 	
 	public ArrayList<ResourceCard> extractResourceDeck(JsonObject jsonModel) {
 		ArrayList<ResourceCard> bankResourceCards = new ArrayList<ResourceCard>();
@@ -224,6 +603,11 @@ public class Model {
 		return bankResourceCards;
 	}
 	
+	/**
+	 * get the available developer cards from model
+	 * @param jsonModel
+	 * @return
+	 */
 	public ArrayList<DevCard> extractDevDeck(JsonObject jsonModel) {
 		
 		ArrayList<DevCard> bankDevCards = new ArrayList<DevCard>();
@@ -235,6 +619,11 @@ public class Model {
 		return bankDevCards;
 	}
 	
+	/**
+	 * helper function to populate a dev card deck
+	 * @param jsonDeck
+	 * @param devCards
+	 */
 	public void populateDevCardDeck(JsonObject jsonDeck, ArrayList<DevCard> devCards) {
 		
 		int yopCount = jsonDeck.get("yearOfPlenty").getAsInt();
@@ -250,13 +639,23 @@ public class Model {
 		addDevCardsByNum(devCards, monumentCount, DevCardType.MONUMENT);
 	}
 	
+	/**
+	 * helper function to add dev cards a certain number of times 
+	 * @param deckToAdd
+	 * @param numTimes
+	 * @param cardType
+	 */
 	public void addDevCardsByNum(ArrayList<DevCard> deckToAdd, int numTimes, DevCardType cardType) {
 			for(int i = 0; i < numTimes; i++) {
 				deckToAdd.add(new DevCard(cardType));
 			}
 	}
 	
-	//for chat or log
+	/**
+	 * extracts the list of messages for chat or game log
+	 * @param jsonMessageList
+	 * @return
+	 */
 	public MessageList extractMessageList(JsonObject jsonMessageList) {
 		
 		JsonArray jsonMessageLines = jsonMessageList.get("lines").getAsJsonArray();
@@ -275,6 +674,11 @@ public class Model {
 		return messageList;
 	}
 	
+	/**
+	 * gets the list of map hex tiles from the json map
+	 * @param jsonMap
+	 * @return
+	 */
 	public ArrayList<HexTile> extractHexes(JsonObject jsonMap) {
 		ArrayList<HexTile> mapHexTiles = new ArrayList<HexTile>();
 		
@@ -290,6 +694,11 @@ public class Model {
 		return mapHexTiles;
 	}
 	
+	/**
+	 * populate each individual hex tile with correct info
+	 * @param jsonHexTile
+	 * @return
+	 */
 	public HexTile extractHexTile(JsonObject jsonHexTile) {
 		Gson gson = new Gson();
 		
@@ -308,6 +717,11 @@ public class Model {
 		return hexTile;
 	}
 	
+	/**
+	 * get the ports from json map
+	 * @param jsonMap
+	 * @return
+	 */
 	public ArrayList<Port> extractPorts(JsonObject jsonMap) {
 		ArrayList<Port> portsOnMap = new ArrayList<Port>();
 		
@@ -321,6 +735,11 @@ public class Model {
 		return portsOnMap;
 	}
 	
+	/**
+	 * get the info of each port 
+	 * @param jsonPort
+	 * @return
+	 */
 	public Port extractPort(JsonObject jsonPort) {
 		
 		Gson gson = new Gson();
@@ -444,25 +863,18 @@ public class Model {
 		robberTile.setRobber(true);
 	}
 	
-//	public ArrayList<User> extractUsers(JsonObject jsonModel) {
 	public void extractUsers(JsonObject jsonModel){
-//		ArrayList<User> currentPlayers = new ArrayList<User>(); //prob updating the users in turnmanager
 		
 		JsonArray jsonUserArray = jsonModel.get("players").getAsJsonArray();
 		
-		
-//		for(JsonElement jsonEleUser : jsonUserArray) {
 		for(int i = 0; i < jsonUserArray.size(); i++) {
 			if(jsonUserArray.get(i).isJsonNull()) {
 				continue;
 			}
 			JsonObject jsonUser = jsonUserArray.get(i).getAsJsonObject();
 
-//			JsonObject jsonUser = jsonEleUser.getAsJsonObject();
-//			User user = extractUser(jsonUser);
 			updateUser(jsonUser);
 		}
-//		return currentPlayers;
 	}
 	
 	
@@ -473,7 +885,9 @@ public class Model {
 		CatanColor userColor = gson.fromJson(jsonUser.get("color"), CatanColor.class);
 		//discarded -- whether or not user has already discarded cards this turn
 		boolean hasDiscarded = jsonUser.get("discarded").getAsBoolean();
-				
+		
+		int monumentsPlayed = jsonUser.get("monuments").getAsInt();
+		
 		String name = jsonUser.get("name").getAsString();
 		
 		ArrayList<DevCard> newDevCards = new ArrayList<DevCard>();
@@ -519,8 +933,8 @@ public class Model {
 		
 		currUser.setUnusedCities(numCities);
 		currUser.setHasPlayedDevCard(playedDevCard);
-//		currUser.setDiscarded(discarded); -- does it matter whether user has already discarded cards?
-//		currUser.setMonuments(monumentsPlayed); -- does user need to keep track of how many monuments are played? maybe in scorekeeper?
+
+		currUser.setMonumentsPlayed(monumentsPlayed); 
 		currUser.getHand().setNewDevCardDeck(newDevCardDeck);
 		currUser.getHand().setDevCardDeck(oldDevCardDeck);
 		currUser.getHand().setResourceCardDeck(resourceDeck);
@@ -677,12 +1091,4 @@ public class Model {
 		}
 	}
 
-	public boolean isUpdating() {
-		return isUpdating;
-	}
-
-	public void setUpdating(boolean isUpdating) {
-		this.isUpdating = isUpdating;
-	}
-	
 }

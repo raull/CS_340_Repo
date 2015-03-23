@@ -1,6 +1,7 @@
 package shared.model.facade;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Observable;
 
 import client.manager.ClientManager;
@@ -20,11 +21,13 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
+import shared.model.board.piece.Building;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.MessageLine;
 import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeManager;
 import shared.model.game.TradeOffer;
@@ -842,6 +845,12 @@ public class ModelFacade extends Observable{
 		return true;
 	}
 	
+	
+	public void addToGameLog(MessageLine logEntry)
+	{
+		model.getLog().addMessage(logEntry);
+	}
+	
 	//Getters and Setters
 	/**
 	 * Get the {@link Bank} from the Game
@@ -904,6 +913,9 @@ public class ModelFacade extends Observable{
 	public void setNotifying(boolean isNotifying) {
 		this.isNotifying = isNotifying;
 	}
+	
+	
+	
 	
 	public void updateTurnPhase(TurnPhase phase)
 	{
@@ -972,4 +984,46 @@ public class ModelFacade extends Observable{
 		return locations;
 	}
 	
+	public boolean discardPhaseNeeded()
+	{
+		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
+		boolean needed = false;
+		for (User user : users)
+		{
+			if (user.getResourceCards().getAllResourceCards().size() > 7)
+			{
+				user.setHasDiscarded(false); //IS THIS SUPPOSED TO BE CALLED?
+				needed = true;
+			}
+		}
+		return needed;		
+	}
+	
+	public void givePlayersResourcesFromRoll(int roll) //TODO not finished yet
+	{
+		Collection<HexTile> tiles = this.map.getHexTiles();
+		
+		for (HexTile hex : tiles)
+		{
+			if (hex.getNumber() == roll)
+			{
+				
+			}
+		}
+	}
+	
+//=======
+//	public void setMostRoads(){
+//		int mostRoads = 0;
+//		User mostUser = null;
+//		for (User u: turnManager().getUsers()){
+//			if (u.getOccupiedEdges().size() > mostRoads){
+//				mostRoads = u.getOccupiedEdges().size();
+//				mostUser = u;
+//			}	
+//		}
+//		turnManager.setLongestRoadIndex(mostUser.getTurnIndex());
+//	}
+//>>>>>>> origin/buildRoad
+
 }

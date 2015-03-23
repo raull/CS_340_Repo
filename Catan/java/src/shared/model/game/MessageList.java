@@ -11,8 +11,26 @@ public class MessageList {
 	public MessageList(){
 		lines = new ArrayList<MessageLine>();
 	}
+	
 	public MessageList(ArrayList<MessageLine> messages){
 		lines = messages;
 	}
+
+	public ArrayList<MessageLine> getLines() {
+		return lines;
+	}
+
+	public void setLines(ArrayList<MessageLine> lines) {
+		this.lines = lines;
+	}
 	
+	
+	public void addMessage(MessageLine message)
+	{
+		lines.add(message);
+	}
+	
+	public void addLine(MessageLine line){
+		lines.add(line);
+	}
 }
