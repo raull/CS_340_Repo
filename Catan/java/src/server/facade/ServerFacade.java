@@ -1,21 +1,38 @@
 package server.facade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
+import shared.definitions.DevCardType;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
+import shared.model.board.Edge;
+import shared.model.board.piece.Road;
+import shared.model.cards.DevCard;
+import shared.model.cards.ResourceCard;
+import shared.model.board.Vertex;
+import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
 import shared.model.facade.ModelFacade;
+import shared.model.game.MessageLine;
+import shared.model.game.MessageList;
+import shared.model.game.TradeOffer;
+import shared.model.game.TurnManager;
+import shared.model.game.TurnPhase;
+
 
 /**
  * Facade of the server to make all operations to an specific game.
@@ -53,35 +70,21 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
-		if (!isUser(username, password)){
-			throw new ServerInvalidRequestException();
+		if (!userManager.userExists(username, password)){
+			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
+			
+		User user = userManager.getUser(username);
 		
-		//else the user cookie needs to be set for the client (done in handlers?)
-		
-		return null;
+		if (user == null) {
+			throw new ServerInvalidRequestException("User cannot be found at the moment");
+		} else {
+			JsonObject response = new JsonObject();
+			response.addProperty("id", user.getPlayerID());
+			return response;
+		}
 	}
 	
-	public boolean existsUser(String username, String password){
-		boolean exists = false;
-		for (User u: userManager.getUsers()){
-			if (u.getName().equals(username)){
-					exists = true;	
-			}
-		}
-		return exists;
-	}
-	
-	public boolean isUser(String username, String password){
-		boolean isUser = false;
-		for (User u: userManager.getUsers()){
-			if (u.getName().equals(username)){
-				if (u.getPassword().equals(password))
-					isUser = true;
-			}
-		}
-		return isUser;
-	}
 	/**
 	 * Creates a new player account, and logs them in to the server
 	 * @param username The user's username (case-sensitive)
@@ -90,17 +93,16 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
-		if (existsUser(username, password)){
-			throw new ServerInvalidRequestException();
+		if (userManager.userExists(username, password)){
+			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
 		else{
-			userManager.addNewUser(username, password);
+			User newUser = userManager.addNewUser(username, password);
+			JsonObject response = new JsonObject();
+			response.addProperty("id", newUser.getPlayerID());
+			return response;
 		}
-			
-		
-		//do we also need to verify on the server side that the username and password are valid (size, characters, etc)?
-		
-		return null;
+					
 	}
 	
 	/**
@@ -216,11 +218,22 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException {
-		//get the correct game
-		//add chat to model with player index
-		//return new model
-		return null;
+	public JsonElement sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException 
+	{
+		//access objects of the specific game
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		MessageList chat = model.getChat();
+		
+		User user = modelFacade.turnManager().getUserFromIndex(playerIndex);
+		
+		//add the new chat message to the list of chats
+		chat.addMessage(new MessageLine(message, user.getName()));
+		
+		this.updateModelVersion(gameId);
+		
+		return getModel(0, gameId); //new version of the model
 	}
 	
 	/**
@@ -232,8 +245,45 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
-		return null;
-	}
+
+		//access objects of the specific game
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		if (modelFacade.canRollNumber(turnManager, user))
+		{
+			if (rolledNumber != 7)
+			{
+				modelFacade.givePlayersResourcesFromRoll(rolledNumber);
+			}
+			else //rolledNumber == 7
+			{
+				if (modelFacade.discardPhaseNeeded())
+				{
+					modelFacade.updateTurnPhase(TurnPhase.DISCARDING);
+				}
+				else
+				{
+					modelFacade.updateTurnPhase(TurnPhase.ROBBING);
+				}
+			}
+			
+			//add to the game log
+			String logSource = user.getName();
+			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+		}
+		else
+		{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
+}
 	
 	/**
 	 * Moves the robber, selecting the new robber position and player to rob.
@@ -279,19 +329,66 @@ public class ServerFacade {
 	 */
 	public JsonElement finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
-		//if can finish turn
-			//update the current turn index to be the next index
-				//this should be a separate function that needs to account for the special rules of the first and second rounds
-			//if the player has any dev cards they bought this turn, move them to the old devcards
-			//update the turn phase
-				//could be updated to rolling, firstround, or second round
-		//else
-			//throw exception
-		
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User user = tm.getUserFromIndex(playerIndex);
+		if (facade.canFinishTurn(tm, tm.getUserFromIndex(playerIndex))){
+			TurnPhase currentPhase = tm.currentTurnPhase();
+			
+			switch (currentPhase){
+			case PLAYING:
+				//if curr player has any dev cards they bought, add them to usable
+				user.getHand().moveNewToUsable();
+				
+				//update the user booleans -- hasDiscarded, hasPlayedDevCard
+				user.setHasDiscarded(false);
+				user.setHasPlayedDevCard(false);
+				
+				tm.setCurrentPhase(TurnPhase.ROLLING);
+				tm.setCurrentTurn(nextTurn(playerIndex));
+				break;
+			case FIRSTROUND:
+				if (tm.getCurrentTurn() != 3)
+					tm.setCurrentTurn(nextTurn(playerIndex));
+				else{
+					tm.setCurrentTurn(nextTurn(playerIndex));
+					tm.setCurrentPhase(TurnPhase.SECONDROUND);
+				}
+				break;
+			case SECONDROUND:
+				if (tm.getCurrentTurn() != 3)
+					tm.setCurrentTurn(nextTurn(playerIndex));
+				else{
+					tm.setCurrentTurn(nextTurn(playerIndex));
+					tm.setCurrentPhase(TurnPhase.ROLLING);
+				}
+			case DISCARDING: //error, can't end turn at this phase
+				break;
+			case ROBBING:
+				break;
+			case ROLLING:
+				break;
+			default:
+				break;
+			}
+			updateModelVersion(gameId);
+			
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
 		return null;
 	}
 	
+	public int nextTurn(int playerIndex){
+		int nextIndex = 0;
+		if (playerIndex == 3)
+			nextIndex = 0;
+		else{
+			nextIndex = playerIndex +1;
+		}
+		return nextIndex;
+	}
 	/**
 	 * Used for a player to buy a development card
 	 * @param game The game where the transaction is being made.
@@ -301,16 +398,41 @@ public class ServerFacade {
 	 */
 	public JsonElement buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
-		//if can buy dev card
-			//subtract 1 sheep, 1 wheat, and 1 ore from the player's resources
-			//add the same resources to the resource bank
-			//randomly add a dev card to the player's new dev cards from the dev card bank
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new Model
-		return null;
+		if(modelFacade.canBuyDevCard(turnManager, user, modelFacade.bank().getDevCardDeck())) {
+			
+			//remove resources from player
+			user.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.ORE));
+			user.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.SHEEP));
+			user.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.WHEAT));
+			
+			//add resources to bank
+			modelFacade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.ORE));
+			modelFacade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.SHEEP));
+			modelFacade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.WHEAT));
+			
+			//randomly give the user a dev card 
+			DevCard devCard = modelFacade.bank().getDevCardDeck().getRandomCard();
+			modelFacade.bank().getDevCardDeck().removeDevCard(devCard);
+			user.getNewDevCardDeck().addDevCard(devCard);
+			
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " bought a development card.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -323,17 +445,37 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
-	{
-		//if can play dev card
-			//add 1 of each of the specified resources to the player's resources
-			//subtract the same resources from the resource bank
-			//subtract one from the player's year of plenty cards
-			//update game history
-		//else
-			//throw exception
+	{	
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new model
-		return null;
+		DevCard devCard = new DevCard(DevCardType.YEAR_OF_PLENTY);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && 
+				modelFacade.canPlayYearofPlenty(turnManager, user, modelFacade.bank(), new ResourceCard(resource1), new ResourceCard(resource2))) {
+			//add 1 of each of the specified resources to the player's resources
+			user.getResourceCards().addResourceCard(new ResourceCard(resource1));
+			user.getResourceCards().addResourceCard(new ResourceCard(resource2));
+			//subtract the same resources from the resource bank
+			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource1));
+			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource2));
+			//subtract one from the player's year of plenty cards
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played year of plenty.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -346,18 +488,37 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
-	{
-		//if can play dev card
-			//subtract 2 from the player's available roads
-			//subtract 1 from the player's road building cards
-			//give the player roads on the 2 given edges
-			//check if longest road needs to be updated
-			//update game history
-		//else
-			//throw exception
+	{	
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new model
-		return null;
+		DevCard devCard = new DevCard(DevCardType.ROAD_BUILD);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayRoadBuilding(turnManager, user)) {
+			//subtract 1 from player's road building
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//let player build two roads on given edges
+			buildRoadHelper(modelFacade, playerIndex, location1, true);
+			buildRoadHelper(modelFacade, playerIndex, location2, true);
+			//re calculate longest road
+			game.calcLongestRoadPlayer();
+			int longestRoadPlayer = game.getLongestRoadPlayer(); 
+			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played road building and built two roads.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -370,17 +531,72 @@ public class ServerFacade {
 	 */
 	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
 	{
-		//if can play dev card
-			//count the total number of cards of the specific resource in any player's hand
-			//set the player to have that number of that resource
-			//set every other player to have 0 of that resource
-			//subtract 1 from the player's monopoly cards
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new Model
-		return null;
+		DevCard devCard = new DevCard(DevCardType.MONOPOLY);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayMonopoly(turnManager, user, resource)) {
+			//get total number of resources from users besides currUser
+			int totalResources = getResourceCount(turnManager.getUsers(), playerIndex, resource);
+			//remove resources from other players
+			removeAllResource(turnManager.getUsers(), playerIndex, resource);
+			//give the user all those cards
+			for(int i = 0; i < totalResources; i++) {
+				user.getResourceCards().addResourceCard(new ResourceCard(resource));
+			}
+			//remove user's monopoly card
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played monopoly.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
+	}
+	
+	/**
+	 * counts the total number of cards of a given resource all users have. 
+	 * used for monopoly
+	 * @param userIndex
+	 * @return
+	 */
+	private int getResourceCount(List<User> users, int userIndex, ResourceType resource) {
+		int total = 0;
+		for(User user : users) {
+			if(user.getTurnIndex() == userIndex) {
+				continue;
+			}
+			total += user.getResourceCards().getCountByType(resource);
+		}
+		return total;
+	}
+	
+	/**
+	 * removes all of one type of resource from user's resource deck
+	 * used for monopoly
+	 * @param users
+	 * @param userIndex
+	 * @param resource
+	 */
+	private void removeAllResource(List<User> users, int userIndex, ResourceType resource) {
+		for(User user : users) {
+			if(user.getTurnIndex() == userIndex) {
+				continue;
+			}
+			for(int i = 0; i < user.getResourceCards().getCountByType(resource); i++) {
+				user.getResourceCards().removeResourceCard(new ResourceCard(resource));
+			}
+		}
 	}
 	
 	/**
@@ -392,15 +608,59 @@ public class ServerFacade {
 	 */
 	public JsonElement playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
-		//if can play dev card
-			//subtract one from the player's monument cards (check if new or old?)
-			//add one to the player's points
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//return new model
-		return null;
+		DevCard devCard = new DevCard(DevCardType.MONUMENT);
+		
+		if(modelFacade.canPlayDevCard(turnManager, user, devCard) && modelFacade.canPlayMonument(turnManager, user)) {
+			//if user can play monument
+			//get rid of dev card from usable deck 
+			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//update user points
+			user.setVictoryPoints(user.getVictoryPoints() + 1);
+			//update game history
+			String logSource = user.getName();
+			String logMessage = user.getName() + " played a monument and gained a point.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		return getModel(0, gameId);
+	}
+	
+	/**
+	 * helper function that can be used by build road and road-build dev card
+	 * checks if user can place road at given edge, and update model
+	 * @param game
+	 * @param playerIndex
+	 * @param roadLocation
+	 * @throws ServerInvalidRequestException 
+	 */
+	private void buildRoadHelper(ModelFacade modelFacade, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException {
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		if(modelFacade.canPlaceRoadAtLoc(turnManager, roadLocation, user)
+				&& modelFacade.canBuyRoadForLoc(turnManager, roadLocation, user, free)) {
+			//Reduces by a road
+			user.setUnusedRoads(user.getUnusedRoads()-1);
+			//create a new road
+			Road road = new Road();
+			road.setEdge(new Edge(roadLocation));
+			//add road to map
+			modelFacade.map().addRoad(road);
+		}
+		else{
+			throw new ServerInvalidRequestException(); 
+		}
+		
 	}
 	
 	/**
@@ -414,16 +674,34 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
-		//if can buildroad
-			//subtract 1 from the player's available roads
-			//place a road on the given edge
-			//if not free
-				//subtract 1 wood and 1 brick from the player's resources
-				//add those resources to the resource bank
-			//check if player has gained longest road
-			//update game history
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+	
+		buildRoadHelper(facade, playerIndex, roadLocation, free);
+		
+		//Pay Resources
+		if (!free){
+			curUser.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.BRICK));
+			curUser.getResourceCards().removeResourceCard(new ResourceCard(ResourceType.WOOD));
+			//Give to the bank
+			facade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.BRICK));
+			facade.bank().getResourceDeck().addResourceCard(new ResourceCard(ResourceType.WOOD));
+		}
+		
+		//re calculate longest road
+		game.calcLongestRoadPlayer();
+		int longestRoadPlayer = game.getLongestRoadPlayer(); 
+		facade.score().setLongestRoadUser(longestRoadPlayer);
+		
+		//Update history
+		String user = curUser.getName();
+		String message = user + "built a road";
+		MessageLine line = new MessageLine(message, user);
+		facade.getModel().getLog().addLine(line);
+		updateModelVersion(gameId);
+		
 		
 		//return new model
 		return null;
@@ -438,20 +716,56 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildSettlement(int gameId, int playerIndex, VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
+	public JsonElement buildSettlement(int gameId, int playerIndex, 
+			VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
 	{
-		//if can buildsettlement
-			//subtract 1 from the player's available settlements
-			//place a settlement on the given vertex
-			//if not free
-				//subtract 1 wood, 1 brick, 1 sheep, and 1 wheat from the player's resources
-				//add those resources to the resource bank
-			//add 1 to the player's points
-			//update game history
-		//else
-			//throw exception
-	
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+		
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.SETTLEMENT)
+				&& facade.canBuyPiece(tm, curUser, PieceType.SETTLEMENT)){
+			
+			//Decrease available Settlements
+			curUser.setUnusedSettlements(curUser.getUnusedSettlements()-1);
+			
+			Building settlement = new Building();
+			settlement.setVertex(new Vertex(vertexLocation));
+			
+			//Add City to map
+			facade.getModel().getMap().addSettlement(settlement);
+			
+			//Pay the resources
+			if (!free){
+				ArrayList<ResourceCard> paymentCards = new ArrayList<ResourceCard>();
+				paymentCards.add(new ResourceCard(ResourceType.BRICK));
+				paymentCards.add(new ResourceCard(ResourceType.SHEEP));
+				paymentCards.add(new ResourceCard(ResourceType.WHEAT));
+				paymentCards.add(new ResourceCard(ResourceType.WOOD));
+				
+				ResourceCardDeck payment = new ResourceCardDeck(paymentCards);
+				
+				//user pays the resources
+				removeResources(payment, curUser.getResourceCards());
+			
+				//Give to the bank
+				addResources(payment, facade.bank().getResourceDeck());
+			}
+			
+			//Add points
+			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
+			
+			//Update history
+			String user = curUser.getName();
+			String message = user + "built a settlement";
+			MessageLine line = new MessageLine(message, user);
+			facade.getModel().getLog().addLine(line);
+			
+			updateModelVersion(gameId);
+		}
+		else{	
+			throw new ServerInvalidRequestException();
+		}
 		return null;
 	}
 	
@@ -463,20 +777,57 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildCity(int gameId, int playerIndex, VertexLocation vertexLocation) throws ServerInvalidRequestException 
+	public JsonElement buildCity(int gameId, int playerIndex, 
+			VertexLocation vertexLocation) throws ServerInvalidRequestException 
 	{
-		//if can buildcity
-			//subtract 1 from the player's available cities
-			//place a city on the given vertex
-			//remove the settlement from the given vertex??
-			//subtract 2 wheat and 3 ore from the player's resources
-			//add those resources to the resource bank
-			//add 1 to player's points
-			//update game history
-		//else
-			//throw exception
-	
-		//return new model
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		User curUser = tm.getUserFromIndex(playerIndex);
+		
+		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.CITY)
+				&& facade.canBuyPiece(tm, curUser, PieceType.CITY)){
+			
+			//Decrease available Cities
+			curUser.setUnusedCities(curUser.getUnusedCities()-1);
+			//Increase available Settlements
+			curUser.setUnusedSettlements(curUser.getUnusedSettlements()+1);
+			
+			Building city = new Building();
+			city.setVertex(new Vertex(vertexLocation));
+			//Remove Settlement from vertex
+			facade.getModel().getMap().removeSettlement(city);
+			//Add City to map
+			facade.getModel().getMap().addCity(city);
+			
+			ArrayList<ResourceCard> paymentCards = new ArrayList<ResourceCard>();
+			for(int i = 0; i < 3; i++)
+				paymentCards.add(new ResourceCard(ResourceType.ORE));
+			for(int i = 0; i < 2; i++)
+				paymentCards.add(new ResourceCard(ResourceType.WHEAT));
+			ResourceCardDeck payment = new ResourceCardDeck(paymentCards);
+			//Pay the resources
+			
+			removeResources(payment, curUser.getResourceCards());
+			
+			//Give to the bank
+			addResources(payment, facade.bank().getResourceDeck());
+			
+			//Add points
+			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
+			
+			//Update history
+			String user = curUser.getName();
+			String message = user + "built a city";
+			MessageLine line = new MessageLine(message, user);
+			facade.getModel().getLog().addLine(line);
+			
+			updateModelVersion(gameId);
+		}
+		else{	
+			throw new ServerInvalidRequestException();
+		}
+			
+		
 		return null;
 	}
 	
@@ -491,12 +842,27 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
-		//if can offer trade
-			//add a trade offer to model
-		//else throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		User receivingUser = turnManager.getUserFromIndex(receiver);
 		
-		//return new model
-		return null;
+		TradeOffer tradeOffer = new TradeOffer(receiverDeck, senderDeck);
+		
+		if(modelFacade.canOfferTrade(turnManager, user, receivingUser, tradeOffer)) {
+			modelFacade.getModel().setTradeOffer(tradeOffer);
+			String logSource = user.getName();
+			String logMessage = user.getName() + " offered a trade to" + receivingUser.getName() + ".";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -508,16 +874,52 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
-		//if user can accept trade
-			//if user accepted trade
-				//current player and player trading swap specified resources
-			//else user rejected trade
 		
-		//else throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//trade offer is removed from model
+		TradeOffer tradeOffer = modelFacade.getModel().getTradeOffer();
 		
-		//return model
+		if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
+			if(accept) {
+				//trade offer goes through, swap resources
+				
+				User trader = turnManager.getUserFromIndex(tradeOffer.getSenderIndex());
+				ResourceCardDeck sendDeck = tradeOffer.getSendingDeck(); //deck trader offered
+				ResourceCardDeck receiveDeck = tradeOffer.getReceivingDeck(); // the deck the trader receives
+				
+				addResources(trader.getResourceCards(), receiveDeck);
+				removeResources(user.getResourceCards(), receiveDeck);
+				
+				addResources(user.getResourceCards(), sendDeck);
+				removeResources(trader.getResourceCards(), sendDeck);
+				
+				//update game log
+				String logSource = user.getName();
+				String logMessage = user.getName() + " accepted the trade.";
+				MessageLine logEntry = new MessageLine(logMessage, logSource);
+				modelFacade.addToGameLog(logEntry);
+			}
+			else{
+				//trade not accepted
+				//update game log
+				String logSource = user.getName();
+				String logMessage = user.getName() + " rejected the trade.";
+				MessageLine logEntry = new MessageLine(logMessage, logSource);
+				modelFacade.addToGameLog(logEntry);
+				
+			}
+			//remove trade offer from model
+			modelFacade.getModel().setTradeOffer(null);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
 		return null;
 	}
 	
@@ -532,15 +934,51 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
-		//get the game by id
+
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		ResourceCard wantedCard = new ResourceCard(receivingResource);
+		ArrayList<ResourceCard> offeredCards = new ArrayList<ResourceCard>();
+		for(int i = 0; i < ratio; i++) {
+			offeredCards.add(new ResourceCard(sendingResource));
+		}
+		ResourceCardDeck offeredCardsDeck = new ResourceCardDeck(offeredCards);
+		
 		//if can maritime trade
-			//subtract 1 of receiving resource type from bank
-			//bank gets ratio number of sending resource type
-			//user loses ratio number of sending resource type
-			//user gains 1 of receiving resource type
-		//else exception
-		//return new model
-		return null;
+		if(modelFacade.canMaritimeTrade(turnManager, modelFacade.bank(), user, wantedCard, offeredCardsDeck)) {
+			modelFacade.bank().getResourceDeck().removeResourceCard(wantedCard);
+			addResources(modelFacade.bank().getResourceDeck(), offeredCardsDeck);
+			removeResources(user.getResourceCards(), offeredCardsDeck);
+			user.getResourceCards().addResourceCard(wantedCard);
+			
+			String logSource = user.getName();
+			String logMessage = user.getName() + " did a maritime trade.";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+			
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		return getModel(0, gameId);
+	}
+	
+	//helper function to remove cards from a resource deck
+	private void removeResources(ResourceCardDeck cardsToRemove, ResourceCardDeck deckToRemoveFrom) {
+		for(ResourceCard card : cardsToRemove.getAllResourceCards()) {
+			deckToRemoveFrom.removeResourceCard(card);
+		}
+	}
+	
+	//helper function to add cards to a resource deck
+	private void addResources(ResourceCardDeck cardsToAdd, ResourceCardDeck deckToAddTo) {
+		for(ResourceCard card : cardsToAdd.getAllResourceCards()) {
+			deckToAddTo.addResourceCard(card);
+		}
 	}
 	
 	/**
@@ -553,16 +991,46 @@ public class ServerFacade {
 	 */
 	public JsonElement discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
 	{
-		//if can discard cards
-			//subtract the resources in the given resource card deck from the player
-			//add the same resources to the resource bank
-			//if all players who needed to discard have now discarded (how are we going to determine this)
-				//update turn phase to now be robbing
-		//else
-			//throw exception
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
 		
-		//return new model
-		return null;
+		if(modelFacade.canDiscardCards(turnManager, user, resources)) {
+			//subtract the resources in the given resource card deck from the player
+			for(ResourceCard card : resources) {
+				user.getResourceCards().removeResourceCard(card);
+			}
+			//add the same resources to the resource bank
+			for(ResourceCard card : resources) {
+				modelFacade.bank().getResourceDeck().addResourceCard(card);
+			}
+			//set the user's discard bool to true
+			user.setHasDiscarded(true);
+			//if all players who needed to discard have discarded
+			if(checkAllDiscarded(turnManager.getUsers())) {
+				modelFacade.updateTurnPhase(TurnPhase.ROBBING);
+			}
+			updateModelVersion(gameId);
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		//need to return a new model?
+		return getModel(0, gameId);
+	}
+	
+	//helper function to check that all users have discarded
+	private boolean checkAllDiscarded(List<User> users) {
+		for(User user : users) {
+			//if user hasn't discarded but has more than 7 cards, return false
+			if(!user.getHasDiscarded() && user.getResourceCards().getAllResourceCards().size() > 7) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public void updateModelVersion(int gameId)

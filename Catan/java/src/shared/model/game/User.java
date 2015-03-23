@@ -3,6 +3,7 @@ package shared.model.game;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import client.data.PlayerInfo;
 import shared.definitions.CatanColor;
@@ -19,6 +20,7 @@ import shared.model.board.Port;
 import shared.model.board.Vertex;
 import shared.model.board.piece.Piece;
 import shared.model.cards.DevCard;
+import shared.model.cards.DevCardDeck;
 import shared.model.cards.Hand;
 import shared.model.cards.ResourceCardDeck;
 
@@ -65,6 +67,7 @@ public class User {
 	private int unusedSettlements;
 	private int unusedCities;
 	
+	private int monumentsPlayed;
 	/**
 	 * An int representing the unique ID of the player. Used in login/cookie functionality
 	 */
@@ -142,6 +145,14 @@ public class User {
 		return new ArrayList<DevCard>( this.hand.getNewDevCards().getAllCards());
 	}
 	
+	public DevCardDeck getUsableDevCardDeck() {
+		return this.hand.getUsableDevCards();
+	}
+	
+	public DevCardDeck getNewDevCardDeck() {
+		return this.hand.getNewDevCards();
+	}
+	
 	public ResourceCardDeck getResourceCards(){
 		return this.hand.getResourceCards();
 	}
@@ -209,6 +220,9 @@ public class User {
 		this.occupiedEdges.add(edge);
 	}
 	
+	public List<Edge> getOccupiedEdges(){
+		return this.occupiedEdges;
+	}
 	public void resetOccupiedEdges(){
 		this.occupiedEdges.clear();
 	}
@@ -446,13 +460,21 @@ public class User {
 		this.soldiers = soldiers;
 	}
 
+	public int getMonumentsPlayed() {
+		return monumentsPlayed;
+	}
+
+	public void setMonumentsPlayed(int monumentsPlayed) {
+		this.monumentsPlayed = monumentsPlayed;
+	}
+
 	public int getVictoryPoints() {
 		return victoryPoints;
 	}
 
 	public void setVictoryPoints(int victoryPoints) {
 		this.victoryPoints = victoryPoints;
-	}
+	}	
 	
 	
 }

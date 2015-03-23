@@ -2,7 +2,7 @@ package server.command;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.rmi.ServerException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import com.sun.net.httpserver.Headers;
@@ -69,7 +69,7 @@ public abstract class ServerCommand{
 			if (string.contains("catan.user")) {
 				String decoded = URLDecoder.decode(string, "UTF-8");
 				String finalChunk = decoded.substring(decoded.indexOf("playerID"));
-				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, decoded.indexOf("=") +1);
+				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, finalChunk.indexOf("}"));
 				//System.out.println("PlayerIndex : " + id);
 				this.playerId = Integer.parseInt(id);
 			} else if (string.contains("catan.game")) {
@@ -85,6 +85,30 @@ public abstract class ServerCommand{
 		}
 	}
 	
+	
+	/**
+	 * Name pretty much says it all. Creates an encoded cookie for us, the required fields are in the paramaters
+	 * @param name
+	 * @param password
+	 * @param playerID
+	 * @return a string representation of the encoded login cookie
+	 * @throws UnsupportedEncodingException
+	 */
+	protected String getEncodedLoginCookie(String name, String password, String playerID) throws UnsupportedEncodingException{
+		String plaintext = "{\"name\":\"" + name + "\",\"password\":\"" + password + "\",\"playerID\":" + playerID + "}";
+		String encoded = URLEncoder.encode(plaintext, "UTF-8");
+		encoded = "catan.user=" + encoded + ";Path=/;";
+		return encoded;
+	}
+	
+	protected String getEncodedJoinGameCookie(String gameID){
+		return "catan.game=" + gameID + ";Path=/;";
+	}
+	
+	protected String getExampleListString(){
+		String output = "[\n\t{\n\t}\n]";
+		return output;
+	}
 	
 
 }

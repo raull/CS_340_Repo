@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import shared.definitions.PortType;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 
 
@@ -50,7 +51,7 @@ public class Port {
 	public int getOfferRate() {
 		return offerRate;
 	}
-	
+
 	public EdgeLocation getEdgeLocation() {
 		return edgeLocation;
 	}
