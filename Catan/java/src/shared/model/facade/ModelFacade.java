@@ -979,7 +979,25 @@ public class ModelFacade extends Observable{
 	{
 		ArrayList<HexLocation> locations = new ArrayList<HexLocation>();
 		
-		//TODO hard code the valid locations of hexTiles
+		locations.add(new HexLocation(0, 0));
+		locations.add(new HexLocation(0, -1));
+		locations.add(new HexLocation(0, -2));
+		locations.add(new HexLocation(0, 1));
+		locations.add(new HexLocation(0, 2));
+		locations.add(new HexLocation(-1, 0));
+		locations.add(new HexLocation(1, 0));
+		locations.add(new HexLocation(-2, 0));
+		locations.add(new HexLocation(2, 0));
+		locations.add(new HexLocation(1, -2));
+		locations.add(new HexLocation(2, -2));
+		locations.add(new HexLocation(1, -1));
+		locations.add(new HexLocation(2, -1));
+		locations.add(new HexLocation(1, 1));
+		locations.add(new HexLocation(-1, -1));
+		locations.add(new HexLocation(-2, 1));
+		locations.add(new HexLocation(-1, 1));
+		locations.add(new HexLocation(-2, 2));
+		locations.add(new HexLocation(-1, 2));		
 		
 		return locations;
 	}
