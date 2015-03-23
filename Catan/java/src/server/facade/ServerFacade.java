@@ -152,7 +152,7 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement joinGame(int gameId, String color, User user) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color, int userID) throws ServerInvalidRequestException 
 	{
 		Game gameToJoin = gameManager.getGameById(gameId);
 		
@@ -165,9 +165,15 @@ public class ServerFacade {
 		
 		CatanColor nuColor = CatanColor.valueOf(color);
 		
+		//Verify user
+		User existingUser = tm.getUserFromID(userID);
+		if (existingUser == null) {
+			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
+		}
+		
 		//Verifies color
 		if (nuColor.name() != null)
-			user.setColor(CatanColor.valueOf(color));
+			existingUser.setColor(CatanColor.valueOf(color));
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
@@ -175,7 +181,7 @@ public class ServerFacade {
 		//Checks to see if there is space
 		if (tm.getUsers().size() < 4){
 			try {
-				tm.addUser(user);
+				tm.addUser(existingUser);
 			} catch (ModelException e) {
 				throw new ServerInvalidRequestException("Cannot join. Error adding user to game.");
 			}

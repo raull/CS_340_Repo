@@ -24,8 +24,9 @@ public class GameJoinCommand extends ServerCommand {
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
 		JoinGameRequest joinGame = gson.fromJson(json, JoinGameRequest.class);
+		return ServerFacade.instance().joinGame(gameId, joinGame.getColor(), playerId);
 		
-		return ServerFacade.instance().joinGame(gameId, joinGame.getColor());
+		
 	}
 
 }
