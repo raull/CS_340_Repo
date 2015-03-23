@@ -29,6 +29,7 @@ public class GameJoinCommand extends ServerCommand {
 			httpObj.getResponseHeaders().add("Set-cookie", encodedCookie);
 			return response;
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new ServerInvalidRequestException("Internal Error");
 		}
 		

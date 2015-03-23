@@ -222,10 +222,11 @@ public class ServerFacade {
 		ModelFacade facade = gameToJoin.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		
+		color = color.toUpperCase();
 		CatanColor nuColor = CatanColor.valueOf(color);
 		
 		//Verify user
-		User existingUser = tm.getUserFromID(userID);
+		User existingUser = userManager.getUser(userID);
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
