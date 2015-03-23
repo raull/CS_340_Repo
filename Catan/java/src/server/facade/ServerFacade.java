@@ -197,7 +197,11 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
-		return null;
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		
+		return model.serialize();
 	}
 	
 	/**
