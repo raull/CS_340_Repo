@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose;
 import shared.locations.VertexLocation;
 import shared.model.board.Edge;
 import shared.model.facade.ModelFacade;
+import shared.model.game.TurnManager;
 import shared.model.game.User;
 import shared.proxy.games.Player;
 
@@ -63,18 +64,6 @@ public class Game {
 	 */
 	public int getId() {
 		return id;
-	}
-
-	public void addPlayer(Player player){
-		boolean inserted = false;
-		while (!inserted){
-		for (int i = 0; i < players.length; i++){
-			if (players[i] == null){
-				players[i] = player;
-				inserted = true;
-			}
-		}
-		}
 	}
 	
 	/**
@@ -251,4 +240,17 @@ public class Game {
 		
 	}
 	
+	public Player[] getPlayers() {
+		
+		TurnManager tm = modelFacade.turnManager();
+		ArrayList<User> users = new ArrayList<>(tm.getUsers());
+		ArrayList<Player> players = new ArrayList<>();
+		for (User user : users) {
+			Player newPlayer = new Player(user.getName(), user.getColor().toString(), user.getPlayerID());
+			players.add(newPlayer);
+		}
+		
+		return players.toArray(new Player[players.size()]);
+	}
+	 
 }

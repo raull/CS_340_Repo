@@ -75,6 +75,12 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (!userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
@@ -98,15 +104,39 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
-		else{
+		if (username.length() < 3 || username.length() > 7){
+			throw new ServerInvalidRequestException("Register Failed: "
+					+ "Username must be between 3 and 7 characters.");
+		}
+		if (password.length() < 5){
+			throw new ServerInvalidRequestException("Register Failed: Password not long enough");
+		}
+		
+		for (int i = 0; i < password.length(); i++){
+			Character ch = password.charAt(i);
+			boolean isGood = false;
+			if (ch.isAlphabetic(ch) || ch.isDigit(ch) || ch.equals('_') || ch.equals('-'))
+				isGood = true;
+			else{
+				isGood = false;
+				throw new ServerInvalidRequestException("Register Failed: Password contains invalid characters");
+			}
+		}
+		
 			User newUser = userManager.addNewUser(username, password);
 			JsonObject response = new JsonObject();
 			response.addProperty("id", newUser.getPlayerID());
 			return response;
-		}
+		
 					
 	}
 	
@@ -207,6 +237,11 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
 		
+		for (User u : tm.getUsers()){
+			if (u.getColor().equals(nuColor)){
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
+		}
 		//Checks to see if there is space
 		if (tm.getUsers().size() < 4){
 			try {
@@ -368,7 +403,8 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, 
+			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		//if can robPlayer
 			//move the robber to the new location
