@@ -10,15 +10,15 @@ public class CreateGameRequest {
 	/**
 	 * A boolean used to decide if Tiles are randomly placed
 	 */
-	private boolean randomTiles;
+	private Boolean randomTiles;
 	/**
 	 * Whether the numbers should be randomly placed
 	 */
-	private boolean randomNumbers;
+	private Boolean randomNumbers;
 	/**
 	 * Whether the ports should be randomly placed
 	 */
-	private boolean randomPorts;
+	private Boolean randomPorts;
 	/**
 	 * The name of the game.
 	 */
@@ -30,30 +30,30 @@ public class CreateGameRequest {
 	 * @param randomPorts
 	 * @param name
 	 */
-	public CreateGameRequest(boolean randomTiles, boolean randomNumbers,
-			boolean randomPorts, String name) {
+	public CreateGameRequest(Boolean randomTiles, Boolean randomNumbers,
+			Boolean randomPorts, String name) {
 		super();
 		this.randomTiles = randomTiles;
 		this.randomNumbers = randomNumbers;
 		this.randomPorts = randomPorts;
 		this.name = name;
 	}
-	public boolean isRandomTiles() {
+	public Boolean isRandomTiles() {
 		return randomTiles;
 	}
-	public void setRandomTiles(boolean randomTiles) {
+	public void setRandomTiles(Boolean randomTiles) {
 		this.randomTiles = randomTiles;
 	}
-	public boolean isRandomNumbers() {
+	public Boolean isRandomNumbers() {
 		return randomNumbers;
 	}
-	public void setRandomNumbers(boolean randomNumbers) {
+	public void setRandomNumbers(Boolean randomNumbers) {
 		this.randomNumbers = randomNumbers;
 	}
-	public boolean isRandomPorts() {
+	public Boolean isRandomPorts() {
 		return randomPorts;
 	}
-	public void setRandomPorts(boolean randomPorts) {
+	public void setRandomPorts(Boolean randomPorts) {
 		this.randomPorts = randomPorts;
 	}
 	public String getName() {

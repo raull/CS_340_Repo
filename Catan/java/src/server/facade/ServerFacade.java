@@ -133,8 +133,29 @@ public class ServerFacade {
 	 * @return A newly created game.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
+	public JsonElement createNewGame(String name, Boolean randomTiles, Boolean randomNumbers, Boolean randomPorts) throws ServerInvalidRequestException 
 	{
+		if (name == null )
+		{
+			throw new ServerInvalidRequestException("The 'name' field was missing.");
+		}
+		else if (randomTiles == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomTiles' field was missing.");
+
+		}
+		else if (randomNumbers == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomNumbers' field was missing.");
+
+		}
+		else if (randomPorts == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomPorts' field was missing.");
+
+		}
+		
+		Boolean test = null;
 		//have a hard coded list of default tiles, numbers, and ports?
 		int newGameId = gameManager.getNextId();
 		
