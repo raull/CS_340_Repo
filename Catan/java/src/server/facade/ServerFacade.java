@@ -74,6 +74,12 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (!userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
@@ -97,6 +103,12 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
