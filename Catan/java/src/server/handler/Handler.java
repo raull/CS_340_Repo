@@ -52,6 +52,14 @@ public class Handler implements HttpHandler{
 			exchange.getResponseBody().write(errorMessage.getBytes());
 			exchange.getResponseBody().close();
 			exchange.close();
+		} catch(Exception e2){
+			String errorMessage = e2.getMessage();
+			this.logError(errorMessage);
+			exchange.getResponseHeaders().add("Content-Type", "application/text");
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_GATEWAY, 0);
+			exchange.getResponseBody().write(errorMessage.getBytes());
+			exchange.getResponseBody().close();
+			exchange.close();
 		}
 	}
 	

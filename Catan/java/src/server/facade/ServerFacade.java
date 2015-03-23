@@ -3,6 +3,8 @@ package server.facade;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -11,6 +13,7 @@ import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
@@ -26,6 +29,7 @@ import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
+import shared.model.exception.ModelException;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
@@ -112,12 +116,13 @@ public class ServerFacade {
 	 */
 	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
-		//gets the list of games from the game manager
-		//at some point we need to be creating a specific JSON element here
-		//is that going to be done in the handler?
-		return null;
+		List<Game> games = gameManager.getGames();
+		
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		
+		
+		return gson.toJsonTree(games);
 	}
-	
 	/**
 	 * Creates and returns a new game.
 	 * @param name The name of the new game.
@@ -154,11 +159,46 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color, int userID) throws ServerInvalidRequestException 
 	{
-		return null;
+		Game gameToJoin = gameManager.getGameById(gameId);
+		
+		if (gameToJoin == null) {
+			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
+		}
+		
+		ModelFacade facade = gameToJoin.getModelFacade();
+		TurnManager tm = facade.turnManager();
+		
+		CatanColor nuColor = CatanColor.valueOf(color);
+		
+		//Verify user
+		User existingUser = tm.getUserFromID(userID);
+		if (existingUser == null) {
+			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
+		}
+		
+		//Verifies color
+		if (nuColor.name() != null)
+			existingUser.setColor(CatanColor.valueOf(color));
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
+		}
+		
+		//Checks to see if there is space
+		if (tm.getUsers().size() < 4){
+			try {
+				tm.addUser(existingUser);
+			} catch (ModelException e) {
+				throw new ServerInvalidRequestException("Cannot join. Error adding user to game.");
+			}
+		}
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Game already full.");
+		}
+		
+		return new JsonPrimitive("Success");
 	}
-	
 	/**
 	 * This method is for testing and debugging purposes. 
 	 * When a bug is found, you can use the /games/save method to save 
@@ -201,7 +241,11 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
-		return null;
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		
+		return model.serialize();
 	}
 	
 	/**
@@ -358,25 +402,18 @@ public class ServerFacade {
 				if (tm.getCurrentTurn() != 3)
 					tm.setCurrentTurn(nextTurn(playerIndex));
 				else{
-					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.SECONDROUND);
 				}
 				break;
 			case SECONDROUND:
-				if (tm.getCurrentTurn() != 3)
-					tm.setCurrentTurn(nextTurn(playerIndex));
+				if (tm.getCurrentTurn() != 0)
+					tm.setCurrentTurn(playerIndex - 1);
 				else{
-					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.ROLLING);
 				}
-			case DISCARDING: //error, can't end turn at this phase
 				break;
-			case ROBBING:
-				break;
-			case ROLLING:
-				break;
-			default:
-				break;
+			default: //can't end turn in anyother phase
+				throw new ServerInvalidRequestException();
 			}
 			updateModelVersion(gameId);
 			

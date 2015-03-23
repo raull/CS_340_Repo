@@ -22,10 +22,16 @@ public class GameJoinCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		try {
+			JoinGameRequest joinGame = gson.fromJson(json, JoinGameRequest.class);
+			String encodedCookie = getEncodedJoinGameCookie(Integer.toString(gameId));
+			JsonElement response = ServerFacade.instance().joinGame(gameId, joinGame.getColor(), playerId);
+			httpObj.getResponseHeaders().add("Set-cookie", encodedCookie);
+			return response;
+		} catch (Exception e) {
+			throw new ServerInvalidRequestException("Internal Error");
+		}
 		
-		JoinGameRequest joinGame = gson.fromJson(json, JoinGameRequest.class);
-		
-		return ServerFacade.instance().joinGame(gameId, joinGame.getColor());
 	}
 
 }
