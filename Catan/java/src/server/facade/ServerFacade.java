@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -149,8 +150,11 @@ public class ServerFacade {
 		//this function should also save the beginning state of the map somewhere
 		//This way if the reset function is called the model can update using this saved file
 		//This also means a Game object should also store the string representing the filename of the intial setup
-		
-		return null;
+		JsonObject response = new JsonObject();
+		response.addProperty("title", name);
+		response.addProperty("id", newGameId);
+		response.add("players", new JsonArray());
+		return response;
 	}
 	
 	/**
