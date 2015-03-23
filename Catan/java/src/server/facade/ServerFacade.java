@@ -208,6 +208,11 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
 		
+		for (User u : tm.getUsers()){
+			if (u.getColor().equals(nuColor)){
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
+		}
 		//Checks to see if there is space
 		if (tm.getUsers().size() < 4){
 			try {
@@ -369,7 +374,8 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, 
+			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		//if can robPlayer
 			//move the robber to the new location
