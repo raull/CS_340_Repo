@@ -11,7 +11,20 @@ public class UserManager {
 	private ArrayList<User> users = new ArrayList<User>();
 	
 	public UserManager() {
+		//Set default players :)
+		User sam = new User("Sam", "sam", null);
+		sam.setPlayerID(1);
+		User pete = new User("Pete", "pete", null);
+		pete.setPlayerID(2);
+		User brooke = new User("Brooke", "brooke", null);
+		brooke.setPlayerID(3);
+		User mark = new User("Mark", "mark", null);
+		mark.setPlayerID(4);
 		
+		addUser(sam);
+		addUser(pete);
+		addUser(brooke);
+		addUser(mark);
 	}
 	
 	public UserManager(List<User> users) {
