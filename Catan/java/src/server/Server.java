@@ -74,12 +74,10 @@ public class Server {
 
 		server.setExecutor(null); // use the default executor
 		
-		server.createContext("/", serverHandler);
-		serverHandler.setLogger(logger);
-		
-		
 		server.createContext("/docs/api/data", new Handlers.JSONAppender(""));
 		server.createContext("/docs/api/view", new Handlers.BasicFile(""));
+		server.createContext("/", serverHandler);
+		serverHandler.setLogger(logger);
 		
 		logger.info("Starting HTTP Server");
 

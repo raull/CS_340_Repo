@@ -69,7 +69,7 @@ public abstract class ServerCommand{
 			if (string.contains("catan.user")) {
 				String decoded = URLDecoder.decode(string, "UTF-8");
 				String finalChunk = decoded.substring(decoded.indexOf("playerID"));
-				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, decoded.indexOf("=") +1);
+				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, finalChunk.indexOf("}"));
 				//System.out.println("PlayerIndex : " + id);
 				this.playerId = Integer.parseInt(id);
 			} else if (string.contains("catan.game")) {
