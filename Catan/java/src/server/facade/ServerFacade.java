@@ -130,10 +130,13 @@ public class ServerFacade {
 	public JsonElement createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
 	{
 		//have a hard coded list of default tiles, numbers, and ports?
+		int newGameId = gameManager.getNextId();
 		
-		//GameManager.instance().addGame(new Game(0, name, null));
-		//TODO need function in gameManager to get next game ID
-		//TODO can I just pass in an new modelFacade??
+		ModelFacade newFacade = new ModelFacade(randomTiles, randomNumbers, randomPorts);
+		
+		Game newGame = new Game(newGameId, name, newFacade);
+		gameManager.addGame(newGame);
+		
 		
 		//don't have to account for automatically adding the player to the game here
 		//that is done client side
