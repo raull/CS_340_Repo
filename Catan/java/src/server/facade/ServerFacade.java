@@ -13,6 +13,7 @@ import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
@@ -28,6 +29,7 @@ import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
+import shared.model.exception.ModelException;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
@@ -150,11 +152,35 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color, User user) throws ServerInvalidRequestException 
 	{
+		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		TurnManager tm = facade.turnManager();
+		
+		CatanColor nuColor = CatanColor.valueOf(color);
+		
+		//verifieds color
+		if (nuColor.name() != null)
+			user.setColor(CatanColor.valueOf(color));
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
+		//Checks to see if there is space
+		if (tm.getUsers().size() < 4){
+			try {
+				tm.addUser(user);
+			} catch (ModelException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else{
+			throw new ServerInvalidRequestException();
+		}
+		
 		return null;
 	}
-	
 	/**
 	 * This method is for testing and debugging purposes. 
 	 * When a bug is found, you can use the /games/save method to save 
