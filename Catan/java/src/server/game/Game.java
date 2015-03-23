@@ -179,7 +179,12 @@ public class Game {
 			}
 		}
 		
-		return 0;
+		int output = 0;
+		for(int i : permutations){
+			if(i>output)
+				output = 0;
+		}
+		return output;
 	}
 
 	public List<Edge> excludeEdge(List<Edge> l, Edge e){
