@@ -17,7 +17,7 @@ public class Handlers {
 		private static Logger LOGGER = Logger.getLogger(BaseFile.class.getName());
 		
 		public BaseFile(String rootPath) {
-			System.out.println("handlers rootpath: " + rootPath);
+			//System.out.println("handlers rootpath: " + rootPath);
 			this.rootPath = rootPath; 
 		}
 		protected String rootPath;
