@@ -354,15 +354,13 @@ public class ServerFacade {
 				if (tm.getCurrentTurn() != 3)
 					tm.setCurrentTurn(nextTurn(playerIndex));
 				else{
-					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.SECONDROUND);
 				}
 				break;
 			case SECONDROUND:
-				if (tm.getCurrentTurn() != 3)
-					tm.setCurrentTurn(nextTurn(playerIndex));
+				if (tm.getCurrentTurn() != 0)
+					tm.setCurrentTurn(playerIndex - 1);
 				else{
-					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.ROLLING);
 				}
 			case DISCARDING: //error, can't end turn at this phase
