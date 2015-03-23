@@ -1,7 +1,10 @@
 package server.game;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import shared.locations.VertexLocation;
+import shared.model.board.Edge;
 import shared.model.facade.ModelFacade;
 import shared.model.game.User;
 
@@ -125,6 +128,68 @@ public class Game {
 				longestRoadIndex = user.getTurnIndex();
 			}
 		}
+	}
+	
+	public int getLongestRoadIndex(){
+		List<User> users = modelFacade.turnManager().getUsers();
+		int index = -1;
+		int longestRoad = 0;
+		
+		//finds longest road of each player
+		for(User user: users){
+			if(user.getOccupiedEdges().size()<5){
+				continue; //don't even bother unless the player has 5+ roads
+			}
+			//checks for longest road beginning at each road
+			try{
+				for(Edge e : user.getOccupiedEdges()){
+					List<Edge> edges = excludeEdge(user.getOccupiedEdges(),e);
+					//This is the tricky part - checks for adjacency to a vertex of a given road, but removes that road before checking
+					VertexLocation[] vertices = e.getLocation().getAdjacentVertices();
+					int temp = Math.max(rGetLongestRoad(vertices[0], edges), rGetLongestRoad(vertices[1], edges));
+					if(temp > longestRoad){
+						longestRoad = temp;
+						index = user.getPlayerInfo().getPlayerIndex();
+					}
+				}
+			} catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		if(longestRoad < 5)
+			return -1;
+		else
+			return index;
+	}
+	
+	private int rGetLongestRoad(VertexLocation v, List<Edge> edges) {
+		if(edges.size()==0){
+			return 1; 			//base case, accounts for road just removed
+		}
+		List<Integer> permutations = new ArrayList<Integer>();
+		for(Edge edge : edges){
+			if(edge.getLocation().getAdjacentVertices()[0].equals(v)){
+				permutations.add(1 + rGetLongestRoad(edge.getLocation().getAdjacentVertices()[1], this.excludeEdge(edges, edge)));
+			}
+			else if(edge.getLocation().getAdjacentVertices()[1].equals(v)){
+				permutations.add(1 + rGetLongestRoad(edge.getLocation().getAdjacentVertices()[0], this.excludeEdge(edges, edge)));
+			}
+			else{
+				permutations.add(0);
+			}
+		}
+		
+		return 0;
+	}
+
+	public List<Edge> excludeEdge(List<Edge> l, Edge e){
+		ArrayList<Edge> list = new ArrayList<Edge>();
+		for(Edge edge : l){
+			if(!edge.getLocation().equals(e.getLocation())){
+				list.add(edge);
+			}
+		}
+		return list;
 	}
 	
 	/**
