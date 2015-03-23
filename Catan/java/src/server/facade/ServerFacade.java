@@ -144,9 +144,6 @@ public class ServerFacade {
 		gameManager.addGame(newGame);
 		
 		
-		//don't have to account for automatically adding the player to the game here
-		//that is done client side
-		
 		//this function should also save the beginning state of the map somewhere
 		//This way if the reset function is called the model can update using this saved file
 		//This also means a Game object should also store the string representing the filename of the intial setup
