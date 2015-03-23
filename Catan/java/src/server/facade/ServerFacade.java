@@ -188,7 +188,7 @@ public class ServerFacade {
 		Writer writer = null;
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(fileName + ".json"), "utf-8"));
+					new FileOutputStream(fileName), "utf-8"));
 			writer.write(jsonModelStr);
 		}
 		catch(IOException ex) {
