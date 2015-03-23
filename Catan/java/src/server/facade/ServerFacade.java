@@ -367,6 +367,7 @@ public class ServerFacade {
 				else{
 					tm.setCurrentPhase(TurnPhase.ROLLING);
 				}
+				break;
 			default: //can't end turn in anyother phase
 				throw new ServerInvalidRequestException();
 			}
