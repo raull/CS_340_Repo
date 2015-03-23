@@ -154,16 +154,22 @@ public class ServerFacade {
 	 */
 	public JsonElement joinGame(int gameId, String color, User user) throws ServerInvalidRequestException 
 	{
-		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+		Game gameToJoin = gameManager.getGameById(gameId);
+		
+		if (gameToJoin == null) {
+			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
+		}
+		
+		ModelFacade facade = gameToJoin.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		
 		CatanColor nuColor = CatanColor.valueOf(color);
 		
-		//verifieds color
+		//Verifies color
 		if (nuColor.name() != null)
 			user.setColor(CatanColor.valueOf(color));
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
 		
 		//Checks to see if there is space
@@ -171,15 +177,14 @@ public class ServerFacade {
 			try {
 				tm.addUser(user);
 			} catch (ModelException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new ServerInvalidRequestException("Cannot join. Error adding user to game.");
 			}
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot join. Game already full.");
 		}
 		
-		return null;
+		return new JsonPrimitive("Success");
 	}
 	/**
 	 * This method is for testing and debugging purposes. 
