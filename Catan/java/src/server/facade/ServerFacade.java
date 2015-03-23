@@ -100,12 +100,30 @@ public class ServerFacade {
 		if (userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
-		else{
+		if (username.length() < 3 || username.length() > 7){
+			throw new ServerInvalidRequestException("Register Failed: "
+					+ "Username must be between 3 and 7 characters.");
+		}
+		if (password.length() < 5){
+			throw new ServerInvalidRequestException("Register Failed: Password not long enough");
+		}
+		
+		for (int i = 0; i < password.length(); i++){
+			Character ch = password.charAt(i);
+			boolean isGood = false;
+			if (ch.isAlphabetic(ch) || ch.isDigit(ch) || ch.equals('_') || ch.equals('-'))
+				isGood = true;
+			else{
+				isGood = false;
+				throw new ServerInvalidRequestException("Register Failed: Password contains invalid characters");
+			}
+		}
+		
 			User newUser = userManager.addNewUser(username, password);
 			JsonObject response = new JsonObject();
 			response.addProperty("id", newUser.getPlayerID());
 			return response;
-		}
+		
 					
 	}
 	
