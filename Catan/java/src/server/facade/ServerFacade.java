@@ -4,28 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
-
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
-
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
-
 import shared.model.board.Edge;
 import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
-import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
-
 import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
@@ -34,9 +30,6 @@ import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
-import shared.model.game.TurnManager;
-import shared.model.game.TurnPhase;
-
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
 
@@ -80,8 +73,16 @@ public class ServerFacade {
 		if (!userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
-				
-		return new JsonPrimitive("Success");
+			
+		User user = userManager.getUser(username);
+		
+		if (user == null) {
+			throw new ServerInvalidRequestException("User cannot be found at the moment");
+		} else {
+			JsonObject response = new JsonObject();
+			response.addProperty("id", user.getPlayerID());
+			return response;
+		}
 	}
 	
 	/**
@@ -96,10 +97,12 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
 		else{
-			userManager.addNewUser(username, password);
+			User newUser = userManager.addNewUser(username, password);
+			JsonObject response = new JsonObject();
+			response.addProperty("id", newUser.getPlayerID());
+			return response;
 		}
 					
-		return new JsonPrimitive("Success");
 	}
 	
 	/**

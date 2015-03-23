@@ -2,10 +2,8 @@ package server;
 
 import java.io.*;
 import java.net.*;
-import java.rmi.ServerException;
 import java.util.logging.*;
 
-import server.facade.ServerFacade;
 import server.handler.Handler;
 
 import com.sun.net.httpserver.*;

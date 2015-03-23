@@ -23,7 +23,7 @@ public class UserManager {
 	}
 	
 	//Adds a new user to the UserManager
-	public void addNewUser(String username, String password){
+	public User addNewUser(String username, String password){
 		//Checks to give a unique ID
 		int highestID = 0;
 		for (User u: users){
@@ -38,12 +38,23 @@ public class UserManager {
 		newUser.setPlayerID(newID);
 		
 		addUser(newUser);
+		return newUser;
 	}
 	
 	
 	public User getUser(int id) {
 		for (User user : users) {
 			if (user.getPlayerID() == id) {
+				return user;
+			}
+		}
+		
+		return null;
+	}
+	
+	public User getUser(String userName) {
+		for (User user : users) {
+			if (user.getName().equals(userName)) {
 				return user;
 			}
 		}

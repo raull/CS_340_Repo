@@ -39,7 +39,7 @@ public class Handler implements HttpHandler{
 			} else {
 				exchange.getResponseHeaders().add("Content-Type", "application/json");
 			}
-			String stringResponse = response.getAsString();
+			String stringResponse = response.toString();
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, stringResponse.length());
 			exchange.getResponseBody().write(stringResponse.getBytes());
 			exchange.getResponseBody().close();

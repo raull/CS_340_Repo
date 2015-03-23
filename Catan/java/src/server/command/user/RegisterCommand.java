@@ -1,13 +1,13 @@
 package server.command.user;
 
-import java.io.UnsupportedEncodingException;
-
 import server.command.ServerCommand;
 import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
 import shared.proxy.user.Credentials;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.sun.net.httpserver.HttpExchange;
 
 /**
@@ -28,12 +28,20 @@ public class RegisterCommand extends ServerCommand {
 		Credentials credentials = gson.fromJson(json, Credentials.class);
 		try {
 			JsonElement response = ServerFacade.instance().register(credentials.getUsername(), credentials.getPassword());
-			String encoded = getEncodedLoginCookie(credentials.getUsername(), credentials.getPassword(), "0");
-			httpObj.getResponseHeaders().add("Set-cookie", encoded);
-			return response;
+			JsonObject responseObject = response.getAsJsonObject();
+			
+			if (responseObject.has("id")) {
+				int id = responseObject.get("id").getAsInt();
+				String encoded = getEncodedLoginCookie(credentials.getUsername(), credentials.getPassword(), Integer.toString(id));
+				httpObj.getResponseHeaders().add("Set-cookie", encoded);
+				return new JsonPrimitive("Success");
+			} else {
+				throw new ServerInvalidRequestException("Internal Error");
+			}
+			
 		} catch (ServerInvalidRequestException e) {
 			throw e;
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new ServerInvalidRequestException("Internal Error");
 		}
