@@ -1,12 +1,25 @@
 package server.facade;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
@@ -167,7 +180,25 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public void gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
+		Game game = gameManager.getGameById(gameId);
+		Model model = game.getModelFacade().getModel();
 		
+		String jsonModelStr = model.serialize().toString();
+		
+		Writer writer = null;
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(fileName + ".json"), "utf-8"));
+			writer.write(jsonModelStr);
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			try { writer.close();} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -182,7 +213,28 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement gameLoad(String fileName) throws ServerInvalidRequestException {
-		return null;
+		
+		String jsonStr = "";
+		JsonObject jsonModel = null;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			
+			String currLine = "";
+			
+			while((currLine = reader.readLine()) != null) {
+				jsonStr += currLine;
+			}
+			
+			reader.close();
+			
+			jsonModel = new JsonParser().parse(jsonStr).getAsJsonObject();
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		return jsonModel;
 	}
 	
 	/**
