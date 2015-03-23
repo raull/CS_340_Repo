@@ -3,6 +3,8 @@ package server.facade;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -112,12 +114,13 @@ public class ServerFacade {
 	 */
 	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
-		//gets the list of games from the game manager
-		//at some point we need to be creating a specific JSON element here
-		//is that going to be done in the handler?
-		return null;
+		List<Game> games = gameManager.getGames();
+		
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		
+		
+		return gson.toJsonTree(games);
 	}
-	
 	/**
 	 * Creates and returns a new game.
 	 * @param name The name of the new game.

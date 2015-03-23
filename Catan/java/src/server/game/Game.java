@@ -7,6 +7,7 @@ import shared.locations.VertexLocation;
 import shared.model.board.Edge;
 import shared.model.facade.ModelFacade;
 import shared.model.game.User;
+import shared.proxy.games.Player;
 
 /**
  * A class to represent a game on the server.
@@ -39,6 +40,8 @@ public class Game {
 	 */
 	private ModelFacade modelFacade;
 	
+	private Player[] players;
+	
 	public Game(int id, String name, ModelFacade modelFacade) {
 		super();
 		this.id = id;
@@ -46,6 +49,7 @@ public class Game {
 		this.modelFacade = modelFacade;
 		this.longestRoadIndex = -1;
 		this.largestArmyIndex = -1;
+		this.players = new Player[4];
 	}
 
 	/**
@@ -56,6 +60,18 @@ public class Game {
 		return id;
 	}
 
+	public void addPlayer(Player player){
+		boolean inserted = false;
+		while (!inserted){
+		for (int i = 0; i < players.length; i++){
+			if (players[i] == null){
+				players[i] = player;
+				inserted = true;
+			}
+		}
+		}
+	}
+	
 	/**
 	 * Sets the unique id of the game.
 	 * @param id
