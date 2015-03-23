@@ -124,7 +124,7 @@ public class ServerFacade {
 		for (int i = 0; i < password.length(); i++){
 			Character ch = password.charAt(i);
 			boolean isGood = false;
-			if (ch.isAlphabetic(ch) || ch.isDigit(ch) || ch.equals('_') || ch.equals('-'))
+			if (Character.isAlphabetic(ch) || Character.isDigit(ch) || ch.equals('_') || ch.equals('-'))
 				isGood = true;
 			else{
 				isGood = false;
