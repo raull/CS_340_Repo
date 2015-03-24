@@ -235,10 +235,11 @@ public class ServerFacade {
 		CatanColor nuColor = CatanColor.valueOf(color);
 		
 		//Verify user
-		User existingUser = userManager.getUser(userID).clone();
+		User existingUser = userManager.getUser(userID);
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
+		existingUser = existingUser.clone();
 		
 		//Verify color	
 		if (nuColor != null)
