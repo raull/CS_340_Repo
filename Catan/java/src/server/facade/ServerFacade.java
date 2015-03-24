@@ -602,7 +602,7 @@ public class ServerFacade {
 				}
 				break;
 			default: //can't end turn in anyother phase
-				throw new ServerInvalidRequestException();
+				throw new ServerInvalidRequestException("Cannot finish turn at this time");
 			}
 			updateModelVersion(gameId);
 			
@@ -667,7 +667,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot buy a development card at this time");
 		}
 		
 		return getModel(0, gameId);
@@ -710,7 +710,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -753,7 +753,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -796,7 +796,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -869,7 +869,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -897,7 +897,7 @@ public class ServerFacade {
 			modelFacade.map().addRoad(road);
 		}
 		else{
-			throw new ServerInvalidRequestException(); 
+			throw new ServerInvalidRequestException("Cannot buy or build road at this location"); 
 		}
 		
 	}
