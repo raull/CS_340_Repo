@@ -25,7 +25,7 @@ public class GameJoinCommand extends ServerCommand {
 		try {
 			JoinGameRequest joinGame = gson.fromJson(json, JoinGameRequest.class);
 			String encodedCookie = getEncodedJoinGameCookie(Integer.toString(gameId));
-			JsonElement response = ServerFacade.instance().joinGame(gameId, joinGame.getColor(), playerId);
+			JsonElement response = ServerFacade.instance().joinGame(joinGame.getId(), joinGame.getColor(), playerId);
 			httpObj.getResponseHeaders().add("Set-cookie", encodedCookie);
 			return response;
 		} catch (Exception e) {
