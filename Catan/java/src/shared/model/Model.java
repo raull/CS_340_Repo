@@ -145,6 +145,9 @@ public class Model {
 		//first add the bank's resource list
 		JsonElement bankJson = serializeResourceList(bank.getResourceDeck());
 		serializedModel.add("bank", bankJson);
+		//bank's dev cards
+		JsonElement bankDevJson = serializeDevCards(bank.getDevCardDeck());
+		serializedModel.add("deck", bankDevJson);
 		//set the chat messages json
 		JsonElement chatJson = serializeMessageList(chat);
 		serializedModel.add("chat", chatJson);
@@ -181,7 +184,6 @@ public class Model {
 	public JsonElement serializeResourceList(ResourceCardDeck resourceDeck) {
 		JsonObject jsonResources = new JsonObject();
 		
-		jsonResources = new JsonObject();
 		jsonResources.add("brick", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.BRICK)));
 		jsonResources.add("ore", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.ORE)));
 		jsonResources.add("sheep", new JsonPrimitive(resourceDeck.getCountByType(ResourceType.SHEEP)));
@@ -198,6 +200,7 @@ public class Model {
 	 * @return json element
 	 */
 	public JsonElement serializeMessageList(MessageList messageList) {
+		JsonObject jsonMessage = new JsonObject();
 		//message list is array of message lines
 		ArrayList<MessageLine> lines = messageList.getLines();
 		JsonArray jsonMessageLines = new JsonArray();
@@ -207,7 +210,8 @@ public class Model {
 			jsonLine.add("source", new JsonPrimitive(line.getSource()));
 			jsonMessageLines.add(jsonLine);
 		}
-		return jsonMessageLines;
+		jsonMessage.add("lines", jsonMessageLines);
+		return jsonMessage;
 	}
 	
 	/**
@@ -232,15 +236,32 @@ public class Model {
 		JsonElement jsonCities = serializeBuildings(map.getCitiesOnMap());
 		jsonMap.add("cities", jsonCities);
 		//radius is always 3 (and not really used?)
+		//keep track of desert hex tile
+		HexTile desertHex = null;
+		//keep track if there is a robber on a hex tile
+		boolean robberPlaced = false;
+		
 		//robber hex location
 		for(HexTile hexTile : map.getHexTiles()) {
+			
+			if(hexTile.getType() == HexType.DESERT) {
+				desertHex = hexTile;
+			}
 			//hex tile that has robber
 			if(hexTile.hasRobber()) {
+				robberPlaced = true;
 				JsonElement jsonLoc = serializeHexLocation(hexTile.getLocation());
 				jsonMap.add("robber", jsonLoc);
 				break;
 			}
+			
 		}
+		//if no robber has been placed
+		if(!robberPlaced) {
+			//place the robber on the desert hex
+			jsonMap.add("robber", serializeHexLocation(desertHex.getLocation()));
+		}
+		
 		return jsonMap;
 	}
 	
@@ -269,7 +290,7 @@ public class Model {
 		//add the resource, if desert, don't add
 		HexType resourceType = hexTile.getType();
 		if(resourceType != HexType.DESERT) {
-			jsonHex.add("resource", new JsonPrimitive(resourceType.name()));
+			jsonHex.add("resource", new JsonPrimitive(resourceType.name().toLowerCase()));
 		}
 		//add the number on tile; if desert, don't add --water wouldn't have either
 		if(resourceType != HexType.DESERT && resourceType != HexType.WATER) {
@@ -313,13 +334,13 @@ public class Model {
 		JsonObject jsonPort = new JsonObject();
 		//resource, optional
 		if(port.getType() != PortType.THREE) {
-			jsonPort.add("resource", new JsonPrimitive(port.getType().name()));
+			jsonPort.add("resource", new JsonPrimitive(port.getType().name().toLowerCase()));
 		}
 		//hex location
 		JsonElement jsonHexLoc = serializeHexLocation(port.getEdgeLocation().getHexLoc());
 		jsonPort.add("location", jsonHexLoc);
 		//direction
-		jsonPort.add("direction", new JsonPrimitive(port.getEdgeLocation().getDir().name()));
+		jsonPort.add("direction", new JsonPrimitive(port.getEdgeLocation().getDir().original()));
 		//ratio
 		jsonPort.add("ratio", new JsonPrimitive(port.getOfferRate()));
 		return jsonPort;
@@ -353,7 +374,7 @@ public class Model {
 		EdgeLocation roadLoc = road.getEdge().getLocation();
 		jsonLoc.add("x", new JsonPrimitive(roadLoc.getHexLoc().getX()));
 		jsonLoc.add("y", new JsonPrimitive(roadLoc.getHexLoc().getY()));
-		jsonLoc.add("direction", new JsonPrimitive(roadLoc.getDir().name()));
+		jsonLoc.add("direction", new JsonPrimitive(roadLoc.getDir().original()));
 		
 		jsonRoad.add("location", jsonLoc);
 		return jsonRoad;
@@ -387,7 +408,7 @@ public class Model {
 		VertexLocation vertexLoc = building.getVertex().getLocation();
 		jsonVertex.add("x", new JsonPrimitive(vertexLoc.getHexLoc().getX()));
 		jsonVertex.add("y", new JsonPrimitive(vertexLoc.getHexLoc().getY()));
-		jsonVertex.add("direction", new JsonPrimitive(vertexLoc.getDir().name()));
+		jsonVertex.add("direction", new JsonPrimitive(vertexLoc.getDir().original()));
 		
 		jsonBuilding.add("location", jsonVertex);
 		
@@ -415,7 +436,7 @@ public class Model {
 	public JsonElement serializePlayer(User user) {
 		JsonObject jsonUser = new JsonObject();
 		jsonUser.add("cities", new JsonPrimitive(user.getUnusedCities()));
-		jsonUser.add("color", new JsonPrimitive(user.getCatanColor().name()));
+		jsonUser.add("color", new JsonPrimitive(user.getCatanColor().name().toLowerCase()));
 		jsonUser.add("discarded", new JsonPrimitive(user.getHasDiscarded()));
 		jsonUser.add("monuments", new JsonPrimitive(user.getMonumentsPlayed()));
 		jsonUser.add("name", new JsonPrimitive(user.getName()));
@@ -492,7 +513,7 @@ public class Model {
 	public JsonElement serializeTurnTracker() {
 		JsonObject jsonTurn = new JsonObject();
 		jsonTurn.add("currentTurn", new JsonPrimitive(turnManager.getCurrentTurn()));
-		jsonTurn.add("status", new JsonPrimitive(turnManager.currentTurnPhase().name()));
+		jsonTurn.add("status", new JsonPrimitive(turnManager.currentTurnPhase().original()));
 		jsonTurn.add("longestRoad", new JsonPrimitive(scoreKeeper.getLongestRoadUser()));
 		jsonTurn.add("largestArmy", new JsonPrimitive(scoreKeeper.getLargestArmyUser()));
 		return jsonTurn;
@@ -758,7 +779,6 @@ public class Model {
 		HexLocation portLocation = gson.fromJson(jsonPort.get("location"), HexLocation.class);
 
 		EdgeDirection portDirection = gson.fromJson(jsonPort.get("direction"), EdgeDirection.class);
-
 
 		EdgeLocation location = new EdgeLocation(portLocation, portDirection);
 		
