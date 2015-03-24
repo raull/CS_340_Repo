@@ -48,6 +48,7 @@ public class TurnManager {
 	 */
 	public TurnManager(ArrayList<User> users) {
 		this.users = users;
+		currentPhase = TurnPhase.FIRSTROUND;
 	}
 	
 	//Helper Methods
