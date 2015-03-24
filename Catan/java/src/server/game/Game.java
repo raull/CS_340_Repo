@@ -1,8 +1,14 @@
 package server.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 
 import shared.locations.VertexLocation;
@@ -270,5 +276,31 @@ public class Game {
 		
 		return players.toArray(new Player[players.size()]);
 	}
-	 
+	
+	public JsonElement jsonRepresentation() {
+		JsonObject gameJSON = new JsonObject();
+		gameJSON.addProperty("id", id);
+		gameJSON.addProperty("title", title);
+		
+		ArrayList<Player> playersArray = new ArrayList<>(Arrays.asList(getPlayers()));
+		JsonArray playersJSON = new JsonArray();
+		Gson gson = new Gson();
+		
+		for (int i = 0; i < 4; i++) {
+			if (i >= playersArray.size()) {
+				playersJSON.add(new JsonObject());
+			} else {
+				Player player = playersArray.get(i);
+				String json = gson.toJson(player);
+				JsonParser parser = new JsonParser();
+				playersJSON.add(parser.parse(json));
+			}
+		}
+		
+		gameJSON.add("players", playersJSON);
+		
+		
+		return gameJSON;
+	}
+	
 }

@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
@@ -148,11 +149,14 @@ public class ServerFacade {
 	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
 		List<Game> games = gameManager.getGames();
+				
+		JsonArray gamesJSON = new JsonArray();
 		
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		for (Game game : games) {
+			gamesJSON.add(game.jsonRepresentation());
+		}
 		
-		
-		return gson.toJsonTree(games);
+		return gamesJSON;
 	}
 	/**
 	 * Creates and returns a new game.
@@ -198,11 +202,8 @@ public class ServerFacade {
 		//this function should also save the beginning state of the map somewhere
 		//This way if the reset function is called the model can update using this saved file
 		//This also means a Game object should also store the string representing the filename of the intial setup
-		JsonObject response = new JsonObject();
-		response.addProperty("title", name);
-		response.addProperty("id", newGameId);
-		response.add("players", new JsonArray());
-		return response;
+
+		return newGame.jsonRepresentation();
 	}
 	
 	/**
