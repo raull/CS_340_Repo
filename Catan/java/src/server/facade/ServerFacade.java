@@ -236,6 +236,7 @@ public class ServerFacade {
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
+		existingUser = User.getShallowCopy(existingUser);
 		
 		//Checks to see if there is space
 		if (tm.getUsers().size() < 4){

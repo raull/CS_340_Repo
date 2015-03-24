@@ -489,5 +489,9 @@ public class User {
 		newUser.setPassword(getPassword());
         return newUser;
     }
+
+	public static User getShallowCopy(User existingUser) {
+		return existingUser.clone();
+	}
 	
 }

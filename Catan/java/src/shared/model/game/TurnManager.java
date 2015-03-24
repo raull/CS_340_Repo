@@ -101,9 +101,8 @@ public class TurnManager {
 		int index = users.size();
 		
 		if(users.size() < 4) {
-			User userToAdd = newUser.clone();
 			newUser.setPlayerTurnIndex(index);
-			users.add(userToAdd);
+			users.add(newUser);
 		}
 		else{
 			throw new ModelException();
