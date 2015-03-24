@@ -422,36 +422,127 @@ public class ServerFacade {
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		//TODO account for if the victim index is -1 (not robbing anyone)
-		User victim = turnManager.getUserFromIndex(victimIndex);
-		
-		if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		if (victimIndex < -1 || victimIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		if (location == null)
+		{
+			throw new ServerInvalidRequestException("Missing hex location");
+			//TODO need a check if the location is valid?
+		}
+
+		if (victimIndex == -1)
 		{
 			modelFacade.map().updateRobberLocation(location);
-			//randomly select a resource card from the victim
-			//remove it from the victim and add it to the given player
+			
 			if (soldierCard)
 			{
-				//remove a soldier devcard from the player
-				//add one to the number of soldiers the player has played
-				//check to see if they gained the largest army
-				//if so
-					//set largest army
-					//update points (may involve taking points away from another player)
-				//update game log with appropriate soldier message(s)
+				 playSoldierCard(game, user, modelFacade);
 			}
-			else
-			{
-				//update game log with appropriate robbing message
-			}
-			modelFacade.updateTurnPhase(TurnPhase.PLAYING);
+			
+			String logSource = user.getName();
+			String logMessage = user.getName() + "moved the robber and robbed, but couldn't rob anyone";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+
 		}
 		else
 		{
-			throw new ServerInvalidRequestException();
+			User victim = turnManager.getUserFromIndex(victimIndex);
+
+			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
+			{
+				modelFacade.map().updateRobberLocation(location);
+
+				//randomly select a resource card from the victim
+				ResourceCard stolenCard = victim.getResourceCards().getRandomResourceCard();
+
+				//remove it from the victim and add it to the given player
+				victim.getResourceCards().removeResourceCard(stolenCard);
+				user.getResourceCards().addResourceCard(stolenCard);
+
+				if (soldierCard)
+				{
+					 playSoldierCard(game, user, modelFacade);
+				}
+
+				//update game log with appropriate robbing message
+				String logSource = user.getName();
+				String logMessage = user.getName() + "moved the robber and robbed " + victim.getName();
+				MessageLine logEntry = new MessageLine(logMessage, logSource);
+				modelFacade.addToGameLog(logEntry);
+			}
+			else
+			{
+				throw new ServerInvalidRequestException();
+			}
 		}
+		modelFacade.updateTurnPhase(TurnPhase.PLAYING);
 		
-		return null;
+		return getModel(0, gameId);
+	}
+	
+	public void playSoldierCard(Game game, User user, ModelFacade modelFacade)
+	{
+		//remove a soldier devcard from the player
+		user.getUsableDevCardDeck().removeDevCard(new DevCard(DevCardType.SOLDIER));
+		//add one to the number of soldiers the player has played
+		user.setSoldiers(user.getSoldiers() + 1);
+
+		//check to see if they gained the largest army
+		updateLargestArmy(game, modelFacade);
+
+		//update game log with appropriate soldier message(s)
+		String logSource = user.getName();
+		String logMessage = user.getName() + " played a soldier card";
+		MessageLine logEntry = new MessageLine(logMessage, logSource);
+		modelFacade.addToGameLog(logEntry);
+	}
+	
+	public void updateLargestArmy(Game game, ModelFacade modelFacade)
+	{
+		game.calcLargestArmyPlayer();
+		int largestArmyIndex = game.getLargestArmyPlayer();
+		modelFacade.score().setLargestArmyUser(largestArmyIndex);
+		
+		updatePlayerScores(game);
+	}
+	
+	public void updatePlayerScores(Game game)
+	{
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		List<User> users = turnManager.getUsers();
+		for (User user : users)
+		{
+			int score = 0;
+			score += user.getNumSettlementsOnMap();
+			int cities = user.getNumCitiesOnMap();
+			score += (cities * 2);
+			score += user.getMonumentsPlayed();
+			if (modelFacade.score().getLargestArmyUser() == user.getTurnIndex())
+			{
+				score += 2;
+			}
+			if (modelFacade.score().getLongestRoadUser() == user.getTurnIndex())
+			{
+				score += 2;
+			}
+			
+			if (score >= 10)
+			{
+				modelFacade.score().setWinner(user.getTurnIndex());
+			}
+		}
 	}
 	
 	/**
@@ -752,6 +843,7 @@ public class ServerFacade {
 			//get rid of dev card from usable deck 
 			user.getUsableDevCardDeck().removeDevCard(devCard);
 			//update user points
+			user.setMonumentsPlayed(user.getMonumentsPlayed() + 1);
 			user.setVictoryPoints(user.getVictoryPoints() + 1);
 			//update game history
 			String logSource = user.getName();
