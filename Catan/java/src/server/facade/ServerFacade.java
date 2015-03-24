@@ -239,6 +239,20 @@ public class ServerFacade {
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
+		existingUser = existingUser.clone();
+		
+		//Verify color	
+		if (nuColor != null)
+			existingUser.setColor(nuColor);
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
+		}
+		
+		for (User u : tm.getUsers()){
+			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(existingUser.getName())){ 
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
+		}
 		
 		//Checks to see if we can add player
 		if (tm.getUsers().size() < 4){ //enough space
@@ -252,6 +266,7 @@ public class ServerFacade {
 			if(!alreadyInList){ //if the player hasn't been added yet, take care of it
 				try {
 					User copyUser = existingUser.clone();
+					copyUser.setColor(existingUser.getCatanColor());
 					tm.addUser(copyUser);
 				} catch (ModelException e) {
 					throw new ServerInvalidRequestException("Cannot join. Game already full.");
@@ -261,24 +276,6 @@ public class ServerFacade {
 		}
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Game already full.");
-		}
-		
-		//Verifies color
-		User tmUser = tm.getUser(existingUser.getPlayerID());
-		
-		if (nuColor != null)
-			tmUser.setColor(nuColor);
-		else{
-			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
-		}
-		
-		for (User u : tm.getUsers()){
-			if(u.getName()==null){
-				continue;
-			}
-			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(tmUser.getName())){ 
-				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
-			}
 		}
 		
 		return new JsonPrimitive("Success");
@@ -389,7 +386,7 @@ public class ServerFacade {
 		Game game = gameManager.getGameById(gameId);
 		if (game == null)
 		{
-			throw new ServerInvalidRequestException("Incorrect game id.");
+			throw new ServerInvalidRequestException("Incorrect game id: " + gameId);
 		}
 		if (playerIndex < 0 || playerIndex > 3)
 		{

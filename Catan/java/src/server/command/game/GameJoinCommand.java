@@ -30,7 +30,7 @@ public class GameJoinCommand extends ServerCommand {
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ServerInvalidRequestException("Internal Error");
+			throw new ServerInvalidRequestException(e.getMessage());
 		}
 		
 	}
