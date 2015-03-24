@@ -316,7 +316,11 @@ public class ServerFacade {
 	 * @param game The game to reset.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException {
+	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
+	{
+		//if we save the initial state of the game when it is first created
+		//all this has to do is call load on that saved file
+		
 		return null;
 	}
 	
@@ -477,6 +481,11 @@ public class ServerFacade {
 			}
 			updateModelVersion(gameId);
 			
+			//add to the game log
+			String logSource = user.getName();
+			String logMessage = user.getName() + "finished their turn";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			facade.addToGameLog(logEntry);
 		}
 		else{
 			throw new ServerInvalidRequestException();
