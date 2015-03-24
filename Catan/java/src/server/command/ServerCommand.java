@@ -76,6 +76,7 @@ public abstract class ServerCommand{
 				String decoded = URLDecoder.decode(string, "UTF-8");
 				//System.out.println("Decoded gameID: " + decoded);
 				String id = decoded.substring(decoded.indexOf("=") + 1);
+				id = id.replace("~Path=/~", "");
 				//System.out.println("GameID: " + id);
 				if(id!=null && !id.equals("") && !id.equals("null")){
 					//System.out.println("Game ID not null");

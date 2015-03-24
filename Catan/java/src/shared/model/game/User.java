@@ -113,6 +113,9 @@ public class User {
 	//Getters
 	
 	public String getName() {
+		if (name == null) {
+			return null;
+		}
 		return this.name.getName();
 	}
 	
@@ -158,6 +161,9 @@ public class User {
 	}
 
 	public String getPassword() {
+		if (password == null) {
+			return null;
+		}
 		return password.getPassword();
 	}
 	
@@ -486,5 +492,16 @@ public class User {
 		this.victoryPoints = victoryPoints;
 	}	
 	
-	
+    public User clone() {
+		User newUser = new User();
+		newUser.setPlayerID(playerID);
+		newUser.setName(getName());
+		newUser.setPassword(getPassword());
+        return newUser;
+    }
+
+//	public static User getShallowCopy(User existingUser) {
+//		return existingUser.clone();
+//	}
+//	
 }
