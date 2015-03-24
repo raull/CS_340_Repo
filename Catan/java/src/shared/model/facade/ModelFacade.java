@@ -2,6 +2,7 @@ package shared.model.facade;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Collections;
 import java.util.Observable;
 
@@ -23,6 +24,7 @@ import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
+import shared.model.board.piece.Building;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -1206,16 +1208,80 @@ public class ModelFacade extends Observable{
 	public void givePlayersResourcesFromRoll(int roll) //TODO not finished yet
 	{
 		Collection<HexTile> tiles = this.map.getHexTiles();
+		List<User> users = this.turnManager.getUsers();
 		
 		for (HexTile hex : tiles)
 		{
-			if (hex.getNumber() == roll)
+			if (hex.getNumber() == roll && !hex.hasRobber())
 			{
+				ResourceType resourceType = identifyResource(hex.getType());
 				
+				HexLocation location = hex.getLocation();
+				ArrayList<VertexLocation> locations = new ArrayList<VertexLocation>();
+				locations.add(new VertexLocation(location, VertexDirection.West));
+				locations.add(new VertexLocation(location, VertexDirection.NorthWest));
+				locations.add(new VertexLocation(location, VertexDirection.NorthEast));
+				locations.add(new VertexLocation(location, VertexDirection.East));
+				locations.add(new VertexLocation(location, VertexDirection.SouthEast));
+				locations.add(new VertexLocation(location, VertexDirection.SouthWest));
+				
+				for (VertexLocation vertLoc : locations)
+				{
+					Building building = map.getBuildingAtVertex(vertLoc);
+					if (building != null)
+					{
+						int ownerIndex = building.getOwner();
+						User owner = turnManager.getUserFromIndex(ownerIndex); 
+						PieceType type = building.getType();
+						givePlayerResource(owner, type, resourceType);
+					}
+				}
 			}
+		}		
+	}
+	
+	private void givePlayerResource(User owner, PieceType type, ResourceType resourceType)
+	{
+		if (bank.getResourceDeck().getCountByType(resourceType) >= 1)
+		{
+			bank.getResourceDeck().removeResourceCard(new ResourceCard(resourceType));
+			owner.getResourceCards().addResourceCard(new ResourceCard(resourceType));
+		}
+		if (type == PieceType.CITY && bank.getResourceDeck().getCountByType(resourceType) >= 1)
+		{
+			bank.getResourceDeck().removeResourceCard(new ResourceCard(resourceType));
+			owner.getResourceCards().addResourceCard(new ResourceCard(resourceType));
 		}
 	}
 	
+	
+	private ResourceType identifyResource(HexType type)
+	{
+		ResourceType resource = null;
+		switch (type)
+		{
+		case ORE:
+			resource = ResourceType.ORE;
+			break;
+		case WOOD:
+			resource = ResourceType.WOOD;
+			break;
+		case WHEAT:
+			resource = ResourceType.WHEAT;
+			break;
+		case BRICK:
+			resource = ResourceType.BRICK;
+			break;
+		case SHEEP:
+			resource = ResourceType.SHEEP;
+			break;
+		default:
+			assert false;	
+		}
+		
+		return resource;
+	}
+
 //=======
 //	public void setMostRoads(){
 //		int mostRoads = 0;
@@ -1229,5 +1295,6 @@ public class ModelFacade extends Observable{
 //		turnManager.setLongestRoadIndex(mostUser.getTurnIndex());
 //	}
 //>>>>>>> origin/buildRoad
+
 
 }

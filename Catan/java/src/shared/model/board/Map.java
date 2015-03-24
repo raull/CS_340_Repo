@@ -77,6 +77,29 @@ public class Map {
 		return output;
 	}
 	
+	public Building getBuildingAtVertex(VertexLocation vertLoc)
+	{
+		for (Building settlement : settlementsOnMap)
+		{
+			VertexLocation normalizedLoc =  settlement.getVertex().getLocation().getNormalizedLocation();
+			if (normalizedLoc.equals(vertLoc.getNormalizedLocation()))
+			{
+				return settlement;
+			}
+		}
+		
+		for (Building city : citiesOnMap)
+		{
+			VertexLocation normalizedLoc =  city.getVertex().getLocation().getNormalizedLocation();
+			if (normalizedLoc.equals(vertLoc.getNormalizedLocation()))
+			{
+				return city;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void setHexTiles(ArrayList<HexTile> hexTiles) {
 		this.hexTiles = hexTiles;
 	}
