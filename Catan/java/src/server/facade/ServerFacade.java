@@ -249,9 +249,6 @@ public class ServerFacade {
 		}
 		
 		for (User u : tm.getUsers()){
-			if(u.getName()==null){
-				continue;
-			}
 			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(colorCheckerUser.getName())){ 
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
