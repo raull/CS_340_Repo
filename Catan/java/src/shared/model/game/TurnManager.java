@@ -96,9 +96,14 @@ public class TurnManager {
 	 * @param newUser the user to be added
 	 * @throws ModelException if too many players are added
 	 */
-	public void addUser(User newUser) throws ModelException{
-		if(users.size()<4){
-			users.add(newUser);
+	public void addUser(User newUser) throws ModelException {
+		
+		int index = users.size();
+		
+		if(users.size() < 4) {
+			User userToAdd = newUser.clone();
+			newUser.setPlayerTurnIndex(index);
+			users.add(userToAdd);
 		}
 		else{
 			throw new ModelException();
@@ -187,5 +192,4 @@ public class TurnManager {
 		this.largestArmyIndex = largestArmyIndex;
 	}
 
-	
 }

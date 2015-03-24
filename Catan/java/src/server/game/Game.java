@@ -270,7 +270,7 @@ public class Game {
 		ArrayList<User> users = new ArrayList<>(tm.getUsers());
 		ArrayList<Player> players = new ArrayList<>();
 		for (User user : users) {
-			Player newPlayer = new Player(user.getName(), user.getColor().toString(), user.getPlayerID());
+			Player newPlayer = new Player(user.getName(), user.getCatanColor().toString().toLowerCase(), user.getPlayerID());
 			players.add(newPlayer);
 		}
 		

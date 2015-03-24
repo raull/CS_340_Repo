@@ -52,7 +52,12 @@ public class ServerFacade {
 	private UserManager userManager = new UserManager();
 	
 	private ServerFacade() {
-		
+		//Default games
+		try {
+			createNewGame("Empty Game", false, false, false);
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	/**
@@ -232,28 +237,31 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
 		
-		//Verifies color
-		if (nuColor.name() != null)
-			existingUser.setColor(CatanColor.valueOf(color));
-		else{
-			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
-		}
-		
-		for (User u : tm.getUsers()){
-			if (u.getColor().equals(nuColor)){
-				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
-			}
-		}
 		//Checks to see if there is space
 		if (tm.getUsers().size() < 4){
 			try {
 				tm.addUser(existingUser);
 			} catch (ModelException e) {
-				throw new ServerInvalidRequestException("Cannot join. Error adding user to game.");
+				throw new ServerInvalidRequestException("Cannot join. Game already full.");
 			}
 		}
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Game already full.");
+		}
+		
+		//Verifies color
+		User tmUser = tm.getUser(existingUser.getPlayerID());
+		
+		if (nuColor != null)
+			tmUser.setColor(nuColor);
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
+		}
+		
+		for (User u : tm.getUsers()){
+			if (u.getColor().equals(nuColor) && u.getName().equals(tmUser.getName())){
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
 		}
 		
 		return new JsonPrimitive("Success");
