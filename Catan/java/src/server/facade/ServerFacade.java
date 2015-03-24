@@ -241,7 +241,8 @@ public class ServerFacade {
 		//Checks to see if there is space
 		if (tm.getUsers().size() < 4){
 			try {
-				tm.addUser(existingUser);
+				User copyUser = existingUser.clone();
+				tm.addUser(copyUser);
 			} catch (ModelException e) {
 				throw new ServerInvalidRequestException("Cannot join. Game already full.");
 			}
