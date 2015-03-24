@@ -33,6 +33,10 @@ public class Map {
 	public Map(ArrayList<HexTile> hexTiles) {
 		super();
 		this.hexTiles = hexTiles;
+		roadsOnMap = new ArrayList<Road>();
+		settlementsOnMap = new ArrayList<Building>();
+		citiesOnMap = new ArrayList<Building>();
+		portsOnMap = new ArrayList<Port>();
 	}
 
 	/**

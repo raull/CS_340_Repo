@@ -44,6 +44,13 @@ public class Port {
 		this.offerRate = offerRate;
 	}
 	
+	public Port(PortType type, int offerRate, EdgeLocation edgeLoc)
+	{
+		this.type = type;
+		this.offerRate = offerRate;
+		this.edgeLocation = edgeLoc;
+	}
+	
 	//Getters
 	public PortType getType() {
 		return type;

@@ -3,8 +3,12 @@ package server.facade;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
@@ -12,6 +16,7 @@ import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
 
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
@@ -27,6 +32,7 @@ import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
+import shared.model.exception.ModelException;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
@@ -73,6 +79,12 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (!userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
@@ -96,15 +108,39 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
-		else{
+		if (username.length() < 3 || username.length() > 7){
+			throw new ServerInvalidRequestException("Register Failed: "
+					+ "Username must be between 3 and 7 characters.");
+		}
+		if (password.length() < 5){
+			throw new ServerInvalidRequestException("Register Failed: Password not long enough");
+		}
+		
+		for (int i = 0; i < password.length(); i++){
+			Character ch = password.charAt(i);
+			boolean isGood = false;
+			if (Character.isAlphabetic(ch) || Character.isDigit(ch) || ch.equals('_') || ch.equals('-'))
+				isGood = true;
+			else{
+				isGood = false;
+				throw new ServerInvalidRequestException("Register Failed: Password contains invalid characters");
+			}
+		}
+		
 			User newUser = userManager.addNewUser(username, password);
 			JsonObject response = new JsonObject();
 			response.addProperty("id", newUser.getPlayerID());
 			return response;
-		}
+		
 					
 	}
 	
@@ -115,12 +151,16 @@ public class ServerFacade {
 	 */
 	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
-		//gets the list of games from the game manager
-		//at some point we need to be creating a specific JSON element here
-		//is that going to be done in the handler?
-		return null;
+		List<Game> games = gameManager.getGames();
+				
+		JsonArray gamesJSON = new JsonArray();
+		
+		for (Game game : games) {
+			gamesJSON.add(game.jsonRepresentation());
+		}
+		
+		return gamesJSON;
 	}
-	
 	/**
 	 * Creates and returns a new game.
 	 * @param name The name of the new game.
@@ -130,18 +170,43 @@ public class ServerFacade {
 	 * @return A newly created game.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
+	public JsonElement createNewGame(String name, Boolean randomTiles, Boolean randomNumbers, Boolean randomPorts) throws ServerInvalidRequestException 
 	{
-		//have a hard coded list of default tiles, numbers, and ports?
+		if (name == null )
+		{
+			throw new ServerInvalidRequestException("The 'name' field was missing.");
+		}
+		else if (randomTiles == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomTiles' field was missing.");
+
+		}
+		else if (randomNumbers == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomNumbers' field was missing.");
+
+		}
+		else if (randomPorts == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomPorts' field was missing.");
+
+		}
 		
-		//don't have to account for automatically adding the player to the game here
-		//that is done client side
+		Boolean test = null;
+		//have a hard coded list of default tiles, numbers, and ports?
+		int newGameId = gameManager.getNextId();
+		
+		ModelFacade newFacade = new ModelFacade(randomTiles, randomNumbers, randomPorts);
+		
+		Game newGame = new Game(newGameId, name, newFacade);
+		gameManager.addGame(newGame);
+		
 		
 		//this function should also save the beginning state of the map somewhere
 		//This way if the reset function is called the model can update using this saved file
 		//This also means a Game object should also store the string representing the filename of the intial setup
-		
-		return null;
+
+		return newGame.jsonRepresentation();
 	}
 	
 	/**
@@ -150,11 +215,52 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color, int userID) throws ServerInvalidRequestException 
 	{
-		return null;
+		Game gameToJoin = gameManager.getGameById(gameId);
+		
+		if (gameToJoin == null) {
+			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
+		}
+		
+		ModelFacade facade = gameToJoin.getModelFacade();
+		TurnManager tm = facade.turnManager();
+		
+		color = color.toUpperCase();
+		CatanColor nuColor = CatanColor.valueOf(color);
+		
+		//Verify user
+		User existingUser = userManager.getUser(userID);
+		if (existingUser == null) {
+			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
+		}
+		
+		//Verifies color
+		if (nuColor.name() != null)
+			existingUser.setColor(CatanColor.valueOf(color));
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
+		}
+		
+		for (User u : tm.getUsers()){
+			if (u.getColor().equals(nuColor)){
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
+		}
+		//Checks to see if there is space
+		if (tm.getUsers().size() < 4){
+			try {
+				tm.addUser(existingUser);
+			} catch (ModelException e) {
+				throw new ServerInvalidRequestException("Cannot join. Error adding user to game.");
+			}
+		}
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Game already full.");
+		}
+		
+		return new JsonPrimitive("Success");
 	}
-	
 	/**
 	 * This method is for testing and debugging purposes. 
 	 * When a bug is found, you can use the /games/save method to save 
@@ -197,7 +303,11 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
-		return null;
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		
+		return model.serialize();
 	}
 	
 	/**
@@ -209,7 +319,11 @@ public class ServerFacade {
 	 * @param game The game to reset.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException {
+	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
+	{
+		//if we save the initial state of the game when it is first created
+		//all this has to do is call load on that saved file
+		
 		return null;
 	}
 	
@@ -299,7 +413,8 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, 
+			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		Game game = gameManager.getGameById(gameId);
 		ModelFacade modelFacade = game.getModelFacade();
@@ -370,28 +485,26 @@ public class ServerFacade {
 				if (tm.getCurrentTurn() != 3)
 					tm.setCurrentTurn(nextTurn(playerIndex));
 				else{
-					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.SECONDROUND);
 				}
 				break;
 			case SECONDROUND:
-				if (tm.getCurrentTurn() != 3)
-					tm.setCurrentTurn(nextTurn(playerIndex));
+				if (tm.getCurrentTurn() != 0)
+					tm.setCurrentTurn(playerIndex - 1);
 				else{
-					tm.setCurrentTurn(nextTurn(playerIndex));
 					tm.setCurrentPhase(TurnPhase.ROLLING);
 				}
-			case DISCARDING: //error, can't end turn at this phase
 				break;
-			case ROBBING:
-				break;
-			case ROLLING:
-				break;
-			default:
-				break;
+			default: //can't end turn in anyother phase
+				throw new ServerInvalidRequestException();
 			}
 			updateModelVersion(gameId);
 			
+			//add to the game log
+			String logSource = user.getName();
+			String logMessage = user.getName() + "finished their turn";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			facade.addToGameLog(logEntry);
 		}
 		else{
 			throw new ServerInvalidRequestException();
