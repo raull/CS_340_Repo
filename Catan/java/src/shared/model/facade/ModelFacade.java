@@ -24,6 +24,7 @@ import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
+import shared.model.board.piece.Building;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -1213,25 +1214,45 @@ public class ModelFacade extends Observable{
 		{
 			if (hex.getNumber() == roll && !hex.hasRobber())
 			{
-				for (User user : users)
+				ResourceType resourceType = identifyResource(hex.getType());
+				
+				HexLocation location = hex.getLocation();
+				ArrayList<VertexLocation> locations = new ArrayList<VertexLocation>();
+				locations.add(new VertexLocation(location, VertexDirection.West));
+				locations.add(new VertexLocation(location, VertexDirection.NorthWest));
+				locations.add(new VertexLocation(location, VertexDirection.NorthEast));
+				locations.add(new VertexLocation(location, VertexDirection.East));
+				locations.add(new VertexLocation(location, VertexDirection.SouthEast));
+				locations.add(new VertexLocation(location, VertexDirection.SouthWest));
+				
+				for (VertexLocation vertLoc : locations)
 				{
-					if (user.ownsAdjacentBuildingToHex(hex.getLocation()))
+					Building building = map.getBuildingAtVertex(vertLoc);
+					if (building != null)
 					{
-						//identify what kind of building it was
-						//or if there are multiple buildings on the hex
-						int gainNumber = 1;
-						
-						HexType type = hex.getType();
-						ResourceType resource = identifyResource(type);
-						
-						
+						int ownerIndex = building.getOwner();
+						User owner = turnManager.getUserFromIndex(ownerIndex); 
+						PieceType type = building.getType();
+						givePlayerResource(owner, type, resourceType);
 					}
 				}
 			}
-		}
+		}		
 	}
 	
-
+	private void givePlayerResource(User owner, PieceType type, ResourceType resourceType)
+	{
+		if (bank.getResourceDeck().getCountByType(resourceType) >= 1)
+		{
+			bank.getResourceDeck().removeResourceCard(new ResourceCard(resourceType));
+			owner.getResourceCards().addResourceCard(new ResourceCard(resourceType));
+		}
+		if (type == PieceType.CITY && bank.getResourceDeck().getCountByType(resourceType) >= 1)
+		{
+			bank.getResourceDeck().removeResourceCard(new ResourceCard(resourceType));
+			owner.getResourceCards().addResourceCard(new ResourceCard(resourceType));
+		}
+	}
 	
 	
 	private ResourceType identifyResource(HexType type)
