@@ -76,9 +76,10 @@ public class ModelFacade extends Observable{
 		TurnManager newTurnManager = new TurnManager(new ArrayList<User>());
 		int version = 0;
 		int winner = -1;
+		ScoreKeeper scoreKeeper = new ScoreKeeper(4); //create score keeper with 4 players
 				
 		model = new Model(newBank, newChat, newLog, newMap,
-				null, newTurnManager, version, winner);
+				null, newTurnManager, version, winner, scoreKeeper);
 		
 		turnManager = model.getTurnManager();
 		map = model.getMap();
