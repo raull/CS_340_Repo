@@ -364,6 +364,19 @@ public class ServerFacade {
 
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Incorrect game id.");
+		}
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index.");
+		}
+		if (rolledNumber < 2 || rolledNumber > 12)
+		{
+			throw new ServerInvalidRequestException("Invalid number rolled.");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		TurnManager turnManager = modelFacade.turnManager();
