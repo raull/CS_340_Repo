@@ -389,7 +389,7 @@ public class ServerFacade {
 		Game game = gameManager.getGameById(gameId);
 		if (game == null)
 		{
-			throw new ServerInvalidRequestException("Incorrect game id.");
+			throw new ServerInvalidRequestException("Incorrect game id: " + gameId);
 		}
 		if (playerIndex < 0 || playerIndex > 3)
 		{
