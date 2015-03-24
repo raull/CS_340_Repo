@@ -53,6 +53,7 @@ public class Handler implements HttpHandler{
 			exchange.getResponseBody().close();
 			exchange.close();
 		} catch(Exception e2){
+			e2.printStackTrace();
 			String errorMessage = e2.getMessage();
 			this.logError(errorMessage);
 			exchange.getResponseHeaders().add("Content-Type", "application/text");

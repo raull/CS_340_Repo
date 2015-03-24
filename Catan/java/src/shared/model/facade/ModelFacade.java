@@ -23,7 +23,6 @@ import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
 import shared.model.board.Port;
-import shared.model.board.piece.Building;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
@@ -40,11 +39,6 @@ import shared.model.game.User;
 
 public class ModelFacade extends Observable{
 	
-
-	//canDo functions
-	//get pieces from models
-	//will eventually have to talk to controllers
-	//need separate "do" functions, canDos return booleans
 	public Model model = new Model();
 	
 	/**

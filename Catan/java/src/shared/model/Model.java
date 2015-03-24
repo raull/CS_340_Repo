@@ -331,6 +331,7 @@ public class Model {
 	public JsonElement serializeMapRoads() {
 		ArrayList<Road> roads = map.getRoadsOnMap();
 		JsonArray jsonRoads = new JsonArray();
+		
 		for(Road road : roads) {
 			JsonElement jsonRoad = serializeMapRoad(road);
 			jsonRoads.add(jsonRoad);
