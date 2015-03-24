@@ -3,6 +3,7 @@ package shared.model.facade;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Collections;
 import java.util.Observable;
 
 import client.manager.ClientManager;
@@ -22,13 +23,14 @@ import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.HexTile;
 import shared.model.board.Map;
-import shared.model.board.piece.Building;
+import shared.model.board.Port;
 import shared.model.cards.Bank;
 import shared.model.cards.DevCard;
 import shared.model.cards.DevCardDeck;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.MessageLine;
+import shared.model.game.MessageList;
 import shared.model.game.ScoreKeeper;
 import shared.model.game.TradeManager;
 import shared.model.game.TradeOffer;
@@ -38,11 +40,6 @@ import shared.model.game.User;
 
 public class ModelFacade extends Observable{
 	
-
-	//canDo functions
-	//get pieces from models
-	//will eventually have to talk to controllers
-	//need separate "do" functions, canDos return booleans
 	public Model model = new Model();
 	
 	/**
@@ -69,6 +66,34 @@ public class ModelFacade extends Observable{
 	private int modelVersion;
 	private int winnerIndex;
 	private boolean isNotifying = false;
+	
+	public ModelFacade(boolean randomTiles, boolean randomNums, boolean randomPorts)
+	{
+		Map newMap = this.generateMap(randomTiles, randomNums, randomPorts);
+		Bank newBank = this.generateBank();
+		MessageList newChat = new MessageList();
+		MessageList newLog = new MessageList();
+		//TradeOffer
+		TurnManager newTurnManager = new TurnManager(new ArrayList<User>());
+		int version = 0;
+		int winner = -1;
+		ScoreKeeper scoreKeeper = new ScoreKeeper(4); //create score keeper with 4 players
+				
+		model = new Model(newBank, newChat, newLog, newMap,
+				null, newTurnManager, version, winner, scoreKeeper);
+		
+		turnManager = model.getTurnManager();
+		map = model.getMap();
+		bank = model.getBank();
+		score = model.getScoreKeeper();
+		winnerIndex = model.getWinner();
+	}
+	
+	public ModelFacade()
+	{
+		
+	}
+	
 	/**
 	 * updates the model class with the JSON response
 	 * @param jsonResponse
@@ -923,6 +948,247 @@ public class ModelFacade extends Observable{
 		this.turnManager().setCurrentPhase(phase);
 	}
 	
+	public ArrayList<Integer> getPossibleTileNumbers()
+	{
+		ArrayList<Integer> tileNumbers = new ArrayList<Integer>();
+		
+		tileNumbers.add(12);
+		tileNumbers.add(11);
+		tileNumbers.add(9);
+		tileNumbers.add(4);
+		tileNumbers.add(6);
+		tileNumbers.add(5);
+		tileNumbers.add(10);
+		tileNumbers.add(3);
+		tileNumbers.add(11);
+		tileNumbers.add(4);
+		tileNumbers.add(8);
+		tileNumbers.add(8);
+		tileNumbers.add(10);
+		tileNumbers.add(9);
+		tileNumbers.add(3);
+		tileNumbers.add(5);
+		tileNumbers.add(2);
+		tileNumbers.add(6);
+		
+		return tileNumbers;
+	}
+	
+	public ArrayList<HexTile> getDefaultHexTiles()
+	{
+		ArrayList<HexTile> hexes = new ArrayList<HexTile>();
+		
+		hexes.add(new HexTile(HexType.DESERT, new HexLocation(0,-2), -1));
+		hexes.add(new HexTile(HexType.WOOD, new HexLocation(0,-1), 3));
+		hexes.add(new HexTile(HexType.WOOD, new HexLocation(2,-2), 11));
+		hexes.add(new HexTile(HexType.WOOD, new HexLocation(-2,2), 6));
+		hexes.add(new HexTile(HexType.WOOD, new HexLocation(0,1), 4));
+		hexes.add(new HexTile(HexType.BRICK, new HexLocation(-1,-1), 8));
+		hexes.add(new HexTile(HexType.BRICK, new HexLocation(1,-2), 4));
+		hexes.add(new HexTile(HexType.BRICK, new HexLocation(1,0), 5));
+		hexes.add(new HexTile(HexType.WHEAT, new HexLocation(-2,1), 2));
+		hexes.add(new HexTile(HexType.WHEAT, new HexLocation(0,0), 11));
+		hexes.add(new HexTile(HexType.WHEAT, new HexLocation(2,0), 9));
+		hexes.add(new HexTile(HexType.WHEAT, new HexLocation(0,2), 8));
+		hexes.add(new HexTile(HexType.SHEEP, new HexLocation(-1,0), 10));
+		hexes.add(new HexTile(HexType.SHEEP, new HexLocation(-1,1), 9));
+		hexes.add(new HexTile(HexType.SHEEP, new HexLocation(2,-1), 12));
+		hexes.add(new HexTile(HexType.SHEEP, new HexLocation(1,1), 10));
+		hexes.add(new HexTile(HexType.ORE, new HexLocation(-2,0), 5));
+		hexes.add(new HexTile(HexType.ORE, new HexLocation(-1,2), 3));
+		hexes.add(new HexTile(HexType.ORE, new HexLocation(1,-1), 6));
+		
+		return hexes;
+	}
+	
+	public ArrayList<HexLocation> getPossibleHexLocations()
+	{
+		ArrayList<HexLocation> locations = new ArrayList<HexLocation>();
+		
+		locations.add(new HexLocation(0, 0));
+		locations.add(new HexLocation(0, -1));
+		locations.add(new HexLocation(0, -2));
+		locations.add(new HexLocation(0, 1));
+		locations.add(new HexLocation(0, 2));
+		locations.add(new HexLocation(-1, 0));
+		locations.add(new HexLocation(1, 0));
+		locations.add(new HexLocation(-2, 0));
+		locations.add(new HexLocation(2, 0));
+		locations.add(new HexLocation(1, -2));
+		locations.add(new HexLocation(2, -2));
+		locations.add(new HexLocation(1, -1));
+		locations.add(new HexLocation(2, -1));
+		locations.add(new HexLocation(1, 1));
+		locations.add(new HexLocation(-1, -1));
+		locations.add(new HexLocation(-2, 1));
+		locations.add(new HexLocation(-1, 1));
+		locations.add(new HexLocation(-2, 2));
+		locations.add(new HexLocation(-1, 2));		
+		
+		return locations;
+	}
+	
+	public ArrayList<Port> getDefaultPorts()
+	{
+		ArrayList<Port> ports = new ArrayList<Port>();
+		
+		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-2), EdgeDirection.North);
+		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(2,-2), EdgeDirection.NorthEast);
+		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(2,-1), EdgeDirection.SouthEast);
+		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(1,1), EdgeDirection.SouthEast);
+		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,2), EdgeDirection.South);
+		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-1,2), EdgeDirection.SouthWest);
+		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-2,1), EdgeDirection.SouthWest);
+		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-2,0), EdgeDirection.NorthWest);
+		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.North);
+		
+		Port p1 = new Port(PortType.ORE, 2, portLoc1);
+		Port p2 = new Port(PortType.THREE, 3, portLoc2);
+		Port p3 = new Port(PortType.SHEEP, 2, portLoc3);
+		Port p4 = new Port(PortType.THREE, 3, portLoc4);
+		Port p5 = new Port(PortType.THREE, 3, portLoc5);
+		Port p6 = new Port(PortType.BRICK, 2, portLoc6);
+		Port p7 = new Port(PortType.WOOD, 2, portLoc7);
+		Port p8 = new Port(PortType.THREE, 3, portLoc8);
+		Port p9 = new Port(PortType.WHEAT, 2, portLoc9);
+		
+		ports.add(p1);
+		ports.add(p2);
+		ports.add(p3);
+		ports.add(p4);
+		ports.add(p5);
+		ports.add(p6);
+		ports.add(p7);
+		ports.add(p8);
+		ports.add(p9);
+		
+		return ports;
+	}
+	
+	public ArrayList<EdgeLocation> getPossiblePortLocations()
+	{
+		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-2), EdgeDirection.North);
+		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(2,-2), EdgeDirection.NorthEast);
+		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(2,-1), EdgeDirection.SouthEast);
+		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(1,1), EdgeDirection.SouthEast);
+		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,2), EdgeDirection.South);
+		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-1,2), EdgeDirection.SouthWest);
+		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-2,1), EdgeDirection.SouthWest);
+		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-2,0), EdgeDirection.NorthWest);
+		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.North);
+		
+		ArrayList<EdgeLocation> edgeLocs = new ArrayList<EdgeLocation>();
+		
+		edgeLocs.add(portLoc1);
+		edgeLocs.add(portLoc2);
+		edgeLocs.add(portLoc3);
+		edgeLocs.add(portLoc4);
+		edgeLocs.add(portLoc5);
+		edgeLocs.add(portLoc6);
+		edgeLocs.add(portLoc7);
+		edgeLocs.add(portLoc8);
+		edgeLocs.add(portLoc9);
+		
+		return edgeLocs;
+	}
+	
+	public Map generateMap(boolean randomTiles, boolean randomNums, boolean randomPorts)
+	{
+		ArrayList<HexTile> startingTiles = this.getDefaultHexTiles();
+		ArrayList<Port> startingPorts = this.getDefaultPorts();
+		
+		if (randomTiles)
+		{
+			ArrayList<HexLocation> locations = this.getPossibleHexLocations();
+			Collections.shuffle(locations);
+			
+			for (int i = 0; i < startingTiles.size(); i++)
+			{
+				startingTiles.get(i).setLocation(locations.get(i));
+			}
+		}
+		
+		if (randomNums)
+		{
+			ArrayList<Integer> numbers = this.getPossibleTileNumbers();
+			Collections.shuffle(numbers);
+			
+			int numIndex = 0;
+			for (int i = 0; i < startingTiles.size(); i++)
+			{
+				if (startingTiles.get(i).getType() != HexType.DESERT)
+				{
+					startingTiles.get(i).setNumber(numbers.get(numIndex));
+					numIndex++;
+				}
+			}
+		}
+		
+		if (randomPorts)
+		{
+			ArrayList<EdgeLocation> edgeLocs = this.getPossiblePortLocations();
+			Collections.shuffle(edgeLocs);
+			
+			for (int i = 0; i < startingPorts.size(); i++)
+			{
+				startingPorts.get(i).setEdgeLocation(edgeLocs.get(i));
+			}
+		}
+				
+		Map startingMap = new Map(startingTiles);
+		startingMap.setPortsOnMap(startingPorts);
+		
+		return startingMap;
+	}
+	
+	public Bank generateBank()
+	{
+		ArrayList<DevCard> initDevCards = getInitialDevCards();
+		ArrayList<ResourceCard> initResourceCards = getInitialResourceCards();
+		
+		return new Bank(initDevCards, initResourceCards);
+	}
+	
+	public ArrayList<DevCard> getInitialDevCards()
+	{
+		ArrayList<DevCard> devCards = new ArrayList<DevCard>();
+		
+		for(int i = 0; i < 14; i++)
+		{
+			devCards.add(new DevCard(DevCardType.SOLDIER));
+		}
+		
+		for(int i = 0; i < 5; i++)
+		{
+			devCards.add(new DevCard(DevCardType.MONUMENT));
+		}
+		
+		for (int i = 0; i < 2; i++)
+		{
+			devCards.add(new DevCard(DevCardType.MONOPOLY));
+			devCards.add(new DevCard(DevCardType.ROAD_BUILD));
+			devCards.add(new DevCard(DevCardType.YEAR_OF_PLENTY));
+		}
+		
+		return devCards;
+	}
+	
+	public ArrayList<ResourceCard> getInitialResourceCards()
+	{
+		ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>();
+		
+		for (int i = 0; i < 19; i++)
+		{
+			resources.add(new ResourceCard(ResourceType.BRICK));
+			resources.add(new ResourceCard(ResourceType.ORE));
+			resources.add(new ResourceCard(ResourceType.SHEEP));
+			resources.add(new ResourceCard(ResourceType.WHEAT));
+			resources.add(new ResourceCard(ResourceType.WOOD));
+		}
+		
+		return resources;
+	}
+	
 	public boolean discardPhaseNeeded()
 	{
 		ArrayList<User> users = new ArrayList<User>(turnManager.getUsers());
@@ -965,6 +1231,7 @@ public class ModelFacade extends Observable{
 		}
 	}
 	
+
 	
 	
 	private ResourceType identifyResource(HexType type)
@@ -993,4 +1260,20 @@ public class ModelFacade extends Observable{
 		
 		return resource;
 	}
+
+//=======
+//	public void setMostRoads(){
+//		int mostRoads = 0;
+//		User mostUser = null;
+//		for (User u: turnManager().getUsers()){
+//			if (u.getOccupiedEdges().size() > mostRoads){
+//				mostRoads = u.getOccupiedEdges().size();
+//				mostUser = u;
+//			}	
+//		}
+//		turnManager.setLongestRoadIndex(mostUser.getTurnIndex());
+//	}
+//>>>>>>> origin/buildRoad
+
+
 }

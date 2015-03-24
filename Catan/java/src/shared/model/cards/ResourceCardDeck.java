@@ -84,6 +84,14 @@ public class ResourceCardDeck {
 	}
 	
 	/**
+	 * remove resource card from deck
+	 * @param card
+	 */
+	public void removeResourceCard(ResourceCard card) {
+		this.cards.remove(card);
+	}
+	
+	/**
 	 * Add the array of {@link ResourceType} to the deck. This will make new {@link ResourceCard} objects.
 	 * @param resources
 	 */

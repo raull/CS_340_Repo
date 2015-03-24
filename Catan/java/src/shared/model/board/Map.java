@@ -33,6 +33,10 @@ public class Map {
 	public Map(ArrayList<HexTile> hexTiles) {
 		super();
 		this.hexTiles = hexTiles;
+		roadsOnMap = new ArrayList<Road>();
+		settlementsOnMap = new ArrayList<Building>();
+		citiesOnMap = new ArrayList<Building>();
+		portsOnMap = new ArrayList<Port>();
 	}
 
 	/**
@@ -117,5 +121,19 @@ public class Map {
 		this.portsOnMap = portsOnMap;
 	}
 	
+	public void addRoad(Road road) {
+		this.roadsOnMap.add(road);
+	}
+
+	public void addCity(Building city){
+		citiesOnMap.add(city);
+	}
 	
+	public void addSettlement(Building settlement){
+		settlementsOnMap.add(settlement);
+	}
+	
+	public void removeSettlement(Building setllement){
+		settlementsOnMap.remove(setllement);
+	}
 }

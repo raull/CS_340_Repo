@@ -1,8 +1,5 @@
 package server.command;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import server.exception.ServerInvalidRequestException;
 
 import com.google.gson.Gson;
@@ -14,7 +11,7 @@ import com.sun.net.httpserver.HttpExchange;
  * @author thyer
  *
  */
-public class MockCommand extends ServerCommand{
+public class MockCommand extends ServerCommand {
 	boolean list = false;
 
 	public MockCommand(HttpExchange arg0) {
@@ -51,30 +48,6 @@ public class MockCommand extends ServerCommand{
 		if(list){
 			output = gson.fromJson(this.getExampleListString(), JsonElement.class);
 		}
-		return output;
-	}
-	
-	/**
-	 * Name pretty much says it all. Creates an encoded cookie for us, the required fields are in the paramaters
-	 * @param name
-	 * @param password
-	 * @param playerID
-	 * @return a string representation of the encoded login cookie
-	 * @throws UnsupportedEncodingException
-	 */
-	private String getEncodedLoginCookie(String name, String password, String playerID) throws UnsupportedEncodingException{
-		String plaintext = "{\"name\":\"" + name + "\",\"password\":\"" + password + "\",\"playerID\":" + playerID + "}";
-		String encoded = URLEncoder.encode(plaintext, "UTF-8");
-		encoded = "catan.user=" + encoded + ";Path=/;";
-		return encoded;
-	}
-	
-	private String getEncodedJoinGameCookie(String gameID){
-		return "catan.game=" + gameID + ";Path=/;";
-	}
-	
-	private String getExampleListString(){
-		String output = "[\n\t{\n\t}\n]";
 		return output;
 	}
 

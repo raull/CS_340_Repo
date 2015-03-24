@@ -10,18 +10,15 @@ import server.exception.ServerInvalidRequestException;
 import server.handler.factory.CommandFactory;
 import server.handler.factory.HandlerCommandFactory;
 import server.handler.factory.MockCommandFactory;
-import client.base.IAction;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Handler implements HttpHandler{
 	
 	CommandFactory factory;
-	private XStream xmlStream = new XStream(new DomDriver());
 	private Logger logger = null;
 	
 	public Handler(boolean testing){
@@ -32,17 +29,38 @@ public class Handler implements HttpHandler{
 	}
 
 	@Override
-	public void handle(HttpExchange arg0) throws IOException {
-		ServerCommand event = factory.create(arg0);
-		this.logInfo("Request: " + arg0.getRequestURI().toString());
+	public void handle(HttpExchange exchange) throws IOException {
+		ServerCommand event = factory.create(exchange);
+		this.logInfo("Request: " + exchange.getRequestURI().toString());
 		try{
 			JsonElement response = event.execute();
-			arg0.sendResponseHeaders(HttpURLConnection.HTTP_OK, response.getAsString().length());
-			xmlStream.toXML(response, arg0.getResponseBody());
-			arg0.getResponseBody().close();
-			arg0.close();
+			if (response.getClass() == JsonPrimitive.class) {
+				exchange.getResponseHeaders().add("Content-Type", "application/text");
+			} else {
+				exchange.getResponseHeaders().add("Content-Type", "application/json");
+			}
+			String stringResponse = response.toString();
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, stringResponse.length());
+			exchange.getResponseBody().write(stringResponse.getBytes());
+			exchange.getResponseBody().close();
+			exchange.close();
 		} catch(ServerInvalidRequestException e1){
-			this.logError(e1.getMessage());
+			String errorMessage = e1.getMessage();
+			this.logError(errorMessage);
+			exchange.getResponseHeaders().add("Content-Type", "application/text");
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
+			exchange.getResponseBody().write(errorMessage.getBytes());
+			exchange.getResponseBody().close();
+			exchange.close();
+		} catch(Exception e2){
+			e2.printStackTrace();
+			String errorMessage = e2.getMessage();
+			this.logError(errorMessage);
+			exchange.getResponseHeaders().add("Content-Type", "application/text");
+			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_GATEWAY, 0);
+			exchange.getResponseBody().write(errorMessage.getBytes());
+			exchange.getResponseBody().close();
+			exchange.close();
 		}
 	}
 	
