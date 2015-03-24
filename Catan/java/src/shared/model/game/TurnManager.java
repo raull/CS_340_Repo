@@ -48,6 +48,7 @@ public class TurnManager {
 	 */
 	public TurnManager(ArrayList<User> users) {
 		this.users = users;
+		currentPhase = TurnPhase.FIRSTROUND;
 	}
 	
 	//Helper Methods
@@ -95,8 +96,13 @@ public class TurnManager {
 	 * @param newUser the user to be added
 	 * @throws ModelException if too many players are added
 	 */
-	public void addUser(User newUser) throws ModelException{
-		if(users.size()<4){
+
+	public void addUser(User newUser) throws ModelException {
+		
+		int index = users.size();
+		
+		if(users.size() < 4) {
+			newUser.setPlayerTurnIndex(index);
 			users.add(newUser);
 		}
 		else{
@@ -186,5 +192,4 @@ public class TurnManager {
 		this.largestArmyIndex = largestArmyIndex;
 	}
 
-	
 }

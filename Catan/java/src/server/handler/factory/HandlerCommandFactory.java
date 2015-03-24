@@ -1,5 +1,6 @@
 package server.handler.factory;
 
+import server.command.MockCommand;
 import server.command.ServerCommand;
 import server.command.game.GameCreateCommand;
 import server.command.game.GameJoinCommand;
@@ -48,6 +49,7 @@ public class HandlerCommandFactory implements CommandFactory{
 		String uri = arg0.getRequestURI().toString();
 		String[] arguments = uri.split("/");
 		String request = arguments[arguments.length-1];
+		System.out.println("Request: " + request);
 		
 		switch (request) {
 		case "login":
@@ -98,6 +100,8 @@ public class HandlerCommandFactory implements CommandFactory{
 			return new MaritimeTradeCommand(arg0);
 		case "discardCards":
 			return new DiscardCardsCommand(arg0);
+		case "addAI":
+			return new MockCommand(arg0);
 		default:
 			break;
 		}

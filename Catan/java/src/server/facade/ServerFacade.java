@@ -17,6 +17,7 @@ import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -26,6 +27,8 @@ import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
+
+import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
@@ -41,12 +44,15 @@ import shared.model.board.Vertex;
 import shared.model.board.piece.Building;
 import shared.model.cards.ResourceCardDeck;
 import shared.model.game.User;
+import shared.model.exception.ModelException;
 import shared.model.facade.ModelFacade;
 import shared.model.game.MessageLine;
 import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
+import shared.model.game.User;
+
 
 
 /**
@@ -61,7 +67,12 @@ public class ServerFacade {
 	private UserManager userManager = new UserManager();
 	
 	private ServerFacade() {
-		
+		//Default games
+		try {
+			createNewGame("Empty Game", false, false, false);
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	/**
@@ -85,6 +96,12 @@ public class ServerFacade {
 	 */
 	public JsonElement login(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (!userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Login Failed: invalid username or password");
 		}
@@ -108,15 +125,39 @@ public class ServerFacade {
 	 */
 	public JsonElement register(String username, String password) throws ServerInvalidRequestException 
 	{
+		if (username == null){
+			throw new ServerInvalidRequestException("Login Failed: Username field not found");
+		}
+		if (password == null){
+			throw new ServerInvalidRequestException("Login Failed: Password field not found");
+		}
 		if (userManager.userExists(username, password)){
 			throw new ServerInvalidRequestException("Register Failed: User already exists.");
 		}
-		else{
+		if (username.length() < 3 || username.length() > 7){
+			throw new ServerInvalidRequestException("Register Failed: "
+					+ "Username must be between 3 and 7 characters.");
+		}
+		if (password.length() < 5){
+			throw new ServerInvalidRequestException("Register Failed: Password not long enough");
+		}
+		
+		for (int i = 0; i < password.length(); i++){
+			Character ch = password.charAt(i);
+			boolean isGood = false;
+			if (Character.isAlphabetic(ch) || Character.isDigit(ch) || ch.equals('_') || ch.equals('-'))
+				isGood = true;
+			else{
+				isGood = false;
+				throw new ServerInvalidRequestException("Register Failed: Password contains invalid characters");
+			}
+		}
+		
 			User newUser = userManager.addNewUser(username, password);
 			JsonObject response = new JsonObject();
 			response.addProperty("id", newUser.getPlayerID());
 			return response;
-		}
+		
 					
 	}
 	
@@ -128,11 +169,14 @@ public class ServerFacade {
 	public JsonElement gameList() throws ServerInvalidRequestException 
 	{
 		List<Game> games = gameManager.getGames();
+				
+		JsonArray gamesJSON = new JsonArray();
 		
-		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		for (Game game : games) {
+			gamesJSON.add(game.jsonRepresentation());
+		}
 		
-		
-		return gson.toJsonTree(games);
+		return gamesJSON;
 	}
 	/**
 	 * Creates and returns a new game.
@@ -143,18 +187,43 @@ public class ServerFacade {
 	 * @return A newly created game.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement createNewGame(String name, boolean randomTiles, boolean randomNumbers, boolean randomPorts) throws ServerInvalidRequestException 
+	public JsonElement createNewGame(String name, Boolean randomTiles, Boolean randomNumbers, Boolean randomPorts) throws ServerInvalidRequestException 
 	{
-		//have a hard coded list of default tiles, numbers, and ports?
+		if (name == null )
+		{
+			throw new ServerInvalidRequestException("The 'name' field was missing.");
+		}
+		else if (randomTiles == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomTiles' field was missing.");
+
+		}
+		else if (randomNumbers == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomNumbers' field was missing.");
+
+		}
+		else if (randomPorts == null)
+		{
+			throw new ServerInvalidRequestException("The 'randomPorts' field was missing.");
+
+		}
 		
-		//don't have to account for automatically adding the player to the game here
-		//that is done client side
+		Boolean test = null;
+		//have a hard coded list of default tiles, numbers, and ports?
+		int newGameId = gameManager.getNextId();
+		
+		ModelFacade newFacade = new ModelFacade(randomTiles, randomNumbers, randomPorts);
+		
+		Game newGame = new Game(newGameId, name, newFacade);
+		gameManager.addGame(newGame);
+		
 		
 		//this function should also save the beginning state of the map somewhere
 		//This way if the reset function is called the model can update using this saved file
 		//This also means a Game object should also store the string representing the filename of the intial setup
-		
-		return null;
+
+		return newGame.jsonRepresentation();
 	}
 	
 	/**
@@ -163,11 +232,56 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement joinGame(int gameId, String color) throws ServerInvalidRequestException 
+	public JsonElement joinGame(int gameId, String color, int userID) throws ServerInvalidRequestException 
 	{
-		return null;
+		Game gameToJoin = gameManager.getGameById(gameId);
+		
+		if (gameToJoin == null) {
+			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
+		}
+		
+		ModelFacade facade = gameToJoin.getModelFacade();
+		TurnManager tm = facade.turnManager();
+		
+		color = color.toUpperCase();
+		CatanColor nuColor = CatanColor.valueOf(color);
+		
+		//Verify user
+		User existingUser = userManager.getUser(userID);
+		if (existingUser == null) {
+			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
+		}
+		
+		//Checks to see if there is space
+		if (tm.getUsers().size() < 4){
+			try {
+				User copyUser = existingUser.clone();
+				tm.addUser(copyUser);
+			} catch (ModelException e) {
+				throw new ServerInvalidRequestException("Cannot join. Game already full.");
+			}
+		}
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Game already full.");
+		}
+		
+		//Verifies color
+		User tmUser = tm.getUser(existingUser.getPlayerID());
+		
+		if (nuColor != null)
+			tmUser.setColor(nuColor);
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
+		}
+		
+		for (User u : tm.getUsers()){
+			if (u.getColor().equals(nuColor) && u.getName().equals(tmUser.getName())){
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
+		}
+		
+		return new JsonPrimitive("Success");
 	}
-	
 	/**
 	 * This method is for testing and debugging purposes. 
 	 * When a bug is found, you can use the /games/save method to save 
@@ -265,7 +379,11 @@ public class ServerFacade {
 	 * @param game The game to reset.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException {
+	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
+	{
+		//if we save the initial state of the game when it is first created
+		//all this has to do is call load on that saved file
+		
 		return null;
 	}
 	
@@ -304,9 +422,22 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
-
+		
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Incorrect game id.");
+		}
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index.");
+		}
+		if (rolledNumber < 2 || rolledNumber > 12)
+		{
+			throw new ServerInvalidRequestException("Invalid number rolled.");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		TurnManager turnManager = modelFacade.turnManager();
@@ -335,6 +466,8 @@ public class ServerFacade {
 			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
+			
+			this.updateModelVersion(gameId);
 		}
 		else
 		{
@@ -342,7 +475,8 @@ public class ServerFacade {
 		}
 		
 		return getModel(0, gameId);
-}
+	}
+
 	
 	/**
 	 * Moves the robber, selecting the new robber position and player to rob.
@@ -354,29 +488,136 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, 
+			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
-		//if can robPlayer
-			//move the robber to the new location
-			//randomly select a resource card from the victim
-			//remove it from the victim and add it to the given player
-			//if soldier card
-				//remove a soldier devcard from the player
-				//add one to the number of soldiers the player has played
-				//check to see if they gained the largest army
-				//if so
-					//set largest army
-					//update points (may involve taking points away from another player)
-				//update game log with appropriate soldier message(s)
-			//else
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		if (victimIndex < -1 || victimIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		if (location == null)
+		{
+			throw new ServerInvalidRequestException("Missing hex location");
+			//TODO need a check if the location is valid?
+		}
+
+		if (victimIndex == -1)
+		{
+			modelFacade.map().updateRobberLocation(location);
+			
+			if (soldierCard)
+			{
+				 playSoldierCard(game, user, modelFacade);
+			}
+			
+			String logSource = user.getName();
+			String logMessage = user.getName() + "moved the robber and robbed, but couldn't rob anyone";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			modelFacade.addToGameLog(logEntry);
+
+		}
+		else
+		{
+			User victim = turnManager.getUserFromIndex(victimIndex);
+
+			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
+			{
+				modelFacade.map().updateRobberLocation(location);
+
+				//randomly select a resource card from the victim
+				ResourceCard stolenCard = victim.getResourceCards().getRandomResourceCard();
+
+				//remove it from the victim and add it to the given player
+				victim.getResourceCards().removeResourceCard(stolenCard);
+				user.getResourceCards().addResourceCard(stolenCard);
+
+				if (soldierCard)
+				{
+					 playSoldierCard(game, user, modelFacade);
+				}
+
 				//update game log with appropriate robbing message
-			//set the turn phase to now be playing
-		//else (can't rob player)
-			//throw exception
+				String logSource = user.getName();
+				String logMessage = user.getName() + "moved the robber and robbed " + victim.getName();
+				MessageLine logEntry = new MessageLine(logMessage, logSource);
+				modelFacade.addToGameLog(logEntry);
+			}
+			else
+			{
+				throw new ServerInvalidRequestException();
+			}
+		}
+		modelFacade.updateTurnPhase(TurnPhase.PLAYING);
 		
-		//return new model
+		return getModel(0, gameId);
+	}
+	
+	public void playSoldierCard(Game game, User user, ModelFacade modelFacade)
+	{
+		//remove a soldier devcard from the player
+		user.getUsableDevCardDeck().removeDevCard(new DevCard(DevCardType.SOLDIER));
+		//add one to the number of soldiers the player has played
+		user.setSoldiers(user.getSoldiers() + 1);
+
+		//check to see if they gained the largest army
+		updateLargestArmy(game, modelFacade);
+
+		//update game log with appropriate soldier message(s)
+		String logSource = user.getName();
+		String logMessage = user.getName() + " played a soldier card";
+		MessageLine logEntry = new MessageLine(logMessage, logSource);
+		modelFacade.addToGameLog(logEntry);
+	}
+	
+	public void updateLargestArmy(Game game, ModelFacade modelFacade)
+	{
+		game.calcLargestArmyPlayer();
+		int largestArmyIndex = game.getLargestArmyPlayer();
+		modelFacade.score().setLargestArmyUser(largestArmyIndex);
 		
-		return null;
+		updatePlayerScores(game);
+	}
+	
+	public void updatePlayerScores(Game game)
+	{
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		List<User> users = turnManager.getUsers();
+		for (User user : users)
+		{
+			int score = 0;
+			score += user.getNumSettlementsOnMap();
+			int cities = user.getNumCitiesOnMap();
+			score += (cities * 2);
+			score += user.getMonumentsPlayed();
+			if (modelFacade.score().getLargestArmyUser() == user.getTurnIndex())
+			{
+				score += 2;
+			}
+			if (modelFacade.score().getLongestRoadUser() == user.getTurnIndex())
+			{
+				score += 2;
+			}
+			
+			if (score >= 10)
+			{
+				modelFacade.score().setWinner(user.getTurnIndex());
+			}
+		}
 	}
 	
 	/**
@@ -421,10 +662,15 @@ public class ServerFacade {
 				}
 				break;
 			default: //can't end turn in anyother phase
-				throw new ServerInvalidRequestException();
+				throw new ServerInvalidRequestException("Cannot finish turn at this time");
 			}
 			updateModelVersion(gameId);
 			
+			//add to the game log
+			String logSource = user.getName();
+			String logMessage = user.getName() + "finished their turn";
+			MessageLine logEntry = new MessageLine(logMessage, logSource);
+			facade.addToGameLog(logEntry);
 		}
 		else{
 			throw new ServerInvalidRequestException();
@@ -481,7 +727,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot buy a development card at this time");
 		}
 		
 		return getModel(0, gameId);
@@ -524,7 +770,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -567,7 +813,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -610,7 +856,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -672,6 +918,7 @@ public class ServerFacade {
 			//get rid of dev card from usable deck 
 			user.getUsableDevCardDeck().removeDevCard(devCard);
 			//update user points
+			user.setMonumentsPlayed(user.getMonumentsPlayed() + 1);
 			user.setVictoryPoints(user.getVictoryPoints() + 1);
 			//update game history
 			String logSource = user.getName();
@@ -682,7 +929,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot play this card right now");
 		}
 		
 		return getModel(0, gameId);
@@ -710,7 +957,7 @@ public class ServerFacade {
 			modelFacade.map().addRoad(road);
 		}
 		else{
-			throw new ServerInvalidRequestException(); 
+			throw new ServerInvalidRequestException("Cannot buy or build road at this location"); 
 		}
 		
 	}

@@ -70,7 +70,7 @@ public class Model {
 	
 	public Model(Bank bank, MessageList chat, MessageList log,
 			Map map, TradeOffer tradeOffer,
-			TurnManager turnManager, int version, int winner) {
+			TurnManager turnManager, int version, int winner, ScoreKeeper scoreKeeper) {
 		super();
 		this.bank = bank;
 		this.chat = chat;
@@ -80,6 +80,7 @@ public class Model {
 		this.turnManager = turnManager;
 		this.version = version;
 		this.winner = winner;
+		this.scoreKeeper = scoreKeeper;
 	}
 
 	public Bank getBank() {
@@ -331,6 +332,7 @@ public class Model {
 	public JsonElement serializeMapRoads() {
 		ArrayList<Road> roads = map.getRoadsOnMap();
 		JsonArray jsonRoads = new JsonArray();
+		
 		for(Road road : roads) {
 			JsonElement jsonRoad = serializeMapRoad(road);
 			jsonRoads.add(jsonRoad);

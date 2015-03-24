@@ -14,6 +14,7 @@ public class GameManager {
 	 * A list of games stored on the server
 	 */
 	private List<Game> games = new ArrayList<Game>();
+	private int nextID = 0;
 		
 	public GameManager() {
 		
@@ -25,6 +26,7 @@ public class GameManager {
 	 */
 	public void addGame(Game newGame) {
 		games.add(newGame);
+		nextID++;
 	}
 	
 	/**
@@ -32,8 +34,22 @@ public class GameManager {
 	 * @param id The ID of the game to retrieve
 	 * @return
 	 */
-	public Game getGameById(int id) {
+	public Game getGameById(int id) 
+	{
+		for (Game game : games)
+		{
+			if (game.getId() == id)
+			{
+				return game;
+			}
+		}
+		System.out.println("getGameById is returning null");
 		return null;
+	}
+	
+	public int getNextId()
+	{
+		return nextID;
 	}
 	
 	/**
