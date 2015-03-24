@@ -252,14 +252,24 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
 		
-		//Checks to see if there is space
-		if (tm.getUsers().size() < 4){
-			try {
-				User copyUser = existingUser.clone();
-				tm.addUser(copyUser);
-			} catch (ModelException e) {
-				throw new ServerInvalidRequestException("Cannot join. Game already full.");
+		//Checks to see if we can add player
+		if (tm.getUsers().size() < 4){ //enough space
+			boolean alreadyInList = false;
+			for (User u : tm.getUsers()){
+				if(u.getPlayerID()==existingUser.getPlayerID()){ //if the player is already in the game, updates that player
+					u = existingUser.clone();
+					alreadyInList = true;
+				}
 			}
+			if(!alreadyInList){ //if the player hasn't been added yet, take care of it
+				try {
+					User copyUser = existingUser.clone();
+					tm.addUser(copyUser);
+				} catch (ModelException e) {
+					throw new ServerInvalidRequestException("Cannot join. Game already full.");
+				}
+			}
+			
 		}
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Game already full.");
@@ -275,7 +285,10 @@ public class ServerFacade {
 		}
 		
 		for (User u : tm.getUsers()){
-			if (u.getColor().equals(nuColor) && u.getName().equals(tmUser.getName())){
+			if(u.getName()==null){
+				continue;
+			}
+			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(tmUser.getName())){ 
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
 		}
