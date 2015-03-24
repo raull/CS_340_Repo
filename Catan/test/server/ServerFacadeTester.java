@@ -49,7 +49,9 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void joinGame(){
-		//valid request
+		//without logging in first
+		
+		//log in, valid request
 		
 		//nonexistent game
 		
