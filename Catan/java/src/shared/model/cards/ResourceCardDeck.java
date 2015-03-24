@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import shared.definitions.ResourceType;
 
@@ -99,6 +100,14 @@ public class ResourceCardDeck {
 		for (ResourceType resourceType : resources) {
 			this.cards.add(new ResourceCard(resourceType));
 		}
+	}
+	
+	public ResourceCard getRandomResourceCard()
+	{
+		Random rand = new Random();
+		int randomIndex = rand.nextInt(cards.size());
+		
+		return cards.get(randomIndex);
 	}
 
 }

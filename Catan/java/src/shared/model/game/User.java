@@ -302,6 +302,16 @@ public class User {
 
 	}
 	
+	public int getNumCitiesOnMap()
+	{
+		return 4 - this.getUnusedCities();
+	}
+	
+	public int getNumSettlementsOnMap()
+	{
+		return 5 - this.getUnusedSettlements();
+	}
+	
 	/**
 	 * Return all the ports related to the user
 	 * @return A Collection of ports

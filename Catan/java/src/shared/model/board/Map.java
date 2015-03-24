@@ -144,6 +144,20 @@ public class Map {
 		this.portsOnMap = portsOnMap;
 	}
 	
+	public void updateRobberLocation(HexLocation location)
+	{
+		for (HexTile hex : hexTiles)
+		{
+			if (hex.hasRobber())
+			{
+				hex.setRobber(false);
+			}
+		}
+		
+		HexTile hex = this.getHexTileByLocation(location);
+		hex.setRobber(true);
+	}
+	
 	public void addRoad(Road road) {
 		this.roadsOnMap.add(road);
 	}
