@@ -235,21 +235,20 @@ public class ServerFacade {
 		CatanColor nuColor = CatanColor.valueOf(color);
 		
 		//Verify user
-		User existingUser = userManager.getUser(userID);
+		User existingUser = userManager.getUser(userID).clone();
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
 		
-		//Verify color
-		User colorCheckerUser = existingUser.clone();		
+		//Verify color	
 		if (nuColor != null)
-			colorCheckerUser.setColor(nuColor);
+			existingUser.setColor(nuColor);
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
 		
 		for (User u : tm.getUsers()){
-			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(colorCheckerUser.getName())){ 
+			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(existingUser.getName())){ 
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
 		}
@@ -266,6 +265,7 @@ public class ServerFacade {
 			if(!alreadyInList){ //if the player hasn't been added yet, take care of it
 				try {
 					User copyUser = existingUser.clone();
+					copyUser.setColor(existingUser.getCatanColor());
 					tm.addUser(copyUser);
 				} catch (ModelException e) {
 					throw new ServerInvalidRequestException("Cannot join. Game already full.");
