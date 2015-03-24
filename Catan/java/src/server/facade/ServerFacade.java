@@ -219,9 +219,9 @@ public class ServerFacade {
 		gameManager.addGame(newGame);
 		
 		
-		//this function should also save the beginning state of the map somewhere
-		//This way if the reset function is called the model can update using this saved file
-		//This also means a Game object should also store the string representing the filename of the intial setup
+		
+		// I put the save file of the reset to be created after the 4th player joins.
+		// This way the players are in the game, and resetting doesn't return an empty game.
 
 		return newGame.jsonRepresentation();
 	}
@@ -279,6 +279,11 @@ public class ServerFacade {
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
 		}
+		// Creates a save file of the initial state that can be used as a reset point
+		if (tm.getUsers().size() == 4){
+			String resetName = gameId + "reset";
+			gameSave(gameId, resetName);
+		}
 		
 		return new JsonPrimitive("Success");
 	}
@@ -293,7 +298,7 @@ public class ServerFacade {
 	 * @param fileName The file name you want to save it under
 	 * @throws ServerInvalidRequestException
 	 */
-	public void gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
+	public JsonElement gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
 		Game game = gameManager.getGameById(gameId);
 		Model model = game.getModelFacade().getModel();
 		
@@ -301,9 +306,13 @@ public class ServerFacade {
 		
 		Writer writer = null;
 		try {
+			File saves = new File("saves");
+			if (!saves.exists())
+				saves.mkdirs();
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(fileName), "utf-8"));
+					new FileOutputStream("saves/" + fileName + ".txt"), "utf-8"));
 			writer.write(jsonModelStr);
+			
 		}
 		catch(IOException ex) {
 			ex.printStackTrace();
@@ -313,6 +322,7 @@ public class ServerFacade {
 				ex.printStackTrace();
 			}
 		}
+		return new JsonPrimitive ("Success");
 	}
 	
 	/**
@@ -331,7 +341,7 @@ public class ServerFacade {
 		String jsonStr = "";
 		JsonObject jsonModel = null;
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
 			
 			String currLine = "";
 			
@@ -381,8 +391,9 @@ public class ServerFacade {
 	 */
 	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
 	{
-		//if we save the initial state of the game when it is first created
-		//all this has to do is call load on that saved file
+		String fileName = gameId + "reset";
+		
+		gameLoad(fileName);
 		
 		return null;
 	}
