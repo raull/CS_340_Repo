@@ -240,6 +240,23 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
 		
+		//Verify color
+		User colorCheckerUser = existingUser.clone();		
+		if (nuColor != null)
+			colorCheckerUser.setColor(nuColor);
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
+		}
+		
+		for (User u : tm.getUsers()){
+			if(u.getName()==null){
+				continue;
+			}
+			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(colorCheckerUser.getName())){ 
+				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
+			}
+		}
+		
 		//Checks to see if we can add player
 		if (tm.getUsers().size() < 4){ //enough space
 			boolean alreadyInList = false;
@@ -261,24 +278,6 @@ public class ServerFacade {
 		}
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Game already full.");
-		}
-		
-		//Verifies color
-		User tmUser = tm.getUser(existingUser.getPlayerID());
-		
-		if (nuColor != null)
-			tmUser.setColor(nuColor);
-		else{
-			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
-		}
-		
-		for (User u : tm.getUsers()){
-			if(u.getName()==null){
-				continue;
-			}
-			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(tmUser.getName())){ 
-				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
-			}
 		}
 		
 		return new JsonPrimitive("Success");
