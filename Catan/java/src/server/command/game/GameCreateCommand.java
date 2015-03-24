@@ -21,9 +21,14 @@ public class GameCreateCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		try{
+			CreateGameRequest createGame = gson.fromJson(json, CreateGameRequest.class);
+			System.out.println(createGame.isRandomNumbers());
+			return ServerFacade.instance().createNewGame(createGame.getName(), createGame.isRandomTiles(), createGame.isRandomNumbers(), createGame.isRandomPorts());
+		} catch(Exception e){
+			throw new ServerInvalidRequestException("Malformed JSON");
+		}
 		
-		CreateGameRequest createGame = gson.fromJson(json, CreateGameRequest.class);
-		return ServerFacade.instance().createNewGame(createGame.getName(), createGame.isRandomTiles(), createGame.isRandomNumbers(), createGame.isRandomPorts());
 		
 	}
 
