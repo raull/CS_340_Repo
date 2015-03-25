@@ -806,6 +806,17 @@ public class ServerFacade {
 	public JsonElement buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
