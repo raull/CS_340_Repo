@@ -67,6 +67,8 @@ public abstract class ServerCommand{
 	 */
 	public abstract JsonElement execute() throws ServerInvalidRequestException;
 	
+	public abstract JsonElement execute(String json) throws ServerInvalidRequestException;
+	
 	private void parseCookie(String cookie) throws UnsupportedEncodingException {
 		String[] parameters = cookie.split(";");
 		

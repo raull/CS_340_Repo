@@ -56,6 +56,11 @@ public class HandlerCommandFactory implements CommandFactory{
 		//String[] requestSplit = request.split("o");
 		//System.out.println("Test: " + requestSplit[0]);
 		
+		return getCommand(request, arg0);
+		
+	}
+	
+	public ServerCommand getCommand(String request, HttpExchange arg0){
 		if (request.startsWith("model"))
 		{
 			//System.out.println("stripping version off model request");
@@ -122,5 +127,6 @@ public class HandlerCommandFactory implements CommandFactory{
 		
 		return null;
 	}
+
 
 }

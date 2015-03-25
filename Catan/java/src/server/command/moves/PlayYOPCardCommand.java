@@ -21,10 +21,17 @@ public class PlayYOPCardCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		Year_of_Plenty_ yearOfPlenty = gson.fromJson(json, Year_of_Plenty_.class);
 		
 		ServerFacade.instance().addCommand(json, gameId);
-		return ServerFacade.instance().playYearOfPlenty(gameId, yearOfPlenty.getPlayerIndex(), yearOfPlenty.getResource1(), yearOfPlenty.getResource2());
+		return ServerFacade.instance().playYearOfPlenty(gameId, yearOfPlenty.getPlayerIndex(),
+				yearOfPlenty.getResource1(), yearOfPlenty.getResource2());
 	}
 
 }

@@ -22,6 +22,12 @@ public class PlayMonopolyCardCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		Monopoly_ monopoly = gson.fromJson(json, Monopoly_.class); 
 		
 		ServerFacade.instance().addCommand(json, gameId);

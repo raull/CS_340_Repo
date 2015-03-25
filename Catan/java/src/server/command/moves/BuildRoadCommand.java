@@ -26,6 +26,12 @@ public class BuildRoadCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		BuildRoad buildRoad = gson.fromJson(json, BuildRoad.class);
 		comEdgeLoc edgeLocParam = buildRoad.getRoadLocation();
 		HexLocation hexLoc = new HexLocation(edgeLocParam.getX(), edgeLocParam.getY());

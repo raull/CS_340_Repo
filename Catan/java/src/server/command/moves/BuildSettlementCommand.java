@@ -25,7 +25,13 @@ public class BuildSettlementCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
 		
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		BuildSettlement buildSettlement = gson.fromJson(json, BuildSettlement.class);
 		comVertexLoc vertexLocParam = buildSettlement.getVertexLocation();
 		HexLocation hexLoc = new HexLocation(vertexLocParam.getX(), vertexLocParam.getY());

@@ -22,6 +22,12 @@ public class PlayMonumentCardCommand extends ServerCommand {
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		Monument_ monument = gson.fromJson(json, Monument_.class);
 		
 		ServerFacade.instance().addCommand(json, gameId);
