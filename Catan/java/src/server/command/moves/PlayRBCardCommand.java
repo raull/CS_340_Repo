@@ -26,6 +26,12 @@ public class PlayRBCardCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		Road_Building_ rb = gson.fromJson(json, Road_Building_.class);
 		
 		//strip out the packaging

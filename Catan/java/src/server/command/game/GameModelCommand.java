@@ -26,4 +26,11 @@ public class GameModelCommand extends ServerCommand {
 		return ServerFacade.instance().getModel(0, gameId);
 	}
 
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

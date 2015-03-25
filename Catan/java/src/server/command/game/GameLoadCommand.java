@@ -30,4 +30,11 @@ public class GameLoadCommand extends ServerCommand {
 
 	}
 
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

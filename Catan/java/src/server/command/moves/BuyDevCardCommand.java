@@ -21,6 +21,12 @@ public class BuyDevCardCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		BuyDevCard buyDevCard = gson.fromJson(json, BuyDevCard.class);
 		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().buyDevCard(gameId, buyDevCard.getPlayerIndex());

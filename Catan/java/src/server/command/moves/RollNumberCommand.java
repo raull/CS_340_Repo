@@ -21,10 +21,16 @@ public class RollNumberCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		RollNumber rollNumber = gson.fromJson(json, RollNumber.class);
 		
 		ServerFacade.instance().addCommand(json, gameId);
-		return ServerFacade.instance().rollNumber(gameId, rollNumber.getplayerIndex(), rollNumber.getNumber());		
+		return ServerFacade.instance().rollNumber(gameId, rollNumber.getplayerIndex(), rollNumber.getNumber());
 	}
 
 }
