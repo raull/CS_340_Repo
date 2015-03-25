@@ -64,6 +64,10 @@ public class Vertex {
 	public Building getBuilding(){
 		return building;
 	}
+	
+	public void setBuilding(Building bldg){
+		this.building = bldg;
+	}
 
 	
 	//Logic

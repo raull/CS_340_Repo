@@ -1,6 +1,8 @@
 package server.command.game;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
 
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,9 +20,11 @@ public class GameResetCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
+	public JsonElement execute() throws ServerInvalidRequestException {
+		
+		
+		return ServerFacade.instance().resetGame(gameId);
+		
 
 	}
 

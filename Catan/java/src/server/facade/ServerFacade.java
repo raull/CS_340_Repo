@@ -18,13 +18,13 @@ import java.util.Scanner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
-
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
@@ -1083,6 +1083,7 @@ public class ServerFacade {
 			Vertex newVertex = new Vertex(vertexLocation);
 			Building settlement = new Building();
 			settlement.setVertex(newVertex);
+			newVertex.setBuilding(settlement);
 			
 			settlement.setOwner(playerIndex);
 			//Add City to map
