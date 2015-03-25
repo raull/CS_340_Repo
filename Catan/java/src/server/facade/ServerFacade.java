@@ -315,6 +315,16 @@ public class ServerFacade {
 	 */
 	public JsonElement gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		if (fileName == null)
+		{
+			throw new ServerInvalidRequestException("Missing fileName field");
+		}
+		
 		Model model = game.getModelFacade().getModel();
 		
 		String jsonModelStr = model.serialize().toString();
