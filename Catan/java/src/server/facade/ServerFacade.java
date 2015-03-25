@@ -623,7 +623,7 @@ public class ServerFacade {
 					tm.setCurrentPhase(TurnPhase.ROLLING);
 				}
 				break;
-			default: //can't end turn in anyother phase
+			default: //can't end turn in any other phase
 				throw new ServerInvalidRequestException("Cannot finish turn at this time");
 			}
 			updateModelVersion(gameId);
