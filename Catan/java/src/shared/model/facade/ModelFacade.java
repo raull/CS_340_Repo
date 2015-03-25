@@ -702,7 +702,7 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canFinishTurn(TurnManager turnManager, User user) {
 		//if it isn't user's turn or if model status is not on playing
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		if(user.getPlayerID() != turnManager.currentUser().getPlayerID() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
 			return false;
 		}
 		return true;
