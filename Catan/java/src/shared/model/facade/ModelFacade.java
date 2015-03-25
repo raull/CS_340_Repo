@@ -702,10 +702,23 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canFinishTurn(TurnManager turnManager, User user) {
 		//if it isn't user's turn or if model status is not on playing
-		if(user.getPlayerID() != turnManager.currentUser().getPlayerID() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		System.out.println("model facade, can finish turn? " + user.equals(turnManager.currentUser()));
+		//if(user.getPlayerID() != turnManager.currentUser().getPlayerID()
+		if(!user.equals(turnManager.currentUser())
+				|| !isValidPhase(turnManager.currentTurnPhase())) {
 			return false;
 		}
 		return true;
+	}
+	
+	//helper function to check if it is currently a valid phase for end turn
+	private boolean isValidPhase(TurnPhase phase) {
+		if(phase == TurnPhase.PLAYING || phase == TurnPhase.FIRSTROUND || phase == TurnPhase.SECONDROUND){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	/**
