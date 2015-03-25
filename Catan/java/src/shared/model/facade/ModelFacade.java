@@ -580,12 +580,12 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
 		//if it isn't user's turn if model status is not on playing
-		if (offeringUser != turnManager.currentUser()) {
+		if (!offeringUser.equals(turnManager.currentUser())) {
 			return false;
 		}
 		
 		//If it's trading with itself
-		if (offeringUser == receivingUser) {
+		if (offeringUser.equals(receivingUser)) {
 			return false;
 		}
 		
