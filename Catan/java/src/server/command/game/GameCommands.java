@@ -38,7 +38,7 @@ public class GameCommands extends ServerCommand{
 			}
 		}
 		
-		return null;
+		return ServerFacade.instance().getModel(0, gameId);
 		
 	}
 
