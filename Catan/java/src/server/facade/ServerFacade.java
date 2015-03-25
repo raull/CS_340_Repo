@@ -410,6 +410,12 @@ public class ServerFacade {
 	 */
 	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		
