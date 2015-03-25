@@ -25,15 +25,23 @@ public class BuildCityCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
 		
+
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		BuildCity buildCity = gson.fromJson(json, BuildCity.class);
 		comVertexLoc locParam = buildCity.getVertexLocation();
 		VertexDirection direction = locParam.getDirection();
 		HexLocation hexLoc = new HexLocation(locParam.getX(), locParam.getY());
 		VertexLocation vertexLocation = new VertexLocation(hexLoc, direction);
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().buildCity(gameId, buildCity.getPlayerIndex(), vertexLocation);
-
+		
 	}
 
 }

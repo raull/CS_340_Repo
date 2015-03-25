@@ -22,8 +22,17 @@ public class PlaySoldierCardCommand extends ServerCommand {
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		Soldier_ soldier = gson.fromJson(json, Soldier_.class);
-		return ServerFacade.instance().robPlayer(gameId, soldier.getPlayerIndex(), soldier.getVictimIndex(), soldier.getLocation(), true);
+		
+		ServerFacade.instance().addCommand(json, gameId);
+		return ServerFacade.instance().robPlayer(gameId, soldier.getPlayerIndex(),
+				soldier.getVictimIndex(), soldier.getLocation(), true);
 	}
 
 }
