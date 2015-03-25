@@ -1055,6 +1055,8 @@ public class ServerFacade {
 		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.CITY)
 				&& facade.canBuyPiece(tm, curUser, PieceType.CITY)){
 			
+			//get the settlement currently there
+			Building currSettlement = facade.map().getBuildingAtVertex(vertexLocation);
 			//Decrease available Cities
 			curUser.setUnusedCities(curUser.getUnusedCities()-1);
 			//Increase available Settlements
@@ -1063,8 +1065,8 @@ public class ServerFacade {
 			Building city = new Building();
 			city.setVertex(new Vertex(vertexLocation));
 			//Remove Settlement from vertex
-			facade.getModel().getMap().removeSettlement(city);
-			//remove owner for settlement
+			facade.getModel().getMap().removeSettlement(currSettlement);
+			//TODO: remove owner for settlement?
 			city.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addCity(city);
