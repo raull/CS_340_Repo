@@ -917,6 +917,7 @@ public class ServerFacade {
 			Road road = new Road();
 			Edge newEdge = new Edge(roadLocation);
 			road.setEdge(newEdge);
+			road.setOwner(playerIndex);
 			user.addOccupiedEdge(newEdge);
 			//add road to map
 			modelFacade.map().addRoad(road);
@@ -997,6 +998,7 @@ public class ServerFacade {
 			Building settlement = new Building();
 			settlement.setVertex(new Vertex(vertexLocation));
 			
+			settlement.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addSettlement(settlement);
 			
@@ -1062,6 +1064,8 @@ public class ServerFacade {
 			city.setVertex(new Vertex(vertexLocation));
 			//Remove Settlement from vertex
 			facade.getModel().getMap().removeSettlement(city);
+			//remove owner for settlement
+			city.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addCity(city);
 			
