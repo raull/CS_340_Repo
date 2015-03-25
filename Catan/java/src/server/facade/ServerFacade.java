@@ -358,6 +358,10 @@ public class ServerFacade {
 			e.printStackTrace();
 		}
 		
+		int newId = gameManager.getNextId();
+		createNewGame(fileName, false, false, false);
+		Game nuGame = gameManager.getGameById(newId);
+		nuGame.getModelFacade().updateModel(jsonModel);
 		return jsonModel;
 	}
 	
