@@ -637,7 +637,7 @@ public class ServerFacade {
 		else{
 			throw new ServerInvalidRequestException();
 		}
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	public int nextTurn(int playerIndex){
@@ -967,7 +967,7 @@ public class ServerFacade {
 		
 		
 		//return new model
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -1029,7 +1029,8 @@ public class ServerFacade {
 		else{	
 			throw new ServerInvalidRequestException();
 		}
-		return null;
+		return getModel(0, gameId);
+		
 	}
 	
 	/**
@@ -1091,7 +1092,7 @@ public class ServerFacade {
 		}
 			
 		
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -1183,7 +1184,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException();
 		}
 		
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**
