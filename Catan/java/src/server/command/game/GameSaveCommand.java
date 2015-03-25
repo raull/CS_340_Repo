@@ -1,6 +1,9 @@
 package server.command.game;
 
 import server.command.ServerCommand;
+import server.exception.ServerInvalidRequestException;
+import server.facade.ServerFacade;
+import shared.proxy.games.SaveGameRequest;
 
 import com.google.gson.JsonElement;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,10 +21,10 @@ public class GameSaveCommand extends ServerCommand {
 	}
 
 	@Override
-	public JsonElement execute() {
-		return null;
-		// TODO Auto-generated method stub
-
+	public JsonElement execute() throws ServerInvalidRequestException{
+		
+			SaveGameRequest saveGame = gson.fromJson(json, SaveGameRequest.class);
+			return ServerFacade.instance().gameSave(saveGame.getId(), saveGame.getName());
 	}
 
 }
