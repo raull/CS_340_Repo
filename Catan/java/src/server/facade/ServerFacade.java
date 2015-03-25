@@ -265,11 +265,8 @@ public class ServerFacade {
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
 		}
-		// Creates a save file of the initial state that can be used as a reset point
-		if (tm.getUsers().size() == 4){
-			String resetName = gameId + "reset";
-			gameSave(gameId, resetName);
-		}
+		
+	
 		
 		//Checks to see if we can add player
 		if (tm.getUsers().size() < 4){ //enough space
@@ -286,6 +283,11 @@ public class ServerFacade {
 			} catch (ModelException e) {
 				throw new ServerInvalidRequestException("Cannot join. Game already full.");
 			}
+			// Creates a save file of the initial state that can be used as a reset point
+			if (tm.getUsers().size() == 4){
+			String resetName = gameId + "reset";
+			gameSave(gameId, resetName);
+		}
 			return new JsonPrimitive("Success");
 			
 		}
@@ -410,9 +412,30 @@ public class ServerFacade {
 	{
 		String fileName = gameId + "reset";
 		
-		gameLoad(fileName);
+		String jsonStr = "";
+		JsonObject jsonModel = null;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
+			
+			String currLine = "";
+			
+			while((currLine = reader.readLine()) != null) {
+				jsonStr += currLine;
+			}
+			
+			reader.close();
+			
+			jsonModel = new JsonParser().parse(jsonStr).getAsJsonObject();
 		
-		return null;
+			ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+			facade.updateModel(jsonModel);
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		return jsonModel;
 	}
 	
 	/**
