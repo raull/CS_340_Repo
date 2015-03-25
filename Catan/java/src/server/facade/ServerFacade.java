@@ -445,9 +445,25 @@ public class ServerFacade {
 	{
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game id");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		MessageList chat = model.getChat();
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (message == null)
+		{
+			throw new ServerInvalidRequestException("Message was empty");
+		}
 		
 		User user = modelFacade.turnManager().getUserFromIndex(playerIndex);
 		
@@ -539,15 +555,17 @@ public class ServerFacade {
 			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		Game game = gameManager.getGameById(gameId);
-		ModelFacade modelFacade = game.getModelFacade();
-		Model model = modelFacade.getModel();
-		TurnManager turnManager = modelFacade.turnManager();
-		User user = turnManager.getUserFromIndex(playerIndex);
 		
 		if (game == null)
 		{
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
+		
+		ModelFacade modelFacade = game.getModelFacade();
+		Model model = modelFacade.getModel();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
