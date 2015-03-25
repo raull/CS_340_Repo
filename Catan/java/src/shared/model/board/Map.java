@@ -170,7 +170,7 @@ public class Map {
 		settlementsOnMap.add(settlement);
 	}
 	
-	public void removeSettlement(Building setllement){
-		settlementsOnMap.remove(setllement);
+	public void removeSettlement(Building settlement){
+		settlementsOnMap.remove(settlement);
 	}
 }
