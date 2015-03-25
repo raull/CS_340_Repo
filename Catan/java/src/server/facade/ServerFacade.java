@@ -235,6 +235,11 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
 		}
 		
+		if (color == null)
+		{
+			throw new ServerInvalidRequestException("Missing color field");
+		}
+		
 		ModelFacade facade = gameToJoin.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		
@@ -405,6 +410,11 @@ public class ServerFacade {
 	 */
 	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
 		String fileName = gameId + "reset";
 		
 		String jsonStr = "";
@@ -445,9 +455,25 @@ public class ServerFacade {
 	{
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game id");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		MessageList chat = model.getChat();
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (message == null)
+		{
+			throw new ServerInvalidRequestException("Message was empty");
+		}
 		
 		User user = modelFacade.turnManager().getUserFromIndex(playerIndex);
 		
@@ -546,6 +572,7 @@ public class ServerFacade {
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
+
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
