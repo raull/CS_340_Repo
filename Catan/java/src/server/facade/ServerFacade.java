@@ -688,7 +688,7 @@ public class ServerFacade {
 		user.getUsableDevCardDeck().removeDevCard(new DevCard(DevCardType.SOLDIER));
 		//add one to the number of soldiers the player has played
 		user.setSoldiers(user.getSoldiers() + 1);
-
+		user.setHasPlayedDevCard(true);
 		//check to see if they gained the largest army
 		updateLargestArmy(game, modelFacade);
 
@@ -918,6 +918,8 @@ public class ServerFacade {
 			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource2));
 			//subtract one from the player's year of plenty cards
 			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played year of plenty.";
@@ -977,6 +979,8 @@ public class ServerFacade {
 			game.calcLongestRoadPlayer();
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
 			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 //			updatePlayerScores(game);
 			//update game history
 			String logSource = user.getName();
@@ -1001,9 +1005,11 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+	public JsonElement playMonopoly(int gameId, int playerId, ResourceType resource) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		int playerIndex = game.getModelFacade().turnManager().getUser(playerId).getTurnIndex();
 		
 		if (game == null)
 		{
@@ -1037,6 +1043,8 @@ public class ServerFacade {
 			}
 			//remove user's monopoly card
 			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played monopoly.";
@@ -1121,6 +1129,8 @@ public class ServerFacade {
 			//update user points
 			user.setMonumentsPlayed(user.getMonumentsPlayed() + 1);
 			user.setVictoryPoints(user.getVictoryPoints() + 1);
+			//user has played a dev card
+			//but since it's a monument don't set?
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played a monument and gained a point.";
