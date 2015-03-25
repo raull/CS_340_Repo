@@ -51,4 +51,11 @@ public class MockCommand extends ServerCommand {
 		return output;
 	}
 
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -27,4 +27,11 @@ public class GameSaveCommand extends ServerCommand {
 			return ServerFacade.instance().gameSave(saveGame.getId(), saveGame.getName());
 	}
 
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

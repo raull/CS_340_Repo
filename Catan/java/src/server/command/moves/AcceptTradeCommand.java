@@ -21,10 +21,17 @@ public class AcceptTradeCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json) throws ServerInvalidRequestException {
 		AcceptTrade accepTrade = gson.fromJson(json, AcceptTrade.class);
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().acceptTrade(gameId, accepTrade.getPlayerIndex(), accepTrade.isWillAccept());
 
 	}
 
+	
 }

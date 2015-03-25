@@ -26,12 +26,20 @@ public class BuildRoadCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		BuildRoad buildRoad = gson.fromJson(json, BuildRoad.class);
 		comEdgeLoc edgeLocParam = buildRoad.getRoadLocation();
 		HexLocation hexLoc = new HexLocation(edgeLocParam.getX(), edgeLocParam.getY());
 		EdgeDirection edgeDirection = edgeLocParam.getDirection();
 		EdgeLocation edgeLocation = new EdgeLocation(hexLoc, edgeDirection);
 		System.out.println("build road command, build road player index?? " + buildRoad.getPlayerIndex());
+		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().buildRoad(gameId, buildRoad.getPlayerIndex(), edgeLocation, buildRoad.isFree());
 
 	}
