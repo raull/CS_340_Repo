@@ -57,6 +57,7 @@ public class HandlerCommandFactory implements CommandFactory{
 		
 		if (request.startsWith("model"))
 		{
+			//System.out.println("stripping version off model request");
 			request = "model";
 		}
 		
@@ -76,6 +77,7 @@ public class HandlerCommandFactory implements CommandFactory{
 		case "load":
 			return new GameLoadCommand(arg0);
 		case "model":
+			//System.out.println("Returning gameModelCommand object...");
 			return new GameModelCommand(arg0);
 		case "reset":
 			return new GameResetCommand(arg0);
