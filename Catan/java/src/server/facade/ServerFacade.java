@@ -985,7 +985,7 @@ public class ServerFacade {
 		User curUser = tm.getUserFromIndex(playerIndex);
 		
 		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.SETTLEMENT)
-				&& facade.canBuyPiece(tm, curUser, PieceType.SETTLEMENT)){
+				&& (facade.canBuyPiece(tm, curUser, PieceType.SETTLEMENT) || free)) {
 			
 			//Decrease available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()-1);
