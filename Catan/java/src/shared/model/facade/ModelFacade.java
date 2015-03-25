@@ -594,8 +594,8 @@ public class ModelFacade extends Observable{
 			return false;
 		}
 		
-		//If the offer can be made
-		if(!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
+		//If the offer user has enough resources
+		if(!TradeManager.hasEnoughResources(offeringUser.getHand().getResourceCards(), tradeOffer.getSendingDeck())) {
 			return false;
 		}
 
