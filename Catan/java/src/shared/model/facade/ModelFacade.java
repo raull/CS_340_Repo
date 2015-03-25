@@ -196,36 +196,8 @@ public class ModelFacade extends Observable{
 		}
 	}
 	
-//	public Boolean isEdgeOnWater(EdgeLocation location) {
-//		HexLocation hexLoc = location.getHexLoc();
-//		int radius = 3-1;
-//		//bottom right of board, water edge on top, left
-//		if(hexLoc.getX() > radius && hexLoc.getY() > radius) {
-//			
-//		}
-//		//top right of board, water edge on bottom, left
-//		else if(hexLoc.getX() > radius && hexLoc.getY() < radius) {
-//			
-//		}
-//		//top left of board, water edge on bottom, right
-//		else if(hexLoc.getX() < radius && hexLoc.getY() < radius){
-//			
-//		}
-//		//bottom left of board, water edge on top, right
-//		else if(hexLoc.getX() < radius && hexLoc.getY() > radius) {
-//			
-//		}
-//		else{ //within radius, shouldn't be on water
-//			return false;
-//		}
-//	}
-//	
-//	public Boolean isVertexOnWater(VertexLocation location) {
-//		return false;
-//	}
-	
 	/**
-	 * Checks to see whether the location is valid for road placement - i.e. is it adjacent to other roads or buidlings
+	 * Checks to see whether the location is valid for road placement - i.e. is it adjacent to other roads or buildings
 	 * owned by the user, is the location unoccupied, etc.
 	 * @param turnManager -- if it is user's turn and if model is at 'Playing'
 	 * @param location -- where the road will be placed
@@ -441,7 +413,7 @@ public class ModelFacade extends Observable{
 	}
 	
 	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
-		return (canBuyPiece(turnManager, user, PieceType.ROAD) && canPlaceRoadAtLoc(turnManager, location, user));
+		return ((canBuyPiece(turnManager, user, PieceType.ROAD) || free )&& canPlaceRoadAtLoc(turnManager, location, user));
 	}
 	
 	/**
