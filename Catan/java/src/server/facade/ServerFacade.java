@@ -410,6 +410,7 @@ public class ServerFacade {
 			if (rolledNumber != 7)
 			{
 				modelFacade.givePlayersResourcesFromRoll(rolledNumber);
+				modelFacade.updateTurnPhase(TurnPhase.PLAYING);
 			}
 			else //rolledNumber == 7
 			{

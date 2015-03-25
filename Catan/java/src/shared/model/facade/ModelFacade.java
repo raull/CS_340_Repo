@@ -1017,15 +1017,15 @@ public class ModelFacade extends Observable{
 	{
 		ArrayList<Port> ports = new ArrayList<Port>();
 		
-		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-2), EdgeDirection.North);
-		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(2,-2), EdgeDirection.NorthEast);
-		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(2,-1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(1,1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,2), EdgeDirection.South);
-		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-1,2), EdgeDirection.SouthWest);
-		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-2,1), EdgeDirection.SouthWest);
-		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-2,0), EdgeDirection.NorthWest);
-		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.North);
+		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-3), EdgeDirection.South);
+		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(3,-3), EdgeDirection.SouthWest);
+		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(3,-1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(2,1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,3), EdgeDirection.North);
+		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-2,3), EdgeDirection.NorthEast);
+		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-3,2), EdgeDirection.NorthEast);
+		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-3,0), EdgeDirection.SouthEast);
+		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-2), EdgeDirection.South);
 		
 		Port p1 = new Port(PortType.ORE, 2, portLoc1);
 		Port p2 = new Port(PortType.THREE, 3, portLoc2);
@@ -1052,15 +1052,15 @@ public class ModelFacade extends Observable{
 	
 	public ArrayList<EdgeLocation> getPossiblePortLocations()
 	{
-		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-2), EdgeDirection.North);
-		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(2,-2), EdgeDirection.NorthEast);
-		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(2,-1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(1,1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,2), EdgeDirection.South);
-		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-1,2), EdgeDirection.SouthWest);
-		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-2,1), EdgeDirection.SouthWest);
-		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-2,0), EdgeDirection.NorthWest);
-		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.North);
+		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-3), EdgeDirection.South);
+		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(3,-3), EdgeDirection.SouthWest);
+		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(3,-1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(2,1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,3), EdgeDirection.North);
+		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-2,3), EdgeDirection.NorthEast);
+		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-3,2), EdgeDirection.NorthEast);
+		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-3,0), EdgeDirection.SouthEast);
+		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-2), EdgeDirection.South);
 		
 		ArrayList<EdgeLocation> edgeLocs = new ArrayList<EdgeLocation>();
 		
