@@ -611,9 +611,14 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement robPlayer(int gameId, int playerIndex, int victimIndex, 
-			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
+	public JsonElement robPlayer(int gameId, Integer playerIndex, Integer victimIndex, 
+			HexLocation location, Boolean soldierCard) throws ServerInvalidRequestException 
 	{		
+		if (playerIndex == null || victimIndex == null || location == null || soldierCard == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -752,8 +757,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	public JsonElement finishTurn(int gameId, Integer playerIndex) throws ServerInvalidRequestException 
 	{
+		if (playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("missing fields");
+		}
+		
 		if (gameManager.getGameById(gameId) == null)
 		{
 			throw new ServerInvalidRequestException("Invalid game ID");
@@ -830,8 +840,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	public JsonElement buyDevCard(int gameId, Integer playerIndex) throws ServerInvalidRequestException 
 	{
+		if (playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -889,8 +904,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
+	public JsonElement playYearOfPlenty(int gameId, Integer playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
 	{	
+		if (resource1 == null || resource2 == null || playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -901,11 +921,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (resource1 == null || resource2 == null)
-		{
-			throw new ServerInvalidRequestException("Missing resource field");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
@@ -948,8 +963,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
+	public JsonElement playRoadBuilding(int gameId, Integer playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
 	{	
+		if (location1 == null || location2 == null || playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -960,11 +980,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (location1 == null || location2 == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
@@ -1006,8 +1021,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+	public JsonElement playMonopoly(int gameId, Integer playerIndex, ResourceType resource) throws ServerInvalidRequestException 
 	{
+		if (resource == null || playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -1099,8 +1119,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
+	public JsonElement playMonument(int gameId, Integer playerIndex) throws ServerInvalidRequestException 
 	{
+		if (playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -1180,9 +1205,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
+	public JsonElement buildRoad(int gameId, Integer playerIndex, EdgeLocation roadLocation, Boolean free) throws ServerInvalidRequestException 
 	{
-		//TODO need to make player index and free non-primitives
+		if (roadLocation == null || playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		System.out.println("server facade, build road, player index: " + playerIndex);
 		Game game = gameManager.getGameById(gameId);
 		
@@ -1194,11 +1223,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (roadLocation == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade facade = game.getModelFacade();
@@ -1242,9 +1266,14 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildSettlement(int gameId, int playerIndex, 
-			VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
+	public JsonElement buildSettlement(int gameId, Integer playerIndex, 
+			VertexLocation vertexLocation, Boolean free) throws ServerInvalidRequestException 
 	{
+		if (vertexLocation == null || playerIndex == null || free == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		if (gameManager.getGameById(gameId) == null)
 		{
 			throw new ServerInvalidRequestException("Invalid game ID");
@@ -1253,11 +1282,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (vertexLocation == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
@@ -1325,9 +1349,14 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement buildCity(int gameId, int playerIndex, 
+	public JsonElement buildCity(int gameId, Integer playerIndex, 
 			VertexLocation vertexLocation) throws ServerInvalidRequestException 
 	{
+		if (vertexLocation == null || playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		if (gameManager.getGameById(gameId) == null)
 		{
 			throw new ServerInvalidRequestException("Invalid game ID");
@@ -1336,11 +1365,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (vertexLocation == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
@@ -1409,7 +1433,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+	public JsonElement offerTrade(int gameId, Integer playerIndex, Integer receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
+		
+		if (senderDeck == null || receiverDeck == null || playerIndex == null || receiver == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (gameManager.getGameById(gameId) == null)
@@ -1425,11 +1455,6 @@ public class ServerFacade {
 		if (receiver < 0 || receiver > 3 || receiver == playerIndex)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (senderDeck == null || receiverDeck == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
@@ -1462,7 +1487,12 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
+	public JsonElement acceptTrade(int gameId, Integer playerIndex, Boolean accept) throws ServerInvalidRequestException {
+		
+		if (playerIndex == null || accept == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
 		
 		Game game = gameManager.getGameById(gameId);
 		
@@ -1533,8 +1563,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
+	public JsonElement maritimeTrade(int gameId, Integer playerIndex, Integer ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
 
+		if (sendingResource == null || receivingResource == null || playerIndex == null || ratio == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (gameManager.getGameById(gameId) == null)
@@ -1550,11 +1585,6 @@ public class ServerFacade {
 		if (ratio != 2 && ratio != 3 && ratio != 41)
 		{
 			throw new ServerInvalidRequestException("bad ratio value");
-		}
-		
-		if (sendingResource == null || receivingResource == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
@@ -1610,8 +1640,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel).
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
+	public JsonElement discardCards(int gameId, Integer playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
 	{
+		if (resourcesToDiscard == null || playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (gameManager.getGameById(gameId) == null)
@@ -1622,11 +1657,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (resourcesToDiscard == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
