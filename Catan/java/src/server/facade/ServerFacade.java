@@ -3,12 +3,9 @@ package server.facade;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
@@ -39,7 +36,6 @@ import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
-import shared.model.game.User;
 
 
 
@@ -197,7 +193,6 @@ public class ServerFacade {
 
 		}
 		
-		Boolean test = null;
 		//have a hard coded list of default tiles, numbers, and ports?
 		int newGameId = gameManager.getNextId();
 		
@@ -622,6 +617,7 @@ public class ServerFacade {
 					tm.setCurrentTurn(playerIndex - 1);
 				else{
 					tm.setCurrentPhase(TurnPhase.ROLLING);
+					facade.givePlayersFirstResources();
 				}
 				break;
 			default: //can't end turn in any other phase
@@ -917,6 +913,7 @@ public class ServerFacade {
 			Road road = new Road();
 			Edge newEdge = new Edge(roadLocation);
 			road.setEdge(newEdge);
+			road.setOwner(playerIndex);
 			user.addOccupiedEdge(newEdge);
 			//add road to map
 			modelFacade.map().addRoad(road);
@@ -938,6 +935,7 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
+		System.out.println("server facade, build road, player index: " + playerIndex);
 		Game game = gameManager.getGameById(gameId);
 		ModelFacade facade = game.getModelFacade();
 		TurnManager tm = facade.turnManager();
@@ -993,11 +991,16 @@ public class ServerFacade {
 			//Decrease available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()-1);
 			
+			Vertex newVertex = new Vertex(vertexLocation);
 			Building settlement = new Building();
-			settlement.setVertex(new Vertex(vertexLocation));
+			settlement.setVertex(newVertex);
 			
+			settlement.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addSettlement(settlement);
+			
+			//Add Vertex to user
+			curUser.addOccupiedVertex(newVertex);
 			
 			//Pay the resources
 			if (!free){
@@ -1028,7 +1031,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{	
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("cannot build settlement at this time");
 		}
 		return getModel(0, gameId);
 		
@@ -1052,15 +1055,20 @@ public class ServerFacade {
 		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.CITY)
 				&& facade.canBuyPiece(tm, curUser, PieceType.CITY)){
 			
+			//get the settlement currently there
+			Building currSettlement = facade.map().getBuildingAtVertex(vertexLocation);
 			//Decrease available Cities
 			curUser.setUnusedCities(curUser.getUnusedCities()-1);
 			//Increase available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()+1);
 			
+			Vertex newVertex = new Vertex(vertexLocation);
 			Building city = new Building();
-			city.setVertex(new Vertex(vertexLocation));
+			city.setVertex(newVertex);
 			//Remove Settlement from vertex
-			facade.getModel().getMap().removeSettlement(city);
+			facade.getModel().getMap().removeSettlement(currSettlement);
+			//TODO: remove owner for settlement?
+			city.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addCity(city);
 			

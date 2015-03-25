@@ -702,7 +702,7 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canFinishTurn(TurnManager turnManager, User user) {
 		//if it isn't user's turn or if model status is not on playing
-		System.out.println("model facade, can finish turn? " + user.equals(turnManager.currentUser()));
+		//System.out.println("model facade, can finish turn? " + user.equals(turnManager.currentUser()));
 		//if(user.getPlayerID() != turnManager.currentUser().getPlayerID()
 		if(!user.equals(turnManager.currentUser())
 				|| !isValidPhase(turnManager.currentTurnPhase())) {
@@ -1222,6 +1222,34 @@ public class ModelFacade extends Observable{
 				}
 			}
 		}		
+	}
+	
+	public void givePlayersFirstResources () {
+		for (User user : turnManager.getUsers()){
+			Building settlementTwo = user.getOccupiedVertices().get(1).getBuilding();
+			for (HexTile hex : map.getHexTiles()){
+				ResourceType resourceType = identifyResource(hex.getType());
+
+				HexLocation location = hex.getLocation();
+				ArrayList<VertexLocation> locations = new ArrayList<VertexLocation>();
+				locations.add(new VertexLocation(location, VertexDirection.West));
+				locations.add(new VertexLocation(location, VertexDirection.NorthWest));
+				locations.add(new VertexLocation(location, VertexDirection.NorthEast));
+				locations.add(new VertexLocation(location, VertexDirection.East));
+				locations.add(new VertexLocation(location, VertexDirection.SouthEast));
+				locations.add(new VertexLocation(location, VertexDirection.SouthWest));
+
+				for (VertexLocation vertLoc : locations)
+				{
+					Building building = map.getBuildingAtVertex(vertLoc);
+					if (building.equals(settlementTwo))
+					{
+						PieceType type = building.getType();
+						givePlayerResource(user, type, resourceType);
+					}
+				}
+			}
+		}
 	}
 	
 	private void givePlayerResource(User owner, PieceType type, ResourceType resourceType)
