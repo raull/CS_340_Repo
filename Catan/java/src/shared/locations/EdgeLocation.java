@@ -89,7 +89,6 @@ public class EdgeLocation
 	{
 		
 		// Return an EdgeLocation that has direction NW, N, or NE
-		
 		switch (dir)
 		{
 			case NorthWest:

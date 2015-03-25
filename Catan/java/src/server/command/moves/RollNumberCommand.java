@@ -17,7 +17,6 @@ public class RollNumberCommand extends ServerCommand {
 
 	public RollNumberCommand(HttpExchange arg0) {
 		super(arg0);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

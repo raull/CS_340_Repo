@@ -26,6 +26,31 @@ public enum TurnPhase {
 	@SerializedName("FirstRound")
 	FIRSTROUND,
 	@SerializedName("SecondRound")
-	SECONDROUND
+	SECONDROUND;
+	
+	public String original() {
+		String original = "";
+		switch(this) {
+			case ROLLING:
+				original = "Rolling";
+				break;
+			case ROBBING:
+				original = "Robbing";
+				break;
+			case PLAYING:
+				original = "Playing";
+				break;
+			case DISCARDING:
+				original = "Discarding";
+				break;
+			case FIRSTROUND:
+				original = "FirstRound";
+				break;
+			case SECONDROUND:
+				original = "SecondRound";
+				break;
+		}
+		return original;
+	}
 	
 }

@@ -251,31 +251,17 @@ public class ServerFacade {
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
+		existingUser = existingUser.clone();
 		
-		//Checks to see if there is space
-		if (tm.getUsers().size() < 4){
-			try {
-				User copyUser = existingUser.clone();
-				tm.addUser(copyUser);
-			} catch (ModelException e) {
-				throw new ServerInvalidRequestException("Cannot join. Game already full.");
-			}
-		}
-		else{
-			throw new ServerInvalidRequestException("Cannot join. Game already full.");
-		}
-		
-		//Verifies color
-		User tmUser = tm.getUser(existingUser.getPlayerID());
-		
+		//Verify color	
 		if (nuColor != null)
-			tmUser.setColor(nuColor);
+			existingUser.setColor(nuColor);
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
 		
 		for (User u : tm.getUsers()){
-			if (u.getColor().equals(nuColor) && u.getName().equals(tmUser.getName())){
+			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(existingUser.getName())){ 
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
 		}
@@ -283,6 +269,30 @@ public class ServerFacade {
 		if (tm.getUsers().size() == 4){
 			String resetName = gameId + "reset";
 			gameSave(gameId, resetName);
+		}
+		
+		//Checks to see if we can add player
+		if (tm.getUsers().size() < 4){ //enough space
+			boolean alreadyInList = false;
+			for (User u : tm.getUsers()){
+				if(u.getPlayerID()==existingUser.getPlayerID()){ //if the player is already in the game, updates that player
+					u = existingUser.clone();
+					alreadyInList = true;
+				}
+			}
+			if(!alreadyInList){ //if the player hasn't been added yet, take care of it
+				try {
+					User copyUser = existingUser.clone();
+					copyUser.setColor(existingUser.getCatanColor());
+					tm.addUser(copyUser);
+				} catch (ModelException e) {
+					throw new ServerInvalidRequestException("Cannot join. Game already full.");
+				}
+			}
+			
+		}
+		else{
+			throw new ServerInvalidRequestException("Cannot join. Game already full.");
 		}
 		
 		return new JsonPrimitive("Success");
@@ -442,7 +452,7 @@ public class ServerFacade {
 		Game game = gameManager.getGameById(gameId);
 		if (game == null)
 		{
-			throw new ServerInvalidRequestException("Incorrect game id.");
+			throw new ServerInvalidRequestException("Incorrect game id: " + gameId);
 		}
 		if (playerIndex < 0 || playerIndex > 3)
 		{
