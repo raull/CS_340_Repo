@@ -1,5 +1,7 @@
 package shared.locations;
 
+import java.util.List;
+
 /**
  * Represents the location of a hex on a hex map
  */
@@ -88,6 +90,17 @@ public class HexLocation
 				assert false;
 				return null;
 		}
+	}
+	
+	public boolean isValid(List<HexLocation> validLocations) {
+		
+		for (HexLocation hexLocation : validLocations) {
+			if (hexLocation.equals(this)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 }

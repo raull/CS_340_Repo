@@ -589,36 +589,32 @@ public class ServerFacade {
 	{		
 		Game game = gameManager.getGameById(gameId);
 		
-		if (game == null)
-		{
+		if (game == null) {
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
-		Model model = modelFacade.getModel();
+
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		if (playerIndex < 0 || playerIndex > 3)
-		{
+		if (playerIndex < 0 || playerIndex > 3) {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
-		if (victimIndex < -1 || victimIndex > 3)
-		{
-			throw new ServerInvalidRequestException("Invalid player index");
+		if (victimIndex < -1 || victimIndex > 3) {
+			throw new ServerInvalidRequestException("Invalid victim index");
 		}
-		if (location == null)
-		{
+		if (location == null) {
 			throw new ServerInvalidRequestException("Missing hex location");
-			//TODO need a check if the location is valid?
+		}
+		if (!location.isValid(modelFacade.getPossibleHexLocations())) {
+			throw new ServerInvalidRequestException("Hex location out of bounds");
 		}
 
-		if (victimIndex == -1)
-		{
+		if (victimIndex == -1) {
 			modelFacade.map().updateRobberLocation(location);
 			
-			if (soldierCard)
-			{
+			if (soldierCard) {
 				 playSoldierCard(game, user, modelFacade);
 			}
 			
@@ -628,12 +624,10 @@ public class ServerFacade {
 			modelFacade.addToGameLog(logEntry);
 
 		}
-		else
-		{
+		else {
 			User victim = turnManager.getUserFromIndex(victimIndex);
 
-			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
-			{
+			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim)) {
 				modelFacade.map().updateRobberLocation(location);
 
 				//randomly select a resource card from the victim
@@ -643,8 +637,7 @@ public class ServerFacade {
 				victim.getResourceCards().removeResourceCard(stolenCard);
 				user.getResourceCards().addResourceCard(stolenCard);
 
-				if (soldierCard)
-				{
+				if (soldierCard) {
 					 playSoldierCard(game, user, modelFacade);
 				}
 
@@ -654,9 +647,8 @@ public class ServerFacade {
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
-			else
-			{
-				throw new ServerInvalidRequestException();
+			else {
+				throw new ServerInvalidRequestException("Cannot Rob Selected Victim");
 			}
 		}
 		modelFacade.updateTurnPhase(TurnPhase.PLAYING);
