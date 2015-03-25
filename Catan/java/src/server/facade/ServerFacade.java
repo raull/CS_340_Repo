@@ -621,6 +621,7 @@ public class ServerFacade {
 					tm.setCurrentTurn(playerIndex - 1);
 				else{
 					tm.setCurrentPhase(TurnPhase.ROLLING);
+					facade.givePlayersFirstResources();
 				}
 				break;
 			default: //can't end turn in anyother phase

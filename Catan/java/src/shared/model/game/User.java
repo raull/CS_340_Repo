@@ -229,6 +229,11 @@ public class User {
 	public List<Edge> getOccupiedEdges(){
 		return this.occupiedEdges;
 	}
+	
+	public List<Vertex> getOccupiedVertices(){
+		return occupiedVertices;
+	}
+	
 	public void resetOccupiedEdges(){
 		this.occupiedEdges.clear();
 	}
