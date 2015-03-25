@@ -3,12 +3,9 @@ package server.facade;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
@@ -39,7 +36,6 @@ import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
-import shared.model.game.User;
 
 
 
@@ -197,7 +193,6 @@ public class ServerFacade {
 
 		}
 		
-		Boolean test = null;
 		//have a hard coded list of default tiles, numbers, and ports?
 		int newGameId = gameManager.getNextId();
 		
@@ -425,7 +420,7 @@ public class ServerFacade {
 			
 			//add to the game log
 			String logSource = user.getName();
-			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
+			String logMessage = user.getName() + " rolled a " + rolledNumber + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
@@ -487,7 +482,7 @@ public class ServerFacade {
 			}
 			
 			String logSource = user.getName();
-			String logMessage = user.getName() + "moved the robber and robbed, but couldn't rob anyone";
+			String logMessage = user.getName() + " moved the robber and robbed, but couldn't rob anyone";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 
@@ -514,7 +509,7 @@ public class ServerFacade {
 
 				//update game log with appropriate robbing message
 				String logSource = user.getName();
-				String logMessage = user.getName() + "moved the robber and robbed " + victim.getName();
+				String logMessage = user.getName() + " moved the robber and robbed " + victim.getName();
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
@@ -631,7 +626,7 @@ public class ServerFacade {
 			
 			//add to the game log
 			String logSource = user.getName();
-			String logMessage = user.getName() + "finished their turn";
+			String logMessage = user.getName() + " finished their turn";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			facade.addToGameLog(logEntry);
 		}
@@ -995,12 +990,16 @@ public class ServerFacade {
 			//Decrease available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()-1);
 			
+			Vertex newVertex = new Vertex(vertexLocation);
 			Building settlement = new Building();
-			settlement.setVertex(new Vertex(vertexLocation));
+			settlement.setVertex(newVertex);
 			
 			settlement.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addSettlement(settlement);
+			
+			//Add Vertex to user
+			curUser.addOccupiedVertex(newVertex);
 			
 			//Pay the resources
 			if (!free){
@@ -1062,8 +1061,9 @@ public class ServerFacade {
 			//Increase available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()+1);
 			
+			Vertex newVertex = new Vertex(vertexLocation);
 			Building city = new Building();
-			city.setVertex(new Vertex(vertexLocation));
+			city.setVertex(newVertex);
 			//Remove Settlement from vertex
 			facade.getModel().getMap().removeSettlement(currSettlement);
 			//TODO: remove owner for settlement?
