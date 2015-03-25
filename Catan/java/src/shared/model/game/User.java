@@ -63,9 +63,9 @@ public class User {
 	 */
 	private ArrayList<Piece> unusedPieces;
 	//instead of array list, maybe just have count?
-	private int unusedRoads;
-	private int unusedSettlements;
-	private int unusedCities;
+	private int unusedRoads = 15;
+	private int unusedSettlements = 5;
+	private int unusedCities = 4;
 	
 	private int monumentsPlayed;
 	/**
