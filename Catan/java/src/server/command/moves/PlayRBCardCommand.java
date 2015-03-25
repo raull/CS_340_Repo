@@ -35,8 +35,8 @@ public class PlayRBCardCommand extends ServerCommand {
 		//convert comEdgeLoc to EdgeLocation
 		HexLocation hexLoc1 = new HexLocation(temp1.getX(),temp1.getY());
 		HexLocation hexLoc2 = new HexLocation(temp2.getX(),temp2.getY());
-		EdgeDirection edgeDir1 = EdgeDirection.valueOf(temp1.getDirection());
-		EdgeDirection edgeDir2 = EdgeDirection.valueOf(temp2.getDirection());
+		EdgeDirection edgeDir1 = temp1.getDirection();
+		EdgeDirection edgeDir2 = temp2.getDirection();
 		EdgeLocation loc1 = new EdgeLocation(hexLoc1, edgeDir1);
 		EdgeLocation loc2 = new EdgeLocation(hexLoc2, edgeDir2);
 		

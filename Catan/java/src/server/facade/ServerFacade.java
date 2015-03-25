@@ -15,12 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
@@ -51,7 +48,6 @@ import shared.model.game.MessageList;
 import shared.model.game.TradeOffer;
 import shared.model.game.TurnManager;
 import shared.model.game.TurnPhase;
-import shared.model.game.User;
 
 
 
@@ -209,7 +205,6 @@ public class ServerFacade {
 
 		}
 		
-		Boolean test = null;
 		//have a hard coded list of default tiles, numbers, and ports?
 		int newGameId = gameManager.getNextId();
 		
@@ -499,6 +494,7 @@ public class ServerFacade {
 			if (rolledNumber != 7)
 			{
 				modelFacade.givePlayersResourcesFromRoll(rolledNumber);
+				modelFacade.updateTurnPhase(TurnPhase.PLAYING);
 			}
 			else //rolledNumber == 7
 			{
@@ -514,7 +510,7 @@ public class ServerFacade {
 			
 			//add to the game log
 			String logSource = user.getName();
-			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
+			String logMessage = user.getName() + " rolled a " + rolledNumber + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
@@ -576,7 +572,7 @@ public class ServerFacade {
 			}
 			
 			String logSource = user.getName();
-			String logMessage = user.getName() + "moved the robber and robbed, but couldn't rob anyone";
+			String logMessage = user.getName() + " moved the robber and robbed, but couldn't rob anyone";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 
@@ -603,7 +599,7 @@ public class ServerFacade {
 
 				//update game log with appropriate robbing message
 				String logSource = user.getName();
-				String logMessage = user.getName() + "moved the robber and robbed " + victim.getName();
+				String logMessage = user.getName() + " moved the robber and robbed " + victim.getName();
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
@@ -710,23 +706,24 @@ public class ServerFacade {
 					tm.setCurrentTurn(playerIndex - 1);
 				else{
 					tm.setCurrentPhase(TurnPhase.ROLLING);
+					facade.givePlayersFirstResources();
 				}
 				break;
-			default: //can't end turn in anyother phase
+			default: //can't end turn in any other phase
 				throw new ServerInvalidRequestException("Cannot finish turn at this time");
 			}
 			updateModelVersion(gameId);
 			
 			//add to the game log
 			String logSource = user.getName();
-			String logMessage = user.getName() + "finished their turn";
+			String logMessage = user.getName() + " finished their turn";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			facade.addToGameLog(logEntry);
 		}
 		else{
 			throw new ServerInvalidRequestException();
 		}
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	public int nextTurn(int playerIndex){
@@ -1003,7 +1000,10 @@ public class ServerFacade {
 			user.setUnusedRoads(user.getUnusedRoads()-1);
 			//create a new road
 			Road road = new Road();
-			road.setEdge(new Edge(roadLocation));
+			Edge newEdge = new Edge(roadLocation);
+			road.setEdge(newEdge);
+			road.setOwner(playerIndex);
+			user.addOccupiedEdge(newEdge);
 			//add road to map
 			modelFacade.map().addRoad(road);
 		}
@@ -1024,6 +1024,7 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
+		System.out.println("server facade, build road, player index: " + playerIndex);
 		Game game = gameManager.getGameById(gameId);
 		ModelFacade facade = game.getModelFacade();
 		TurnManager tm = facade.turnManager();
@@ -1047,14 +1048,14 @@ public class ServerFacade {
 		
 		//Update history
 		String user = curUser.getName();
-		String message = user + "built a road";
+		String message = user + " built a road";
 		MessageLine line = new MessageLine(message, user);
 		facade.getModel().getLog().addLine(line);
 		updateModelVersion(gameId);
 		
 		
 		//return new model
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -1074,16 +1075,21 @@ public class ServerFacade {
 		User curUser = tm.getUserFromIndex(playerIndex);
 		
 		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.SETTLEMENT)
-				&& facade.canBuyPiece(tm, curUser, PieceType.SETTLEMENT)){
+				&& (facade.canBuyPiece(tm, curUser, PieceType.SETTLEMENT) || free)) {
 			
 			//Decrease available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()-1);
 			
+			Vertex newVertex = new Vertex(vertexLocation);
 			Building settlement = new Building();
-			settlement.setVertex(new Vertex(vertexLocation));
+			settlement.setVertex(newVertex);
 			
+			settlement.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addSettlement(settlement);
+			
+			//Add Vertex to user
+			curUser.addOccupiedVertex(newVertex);
 			
 			//Pay the resources
 			if (!free){
@@ -1107,16 +1113,17 @@ public class ServerFacade {
 			
 			//Update history
 			String user = curUser.getName();
-			String message = user + "built a settlement";
+			String message = user + " built a settlement";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
 			
 			updateModelVersion(gameId);
 		}
 		else{	
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("cannot build settlement at this time");
 		}
-		return null;
+		return getModel(0, gameId);
+		
 	}
 	
 	/**
@@ -1137,15 +1144,20 @@ public class ServerFacade {
 		if (facade.canPlaceBuildingAtLoc(tm, vertexLocation, curUser, PieceType.CITY)
 				&& facade.canBuyPiece(tm, curUser, PieceType.CITY)){
 			
+			//get the settlement currently there
+			Building currSettlement = facade.map().getBuildingAtVertex(vertexLocation);
 			//Decrease available Cities
 			curUser.setUnusedCities(curUser.getUnusedCities()-1);
 			//Increase available Settlements
 			curUser.setUnusedSettlements(curUser.getUnusedSettlements()+1);
 			
+			Vertex newVertex = new Vertex(vertexLocation);
 			Building city = new Building();
-			city.setVertex(new Vertex(vertexLocation));
+			city.setVertex(newVertex);
 			//Remove Settlement from vertex
-			facade.getModel().getMap().removeSettlement(city);
+			facade.getModel().getMap().removeSettlement(currSettlement);
+			//TODO: remove owner for settlement?
+			city.setOwner(playerIndex);
 			//Add City to map
 			facade.getModel().getMap().addCity(city);
 			
@@ -1167,7 +1179,7 @@ public class ServerFacade {
 			
 			//Update history
 			String user = curUser.getName();
-			String message = user + "built a city";
+			String message = user + " built a city";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
 			
@@ -1178,7 +1190,7 @@ public class ServerFacade {
 		}
 			
 		
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**
@@ -1270,7 +1282,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException();
 		}
 		
-		return null;
+		return getModel(0, gameId);
 	}
 	
 	/**

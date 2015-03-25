@@ -196,36 +196,8 @@ public class ModelFacade extends Observable{
 		}
 	}
 	
-//	public Boolean isEdgeOnWater(EdgeLocation location) {
-//		HexLocation hexLoc = location.getHexLoc();
-//		int radius = 3-1;
-//		//bottom right of board, water edge on top, left
-//		if(hexLoc.getX() > radius && hexLoc.getY() > radius) {
-//			
-//		}
-//		//top right of board, water edge on bottom, left
-//		else if(hexLoc.getX() > radius && hexLoc.getY() < radius) {
-//			
-//		}
-//		//top left of board, water edge on bottom, right
-//		else if(hexLoc.getX() < radius && hexLoc.getY() < radius){
-//			
-//		}
-//		//bottom left of board, water edge on top, right
-//		else if(hexLoc.getX() < radius && hexLoc.getY() > radius) {
-//			
-//		}
-//		else{ //within radius, shouldn't be on water
-//			return false;
-//		}
-//	}
-//	
-//	public Boolean isVertexOnWater(VertexLocation location) {
-//		return false;
-//	}
-	
 	/**
-	 * Checks to see whether the location is valid for road placement - i.e. is it adjacent to other roads or buidlings
+	 * Checks to see whether the location is valid for road placement - i.e. is it adjacent to other roads or buildings
 	 * owned by the user, is the location unoccupied, etc.
 	 * @param turnManager -- if it is user's turn and if model is at 'Playing'
 	 * @param location -- where the road will be placed
@@ -441,7 +413,7 @@ public class ModelFacade extends Observable{
 	}
 	
 	public Boolean canBuyRoadForLoc(TurnManager turnManager, EdgeLocation location, User user, boolean free){
-		return (canBuyPiece(turnManager, user, PieceType.ROAD) && canPlaceRoadAtLoc(turnManager, location, user));
+		return ((canBuyPiece(turnManager, user, PieceType.ROAD) || free )&& canPlaceRoadAtLoc(turnManager, location, user));
 	}
 	
 	/**
@@ -730,10 +702,23 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canFinishTurn(TurnManager turnManager, User user) {
 		//if it isn't user's turn or if model status is not on playing
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.PLAYING) {
+		//System.out.println("model facade, can finish turn? " + user.equals(turnManager.currentUser()));
+		//if(user.getPlayerID() != turnManager.currentUser().getPlayerID()
+		if(!user.equals(turnManager.currentUser())
+				|| !isValidPhase(turnManager.currentTurnPhase())) {
 			return false;
 		}
 		return true;
+	}
+	
+	//helper function to check if it is currently a valid phase for end turn
+	private boolean isValidPhase(TurnPhase phase) {
+		if(phase == TurnPhase.PLAYING || phase == TurnPhase.FIRSTROUND || phase == TurnPhase.SECONDROUND){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	/**
@@ -1032,15 +1017,15 @@ public class ModelFacade extends Observable{
 	{
 		ArrayList<Port> ports = new ArrayList<Port>();
 		
-		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-2), EdgeDirection.North);
-		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(2,-2), EdgeDirection.NorthEast);
-		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(2,-1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(1,1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,2), EdgeDirection.South);
-		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-1,2), EdgeDirection.SouthWest);
-		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-2,1), EdgeDirection.SouthWest);
-		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-2,0), EdgeDirection.NorthWest);
-		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.North);
+		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-3), EdgeDirection.South);
+		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(3,-3), EdgeDirection.SouthWest);
+		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(3,-1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(2,1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,3), EdgeDirection.North);
+		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-2,3), EdgeDirection.NorthEast);
+		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-3,2), EdgeDirection.NorthEast);
+		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-3,0), EdgeDirection.SouthEast);
+		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-2), EdgeDirection.South);
 		
 		Port p1 = new Port(PortType.ORE, 2, portLoc1);
 		Port p2 = new Port(PortType.THREE, 3, portLoc2);
@@ -1067,15 +1052,15 @@ public class ModelFacade extends Observable{
 	
 	public ArrayList<EdgeLocation> getPossiblePortLocations()
 	{
-		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-2), EdgeDirection.North);
-		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(2,-2), EdgeDirection.NorthEast);
-		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(2,-1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(1,1), EdgeDirection.SouthEast);
-		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,2), EdgeDirection.South);
-		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-1,2), EdgeDirection.SouthWest);
-		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-2,1), EdgeDirection.SouthWest);
-		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-2,0), EdgeDirection.NorthWest);
-		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-1), EdgeDirection.North);
+		EdgeLocation portLoc1 = new EdgeLocation(new HexLocation(1,-3), EdgeDirection.South);
+		EdgeLocation portLoc2 = new EdgeLocation(new HexLocation(3,-3), EdgeDirection.SouthWest);
+		EdgeLocation portLoc3 = new EdgeLocation(new HexLocation(3,-1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc4 = new EdgeLocation(new HexLocation(2,1), EdgeDirection.NorthWest);
+		EdgeLocation portLoc5 = new EdgeLocation(new HexLocation(0,3), EdgeDirection.North);
+		EdgeLocation portLoc6 = new EdgeLocation(new HexLocation(-2,3), EdgeDirection.NorthEast);
+		EdgeLocation portLoc7 = new EdgeLocation(new HexLocation(-3,2), EdgeDirection.NorthEast);
+		EdgeLocation portLoc8 = new EdgeLocation(new HexLocation(-3,0), EdgeDirection.SouthEast);
+		EdgeLocation portLoc9 = new EdgeLocation(new HexLocation(-1,-2), EdgeDirection.South);
 		
 		ArrayList<EdgeLocation> edgeLocs = new ArrayList<EdgeLocation>();
 		
@@ -1237,6 +1222,34 @@ public class ModelFacade extends Observable{
 				}
 			}
 		}		
+	}
+	
+	public void givePlayersFirstResources () {
+		for (User user : turnManager.getUsers()){
+			Building settlementTwo = user.getOccupiedVertices().get(1).getBuilding();
+			for (HexTile hex : map.getHexTiles()){
+				ResourceType resourceType = identifyResource(hex.getType());
+
+				HexLocation location = hex.getLocation();
+				ArrayList<VertexLocation> locations = new ArrayList<VertexLocation>();
+				locations.add(new VertexLocation(location, VertexDirection.West));
+				locations.add(new VertexLocation(location, VertexDirection.NorthWest));
+				locations.add(new VertexLocation(location, VertexDirection.NorthEast));
+				locations.add(new VertexLocation(location, VertexDirection.East));
+				locations.add(new VertexLocation(location, VertexDirection.SouthEast));
+				locations.add(new VertexLocation(location, VertexDirection.SouthWest));
+
+				for (VertexLocation vertLoc : locations)
+				{
+					Building building = map.getBuildingAtVertex(vertLoc);
+					if (building.equals(settlementTwo))
+					{
+						PieceType type = building.getType();
+						givePlayerResource(user, type, resourceType);
+					}
+				}
+			}
+		}
 	}
 	
 	private void givePlayerResource(User owner, PieceType type, ResourceType resourceType)

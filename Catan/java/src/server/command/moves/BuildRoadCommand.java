@@ -29,8 +29,9 @@ public class BuildRoadCommand extends ServerCommand {
 		BuildRoad buildRoad = gson.fromJson(json, BuildRoad.class);
 		comEdgeLoc edgeLocParam = buildRoad.getRoadLocation();
 		HexLocation hexLoc = new HexLocation(edgeLocParam.getX(), edgeLocParam.getY());
-		EdgeDirection edgeDirection = EdgeDirection.valueOf(edgeLocParam.getDirection());
+		EdgeDirection edgeDirection = edgeLocParam.getDirection();
 		EdgeLocation edgeLocation = new EdgeLocation(hexLoc, edgeDirection);
+		System.out.println("build road command, build road player index?? " + buildRoad.getPlayerIndex());
 		return ServerFacade.instance().buildRoad(gameId, buildRoad.getPlayerIndex(), edgeLocation, buildRoad.isFree());
 
 	}

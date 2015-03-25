@@ -16,10 +16,13 @@ public class GameModelCommand extends ServerCommand {
 
 	public GameModelCommand(HttpExchange arg0) {
 		super(arg0);
+		System.out.println("exiting GameModelCommand constructor");
 	}
 
 	@Override
-	public JsonElement execute() throws ServerInvalidRequestException {				
+	public JsonElement execute() throws ServerInvalidRequestException {	
+		System.out.println("executing Model command");
+		System.out.println("gameID: " + gameId);
 		return ServerFacade.instance().getModel(0, gameId);
 	}
 
