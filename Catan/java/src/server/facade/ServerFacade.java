@@ -341,6 +341,7 @@ public class ServerFacade {
 		}
 		catch(IOException ex) {
 			ex.printStackTrace();
+			throw new ServerInvalidRequestException("Internal server error");
 		}
 		finally {
 			try { writer.close();} catch (Exception ex) {
