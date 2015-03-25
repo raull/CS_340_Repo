@@ -103,7 +103,7 @@ public abstract class ServerCommand{
 	}
 	
 	protected String getEncodedJoinGameCookie(String gameID){
-		return "catan.game=" + gameID + ";Path=/;";
+		return "catan.game=" + gameID + ";Path=/;";
 	}
 	
 	protected String getExampleListString(){
