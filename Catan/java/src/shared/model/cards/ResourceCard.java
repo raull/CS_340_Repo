@@ -7,7 +7,7 @@ import shared.definitions.ResourceType;
  * @author Raul Lopez
  *
  */
-public class ResourceCard extends Card{
+public class ResourceCard {// extends Card{
 	
 	/**
 	 * The type of resource that the card holds
@@ -52,7 +52,7 @@ public class ResourceCard extends Card{
 		if (getClass() != obj.getClass())
 			return false;
 		ResourceCard other = (ResourceCard) obj;
-		if (type != other.type)
+		if (this.type != other.type)
 			return false;
 		return true;
 	}

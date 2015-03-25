@@ -2,6 +2,9 @@ package shared.model.cards;
 
 import java.util.ArrayList;
 
+import shared.definitions.DevCardType;
+import shared.definitions.ResourceType;
+
 /**
  * The user's hand. Contains a deck of DevCards and a deck of ResourceCards. 
  * @author thyer
@@ -56,27 +59,23 @@ public class Hand {
 	public void setResourceCardDeck(ResourceCardDeck resourceCardDeck) {
 		this.resourceCardDeck = resourceCardDeck;
 	}
-
+	
 	/**
-	 * Determines whether a card can be removed from the hand
-	 * @param type the type of card to be removed
-	 * @return false if the card does not exist, otherwise true
+	 * if a dev card could be removed
+	 * @param type
+	 * @return
 	 */
-	public boolean canRemoveCard(Card type){
-		DevCard tempDevCard = new DevCard(null);
-		ResourceCard tempResourceCard = new ResourceCard(null);
-		
-		/*Determines whether the card is DevCard or ResourceCard*/
-		if(type.getClass()==tempDevCard.getClass()){
-			return (devCardDeck.getCountByType(((DevCard)type).getType())>0); //gets count by type from usable cards
-			//if a card is in newDevCards but not the playable deck, it'll return false
-		}
-		else if(type.getClass()==tempResourceCard.getClass()){
-			return (resourceCardDeck.getCountByType(((ResourceCard)type).getType())>0); //gets count by type
-		}
-		else{
-			return false;		//idiot-proofing, prevents incorrect inputs
-		}
+	public boolean canRemoveDevCard(DevCardType type) {
+		return devCardDeck.getAllCards().contains(new DevCard(type));
+	}
+	
+	/**
+	 * if a resource card could be removed
+	 * @param type
+	 * @return
+	 */
+	public boolean canRemoveResourceCard(ResourceType type) {
+		return resourceCardDeck.getAllResourceCards().contains(new ResourceCard(type));
 	}
 	
 	/**

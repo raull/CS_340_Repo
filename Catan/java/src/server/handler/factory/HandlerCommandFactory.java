@@ -23,6 +23,7 @@ import server.command.moves.PlayMonumentCardCommand;
 import server.command.moves.PlayRBCardCommand;
 import server.command.moves.PlaySoldierCardCommand;
 import server.command.moves.PlayYOPCardCommand;
+import server.command.moves.RobPlayerCommand;
 import server.command.moves.RollNumberCommand;
 import server.command.moves.SendChatCommand;
 import server.command.user.LoginCommand;
@@ -78,12 +79,13 @@ public class HandlerCommandFactory implements CommandFactory{
 		case "load":
 			return new GameLoadCommand(arg0);
 		case "model":
-			//System.out.println("Returning gameModelCommand object...");
 			return new GameModelCommand(arg0);
 		case "reset":
 			return new GameResetCommand(arg0);
 		case "sendChat":
 			return new SendChatCommand(arg0);
+		case "robPlayer":
+			return new RobPlayerCommand(arg0);
 		case "rollNumber":
 			return new RollNumberCommand(arg0);
 		case "finishTurn":
