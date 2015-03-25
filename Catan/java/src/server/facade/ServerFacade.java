@@ -1541,7 +1541,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
 		
-		if (ratio != 2 && ratio != 3 && ratio != 41)
+		if (ratio != 2 && ratio != 3 && ratio != 4)
 		{
 			throw new ServerInvalidRequestException("bad ratio value");
 		}
