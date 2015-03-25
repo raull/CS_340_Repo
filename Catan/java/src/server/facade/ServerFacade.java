@@ -709,7 +709,8 @@ public class ServerFacade {
 				modelFacade.score().setWinner(user.getTurnIndex());
 			}
 			//set the scores
-			modelFacade.score().setScore(user.getTurnIndex(), score);
+//			modelFacade.score().setScore(user.getTurnIndex(), score);
+			user.setVictoryPoints(score);
 		}
 	}
 	
