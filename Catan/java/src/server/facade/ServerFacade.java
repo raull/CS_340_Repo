@@ -1,18 +1,30 @@
 package server.facade;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
 import server.user.UserManager;
-
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
@@ -202,9 +214,9 @@ public class ServerFacade {
 		gameManager.addGame(newGame);
 		
 		
-		//this function should also save the beginning state of the map somewhere
-		//This way if the reset function is called the model can update using this saved file
-		//This also means a Game object should also store the string representing the filename of the intial setup
+		
+		// I put the save file of the reset to be created after the 4th player joins.
+		// This way the players are in the game, and resetting doesn't return an empty game.
 
 		return newGame.jsonRepresentation();
 	}
@@ -249,6 +261,8 @@ public class ServerFacade {
 			}
 		}
 		
+	
+		
 		//Checks to see if we can add player
 		if (tm.getUsers().size() < 4){ //enough space
 			for (User u : tm.getUsers()){
@@ -264,6 +278,11 @@ public class ServerFacade {
 			} catch (ModelException e) {
 				throw new ServerInvalidRequestException("Cannot join. Game already full.");
 			}
+			// Creates a save file of the initial state that can be used as a reset point
+			if (tm.getUsers().size() == 4){
+			String resetName = gameId + "reset";
+			gameSave(gameId, resetName);
+		}
 			return new JsonPrimitive("Success");
 			
 		}
@@ -289,8 +308,31 @@ public class ServerFacade {
 	 * @param fileName The file name you want to save it under
 	 * @throws ServerInvalidRequestException
 	 */
-	public void gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
+	public JsonElement gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
+		Game game = gameManager.getGameById(gameId);
+		Model model = game.getModelFacade().getModel();
 		
+		String jsonModelStr = model.serialize().toString();
+		
+		Writer writer = null;
+		try {
+			File saves = new File("saves");
+			if (!saves.exists())
+				saves.mkdirs();
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream("saves/" + fileName + ".txt"), "utf-8"));
+			writer.write(jsonModelStr);
+			
+		}
+		catch(IOException ex) {
+			ex.printStackTrace();
+		}
+		finally {
+			try { writer.close();} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		return new JsonPrimitive ("Success");
 	}
 	
 	/**
@@ -305,7 +347,32 @@ public class ServerFacade {
 	 * @throws ServerInvalidRequestException
 	 */
 	public JsonElement gameLoad(String fileName) throws ServerInvalidRequestException {
-		return null;
+		
+		String jsonStr = "";
+		JsonObject jsonModel = null;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
+			
+			String currLine = "";
+			
+			while((currLine = reader.readLine()) != null) {
+				jsonStr += currLine;
+			}
+			
+			reader.close();
+			
+			jsonModel = new JsonParser().parse(jsonStr).getAsJsonObject();
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		int newId = gameManager.getNextId();
+		createNewGame(fileName, false, false, false);
+		Game nuGame = gameManager.getGameById(newId);
+		nuGame.getModelFacade().updateModel(jsonModel);
+		return jsonModel;
 	}
 	
 	/**
@@ -338,10 +405,32 @@ public class ServerFacade {
 	 */
 	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
 	{
-		//if we save the initial state of the game when it is first created
-		//all this has to do is call load on that saved file
+		String fileName = gameId + "reset";
 		
-		return null;
+		String jsonStr = "";
+		JsonObject jsonModel = null;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
+			
+			String currLine = "";
+			
+			while((currLine = reader.readLine()) != null) {
+				jsonStr += currLine;
+			}
+			
+			reader.close();
+			
+			jsonModel = new JsonParser().parse(jsonStr).getAsJsonObject();
+		
+			ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+			facade.updateModel(jsonModel);
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		return jsonModel;
 	}
 	
 	/**
@@ -995,6 +1084,7 @@ public class ServerFacade {
 			Vertex newVertex = new Vertex(vertexLocation);
 			Building settlement = new Building();
 			settlement.setVertex(newVertex);
+			newVertex.setBuilding(settlement);
 			
 			settlement.setOwner(playerIndex);
 			//Add City to map

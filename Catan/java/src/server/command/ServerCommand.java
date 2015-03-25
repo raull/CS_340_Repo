@@ -35,6 +35,7 @@ public abstract class ServerCommand{
 		
 		httpObj = arg0;
 		httpObj.getRequestMethod();
+		//System.out.println("Request: " + httpObj.getRequestURI());
 		
 		//Parse request body
 		try {
@@ -53,8 +54,12 @@ public abstract class ServerCommand{
 			parseCookie(catanCookie);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
+		} catch (NumberFormatException e2)
+		{
+			e2.printStackTrace();
 		}
-
+		
+		//System.out.println("Test");
 	}
 
 	/**

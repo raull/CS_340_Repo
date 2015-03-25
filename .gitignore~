@@ -4,7 +4,6 @@
 target/
 /Catan/demo/
 /Catan/logs/
-/Catan/saves/
  
 # OS Files #
 .DS_Store
