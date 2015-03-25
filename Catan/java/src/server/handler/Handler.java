@@ -46,7 +46,7 @@ public class Handler implements HttpHandler{
 			exchange.close();
 		} catch(ServerInvalidRequestException e1){
 			String errorMessage = e1.getMessage();
-			this.logError(errorMessage);
+			this.logError("Bad request " + errorMessage);
 			exchange.getResponseHeaders().add("Content-Type", "application/text");
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_REQUEST, 0);
 			exchange.getResponseBody().write(errorMessage.getBytes());
@@ -55,7 +55,7 @@ public class Handler implements HttpHandler{
 		} catch(Exception e2){
 			e2.printStackTrace();
 			String errorMessage = e2.getMessage();
-			this.logError(errorMessage);
+			this.logError("Bad Gateway " + errorMessage);
 			exchange.getResponseHeaders().add("Content-Type", "application/text");
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_BAD_GATEWAY, 0);
 			exchange.getResponseBody().write(errorMessage.getBytes());
