@@ -235,6 +235,11 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
 		}
 		
+		if (color == null)
+		{
+			throw new ServerInvalidRequestException("Missing color field");
+		}
+		
 		ModelFacade facade = gameToJoin.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		
