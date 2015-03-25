@@ -405,6 +405,11 @@ public class ServerFacade {
 	 */
 	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
 		String fileName = gameId + "reset";
 		
 		String jsonStr = "";
