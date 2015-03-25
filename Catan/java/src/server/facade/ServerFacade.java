@@ -364,6 +364,11 @@ public class ServerFacade {
 	 */
 	public JsonElement gameLoad(String fileName) throws ServerInvalidRequestException {
 		
+		if (fileName == null)
+		{
+			throw new ServerInvalidRequestException("Missing fileName field");
+		}
+		
 		String jsonStr = "";
 		JsonObject jsonModel = null;
 		try {
@@ -382,6 +387,7 @@ public class ServerFacade {
 		} catch (IOException e) {
 
 			e.printStackTrace();
+			throw new ServerInvalidRequestException("Unable to load file");
 		}
 		
 		int newId = gameManager.getNextId();
