@@ -10,6 +10,7 @@ import server.command.game.GameLoadCommand;
 import server.command.game.GameModelCommand;
 import server.command.game.GameResetCommand;
 import server.command.game.GameSaveCommand;
+import server.command.moves.AcceptTradeCommand;
 import server.command.moves.BuildCityCommand;
 import server.command.moves.BuildRoadCommand;
 import server.command.moves.BuildSettlementCommand;
@@ -103,6 +104,8 @@ public class HandlerCommandFactory implements CommandFactory{
 			return new PlayRBCardCommand(arg0);
 		case "Soldier":
 			return new PlaySoldierCardCommand(arg0);
+		case "acceptTrade":
+			return new AcceptTradeCommand(arg0);
 		case "Monopoly":
 			return new PlayMonopolyCardCommand(arg0);
 		case "Monument":
