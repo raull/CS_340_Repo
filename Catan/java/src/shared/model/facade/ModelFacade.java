@@ -1242,7 +1242,7 @@ public class ModelFacade extends Observable{
 				for (VertexLocation vertLoc : locations)
 				{
 					Building building = map.getBuildingAtVertex(vertLoc);
-					if (building.equals(settlementTwo))
+					if (building != null && building.equals(settlementTwo))
 					{
 						PieceType type = building.getType();
 						givePlayerResource(user, type, resourceType);
