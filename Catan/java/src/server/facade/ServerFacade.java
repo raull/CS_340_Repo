@@ -450,22 +450,23 @@ public class ServerFacade {
 			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		Game game = gameManager.getGameById(gameId);
-		ModelFacade modelFacade = game.getModelFacade();
-		Model model = modelFacade.getModel();
-		TurnManager turnManager = modelFacade.turnManager();
-		User user = turnManager.getUserFromIndex(playerIndex);
 		
 		if (game == null)
 		{
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
+		
+		ModelFacade modelFacade = game.getModelFacade();
+		TurnManager turnManager = modelFacade.turnManager();
+		User user = turnManager.getUserFromIndex(playerIndex);
+		
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
 		if (victimIndex < -1 || victimIndex > 3)
 		{
-			throw new ServerInvalidRequestException("Invalid player index");
+			throw new ServerInvalidRequestException("Invalid victim index");
 		}
 		if (location == null)
 		{
@@ -516,7 +517,7 @@ public class ServerFacade {
 			}
 			else
 			{
-				throw new ServerInvalidRequestException();
+				throw new ServerInvalidRequestException("Cannot Rob Selected Victim");
 			}
 		}
 		modelFacade.updateTurnPhase(TurnPhase.PLAYING);

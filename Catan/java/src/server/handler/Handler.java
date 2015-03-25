@@ -33,12 +33,18 @@ public class Handler implements HttpHandler{
 		ServerCommand event = factory.create(exchange);
 		this.logInfo("Request: " + exchange.getRequestURI().toString());
 		try{
+			//Check if it is a valid request
+			if (event == null) {
+				throw new ServerInvalidRequestException("Invalid request");
+			}
 			JsonElement response = event.execute();
+			//Check the type of response
 			if (response.getClass() == JsonPrimitive.class) {
 				exchange.getResponseHeaders().add("Content-Type", "application/text");
 			} else {
 				exchange.getResponseHeaders().add("Content-Type", "application/json");
 			}
+			//Set up Body
 			String stringResponse = response.toString();
 			exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK, stringResponse.length());
 			exchange.getResponseBody().write(stringResponse.getBytes());
