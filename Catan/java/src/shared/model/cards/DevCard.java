@@ -7,7 +7,8 @@ import shared.definitions.DevCardType;
  * @author Raul Lopez
  *
  */
-public class DevCard extends Card{
+//public class DevCard extends Card{
+public class DevCard {
 	
 	/**
 	 * The type of Development Card

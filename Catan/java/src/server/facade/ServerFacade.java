@@ -236,6 +236,11 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Cannot join. Game doesn't exist.");
 		}
 		
+		if (color == null)
+		{
+			throw new ServerInvalidRequestException("Missing color field");
+		}
+		
 		ModelFacade facade = gameToJoin.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		
@@ -311,6 +316,16 @@ public class ServerFacade {
 	 */
 	public JsonElement gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		if (fileName == null)
+		{
+			throw new ServerInvalidRequestException("Missing fileName field");
+		}
+		
 		Model model = game.getModelFacade().getModel();
 		
 		String jsonModelStr = model.serialize().toString();
@@ -327,6 +342,7 @@ public class ServerFacade {
 		}
 		catch(IOException ex) {
 			ex.printStackTrace();
+			throw new ServerInvalidRequestException("Internal server error");
 		}
 		finally {
 			try { writer.close();} catch (Exception ex) {
@@ -349,6 +365,11 @@ public class ServerFacade {
 	 */
 	public JsonElement gameLoad(String fileName) throws ServerInvalidRequestException {
 		
+		if (fileName == null)
+		{
+			throw new ServerInvalidRequestException("Missing fileName field");
+		}
+		
 		String jsonStr = "";
 		JsonObject jsonModel = null;
 		try {
@@ -367,6 +388,7 @@ public class ServerFacade {
 		} catch (IOException e) {
 
 			e.printStackTrace();
+			throw new ServerInvalidRequestException("Unable to load file");
 		}
 		
 		int newId = gameManager.getNextId();
@@ -389,6 +411,12 @@ public class ServerFacade {
 	 */
 	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		
@@ -430,6 +458,11 @@ public class ServerFacade {
 	 */
 	public JsonElement resetGame(int gameId) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
 		String fileName = gameId + "reset";
 		
 		String jsonStr = "";
@@ -470,9 +503,25 @@ public class ServerFacade {
 	{
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game id");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		MessageList chat = model.getChat();
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (message == null)
+		{
+			throw new ServerInvalidRequestException("Message was empty");
+		}
 		
 		User user = modelFacade.turnManager().getUserFromIndex(playerIndex);
 		
@@ -564,35 +613,33 @@ public class ServerFacade {
 			HexLocation location, boolean soldierCard) throws ServerInvalidRequestException 
 	{		
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null) {
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
-		Model model = modelFacade.getModel();
+
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		if (game == null)
-		{
-			throw new ServerInvalidRequestException("Invalid game ID");
-		}
-		if (playerIndex < 0 || playerIndex > 3)
-		{
+		if (playerIndex < 0 || playerIndex > 3) {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
-		if (victimIndex < -1 || victimIndex > 3)
-		{
-			throw new ServerInvalidRequestException("Invalid player index");
+		if (victimIndex < -1 || victimIndex > 3) {
+			throw new ServerInvalidRequestException("Invalid victim index");
 		}
-		if (location == null)
-		{
+		if (location == null) {
 			throw new ServerInvalidRequestException("Missing hex location");
-			//TODO need a check if the location is valid?
+		}
+		if (!location.isValid(modelFacade.getPossibleHexLocations())) {
+			throw new ServerInvalidRequestException("Hex location out of bounds");
 		}
 
-		if (victimIndex == -1)
-		{
+		if (victimIndex == -1) {
 			modelFacade.map().updateRobberLocation(location);
 			
-			if (soldierCard)
-			{
+			if (soldierCard) {
 				 playSoldierCard(game, user, modelFacade);
 			}
 			
@@ -602,12 +649,10 @@ public class ServerFacade {
 			modelFacade.addToGameLog(logEntry);
 
 		}
-		else
-		{
+		else {
 			User victim = turnManager.getUserFromIndex(victimIndex);
 
-			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
-			{
+			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim)) {
 				modelFacade.map().updateRobberLocation(location);
 
 				//randomly select a resource card from the victim
@@ -617,8 +662,7 @@ public class ServerFacade {
 				victim.getResourceCards().removeResourceCard(stolenCard);
 				user.getResourceCards().addResourceCard(stolenCard);
 
-				if (soldierCard)
-				{
+				if (soldierCard) {
 					 playSoldierCard(game, user, modelFacade);
 				}
 
@@ -628,9 +672,8 @@ public class ServerFacade {
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
-			else
-			{
-				throw new ServerInvalidRequestException();
+			else {
+				throw new ServerInvalidRequestException("Cannot Rob Selected Victim");
 			}
 		}
 		modelFacade.updateTurnPhase(TurnPhase.PLAYING);
@@ -701,6 +744,16 @@ public class ServerFacade {
 	 */
 	public JsonElement finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User user = tm.getUserFromIndex(playerIndex);
@@ -770,6 +823,17 @@ public class ServerFacade {
 	public JsonElement buyDevCard(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -818,6 +882,22 @@ public class ServerFacade {
 	public JsonElement playYearOfPlenty(int gameId, int playerIndex, ResourceType resource1, ResourceType resource2) throws ServerInvalidRequestException 
 	{	
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (resource1 == null || resource2 == null)
+		{
+			throw new ServerInvalidRequestException("Missing resource field");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -861,6 +941,22 @@ public class ServerFacade {
 	public JsonElement playRoadBuilding(int gameId, int playerIndex, EdgeLocation location1, EdgeLocation location2) throws ServerInvalidRequestException 
 	{	
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (location1 == null || location2 == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -903,6 +999,22 @@ public class ServerFacade {
 	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (resource == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -980,6 +1092,17 @@ public class ServerFacade {
 	public JsonElement playMonument(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -1049,8 +1172,25 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
+		//TODO need to make player index and free non-primitives
 		System.out.println("server facade, build road, player index: " + playerIndex);
 		Game game = gameManager.getGameById(gameId);
+		
+		if (game == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (roadLocation == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade facade = game.getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User curUser = tm.getUserFromIndex(playerIndex);
@@ -1095,6 +1235,21 @@ public class ServerFacade {
 	public JsonElement buildSettlement(int gameId, int playerIndex, 
 			VertexLocation vertexLocation, boolean free) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (vertexLocation == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User curUser = tm.getUserFromIndex(playerIndex);
@@ -1163,6 +1318,21 @@ public class ServerFacade {
 	public JsonElement buildCity(int gameId, int playerIndex, 
 			VertexLocation vertexLocation) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (vertexLocation == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User curUser = tm.getUserFromIndex(playerIndex);
@@ -1231,6 +1401,27 @@ public class ServerFacade {
 	 */
 	public JsonElement offerTrade(int gameId, int playerIndex, int receiver, ResourceCardDeck senderDeck, ResourceCardDeck receiverDeck) throws ServerInvalidRequestException {
 		Game game = gameManager.getGameById(gameId);
+		
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (receiver < 0 || receiver > 3 || receiver == playerIndex)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (senderDeck == null || receiverDeck == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -1264,6 +1455,17 @@ public class ServerFacade {
 	public JsonElement acceptTrade(int gameId, int playerIndex, boolean accept) throws ServerInvalidRequestException {
 		
 		Game game = gameManager.getGameById(gameId);
+		
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -1324,6 +1526,27 @@ public class ServerFacade {
 	public JsonElement maritimeTrade(int gameId, int playerIndex, int ratio, ResourceType sendingResource, ResourceType receivingResource) throws ServerInvalidRequestException {
 
 		Game game = gameManager.getGameById(gameId);
+		
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (ratio != 2 && ratio != 3 && ratio != 41)
+		{
+			throw new ServerInvalidRequestException("bad ratio value");
+		}
+		
+		if (sendingResource == null || receivingResource == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
@@ -1338,8 +1561,8 @@ public class ServerFacade {
 		//if can maritime trade
 		if(modelFacade.canMaritimeTrade(turnManager, modelFacade.bank(), user, wantedCard, offeredCardsDeck)) {
 			modelFacade.bank().getResourceDeck().removeResourceCard(wantedCard);
-			addResources(modelFacade.bank().getResourceDeck(), offeredCardsDeck);
-			removeResources(user.getResourceCards(), offeredCardsDeck);
+			addResources(offeredCardsDeck, modelFacade.bank().getResourceDeck());
+			removeResources(offeredCardsDeck, user.getResourceCards());
 			user.getResourceCards().addResourceCard(wantedCard);
 			
 			String logSource = user.getName();
@@ -1380,6 +1603,22 @@ public class ServerFacade {
 	public JsonElement discardCards(int gameId, int playerIndex, ResourceCardDeck resourcesToDiscard) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
+		if (resourcesToDiscard == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
