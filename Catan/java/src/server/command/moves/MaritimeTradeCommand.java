@@ -28,6 +28,7 @@ public class MaritimeTradeCommand extends ServerCommand {
 		ResourceType input = ResourceType.valueOf(maritimeTrade.getInputResource());
 		ResourceType output = ResourceType.valueOf(maritimeTrade.getOutputResource());
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().maritimeTrade(gameId, maritimeTrade.getPlayerIndex(), maritimeTrade.getRatio(), input, output);
 	}
 

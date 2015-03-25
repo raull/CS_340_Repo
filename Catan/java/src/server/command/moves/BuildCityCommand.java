@@ -32,6 +32,7 @@ public class BuildCityCommand extends ServerCommand {
 		HexLocation hexLoc = new HexLocation(locParam.getX(), locParam.getY());
 		VertexLocation vertexLocation = new VertexLocation(hexLoc, direction);
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().buildCity(gameId, buildCity.getPlayerIndex(), vertexLocation);
 
 	}

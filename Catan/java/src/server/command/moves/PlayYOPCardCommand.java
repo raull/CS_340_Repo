@@ -22,6 +22,8 @@ public class PlayYOPCardCommand extends ServerCommand {
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
 		Year_of_Plenty_ yearOfPlenty = gson.fromJson(json, Year_of_Plenty_.class);
+		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().playYearOfPlenty(gameId, yearOfPlenty.getPlayerIndex(), yearOfPlenty.getResource1(), yearOfPlenty.getResource2());
 	}
 

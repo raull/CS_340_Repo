@@ -64,6 +64,7 @@ public class ModelFacade extends Observable{
 	 */
 	private Bank bank;
 	
+	private List<String> commands;
 	private int modelVersion;
 	private int winnerIndex;
 	private boolean isNotifying = false;
@@ -88,11 +89,21 @@ public class ModelFacade extends Observable{
 		bank = model.getBank();
 		score = model.getScoreKeeper();
 		winnerIndex = model.getWinner();
+		commands = new ArrayList<String>();
 	}
 	
 	public ModelFacade()
 	{
 		
+	}
+	
+	
+	public void addCommand(String command){
+		commands.add(command);
+	}
+	
+	public List<String> getCommands(){
+		return commands;
 	}
 	
 	/**

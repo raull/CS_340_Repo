@@ -23,6 +23,8 @@ public class FinishTurnCommand extends ServerCommand {
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
 		FinishMove finishMove = gson.fromJson(json, FinishMove.class);
+		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().finishTurn(gameId, finishMove.getPlayerIndex());
 	}
 

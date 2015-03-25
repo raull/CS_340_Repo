@@ -23,6 +23,8 @@ public class RobPlayerCommand extends ServerCommand {
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
 		RobPlayer robPlayer = gson.fromJson(json, RobPlayer.class);
+		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().robPlayer(gameId, robPlayer.getPlayerIndex(), robPlayer.getVictimIndex(), robPlayer.getLocation(), false);
 	}
 

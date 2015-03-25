@@ -32,6 +32,8 @@ public class BuildRoadCommand extends ServerCommand {
 		EdgeDirection edgeDirection = edgeLocParam.getDirection();
 		EdgeLocation edgeLocation = new EdgeLocation(hexLoc, edgeDirection);
 		System.out.println("build road command, build road player index?? " + buildRoad.getPlayerIndex());
+		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().buildRoad(gameId, buildRoad.getPlayerIndex(), edgeLocation, buildRoad.isFree());
 
 	}

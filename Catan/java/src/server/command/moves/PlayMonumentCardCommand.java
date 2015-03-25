@@ -24,6 +24,7 @@ public class PlayMonumentCardCommand extends ServerCommand {
 		
 		Monument_ monument = gson.fromJson(json, Monument_.class);
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().playMonument(gameId, monument.getPlayerIndex());
 	}
 

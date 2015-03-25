@@ -23,6 +23,8 @@ public class PlaySoldierCardCommand extends ServerCommand {
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
 		Soldier_ soldier = gson.fromJson(json, Soldier_.class);
+		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().robPlayer(gameId, soldier.getPlayerIndex(), soldier.getVictimIndex(), soldier.getLocation(), true);
 	}
 

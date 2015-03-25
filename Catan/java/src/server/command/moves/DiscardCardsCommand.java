@@ -27,6 +27,7 @@ public class DiscardCardsCommand extends ServerCommand {
 		DiscardCards discardCards = gson.fromJson(json, DiscardCards.class);
 		ResourceList list = discardCards.getDiscardedCards();
 						
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().discardCards(gameId, discardCards.getPlayerIndex(), list.getResourceDeck());
 	}
 
