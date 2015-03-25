@@ -53,8 +53,18 @@ public class HexTile {
 		return location;
 	}
 	
+	public void setLocation(HexLocation location)
+	{
+		this.location = location;
+	}
+	
 	public int getNumber() {
 		return number;
+	}
+	
+	public void setNumber(int number)
+	{
+		this.number = number;
 	}
 	
 	public boolean hasRobber(){

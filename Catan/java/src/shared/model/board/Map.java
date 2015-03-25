@@ -33,6 +33,10 @@ public class Map {
 	public Map(ArrayList<HexTile> hexTiles) {
 		super();
 		this.hexTiles = hexTiles;
+		roadsOnMap = new ArrayList<Road>();
+		settlementsOnMap = new ArrayList<Building>();
+		citiesOnMap = new ArrayList<Building>();
+		portsOnMap = new ArrayList<Port>();
 	}
 
 	/**
@@ -71,6 +75,29 @@ public class Map {
 				
 		}
 		return output;
+	}
+	
+	public Building getBuildingAtVertex(VertexLocation vertLoc)
+	{
+		for (Building settlement : settlementsOnMap)
+		{
+			VertexLocation normalizedLoc =  settlement.getVertex().getLocation().getNormalizedLocation();
+			if (normalizedLoc.equals(vertLoc.getNormalizedLocation()))
+			{
+				return settlement;
+			}
+		}
+		
+		for (Building city : citiesOnMap)
+		{
+			VertexLocation normalizedLoc =  city.getVertex().getLocation().getNormalizedLocation();
+			if (normalizedLoc.equals(vertLoc.getNormalizedLocation()))
+			{
+				return city;
+			}
+		}
+		
+		return null;
 	}
 	
 	public void setHexTiles(ArrayList<HexTile> hexTiles) {
@@ -115,6 +142,20 @@ public class Map {
 
 	public void setPortsOnMap(ArrayList<Port> portsOnMap) {
 		this.portsOnMap = portsOnMap;
+	}
+	
+	public void updateRobberLocation(HexLocation location)
+	{
+		for (HexTile hex : hexTiles)
+		{
+			if (hex.hasRobber())
+			{
+				hex.setRobber(false);
+			}
+		}
+		
+		HexTile hex = this.getHexTileByLocation(location);
+		hex.setRobber(true);
 	}
 	
 	public void addRoad(Road road) {

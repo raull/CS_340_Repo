@@ -89,7 +89,6 @@ public class EdgeLocation
 	{
 		
 		// Return an EdgeLocation that has direction NW, N, or NE
-		
 		switch (dir)
 		{
 			case NorthWest:
@@ -105,6 +104,29 @@ public class EdgeLocation
 				assert false;
 				return null;
 		}
+	}
+
+	public VertexLocation[] getAdjacentVertices() {
+		EdgeLocation normalized = this.getNormalizedLocation();
+		VertexLocation[] output = new VertexLocation[2];
+		switch(normalized.getDir()){
+			case NorthWest:
+				output[0] = new VertexLocation(normalized.getHexLoc(), VertexDirection.NorthWest);
+				output[1] = new VertexLocation(normalized.getHexLoc(), VertexDirection.West);
+				break;
+			case North:
+				output[0] = new VertexLocation(normalized.getHexLoc(), VertexDirection.NorthWest);
+				output[1] = new VertexLocation(normalized.getHexLoc(), VertexDirection.NorthEast);
+				break;
+			case NorthEast:
+				output[0] = new VertexLocation(normalized.getHexLoc(), VertexDirection.NorthEast);
+				output[1] = new VertexLocation(normalized.getHexLoc(), VertexDirection.East);
+				break;
+			default:
+				assert false;
+				return null;
+		}
+		return output;
 	}
 }
 
