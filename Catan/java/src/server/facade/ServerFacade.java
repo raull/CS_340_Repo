@@ -914,7 +914,9 @@ public class ServerFacade {
 			user.setUnusedRoads(user.getUnusedRoads()-1);
 			//create a new road
 			Road road = new Road();
-			road.setEdge(new Edge(roadLocation));
+			Edge newEdge = new Edge(roadLocation);
+			road.setEdge(newEdge);
+			user.addOccupiedEdge(newEdge);
 			//add road to map
 			modelFacade.map().addRoad(road);
 		}

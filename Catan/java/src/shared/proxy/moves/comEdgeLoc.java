@@ -1,5 +1,6 @@
 package shared.proxy.moves;
 
+import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.VertexLocation;
 
@@ -7,14 +8,14 @@ public class comEdgeLoc {
 
 	private int x;
 	private int y;
-	private String direction;
+	private EdgeDirection direction;
 	
 	//constructor
 	public comEdgeLoc(EdgeLocation edge){
 		x = edge.getHexLoc().getX();
 		y = edge.getHexLoc().getY();
 		
-		direction = edge.getDir().original();
+		direction = edge.getDir();
 	}
 
 	public int getX() {
@@ -33,11 +34,11 @@ public class comEdgeLoc {
 		this.y = y;
 	}
 
-	public String getDirection() {
+	public EdgeDirection getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction) {
+	public void setDirection(EdgeDirection direction) {
 		this.direction = direction;
 	}
 }
