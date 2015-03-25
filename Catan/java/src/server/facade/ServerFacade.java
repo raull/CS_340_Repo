@@ -1005,9 +1005,11 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+	public JsonElement playMonopoly(int gameId, int playerId, ResourceType resource) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		int playerIndex = game.getModelFacade().turnManager().getUser(playerId).getTurnIndex();
 		
 		if (game == null)
 		{
