@@ -51,6 +51,7 @@ public class Handler implements HttpHandler{
 			exchange.getResponseBody().close();
 			exchange.close();
 		} catch(ServerInvalidRequestException e1){
+			e1.printStackTrace();
 			String errorMessage = e1.getMessage();
 			this.logError("Bad request " + errorMessage);
 			exchange.getResponseHeaders().add("Content-Type", "application/text");

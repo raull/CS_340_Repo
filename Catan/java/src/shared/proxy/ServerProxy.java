@@ -101,9 +101,11 @@ public class ServerProxy implements Proxy{
 			}
 			else if (connection.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST)
 			{
+				System.out.println("do post failed, message? " + connection.getResponseMessage());
 				throw new ProxyException(StringUtils.getString(connection.getErrorStream()));
 			}
 			else{
+				System.out.println("do post failed, code: " + connection.getResponseCode());
 				throw new ProxyException(String.format("doPost failed: %s (http code %d)",
 						urlPath, connection.getResponseCode()));
 			}
