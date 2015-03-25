@@ -56,6 +56,11 @@ public class ResourceCard extends Card{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ResourceCard [type=" + type + "]";
+	}
 	
 	
 	

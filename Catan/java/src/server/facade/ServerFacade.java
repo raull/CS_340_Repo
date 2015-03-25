@@ -1380,7 +1380,7 @@ public class ServerFacade {
 		User user = turnManager.getUserFromIndex(playerIndex);
 //		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
 		ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>(resourcesToDiscard.getAllResourceCards());
-		
+		System.out.println("discard resources---------------------------------------\n" + resources.toString());
 		if(modelFacade.canDiscardCards(turnManager, user, resources)) {
 			//subtract the resources in the given resource card deck from the player
 			for(ResourceCard card : resources) {
