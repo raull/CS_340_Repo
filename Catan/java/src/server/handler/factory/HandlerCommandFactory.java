@@ -49,7 +49,16 @@ public class HandlerCommandFactory implements CommandFactory{
 		String uri = arg0.getRequestURI().toString();
 		String[] arguments = uri.split("/");
 		String request = arguments[arguments.length-1];
-		System.out.println("Request: " + request);
+		//System.out.println("Request: " + request);
+		//System.out.println("Query: " + arg0.getRequestURI().getQuery());
+		
+		//String[] requestSplit = request.split("o");
+		//System.out.println("Test: " + requestSplit[0]);
+		
+		if (request.startsWith("model"))
+		{
+			request = "model";
+		}
 		
 		switch (request) {
 		case "login":
