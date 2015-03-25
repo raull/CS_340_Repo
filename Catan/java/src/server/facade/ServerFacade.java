@@ -416,6 +416,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
 		
+		updatePlayerScores(game);
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		
@@ -679,7 +680,7 @@ public class ServerFacade {
 		int largestArmyIndex = game.getLargestArmyPlayer();
 		modelFacade.score().setLargestArmyUser(largestArmyIndex);
 		
-		updatePlayerScores(game);
+//		updatePlayerScores(game);
 	}
 	
 	public void updatePlayerScores(Game game)
@@ -707,6 +708,8 @@ public class ServerFacade {
 			{
 				modelFacade.score().setWinner(user.getTurnIndex());
 			}
+			//set the scores
+			modelFacade.score().setScore(user.getTurnIndex(), score);
 		}
 	}
 	
@@ -948,6 +951,7 @@ public class ServerFacade {
 			game.calcLongestRoadPlayer();
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
 			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
+//			updatePlayerScores(game);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played road building and built two roads.";
@@ -1185,7 +1189,6 @@ public class ServerFacade {
 		game.calcLongestRoadPlayer();
 		int longestRoadPlayer = game.getLongestRoadPlayer(); 
 		facade.score().setLongestRoadUser(longestRoadPlayer);
-		
 		//Update history
 		String user = curUser.getName();
 		String message = user + " built a road";
