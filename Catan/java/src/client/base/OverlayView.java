@@ -44,7 +44,7 @@ public class OverlayView extends PanelView implements IOverlayView
 	 */
 	public void showModal()
 	{
-		printStack();
+		//printStack();
 		// Open the new overlay
 		JPanel overlayPanel = new JPanel();
 		overlayPanel.setLayout(new BorderLayout());
@@ -99,7 +99,7 @@ public class OverlayView extends PanelView implements IOverlayView
 	 */
 	public void closeModal()
 	{
-		printStack();
+		//printStack();
 		assert overlayStack.size() > 0;
 		assert window.getGlassPane() == overlayStack.peek().getOverlayPanel();
 		

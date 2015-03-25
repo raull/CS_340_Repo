@@ -938,6 +938,7 @@ public class ServerFacade {
 	 */
 	public JsonElement buildRoad(int gameId, int playerIndex, EdgeLocation roadLocation, boolean free) throws ServerInvalidRequestException 
 	{
+		System.out.println("server facade, build road, player index: " + playerIndex);
 		Game game = gameManager.getGameById(gameId);
 		ModelFacade facade = game.getModelFacade();
 		TurnManager tm = facade.turnManager();
@@ -961,7 +962,7 @@ public class ServerFacade {
 		
 		//Update history
 		String user = curUser.getName();
-		String message = user + "built a road";
+		String message = user + " built a road";
 		MessageLine line = new MessageLine(message, user);
 		facade.getModel().getLog().addLine(line);
 		updateModelVersion(gameId);
@@ -1021,14 +1022,14 @@ public class ServerFacade {
 			
 			//Update history
 			String user = curUser.getName();
-			String message = user + "built a settlement";
+			String message = user + " built a settlement";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
 			
 			updateModelVersion(gameId);
 		}
 		else{	
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("cannot build settlement at this time");
 		}
 		return getModel(0, gameId);
 		
