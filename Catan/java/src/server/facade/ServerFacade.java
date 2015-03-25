@@ -727,6 +727,16 @@ public class ServerFacade {
 	 */
 	public JsonElement finishTurn(int gameId, int playerIndex) throws ServerInvalidRequestException 
 	{
+		if (gameManager.getGameById(gameId) == null)
+		{
+			throw new ServerInvalidRequestException("Invalid game ID");
+		}
+		
+		if (playerIndex < 0 || playerIndex > 3)
+		{
+			throw new ServerInvalidRequestException("Invalid player index");
+		}
+		
 		ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
 		TurnManager tm = facade.turnManager();
 		User user = tm.getUserFromIndex(playerIndex);
