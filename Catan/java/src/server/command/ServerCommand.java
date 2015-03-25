@@ -35,6 +35,7 @@ public abstract class ServerCommand{
 		
 		httpObj = arg0;
 		httpObj.getRequestMethod();
+		//System.out.println("Request: " + httpObj.getRequestURI());
 		
 		//Parse request body
 		try {
@@ -53,8 +54,12 @@ public abstract class ServerCommand{
 			parseCookie(catanCookie);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
+		} catch (NumberFormatException e2)
+		{
+			e2.printStackTrace();
 		}
-
+		
+		//System.out.println("Test");
 	}
 
 	/**
@@ -70,14 +75,14 @@ public abstract class ServerCommand{
 				String decoded = URLDecoder.decode(string, "UTF-8");
 				String finalChunk = decoded.substring(decoded.indexOf("playerID"));
 				String id = finalChunk.substring(finalChunk.indexOf(":") + 1, finalChunk.indexOf("}"));
-				//System.out.println("PlayerIndex : " + id);
+				System.out.println("PlayerIndex : " + id);
 				this.playerId = Integer.parseInt(id);
 			} else if (string.contains("catan.game")) {
 				String decoded = URLDecoder.decode(string, "UTF-8");
 				//System.out.println("Decoded gameID: " + decoded);
 				String id = decoded.substring(decoded.indexOf("=") + 1);
 				id = id.replace("~Path=/~", "");
-				//System.out.println("GameID: " + id);
+				System.out.println("GameID: " + id);
 				if(id!=null && !id.equals("") && !id.equals("null")){
 					//System.out.println("Game ID not null");
 					this.gameId = Integer.parseInt(id);
