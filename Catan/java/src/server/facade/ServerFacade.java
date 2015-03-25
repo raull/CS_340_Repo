@@ -1544,8 +1544,8 @@ public class ServerFacade {
 		//if can maritime trade
 		if(modelFacade.canMaritimeTrade(turnManager, modelFacade.bank(), user, wantedCard, offeredCardsDeck)) {
 			modelFacade.bank().getResourceDeck().removeResourceCard(wantedCard);
-			addResources(modelFacade.bank().getResourceDeck(), offeredCardsDeck);
-			removeResources(user.getResourceCards(), offeredCardsDeck);
+			addResources(offeredCardsDeck, modelFacade.bank().getResourceDeck());
+			removeResources(offeredCardsDeck, user.getResourceCards());
 			user.getResourceCards().addResourceCard(wantedCard);
 			
 			String logSource = user.getName();
