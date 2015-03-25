@@ -1,5 +1,6 @@
 package shared.proxy.moves;
 
+import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
 
 public class comVertexLoc {
@@ -8,13 +9,13 @@ public class comVertexLoc {
 	
 	private int y;
 	
-	private String direction;
+	private VertexDirection direction;
 	
 	public comVertexLoc(VertexLocation vertex){
 		x = vertex.getHexLoc().getX();
 		y = vertex.getHexLoc().getY();
 		
-		direction = vertex.getDir().original();
+		direction = vertex.getDir();
 	}
 
 	public int getX() {
@@ -33,11 +34,11 @@ public class comVertexLoc {
 		this.y = y;
 	}
 
-	public String getDirection() {
+	public VertexDirection getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction) {
+	public void setDirection(VertexDirection direction) {
 		this.direction = direction;
 	}
 }
