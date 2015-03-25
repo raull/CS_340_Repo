@@ -425,7 +425,7 @@ public class ServerFacade {
 			
 			//add to the game log
 			String logSource = user.getName();
-			String logMessage = user.getName() + "rolled a " + rolledNumber + ".";
+			String logMessage = user.getName() + " rolled a " + rolledNumber + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
@@ -487,7 +487,7 @@ public class ServerFacade {
 			}
 			
 			String logSource = user.getName();
-			String logMessage = user.getName() + "moved the robber and robbed, but couldn't rob anyone";
+			String logMessage = user.getName() + " moved the robber and robbed, but couldn't rob anyone";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 
@@ -514,7 +514,7 @@ public class ServerFacade {
 
 				//update game log with appropriate robbing message
 				String logSource = user.getName();
-				String logMessage = user.getName() + "moved the robber and robbed " + victim.getName();
+				String logMessage = user.getName() + " moved the robber and robbed " + victim.getName();
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
@@ -630,7 +630,7 @@ public class ServerFacade {
 			
 			//add to the game log
 			String logSource = user.getName();
-			String logMessage = user.getName() + "finished their turn";
+			String logMessage = user.getName() + " finished their turn";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			facade.addToGameLog(logEntry);
 		}
@@ -960,7 +960,7 @@ public class ServerFacade {
 		
 		//Update history
 		String user = curUser.getName();
-		String message = user + "built a road";
+		String message = user + " built a road";
 		MessageLine line = new MessageLine(message, user);
 		facade.getModel().getLog().addLine(line);
 		updateModelVersion(gameId);
@@ -1020,7 +1020,7 @@ public class ServerFacade {
 			
 			//Update history
 			String user = curUser.getName();
-			String message = user + "built a settlement";
+			String message = user + " built a settlement";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
 			
@@ -1081,7 +1081,7 @@ public class ServerFacade {
 			
 			//Update history
 			String user = curUser.getName();
-			String message = user + "built a city";
+			String message = user + " built a city";
 			MessageLine line = new MessageLine(message, user);
 			facade.getModel().getLog().addLine(line);
 			
