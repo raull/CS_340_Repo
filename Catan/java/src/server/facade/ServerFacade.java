@@ -256,29 +256,32 @@ public class ServerFacade {
 		
 		//Checks to see if we can add player
 		if (tm.getUsers().size() < 4){ //enough space
-			boolean alreadyInList = false;
 			for (User u : tm.getUsers()){
 				if(u.getPlayerID()==existingUser.getPlayerID()){ //if the player is already in the game, updates that player
-					u = existingUser.clone();
-					alreadyInList = true;
+					tm.getUser(userID).setColor(nuColor);
+					return new JsonPrimitive("Success");
 				}
 			}
-			if(!alreadyInList){ //if the player hasn't been added yet, take care of it
-				try {
-					User copyUser = existingUser.clone();
-					copyUser.setColor(existingUser.getCatanColor());
-					tm.addUser(copyUser);
-				} catch (ModelException e) {
-					throw new ServerInvalidRequestException("Cannot join. Game already full.");
-				}
+			try {
+				User copyUser = existingUser.clone();
+				copyUser.setColor(existingUser.getCatanColor());
+				tm.addUser(copyUser);
+			} catch (ModelException e) {
+				throw new ServerInvalidRequestException("Cannot join. Game already full.");
 			}
+			return new JsonPrimitive("Success");
 			
 		}
-		else{
-			throw new ServerInvalidRequestException("Cannot join. Game already full.");
+		else if(tm.getUsers().size() == 4){ //if the game is full and our user is rejoining
+			for (User u : tm.getUsers()){
+				if(u.getPlayerID()==existingUser.getPlayerID()){
+					tm.getUser(userID).setColor(nuColor);
+					return new JsonPrimitive("Success");
+				}
+			}
 		}
-		
-		return new JsonPrimitive("Success");
+		throw new ServerInvalidRequestException("Cannot join. Game already full.");
+
 	}
 	/**
 	 * This method is for testing and debugging purposes. 
