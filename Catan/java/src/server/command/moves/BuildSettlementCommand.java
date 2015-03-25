@@ -29,7 +29,7 @@ public class BuildSettlementCommand extends ServerCommand {
 		BuildSettlement buildSettlement = gson.fromJson(json, BuildSettlement.class);
 		comVertexLoc vertexLocParam = buildSettlement.getVertexLocation();
 		HexLocation hexLoc = new HexLocation(vertexLocParam.getX(), vertexLocParam.getY());
-		VertexDirection vertexDirection = VertexDirection.valueOf(vertexLocParam.getDirection());
+		VertexDirection vertexDirection = vertexLocParam.getDirection();
 		VertexLocation vertexLocation = new VertexLocation(hexLoc, vertexDirection);
 		
 		return ServerFacade.instance().buildSettlement(gameId, buildSettlement.getPlayerIndex(), vertexLocation, buildSettlement.isFree());

@@ -28,7 +28,7 @@ public class BuildCityCommand extends ServerCommand {
 		
 		BuildCity buildCity = gson.fromJson(json, BuildCity.class);
 		comVertexLoc locParam = buildCity.getVertexLocation();
-		VertexDirection direction = VertexDirection.valueOf(locParam.getDirection());
+		VertexDirection direction = locParam.getDirection();
 		HexLocation hexLoc = new HexLocation(locParam.getX(), locParam.getY());
 		VertexLocation vertexLocation = new VertexLocation(hexLoc, direction);
 		
