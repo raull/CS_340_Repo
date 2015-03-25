@@ -500,8 +500,21 @@ public class User {
         return newUser;
     }
 
-//	public static User getShallowCopy(User existingUser) {
-//		return existingUser.clone();
-//	}
-//	
+    @Override
+    public boolean equals(Object o){
+    	if(o==null){
+    		return false;
+    	}
+    	else if(this.getClass()!=o.getClass()){
+    		return false;
+    	}
+    	User u = (User) o;
+    	if(this.getPlayerID()!=u.getPlayerID()){
+    		return false;
+    	}
+    	else if(!this.getName().equals(u.getName())){
+    		return false;
+    	}
+    	return true;
+    }
 }
