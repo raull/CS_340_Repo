@@ -12,25 +12,25 @@ public class RollNumber {
 	/**
 	 * The Index of the player (0-3)
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * The number rolled (2-12)
 	 */
-	private int number;
+	private Integer number;
 	
 	/**
 	 * Constructor to instantiate the RollNumber object
 	 * @param playerId
 	 * @param number
 	 */
-	public RollNumber(int PlayerIndex, int number) {
+	public RollNumber(Integer PlayerIndex, Integer number) {
 		super();
 		playerIndex = PlayerIndex;
 		this.number = number;
 		type = "rollNumber";
 	}
 
-	public int getplayerIndex() {
+	public Integer getplayerIndex() {
 		return playerIndex;
 	}
 
@@ -39,12 +39,12 @@ public class RollNumber {
 	 * index
 	 * @param playerIndex
 	 */
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		//INPUT VERIFICATION
 		playerIndex = playerIndex;
 	}
 
-	public int getNumber() {
+	public Integer getNumber() {
 		return number;
 	}
 
@@ -52,7 +52,7 @@ public class RollNumber {
 	 * Checks to ensure that the number is 2-12, and sets it.
 	 * @param number
 	 */
-	public void setNumber(int number) {
+	public void setNumber(Integer number) {
 		//INPUT VERIFICATION
 		this.number = number;
 	}

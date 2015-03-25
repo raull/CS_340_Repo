@@ -11,7 +11,7 @@ public class SaveGameRequest {
 	/**
 	 * The ID of the game to be saved
 	 */
-	private int id;
+	private Integer id;
 	/**
 	 * The file name to be saved under
 	 */
@@ -22,17 +22,17 @@ public class SaveGameRequest {
 	 * @param id
 	 * @param name
 	 */
-	public SaveGameRequest(int id, String name) {
+	public SaveGameRequest(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

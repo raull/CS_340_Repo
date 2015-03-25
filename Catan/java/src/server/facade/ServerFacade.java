@@ -318,7 +318,13 @@ public class ServerFacade {
 	 * @param fileName The file name you want to save it under
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement gameSave(int gameId, String fileName) throws ServerInvalidRequestException {
+	public JsonElement gameSave(Integer gameId, String fileName) throws ServerInvalidRequestException {
+		
+		if (gameId == null)
+		{
+			throw new ServerInvalidRequestException("Missing game Id field");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -413,7 +419,13 @@ public class ServerFacade {
 	 * @return
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement getModel(int version, int gameId) throws ServerInvalidRequestException {
+	public JsonElement getModel(int version, Integer gameId) throws ServerInvalidRequestException {
+		
+		if (gameId == null)
+		{
+			throw new ServerInvalidRequestException("missing gameId field");
+		}
+		
 		Game game = gameManager.getGameById(gameId);
 		
 		if (game == null)
@@ -479,8 +491,13 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement sendChat(int gameId, int playerIndex, String message) throws ServerInvalidRequestException 
+	public JsonElement sendChat(int gameId, Integer playerIndex, String message) throws ServerInvalidRequestException 
 	{
+		if (playerIndex == null)
+		{
+			throw new ServerInvalidRequestException("missing playerIndex field");
+		}
+		
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
 		
@@ -521,7 +538,12 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement rollNumber(int gameId, int playerIndex, int rolledNumber) throws ServerInvalidRequestException {
+	public JsonElement rollNumber(int gameId, Integer playerIndex, Integer rolledNumber) throws ServerInvalidRequestException {
+		
+		if (playerIndex == null || rolledNumber == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
 		
 		//access objects of the specific game
 		Game game = gameManager.getGameById(gameId);
