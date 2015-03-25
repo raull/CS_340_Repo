@@ -10,7 +10,7 @@ public class JoinGameRequest {
 	/**
 	 * The ID of the game requesting to join
 	 */
-	private int id;
+	private Integer id;
 	/**
 	 * The requested color for this player for that game
 	 */
@@ -21,17 +21,17 @@ public class JoinGameRequest {
 	 * @param id
 	 * @param color
 	 */
-	public JoinGameRequest(int id, String color) {
+	public JoinGameRequest(Integer id, String color) {
 		super();
 		this.id = id;
 		this.color = color;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

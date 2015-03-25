@@ -227,8 +227,13 @@ public class ServerFacade {
 	 * @param color The color of the player for the game to join. Should not be taken by another player already.
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement joinGame(int gameId, String color, int userID) throws ServerInvalidRequestException 
+	public JsonElement joinGame(Integer gameId, String color, Integer userID) throws ServerInvalidRequestException 
 	{
+		if (gameId == null || userID == null)
+		{
+			throw new ServerInvalidRequestException("Missing fields");
+		}
+		
 		Game gameToJoin = gameManager.getGameById(gameId);
 		
 		if (gameToJoin == null) {
