@@ -251,54 +251,56 @@ public class ServerFacade {
 		if (existingUser == null) {
 			throw new ServerInvalidRequestException("Cannot join. User does not exist.");
 		}
+		existingUser = existingUser.clone();
 		
-		//Checks to see if we can add player
-		if (tm.getUsers().size() < 4){ //enough space
-			boolean alreadyInList = false;
-			for (User u : tm.getUsers()){
-				if(u.getPlayerID()==existingUser.getPlayerID()){ //if the player is already in the game, updates that player
-					u = existingUser.clone();
-					alreadyInList = true;
-				}
-			}
-			if(!alreadyInList){ //if the player hasn't been added yet, take care of it
-				try {
-					User copyUser = existingUser.clone();
-					tm.addUser(copyUser);
-				} catch (ModelException e) {
-					throw new ServerInvalidRequestException("Cannot join. Game already full.");
-				}
-			}
-			
-		}
-		else{
-			throw new ServerInvalidRequestException("Cannot join. Game already full.");
-		}
-		
-		//Verifies color
-		User tmUser = tm.getUser(existingUser.getPlayerID());
-		
+		//Verify color	
 		if (nuColor != null)
-			tmUser.setColor(nuColor);
+			existingUser.setColor(nuColor);
 		else{
 			throw new ServerInvalidRequestException("Cannot join. Select a valid color.");
 		}
 		
 		for (User u : tm.getUsers()){
-			if(u.getName()==null){
-				continue;
-			}
-			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(tmUser.getName())){ 
+			if (u.getCatanColor().equals(nuColor) && !u.getName().equals(existingUser.getName())){ 
 				throw new ServerInvalidRequestException("Cannot join. That color has been chosen.");
 			}
 		}
-		// Creates a save file of the initial state that can be used as a reset point
-		if (tm.getUsers().size() == 4){
+		
+	
+		
+		//Checks to see if we can add player
+		if (tm.getUsers().size() < 4){ //enough space
+			for (User u : tm.getUsers()){
+				if(u.getPlayerID()==existingUser.getPlayerID()){ //if the player is already in the game, updates that player
+					tm.getUser(userID).setColor(nuColor);
+					return new JsonPrimitive("Success");
+				}
+			}
+			try {
+				User copyUser = existingUser.clone();
+				copyUser.setColor(existingUser.getCatanColor());
+				tm.addUser(copyUser);
+			} catch (ModelException e) {
+				throw new ServerInvalidRequestException("Cannot join. Game already full.");
+			}
+			// Creates a save file of the initial state that can be used as a reset point
+			if (tm.getUsers().size() == 4){
 			String resetName = gameId + "reset";
 			gameSave(gameId, resetName);
 		}
-		
-		return new JsonPrimitive("Success");
+			return new JsonPrimitive("Success");
+			
+		}
+		else if(tm.getUsers().size() == 4){ //if the game is full and our user is rejoining
+			for (User u : tm.getUsers()){
+				if(u.getPlayerID()==existingUser.getPlayerID()){
+					tm.getUser(userID).setColor(nuColor);
+					return new JsonPrimitive("Success");
+				}
+			}
+		}
+		throw new ServerInvalidRequestException("Cannot join. Game already full.");
+
 	}
 	/**
 	 * This method is for testing and debugging purposes. 
@@ -371,6 +373,10 @@ public class ServerFacade {
 			e.printStackTrace();
 		}
 		
+		int newId = gameManager.getNextId();
+		createNewGame(fileName, false, false, false);
+		Game nuGame = gameManager.getGameById(newId);
+		nuGame.getModelFacade().updateModel(jsonModel);
 		return jsonModel;
 	}
 	
@@ -406,9 +412,30 @@ public class ServerFacade {
 	{
 		String fileName = gameId + "reset";
 		
-		gameLoad(fileName);
+		String jsonStr = "";
+		JsonObject jsonModel = null;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
+			
+			String currLine = "";
+			
+			while((currLine = reader.readLine()) != null) {
+				jsonStr += currLine;
+			}
+			
+			reader.close();
+			
+			jsonModel = new JsonParser().parse(jsonStr).getAsJsonObject();
 		
-		return null;
+			ModelFacade facade = gameManager.getGameById(gameId).getModelFacade();
+			facade.updateModel(jsonModel);
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		
+		return jsonModel;
 	}
 	
 	/**
@@ -451,7 +478,7 @@ public class ServerFacade {
 		Game game = gameManager.getGameById(gameId);
 		if (game == null)
 		{
-			throw new ServerInvalidRequestException("Incorrect game id.");
+			throw new ServerInvalidRequestException("Incorrect game id: " + gameId);
 		}
 		if (playerIndex < 0 || playerIndex > 3)
 		{

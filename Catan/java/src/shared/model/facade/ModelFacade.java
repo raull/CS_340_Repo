@@ -115,7 +115,6 @@ public class ModelFacade extends Observable{
 		//int newModelVersion = model.getVersion();
 
 		//System.out.println("new model version num: " + newModelVersion);
-		
 		System.out.println("Current State: " + turnManager.currentTurnPhase().toString());
 
 		
