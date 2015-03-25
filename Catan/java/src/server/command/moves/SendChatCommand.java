@@ -22,8 +22,16 @@ public class SendChatCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		SendChat sendChat = gson.fromJson(json, SendChat.class);
-		return ServerFacade.instance().sendChat(gameId, sendChat.getPlayerIndex(), sendChat.getContent());		
+		
+		ServerFacade.instance().addCommand(json, gameId);
+		return ServerFacade.instance().sendChat(gameId, sendChat.getPlayerIndex(), sendChat.getContent());
 	}
 
 }

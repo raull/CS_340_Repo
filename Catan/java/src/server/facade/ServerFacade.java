@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -421,6 +422,30 @@ public class ServerFacade {
 		Model model = modelFacade.getModel();
 		
 		return model.serialize();
+	}
+	
+	
+	public void addCommand(String command, int gameId){
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		
+		facade.addCommand(command);
+	}
+	
+	public JsonElement getCommands(int gameId){
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		Gson gson = new Gson();
+		
+		JsonArray commands = new JsonArray();
+		
+		for (String command : facade.getCommands()){
+			JsonElement commandjson = new JsonObject();
+			commandjson = gson.fromJson(command, JsonElement.class);  
+			commands.add(commandjson);
+		}
+		
+		return commands;
 	}
 	
 	/**

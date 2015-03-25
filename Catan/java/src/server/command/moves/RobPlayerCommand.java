@@ -22,8 +22,17 @@ public class RobPlayerCommand extends ServerCommand {
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
 		
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		RobPlayer robPlayer = gson.fromJson(json, RobPlayer.class);
-		return ServerFacade.instance().robPlayer(gameId, robPlayer.getPlayerIndex(), robPlayer.getVictimIndex(), robPlayer.getLocation(), false);
+		
+		ServerFacade.instance().addCommand(json, gameId);
+		return ServerFacade.instance().robPlayer(gameId, robPlayer.getPlayerIndex(),
+				robPlayer.getVictimIndex(), robPlayer.getLocation(), false);
 	}
 
 }
