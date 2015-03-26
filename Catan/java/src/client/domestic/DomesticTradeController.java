@@ -269,6 +269,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		trading = false;
 		getTradeOverlay().closeModal();
 		getTradeOverlay().reset();
+		tradePlayer = -1;
 		getWaitOverlay().showModal();
 		waiting = true;
 	}
@@ -424,6 +425,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		
 		getTradeOverlay().closeModal();
 		getTradeOverlay().reset();
+		tradePlayer = -1;
 		trading = false;
 	}
 
