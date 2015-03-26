@@ -26,6 +26,12 @@ public class PlayRBCardCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		Road_Building_ rb = gson.fromJson(json, Road_Building_.class);
 		
 		//strip out the packaging
@@ -40,6 +46,7 @@ public class PlayRBCardCommand extends ServerCommand {
 		EdgeLocation loc1 = new EdgeLocation(hexLoc1, edgeDir1);
 		EdgeLocation loc2 = new EdgeLocation(hexLoc2, edgeDir2);
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		//do the dirty deed
 		return ServerFacade.instance().playRoadBuilding(gameId, rb.getPlayerIndex(), loc1, loc2);
 	}

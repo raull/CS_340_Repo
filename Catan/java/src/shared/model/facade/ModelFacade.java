@@ -64,6 +64,7 @@ public class ModelFacade extends Observable{
 	 */
 	private Bank bank;
 	
+	private List<String> commands;
 	private int modelVersion;
 	private int winnerIndex;
 	private boolean isNotifying = false;
@@ -88,11 +89,21 @@ public class ModelFacade extends Observable{
 		bank = model.getBank();
 		score = model.getScoreKeeper();
 		winnerIndex = model.getWinner();
+		commands = new ArrayList<String>();
 	}
 	
 	public ModelFacade()
 	{
 		
+	}
+	
+	
+	public void addCommand(String command){
+		commands.add(command);
+	}
+	
+	public List<String> getCommands(){
+		return commands;
 	}
 	
 	/**
@@ -144,7 +155,7 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<ResourceCard> cardsToRemove) {
 		//if it isn't the user's turn and the status of model is not discarding
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
+		if(turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
 			return false;
 		}
 		ArrayList<ResourceCard> userCards = new ArrayList<ResourceCard>(user.getHand().getResourceCards().getAllResourceCards()) ;
@@ -209,7 +220,7 @@ public class ModelFacade extends Observable{
 		location = location.getNormalizedLocation();
 		
 		//if it's not user's turn, return false
-		if(user != turnManager.currentUser()) {
+		if(!user.equals(turnManager.currentUser())) {
 			return false;
 		}
 		
@@ -525,7 +536,7 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canRobPlayer(HexTile hexTile,User currUser, User victim) {
 		//if it isn't user's turn or if model status is not on playing
-		if(currUser.getPlayerID() != ClientManager.instance().getCurrentPlayerInfo().getId() 
+		if(currUser.getPlayerID() != turnManager.currentUser().getPlayerID() 
 				|| (turnManager.currentTurnPhase() != TurnPhase.PLAYING 
 				&& turnManager.currentTurnPhase() != TurnPhase.ROBBING)) {
 			return false;
@@ -569,12 +580,12 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canOfferTrade(TurnManager turnManager, User offeringUser, User receivingUser, TradeOffer tradeOffer) {
 		//if it isn't user's turn if model status is not on playing
-		if (offeringUser != turnManager.currentUser()) {
+		if (!offeringUser.equals(turnManager.currentUser())) {
 			return false;
 		}
 		
 		//If it's trading with itself
-		if (offeringUser == receivingUser) {
+		if (offeringUser.equals(receivingUser)) {
 			return false;
 		}
 		
@@ -583,8 +594,8 @@ public class ModelFacade extends Observable{
 			return false;
 		}
 		
-		//If the offer can be made
-		if(!TradeManager.canMakeOffer(offeringUser, receivingUser, tradeOffer)) {
+		//If the offer user has enough resources
+		if(!TradeManager.hasEnoughResources(offeringUser.getHand().getResourceCards(), tradeOffer.getSendingDeck())) {
 			return false;
 		}
 
@@ -604,7 +615,7 @@ public class ModelFacade extends Observable{
 		}
 		
 		//Check if the user is the one receiving the offer
-		if (turnManager.getUserFromIndex(tradeOffer.getReceiverIndex()) != user) {
+		if (!turnManager.getUserFromIndex(tradeOffer.getReceiverIndex()).equals(user)) {
 			return false;
 		}
 		

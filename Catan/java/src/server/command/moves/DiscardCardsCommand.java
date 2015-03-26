@@ -23,11 +23,18 @@ public class DiscardCardsCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
-		
+		return execute(this.json);
+		}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		DiscardCards discardCards = gson.fromJson(json, DiscardCards.class);
 		ResourceList list = discardCards.getDiscardedCards();
 						
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().discardCards(gameId, discardCards.getPlayerIndex(), list.getResourceDeck());
+	
 	}
 
 }

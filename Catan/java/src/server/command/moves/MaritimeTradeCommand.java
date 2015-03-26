@@ -23,12 +23,19 @@ public class MaritimeTradeCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
-		MaritimeTrade maritimeTrade = gson.fromJson(json, MaritimeTrade.class);
-		
-		ResourceType input = ResourceType.valueOf(maritimeTrade.getInputResource());
-		ResourceType output = ResourceType.valueOf(maritimeTrade.getOutputResource());
-		
-		return ServerFacade.instance().maritimeTrade(gameId, maritimeTrade.getPlayerIndex(), maritimeTrade.getRatio(), input, output);
+		return execute(this.json);
 	}
 
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
+		MaritimeTrade maritimeTrade = gson.fromJson(json, MaritimeTrade.class);
+		
+		ResourceType input = ResourceType.valueOf(maritimeTrade.getInputResource().toUpperCase());
+		ResourceType output = ResourceType.valueOf(maritimeTrade.getOutputResource().toUpperCase());
+		
+		ServerFacade.instance().addCommand(json, gameId);
+		return ServerFacade.instance().maritimeTrade(gameId, maritimeTrade.getPlayerIndex(),
+				maritimeTrade.getRatio(), input, output);
+	}
 }

@@ -3,8 +3,6 @@ package server.facade;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -15,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -433,10 +432,35 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
 		
+		updatePlayerScores(game);
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		
 		return model.serialize();
+	}
+	
+	
+	public void addCommand(String command, int gameId){
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		
+		facade.addCommand(command);
+	}
+	
+	public JsonElement getCommands(int gameId){
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		Gson gson = new Gson();
+		
+		JsonArray commands = new JsonArray();
+		
+		for (String command : facade.getCommands()){
+			JsonElement commandjson = new JsonObject();
+			commandjson = gson.fromJson(command, JsonElement.class);  
+			commands.add(commandjson);
+		}
+		
+		return commands;
 	}
 	
 	/**
@@ -621,36 +645,32 @@ public class ServerFacade {
 		
 		Game game = gameManager.getGameById(gameId);
 		
-		if (game == null)
-		{
+		if (game == null) {
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
-		Model model = modelFacade.getModel();
+
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
-		if (playerIndex < 0 || playerIndex > 3)
-		{
+		if (playerIndex < 0 || playerIndex > 3) {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
-		if (victimIndex < -1 || victimIndex > 3)
-		{
-			throw new ServerInvalidRequestException("Invalid player index");
+		if (victimIndex < -1 || victimIndex > 3) {
+			throw new ServerInvalidRequestException("Invalid victim index");
 		}
-		if (location == null)
-		{
+		if (location == null) {
 			throw new ServerInvalidRequestException("Missing hex location");
-			//TODO need a check if the location is valid?
+		}
+		if (!location.isValid(modelFacade.getPossibleHexLocations())) {
+			throw new ServerInvalidRequestException("Hex location out of bounds");
 		}
 
-		if (victimIndex == -1)
-		{
+		if (victimIndex == -1) {
 			modelFacade.map().updateRobberLocation(location);
 			
-			if (soldierCard)
-			{
+			if (soldierCard) {
 				 playSoldierCard(game, user, modelFacade);
 			}
 			
@@ -660,12 +680,10 @@ public class ServerFacade {
 			modelFacade.addToGameLog(logEntry);
 
 		}
-		else
-		{
+		else {
 			User victim = turnManager.getUserFromIndex(victimIndex);
 
-			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim))
-			{
+			if (modelFacade.canRobPlayer(modelFacade.getHexTileFromHexLoc(location), user, victim)) {
 				modelFacade.map().updateRobberLocation(location);
 
 				//randomly select a resource card from the victim
@@ -675,8 +693,7 @@ public class ServerFacade {
 				victim.getResourceCards().removeResourceCard(stolenCard);
 				user.getResourceCards().addResourceCard(stolenCard);
 
-				if (soldierCard)
-				{
+				if (soldierCard) {
 					 playSoldierCard(game, user, modelFacade);
 				}
 
@@ -686,9 +703,8 @@ public class ServerFacade {
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
-			else
-			{
-				throw new ServerInvalidRequestException();
+			else {
+				throw new ServerInvalidRequestException("Cannot Rob Selected Victim");
 			}
 		}
 		modelFacade.updateTurnPhase(TurnPhase.PLAYING);
@@ -702,7 +718,7 @@ public class ServerFacade {
 		user.getUsableDevCardDeck().removeDevCard(new DevCard(DevCardType.SOLDIER));
 		//add one to the number of soldiers the player has played
 		user.setSoldiers(user.getSoldiers() + 1);
-
+		user.setHasPlayedDevCard(true);
 		//check to see if they gained the largest army
 		updateLargestArmy(game, modelFacade);
 
@@ -719,7 +735,7 @@ public class ServerFacade {
 		int largestArmyIndex = game.getLargestArmyPlayer();
 		modelFacade.score().setLargestArmyUser(largestArmyIndex);
 		
-		updatePlayerScores(game);
+//		updatePlayerScores(game);
 	}
 	
 	public void updatePlayerScores(Game game)
@@ -747,6 +763,9 @@ public class ServerFacade {
 			{
 				modelFacade.score().setWinner(user.getTurnIndex());
 			}
+			//set the scores
+//			modelFacade.score().setScore(user.getTurnIndex(), score);
+			user.setVictoryPoints(score);
 		}
 	}
 	
@@ -878,7 +897,12 @@ public class ServerFacade {
 			//randomly give the user a dev card 
 			DevCard devCard = modelFacade.bank().getDevCardDeck().getRandomCard();
 			modelFacade.bank().getDevCardDeck().removeDevCard(devCard);
-			user.getNewDevCardDeck().addDevCard(devCard);
+			if(devCard.type == DevCardType.MONUMENT) {
+				user.getUsableDevCardDeck().addDevCard(devCard);
+			}
+			else{
+				user.getNewDevCardDeck().addDevCard(devCard);
+			}
 			
 			//update game history
 			String logSource = user.getName();
@@ -939,6 +963,8 @@ public class ServerFacade {
 			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource2));
 			//subtract one from the player's year of plenty cards
 			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played year of plenty.";
@@ -998,6 +1024,9 @@ public class ServerFacade {
 			game.calcLongestRoadPlayer();
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
 			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
+//			updatePlayerScores(game);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played road building and built two roads.";
@@ -1021,7 +1050,9 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
+
 	public JsonElement playMonopoly(int gameId, Integer playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+
 	{
 		if (resource == null || playerIndex == null)
 		{
@@ -1062,6 +1093,8 @@ public class ServerFacade {
 			}
 			//remove user's monopoly card
 			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played monopoly.";
@@ -1151,6 +1184,8 @@ public class ServerFacade {
 			//update user points
 			user.setMonumentsPlayed(user.getMonumentsPlayed() + 1);
 			user.setVictoryPoints(user.getVictoryPoints() + 1);
+			//user has played a dev card
+			//but since it's a monument don't set?
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played a monument and gained a point.";
@@ -1244,7 +1279,6 @@ public class ServerFacade {
 		game.calcLongestRoadPlayer();
 		int longestRoadPlayer = game.getLongestRoadPlayer(); 
 		facade.score().setLongestRoadUser(longestRoadPlayer);
-		
 		//Update history
 		String user = curUser.getName();
 		String message = user + " built a road";
@@ -1463,11 +1497,13 @@ public class ServerFacade {
 		User receivingUser = turnManager.getUserFromIndex(receiver);
 		
 		TradeOffer tradeOffer = new TradeOffer(receiverDeck, senderDeck);
+		tradeOffer.setReceiverIndex(receiver);
+		tradeOffer.setSenderIndex(playerIndex);
 		
 		if(modelFacade.canOfferTrade(turnManager, user, receivingUser, tradeOffer)) {
 			modelFacade.getModel().setTradeOffer(tradeOffer);
 			String logSource = user.getName();
-			String logMessage = user.getName() + " offered a trade to" + receivingUser.getName() + ".";
+			String logMessage = user.getName() + " offered a trade to " + receivingUser.getName() + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
@@ -1512,19 +1548,20 @@ public class ServerFacade {
 		
 		TradeOffer tradeOffer = modelFacade.getModel().getTradeOffer();
 		
-		if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
-			if(accept) {
+		if(accept) {
+			if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
+			
 				//trade offer goes through, swap resources
 				
 				User trader = turnManager.getUserFromIndex(tradeOffer.getSenderIndex());
 				ResourceCardDeck sendDeck = tradeOffer.getSendingDeck(); //deck trader offered
 				ResourceCardDeck receiveDeck = tradeOffer.getReceivingDeck(); // the deck the trader receives
 				
-				addResources(trader.getResourceCards(), receiveDeck);
-				removeResources(user.getResourceCards(), receiveDeck);
+				addResources(receiveDeck, trader.getResourceCards());
+				removeResources( receiveDeck, user.getResourceCards());
 				
-				addResources(user.getResourceCards(), sendDeck);
-				removeResources(trader.getResourceCards(), sendDeck);
+				addResources( sendDeck, user.getResourceCards());
+				removeResources(sendDeck, trader.getResourceCards());
 				
 				//update game log
 				String logSource = user.getName();
@@ -1532,6 +1569,10 @@ public class ServerFacade {
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
+			else{
+			throw new ServerInvalidRequestException();
+			}
+		}
 			else{
 				//trade not accepted
 				//update game log
@@ -1545,11 +1586,6 @@ public class ServerFacade {
 			modelFacade.getModel().setTradeOffer(null);
 			
 			updateModelVersion(gameId);
-		}
-		else{
-			throw new ServerInvalidRequestException();
-		}
-		
 		return getModel(0, gameId);
 	}
 	
@@ -1582,7 +1618,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
 		
-		if (ratio != 2 && ratio != 3 && ratio != 41)
+		if (ratio != 2 && ratio != 3 && ratio != 4)
 		{
 			throw new ServerInvalidRequestException("bad ratio value");
 		}
@@ -1601,8 +1637,8 @@ public class ServerFacade {
 		//if can maritime trade
 		if(modelFacade.canMaritimeTrade(turnManager, modelFacade.bank(), user, wantedCard, offeredCardsDeck)) {
 			modelFacade.bank().getResourceDeck().removeResourceCard(wantedCard);
-			addResources(modelFacade.bank().getResourceDeck(), offeredCardsDeck);
-			removeResources(user.getResourceCards(), offeredCardsDeck);
+			addResources(offeredCardsDeck, modelFacade.bank().getResourceDeck());
+			removeResources(offeredCardsDeck, user.getResourceCards());
 			user.getResourceCards().addResourceCard(wantedCard);
 			
 			String logSource = user.getName();
@@ -1662,8 +1698,9 @@ public class ServerFacade {
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
-		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
-		
+//		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
+		ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>(resourcesToDiscard.getAllResourceCards());
+		System.out.println("discard resources---------------------------------------\n" + resources.toString());
 		if(modelFacade.canDiscardCards(turnManager, user, resources)) {
 			//subtract the resources in the given resource card deck from the player
 			for(ResourceCard card : resources) {
@@ -1682,7 +1719,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot discard cards at this time");
 		}
 		
 		//need to return a new model?

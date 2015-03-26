@@ -287,7 +287,7 @@ public class MapController extends Controller implements IMapController, Observe
 	@Override
 	public void update(Observable o, Object arg) //TODO verify that this is correct
 	{
-		System.out.println("current turn phase: " + ClientManager.instance().getCurrentTurnPhase());
+//		System.out.println("current turn phase: " + ClientManager.instance().getCurrentTurnPhase());
 		if (state == null && ClientManager.instance().hasGameStarted()) {
 			initFromModel();
 		} else if (state != null){

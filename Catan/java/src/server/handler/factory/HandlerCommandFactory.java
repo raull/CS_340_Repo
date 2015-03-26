@@ -2,6 +2,7 @@ package server.handler.factory;
 
 import server.command.MockCommand;
 import server.command.ServerCommand;
+import server.command.game.GameCommands;
 import server.command.game.GameCreateCommand;
 import server.command.game.GameJoinCommand;
 import server.command.game.GameListCommand;
@@ -9,6 +10,7 @@ import server.command.game.GameLoadCommand;
 import server.command.game.GameModelCommand;
 import server.command.game.GameResetCommand;
 import server.command.game.GameSaveCommand;
+import server.command.moves.AcceptTradeCommand;
 import server.command.moves.BuildCityCommand;
 import server.command.moves.BuildRoadCommand;
 import server.command.moves.BuildSettlementCommand;
@@ -22,6 +24,7 @@ import server.command.moves.PlayMonumentCardCommand;
 import server.command.moves.PlayRBCardCommand;
 import server.command.moves.PlaySoldierCardCommand;
 import server.command.moves.PlayYOPCardCommand;
+import server.command.moves.RobPlayerCommand;
 import server.command.moves.RollNumberCommand;
 import server.command.moves.SendChatCommand;
 import server.command.user.LoginCommand;
@@ -55,6 +58,11 @@ public class HandlerCommandFactory implements CommandFactory{
 		//String[] requestSplit = request.split("o");
 		//System.out.println("Test: " + requestSplit[0]);
 		
+		return getCommand(request, arg0);
+		
+	}
+	
+	public ServerCommand getCommand(String request, HttpExchange arg0){
 		if (request.startsWith("model"))
 		{
 			//System.out.println("stripping version off model request");
@@ -77,12 +85,13 @@ public class HandlerCommandFactory implements CommandFactory{
 		case "load":
 			return new GameLoadCommand(arg0);
 		case "model":
-			//System.out.println("Returning gameModelCommand object...");
 			return new GameModelCommand(arg0);
 		case "reset":
 			return new GameResetCommand(arg0);
 		case "sendChat":
 			return new SendChatCommand(arg0);
+		case "robPlayer":
+			return new RobPlayerCommand(arg0);
 		case "rollNumber":
 			return new RollNumberCommand(arg0);
 		case "finishTurn":
@@ -95,6 +104,8 @@ public class HandlerCommandFactory implements CommandFactory{
 			return new PlayRBCardCommand(arg0);
 		case "Soldier":
 			return new PlaySoldierCardCommand(arg0);
+		case "acceptTrade":
+			return new AcceptTradeCommand(arg0);
 		case "Monopoly":
 			return new PlayMonopolyCardCommand(arg0);
 		case "Monument":
@@ -113,11 +124,14 @@ public class HandlerCommandFactory implements CommandFactory{
 			return new DiscardCardsCommand(arg0);
 		case "addAI":
 			return new MockCommand(arg0);
+		case "commands":
+			return new GameCommands(arg0);
 		default:
 			break;
 		}
 		
 		return null;
 	}
+
 
 }

@@ -25,13 +25,20 @@ public class BuildSettlementCommand extends ServerCommand {
 
 	@Override
 	public JsonElement execute() throws ServerInvalidRequestException {
+		return execute(this.json);
 		
+	}
+
+	@Override
+	public JsonElement execute(String json)
+			throws ServerInvalidRequestException {
 		BuildSettlement buildSettlement = gson.fromJson(json, BuildSettlement.class);
 		comVertexLoc vertexLocParam = buildSettlement.getVertexLocation();
 		HexLocation hexLoc = new HexLocation(vertexLocParam.getX(), vertexLocParam.getY());
 		VertexDirection vertexDirection = vertexLocParam.getDirection();
 		VertexLocation vertexLocation = new VertexLocation(hexLoc, vertexDirection);
 		
+		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().buildSettlement(gameId, buildSettlement.getPlayerIndex(), vertexLocation, buildSettlement.isFree());
 
 	}
