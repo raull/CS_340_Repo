@@ -33,6 +33,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.Edge;
+import shared.model.board.Port;
 import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
 import shared.model.cards.ResourceCard;
@@ -1303,6 +1304,15 @@ public class ServerFacade {
 			
 			//Add points
 			curUser.setVictoryPoints(curUser.getVictoryPoints()+1);
+			
+			//Checks for port
+			for (Port port : facade.getModel().getMap().getPortsOnMap()){
+				for (Vertex vert : port.getLocations()){
+					if (vert.getLocation().equals(newVertex.getLocation())){
+						curUser.addPort(port);
+					}
+				}
+			}
 			
 			//Update history
 			String user = curUser.getName();
