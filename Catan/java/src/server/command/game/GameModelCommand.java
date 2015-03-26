@@ -23,7 +23,8 @@ public class GameModelCommand extends ServerCommand {
 	public JsonElement execute() throws ServerInvalidRequestException {	
 		System.out.println("executing Model command");
 		System.out.println("gameID: " + gameId);
-		return ServerFacade.instance().getModel(0, gameId);
+		int version = identifyVersion();
+		return ServerFacade.instance().getModel(version, gameId);
 	}
 
 	@Override
@@ -31,6 +32,28 @@ public class GameModelCommand extends ServerCommand {
 			throws ServerInvalidRequestException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public int identifyVersion()
+	{
+		String url = httpObj.getRequestURI().toString();
+		String[] split = url.split("/");
+		String modelParam = split[split.length - 1];
+		try
+		{
+			String[] modelSplit = modelParam.split("=");
+			int version = Integer.parseInt(modelSplit[modelSplit.length - 1]);
+			return version;
+		}
+		catch (NumberFormatException e)
+		{
+			return -1;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
 }
