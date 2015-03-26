@@ -12,11 +12,11 @@ public class Soldier_ {
 	/**
 	 * Index of player who is using the card
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * Index of the player who is being robbed
 	 */
-	private int victimIndex;
+	private Integer victimIndex;
 	/**
 	 * Location to where the robber is being moved.
 	 */
@@ -28,7 +28,7 @@ public class Soldier_ {
 	 * @param victimIndex
 	 * @param location
 	 */
-	public Soldier_(int playerIndex, int victimIndex, HexLocation location) {
+	public Soldier_(Integer playerIndex, Integer victimIndex, HexLocation location) {
 		super();
 		this.playerIndex = playerIndex;
 		this.victimIndex = victimIndex;
@@ -36,20 +36,20 @@ public class Soldier_ {
 		type = "Soldier";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		//INPUT VALIDATION
 		this.playerIndex = playerIndex;
 	}
 
-	public int getVictimIndex() {
+	public Integer getVictimIndex() {
 		return victimIndex;
 	}
 
-	public void setVictimIndex(int victimIndex) {
+	public void setVictimIndex(Integer victimIndex) {
 		//INPUT VALIDATION
 		this.victimIndex = victimIndex;
 	}

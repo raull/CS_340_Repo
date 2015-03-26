@@ -12,7 +12,7 @@ public class DiscardCards {
 	/**
 	 * Who is discarding cards
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * The cards being discarded
 	 */
@@ -23,18 +23,18 @@ public class DiscardCards {
 	 * @param playerIndex
 	 * @param discardedCards
 	 */
-	public DiscardCards(int playerIndex, ResourceList discardedCards) {
+	public DiscardCards(Integer playerIndex, ResourceList discardedCards) {
 		super();
 		this.playerIndex = playerIndex;
 		this.discardedCards = discardedCards;
 		type = "discardCards";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 

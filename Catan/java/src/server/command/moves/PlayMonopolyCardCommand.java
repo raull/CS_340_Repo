@@ -31,7 +31,7 @@ public class PlayMonopolyCardCommand extends ServerCommand {
 		Monopoly_ monopoly = gson.fromJson(json, Monopoly_.class); 
 		
 		ServerFacade.instance().addCommand(json, gameId);
-		return ServerFacade.instance().playMonopoly(gameId, playerId, monopoly.getResource());
+		return ServerFacade.instance().playMonopoly(gameId, monopoly.getPlayerIndex(), monopoly.getResource());
 	}
 
 }

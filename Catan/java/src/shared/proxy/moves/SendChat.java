@@ -12,7 +12,7 @@ public class SendChat {
 	/**
 	 * Index of which player sent the chat
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * The message being sent. 
 	 */
@@ -22,16 +22,16 @@ public class SendChat {
 	 * @param playerIndex
 	 * @param content
 	 */
-	public SendChat(int playerIndex, String content) {
+	public SendChat(Integer playerIndex, String content) {
 		super();
 		this.playerIndex = playerIndex;
 		this.content = content;
 		type = "sendChat";
 	}
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 	public String getContent() {

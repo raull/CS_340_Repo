@@ -11,19 +11,19 @@ public class BuyDevCard {
 	/**
 	 * Index (0-3) of player who is buying dev. card
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 
 	/**
 	 * Constructor to instantiate the BuyDevCard object
 	 * @param playerIndex
 	 */
-	public BuyDevCard(int playerIndex) {
+	public BuyDevCard(Integer playerIndex) {
 		super();
 		this.playerIndex = playerIndex;
 		type = "buyDevCard";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
@@ -31,7 +31,7 @@ public class BuyDevCard {
 	 * If index is 0-3, sets the number
 	 * @param playerIndex
 	 */
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		//INPUT VERIFICATION
 		this.playerIndex = playerIndex;
 	}

@@ -16,14 +16,14 @@ public class Monopoly_ {
 	/**
 	 * Index of player who is playing the card
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	
 	/**
 	 * Constructor to instantiate the Monopoly_ object
 	 * @param resource
 	 * @param playerIndex
 	 */
-	public Monopoly_(ResourceType resource, int playerIndex) {
+	public Monopoly_(ResourceType resource, Integer playerIndex) {
 		super();
 		this.resource = resource;
 		this.playerIndex = playerIndex;
@@ -38,11 +38,11 @@ public class Monopoly_ {
 		this.resource = resource;
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		//INPUT VALIDATION
 		this.playerIndex = playerIndex;
 	}

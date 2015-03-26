@@ -12,7 +12,7 @@ public class Road_Building_ {
 	/**
 	 * Index of Player who is building roads
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * First location to build road
 	 */
@@ -28,7 +28,7 @@ public class Road_Building_ {
 	 * @param location1
 	 * @param location2
 	 */
-	public Road_Building_(int playerIndex, EdgeLocation location1,
+	public Road_Building_(Integer playerIndex, EdgeLocation location1,
 			EdgeLocation location2) {
 		super();
 		this.playerIndex = playerIndex;
@@ -37,11 +37,11 @@ public class Road_Building_ {
 		type = "Road_Building";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		
 		this.playerIndex = playerIndex;
 	}

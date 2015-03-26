@@ -11,23 +11,23 @@ public class Monument_ {
 	/**
 	 * Who's playing this dev. card.
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 
 	/**
 	 * Constructor to instantiate the Monument_ object
 	 * @param playerIndex
 	 */
-	public Monument_(int playerIndex) {
+	public Monument_(Integer playerIndex) {
 		super();
 		this.playerIndex = playerIndex;
 		type = "Monument";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 	

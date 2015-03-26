@@ -12,7 +12,7 @@ public class Year_of_Plenty_ {
 	/**
 	 * Index of the player using the card
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * Resource Type 1
 	 */
@@ -27,7 +27,7 @@ public class Year_of_Plenty_ {
 	 * @param resource1
 	 * @param resource2
 	 */
-	public Year_of_Plenty_(int playerIndex, ResourceType resource1,
+	public Year_of_Plenty_(Integer playerIndex, ResourceType resource1,
 			ResourceType resource2) {
 		super();
 		this.playerIndex = playerIndex;
@@ -35,10 +35,10 @@ public class Year_of_Plenty_ {
 		this.resource2 = resource2;
 		type = "Year_of_Plenty";
 	}
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		//INPUT VALIDATION
 		this.playerIndex = playerIndex;
 	}
