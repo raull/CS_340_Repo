@@ -3,6 +3,8 @@ package client.poller;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import client.manager.ClientManager;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -94,9 +96,20 @@ public class Poller {
 //			System.out.println("version num of model in poller: " + currVer);
 			//set the current model version in the facade
 //			modelFacade.setModelVersion(currVer);
-			response = proxy.model(currModel.getVersion());
+			if (ClientManager.instance().hasGameStarted())
+			{
+				response = proxy.model(currModel.getVersion());
+			}
+			else
+			{
+				response = proxy.model(-1);
+			}
 			
-			modelFacade.updateModel(response);
+			//TODO something here such that the modelFacade is only called if the response was a new model
+			if (!response.isJsonPrimitive())			
+			{
+				modelFacade.updateModel(response);
+			}
 			
 			
 		} catch (ProxyException e) {

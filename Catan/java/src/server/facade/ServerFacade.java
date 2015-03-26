@@ -447,7 +447,16 @@ public class ServerFacade {
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		
-		return model.serialize();
+		int currentVersion = model.getVersion();
+		
+		if (currentVersion > version)
+		{
+			return model.serialize();
+		}
+		else
+		{
+			return new JsonPrimitive("true");
+		}
 	}
 	
 	
