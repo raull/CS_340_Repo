@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -414,10 +415,35 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Invalid game ID");
 		}
 		
+		updatePlayerScores(game);
 		ModelFacade modelFacade = game.getModelFacade();
 		Model model = modelFacade.getModel();
 		
 		return model.serialize();
+	}
+	
+	
+	public void addCommand(String command, int gameId){
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		
+		facade.addCommand(command);
+	}
+	
+	public JsonElement getCommands(int gameId){
+		Game game = gameManager.getGameById(gameId);
+		ModelFacade facade = game.getModelFacade();
+		Gson gson = new Gson();
+		
+		JsonArray commands = new JsonArray();
+		
+		for (String command : facade.getCommands()){
+			JsonElement commandjson = new JsonObject();
+			commandjson = gson.fromJson(command, JsonElement.class);  
+			commands.add(commandjson);
+		}
+		
+		return commands;
 	}
 	
 	/**
@@ -660,7 +686,7 @@ public class ServerFacade {
 		user.getUsableDevCardDeck().removeDevCard(new DevCard(DevCardType.SOLDIER));
 		//add one to the number of soldiers the player has played
 		user.setSoldiers(user.getSoldiers() + 1);
-
+		user.setHasPlayedDevCard(true);
 		//check to see if they gained the largest army
 		updateLargestArmy(game, modelFacade);
 
@@ -677,7 +703,7 @@ public class ServerFacade {
 		int largestArmyIndex = game.getLargestArmyPlayer();
 		modelFacade.score().setLargestArmyUser(largestArmyIndex);
 		
-		updatePlayerScores(game);
+//		updatePlayerScores(game);
 	}
 	
 	public void updatePlayerScores(Game game)
@@ -705,6 +731,9 @@ public class ServerFacade {
 			{
 				modelFacade.score().setWinner(user.getTurnIndex());
 			}
+			//set the scores
+//			modelFacade.score().setScore(user.getTurnIndex(), score);
+			user.setVictoryPoints(score);
 		}
 	}
 	
@@ -887,6 +916,8 @@ public class ServerFacade {
 			modelFacade.bank().getResourceDeck().removeResourceCard(new ResourceCard(resource2));
 			//subtract one from the player's year of plenty cards
 			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played year of plenty.";
@@ -946,6 +977,9 @@ public class ServerFacade {
 			game.calcLongestRoadPlayer();
 			int longestRoadPlayer = game.getLongestRoadPlayer(); 
 			modelFacade.score().setLongestRoadUser(longestRoadPlayer);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
+//			updatePlayerScores(game);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played road building and built two roads.";
@@ -969,9 +1003,11 @@ public class ServerFacade {
 	 * @return Returns the client model (identical to getModel)
 	 * @throws ServerInvalidRequestException
 	 */
-	public JsonElement playMonopoly(int gameId, int playerIndex, ResourceType resource) throws ServerInvalidRequestException 
+	public JsonElement playMonopoly(int gameId, int playerId, ResourceType resource) throws ServerInvalidRequestException 
 	{
 		Game game = gameManager.getGameById(gameId);
+		
+		int playerIndex = game.getModelFacade().turnManager().getUser(playerId).getTurnIndex();
 		
 		if (game == null)
 		{
@@ -1005,6 +1041,8 @@ public class ServerFacade {
 			}
 			//remove user's monopoly card
 			user.getUsableDevCardDeck().removeDevCard(devCard);
+			//user has played a dev card
+			user.setHasPlayedDevCard(true);
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played monopoly.";
@@ -1089,6 +1127,8 @@ public class ServerFacade {
 			//update user points
 			user.setMonumentsPlayed(user.getMonumentsPlayed() + 1);
 			user.setVictoryPoints(user.getVictoryPoints() + 1);
+			//user has played a dev card
+			//but since it's a monument don't set?
 			//update game history
 			String logSource = user.getName();
 			String logMessage = user.getName() + " played a monument and gained a point.";
@@ -1183,7 +1223,6 @@ public class ServerFacade {
 		game.calcLongestRoadPlayer();
 		int longestRoadPlayer = game.getLongestRoadPlayer(); 
 		facade.score().setLongestRoadUser(longestRoadPlayer);
-		
 		//Update history
 		String user = curUser.getName();
 		String message = user + " built a road";
@@ -1510,7 +1549,7 @@ public class ServerFacade {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
 		
-		if (ratio != 2 && ratio != 3 && ratio != 41)
+		if (ratio != 2 && ratio != 3 && ratio != 4)
 		{
 			throw new ServerInvalidRequestException("bad ratio value");
 		}

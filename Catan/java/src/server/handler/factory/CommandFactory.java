@@ -8,5 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 public interface CommandFactory {
 
 	ServerCommand create(HttpExchange arg0);
+	
+	
 
 }
