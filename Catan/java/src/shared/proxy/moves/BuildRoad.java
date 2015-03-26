@@ -11,7 +11,7 @@ public class BuildRoad {
 	/**
 	 * Who is building a road
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * Where the road is to be built
 	 */
@@ -19,7 +19,7 @@ public class BuildRoad {
 	/**
 	 * Whether the location is free (doesn't cost resources, used for setup).
 	 */
-	private boolean free;
+	private Boolean free;
 	
 	/**
 	 * Constructor to instantiate the BuildRoad object
@@ -27,7 +27,7 @@ public class BuildRoad {
 	 * @param roadLocation
 	 * @param free
 	 */
-	public BuildRoad(int playerIndex, EdgeLocation roadLocation, boolean free) {
+	public BuildRoad(Integer playerIndex, EdgeLocation roadLocation, Boolean free) {
 		super();
 		this.playerIndex = playerIndex;
 		this.roadLocation = new comEdgeLoc(roadLocation);
@@ -35,11 +35,11 @@ public class BuildRoad {
 		type = "buildRoad";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 
@@ -51,11 +51,11 @@ public class BuildRoad {
 		this.roadLocation = new comEdgeLoc(roadLocation);
 	}
 
-	public boolean isFree() {
+	public Boolean isFree() {
 		return free;
 	}
 
-	public void setFree(boolean free) {
+	public void setFree(Boolean free) {
 		this.free = free;
 	}
 	

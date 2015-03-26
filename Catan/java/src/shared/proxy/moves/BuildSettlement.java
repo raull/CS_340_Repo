@@ -11,7 +11,7 @@ public class BuildSettlement {
 	/**
 	 * Who is trying to build a settlement
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * Where the settlement is to be built
 	 */
@@ -19,7 +19,7 @@ public class BuildSettlement {
 	/**
 	 * Whether this is placed for free (used for setup)
 	 */
-	private boolean free;
+	private Boolean free;
 	
 	/**
 	 * Constructor to instantiate the BuildSettlement object
@@ -27,8 +27,8 @@ public class BuildSettlement {
 	 * @param vertexLocation
 	 * @param free
 	 */
-	public BuildSettlement(int playerIndex, VertexLocation vertexLocation,
-			boolean free) {
+	public BuildSettlement(Integer playerIndex, VertexLocation vertexLocation,
+			Boolean free) {
 		super();
 		this.playerIndex = playerIndex;
 		this.vertexLocation = new comVertexLoc(vertexLocation);
@@ -36,11 +36,11 @@ public class BuildSettlement {
 		type = "buildSettlement";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 
@@ -52,11 +52,11 @@ public class BuildSettlement {
 		this.vertexLocation = new comVertexLoc(vertexLocation);
 	}
 
-	public boolean isFree() {
+	public Boolean isFree() {
 		return free;
 	}
 
-	public void setFree(boolean free) {
+	public void setFree(Boolean free) {
 		this.free = free;
 	}
 }

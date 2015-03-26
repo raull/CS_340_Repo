@@ -10,11 +10,11 @@ public class MaritimeTrade {
 	/**
 	 * Who is doing the Maritime trade
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * 	The ratio of the trade (e.g. 3 for a 3:1 trade)
 	 */
-	private int ratio;
+	private Integer ratio;
 	/**
 	 * The resource you're getting
 	 */
@@ -31,7 +31,7 @@ public class MaritimeTrade {
 	 * @param outputResource
 	 * @param inputResource
 	 */
-	public MaritimeTrade(int playerIndex, int ratio, String outputResource,
+	public MaritimeTrade(Integer playerIndex, Integer ratio, String outputResource,
 			String inputResource) {
 		super();
 		this.playerIndex = playerIndex;
@@ -41,19 +41,19 @@ public class MaritimeTrade {
 		type = "maritimeTrade";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 
-	public int getRatio() {
+	public Integer getRatio() {
 		return ratio;
 	}
 
-	public void setRatio(int ratio) {
+	public void setRatio(Integer ratio) {
 		this.ratio = ratio;
 	}
 

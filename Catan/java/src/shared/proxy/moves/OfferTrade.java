@@ -12,7 +12,7 @@ public class OfferTrade {
 	/**
 	 * Who is offering the trade
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * The proposed offer (what the player gives and gets)
 	 */
@@ -20,7 +20,7 @@ public class OfferTrade {
 	/**
 	 * The player to whom the offer is being made
 	 */
-	private int receiver;
+	private Integer receiver;
 	
 	/**
 	 * Constructor to instantiate the OfferTrade object	
@@ -28,7 +28,7 @@ public class OfferTrade {
 	 * @param offer
 	 * @param receiver
 	 */
-	public OfferTrade(int playerIndex, ResourceList offer, int receiver) {
+	public OfferTrade(Integer playerIndex, ResourceList offer, Integer receiver) {
 		super();
 		this.playerIndex = playerIndex;
 		this.offer = offer;
@@ -36,11 +36,11 @@ public class OfferTrade {
 		type = "offerTrade";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 
@@ -52,11 +52,11 @@ public class OfferTrade {
 		this.offer = offer;
 	}
 
-	public int getReceiver() {
+	public Integer getReceiver() {
 		return receiver;
 	}
 
-	public void setReceiver(int receiver) {
+	public void setReceiver(Integer receiver) {
 		this.receiver = receiver;
 	}
 }

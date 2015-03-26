@@ -11,7 +11,7 @@ public class BuildCity {
 	/**
 	 * Who is building the city.
 	 */
-	private int playerIndex;
+	private Integer playerIndex;
 	/**
 	 * Where the city is to be built.
 	 */
@@ -22,18 +22,18 @@ public class BuildCity {
 	 * @param playerIndex
 	 * @param vertexLocation
 	 */
-	public BuildCity(int playerIndex, VertexLocation vertexLocation) {
+	public BuildCity(Integer playerIndex, VertexLocation vertexLocation) {
 		super();
 		this.playerIndex = playerIndex;
 		this.vertexLocation = new comVertexLoc(vertexLocation);
 		type = "buildCity";
 	}
 
-	public int getPlayerIndex() {
+	public Integer getPlayerIndex() {
 		return playerIndex;
 	}
 
-	public void setPlayerIndex(int playerIndex) {
+	public void setPlayerIndex(Integer playerIndex) {
 		this.playerIndex = playerIndex;
 	}
 
