@@ -855,7 +855,12 @@ public class ServerFacade {
 			//randomly give the user a dev card 
 			DevCard devCard = modelFacade.bank().getDevCardDeck().getRandomCard();
 			modelFacade.bank().getDevCardDeck().removeDevCard(devCard);
-			user.getNewDevCardDeck().addDevCard(devCard);
+			if(devCard.type == DevCardType.MONUMENT) {
+				user.getUsableDevCardDeck().addDevCard(devCard);
+			}
+			else{
+				user.getNewDevCardDeck().addDevCard(devCard);
+			}
 			
 			//update game history
 			String logSource = user.getName();
