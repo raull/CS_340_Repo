@@ -729,7 +729,7 @@ public class ServerFacade {
 			
 			if (score >= 10)
 			{
-				modelFacade.score().setWinner(user.getTurnIndex());
+				modelFacade.score().setWinner(user.getPlayerID());
 			}
 			//set the scores
 //			modelFacade.score().setScore(user.getTurnIndex(), score);
