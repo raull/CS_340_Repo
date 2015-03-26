@@ -259,7 +259,7 @@ public class ServerProxy implements Proxy{
 
 	@Override
 	public JsonElement model(int version) throws ProxyException {
-		return doGet("/game/model");
+		return doGet("/game/model?version=" + version);
 	}
 
 	@Override
