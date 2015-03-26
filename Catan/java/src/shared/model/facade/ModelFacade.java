@@ -615,7 +615,7 @@ public class ModelFacade extends Observable{
 		}
 		
 		//Check if the user is the one receiving the offer
-		if (turnManager.getUserFromIndex(tradeOffer.getReceiverIndex()) != user) {
+		if (!turnManager.getUserFromIndex(tradeOffer.getReceiverIndex()).equals(user)) {
 			return false;
 		}
 		

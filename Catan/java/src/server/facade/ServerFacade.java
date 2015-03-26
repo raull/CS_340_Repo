@@ -1428,11 +1428,13 @@ public class ServerFacade {
 		User receivingUser = turnManager.getUserFromIndex(receiver);
 		
 		TradeOffer tradeOffer = new TradeOffer(receiverDeck, senderDeck);
+		tradeOffer.setReceiverIndex(receiver);
+		tradeOffer.setSenderIndex(playerIndex);
 		
 		if(modelFacade.canOfferTrade(turnManager, user, receivingUser, tradeOffer)) {
 			modelFacade.getModel().setTradeOffer(tradeOffer);
 			String logSource = user.getName();
-			String logMessage = user.getName() + " offered a trade to" + receivingUser.getName() + ".";
+			String logMessage = user.getName() + " offered a trade to " + receivingUser.getName() + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
@@ -1472,19 +1474,20 @@ public class ServerFacade {
 		
 		TradeOffer tradeOffer = modelFacade.getModel().getTradeOffer();
 		
-		if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
-			if(accept) {
+		if(accept) {
+			if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
+			
 				//trade offer goes through, swap resources
 				
 				User trader = turnManager.getUserFromIndex(tradeOffer.getSenderIndex());
 				ResourceCardDeck sendDeck = tradeOffer.getSendingDeck(); //deck trader offered
 				ResourceCardDeck receiveDeck = tradeOffer.getReceivingDeck(); // the deck the trader receives
 				
-				addResources(trader.getResourceCards(), receiveDeck);
-				removeResources(user.getResourceCards(), receiveDeck);
+				addResources(receiveDeck, trader.getResourceCards());
+				removeResources( receiveDeck, user.getResourceCards());
 				
-				addResources(user.getResourceCards(), sendDeck);
-				removeResources(trader.getResourceCards(), sendDeck);
+				addResources( sendDeck, user.getResourceCards());
+				removeResources(sendDeck, trader.getResourceCards());
 				
 				//update game log
 				String logSource = user.getName();
@@ -1492,6 +1495,10 @@ public class ServerFacade {
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
+			else{
+			throw new ServerInvalidRequestException();
+			}
+		}
 			else{
 				//trade not accepted
 				//update game log
@@ -1505,11 +1512,6 @@ public class ServerFacade {
 			modelFacade.getModel().setTradeOffer(null);
 			
 			updateModelVersion(gameId);
-		}
-		else{
-			throw new ServerInvalidRequestException();
-		}
-		
 		return getModel(0, gameId);
 	}
 	
