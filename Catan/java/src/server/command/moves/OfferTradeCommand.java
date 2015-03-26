@@ -31,8 +31,8 @@ public class OfferTradeCommand extends ServerCommand {
 	public JsonElement execute(String json) throws ServerInvalidRequestException {
 		OfferTrade offertrade = gson.fromJson(json, OfferTrade.class);
 		ResourceList rl = offertrade.getOffer();
-		ResourceCardDeck senderDeck = rl.getResourceDeck();
-		ResourceCardDeck receiverDeck = rl.getReceiverDeck();
+		ResourceCardDeck receiverDeck = rl.getResourceDeck();
+		ResourceCardDeck senderDeck = rl.getReceiverDeck();
 		ServerFacade.instance().addCommand(json, gameId);
 		return ServerFacade.instance().offerTrade(gameId, offertrade.getPlayerIndex(),
 				offertrade.getReceiver(), senderDeck, receiverDeck);
