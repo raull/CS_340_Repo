@@ -220,7 +220,7 @@ public class ModelFacade extends Observable{
 		location = location.getNormalizedLocation();
 		
 		//if it's not user's turn, return false
-		if(user.equals(turnManager.currentUser())) {
+		if(!user.equals(turnManager.currentUser())) {
 			return false;
 		}
 		
