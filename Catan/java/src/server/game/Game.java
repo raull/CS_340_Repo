@@ -117,7 +117,7 @@ public class Game {
 	 * @return
 	 */
 	public int getLongestRoadPlayer() {
-		return -1; //returns -1 when no one has longest road
+		return longestRoadIndex; 
 	}
 	
 	/**
