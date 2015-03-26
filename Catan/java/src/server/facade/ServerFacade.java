@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -343,19 +344,28 @@ public class ServerFacade {
 		Writer writer = null;
 		try {
 			File saves = new File("saves");
-			if (!saves.exists())
+			if (!saves.exists()) {
 				saves.mkdirs();
+			}
+			//Check if the file already exists
+			String filePath = "saves/" + fileName + ".txt"; 
+			File existingFile = new File(filePath);
+			if (existingFile.exists()) {
+				Files.delete(existingFile.toPath());
+			}
+			//Write File
 			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream("saves/" + fileName + ".txt"), "utf-8"));
-			writer.write(jsonModelStr);
-			
+					new FileOutputStream("saves/" + fileName + ".txt", false), "utf-8"));
+			writer.write(jsonModelStr);			
 		}
-		catch(IOException ex) {
+		catch(Exception ex) {
 			ex.printStackTrace();
 			throw new ServerInvalidRequestException("Internal server error");
 		}
 		finally {
-			try { writer.close();} catch (Exception ex) {
+			try { 
+				writer.close();
+			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
 		}
