@@ -155,7 +155,7 @@ public class ModelFacade extends Observable{
 	 */
 	public Boolean canDiscardCards(TurnManager turnManager, User user, ArrayList<ResourceCard> cardsToRemove) {
 		//if it isn't the user's turn and the status of model is not discarding
-		if(user != turnManager.currentUser() || turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
+		if(turnManager.currentTurnPhase() != TurnPhase.DISCARDING){
 			return false;
 		}
 		ArrayList<ResourceCard> userCards = new ArrayList<ResourceCard>(user.getHand().getResourceCards().getAllResourceCards()) ;
@@ -220,7 +220,7 @@ public class ModelFacade extends Observable{
 		location = location.getNormalizedLocation();
 		
 		//if it's not user's turn, return false
-		if(user != turnManager.currentUser()) {
+		if(!user.equals(turnManager.currentUser())) {
 			return false;
 		}
 		

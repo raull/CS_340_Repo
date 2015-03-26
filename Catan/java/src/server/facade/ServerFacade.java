@@ -3,8 +3,6 @@ package server.facade;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -1638,8 +1636,9 @@ public class ServerFacade {
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
-		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
-		
+//		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
+		ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>(resourcesToDiscard.getAllResourceCards());
+		System.out.println("discard resources---------------------------------------\n" + resources.toString());
 		if(modelFacade.canDiscardCards(turnManager, user, resources)) {
 			//subtract the resources in the given resource card deck from the player
 			for(ResourceCard card : resources) {
@@ -1658,7 +1657,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot discard cards at this time");
 		}
 		
 		//need to return a new model?
