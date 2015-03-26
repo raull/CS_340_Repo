@@ -114,7 +114,7 @@ public class TurnTrackerController extends Controller implements ITurnTrackerCon
 		
 		int largestArmyIndex = cm.getModelFacade().score().getLargestArmyUser();
 		int longestRoadIndex = cm.getModelFacade().score().getLongestRoadUser();
-		System.out.println("longest road person: " + longestRoadIndex);
+//		System.out.println("longest road person: " + longestRoadIndex);
 		
 		for(User user : users) {
 			//user is highlighted if it's currently their turn

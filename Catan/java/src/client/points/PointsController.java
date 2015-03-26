@@ -105,7 +105,7 @@ public class PointsController extends Controller implements IPointsController, O
 			
 			//if there is a winner
 			boolean hasWinner = false;
-			System.out.println("winner???? " + cm.getModelFacade().score().getWinner());
+//			System.out.println("winner???? " + cm.getModelFacade().score().getWinner());
 			if(cm.getModelFacade().score().getWinner() != -1) {
 				hasWinner = true;
 			}
