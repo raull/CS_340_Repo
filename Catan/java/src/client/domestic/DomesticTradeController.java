@@ -600,7 +600,7 @@ public class DomesticTradeController extends Controller implements IDomesticTrad
 		if (sheepr > 0)
 			getAcceptOverlay().addGiveResource(ResourceType.SHEEP, sheepr);
 		if (woodr > 0)
-			getAcceptOverlay().addGiveResource(ResourceType.WHEAT, woodr);
+			getAcceptOverlay().addGiveResource(ResourceType.WOOD, woodr);
 		
 		//Gets the sender's name
 		User sendingUser = ClientManager.instance().getModelFacade().turnManager()

@@ -3,8 +3,6 @@ package server.facade;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -1447,11 +1445,13 @@ public class ServerFacade {
 		User receivingUser = turnManager.getUserFromIndex(receiver);
 		
 		TradeOffer tradeOffer = new TradeOffer(receiverDeck, senderDeck);
+		tradeOffer.setReceiverIndex(receiver);
+		tradeOffer.setSenderIndex(playerIndex);
 		
 		if(modelFacade.canOfferTrade(turnManager, user, receivingUser, tradeOffer)) {
 			modelFacade.getModel().setTradeOffer(tradeOffer);
 			String logSource = user.getName();
-			String logMessage = user.getName() + " offered a trade to" + receivingUser.getName() + ".";
+			String logMessage = user.getName() + " offered a trade to " + receivingUser.getName() + ".";
 			MessageLine logEntry = new MessageLine(logMessage, logSource);
 			modelFacade.addToGameLog(logEntry);
 			
@@ -1491,19 +1491,20 @@ public class ServerFacade {
 		
 		TradeOffer tradeOffer = modelFacade.getModel().getTradeOffer();
 		
-		if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
-			if(accept) {
+		if(accept) {
+			if(modelFacade.canAcceptTrade(turnManager, user, tradeOffer)) {
+			
 				//trade offer goes through, swap resources
 				
 				User trader = turnManager.getUserFromIndex(tradeOffer.getSenderIndex());
 				ResourceCardDeck sendDeck = tradeOffer.getSendingDeck(); //deck trader offered
 				ResourceCardDeck receiveDeck = tradeOffer.getReceivingDeck(); // the deck the trader receives
 				
-				addResources(trader.getResourceCards(), receiveDeck);
-				removeResources(user.getResourceCards(), receiveDeck);
+				addResources(receiveDeck, trader.getResourceCards());
+				removeResources( receiveDeck, user.getResourceCards());
 				
-				addResources(user.getResourceCards(), sendDeck);
-				removeResources(trader.getResourceCards(), sendDeck);
+				addResources( sendDeck, user.getResourceCards());
+				removeResources(sendDeck, trader.getResourceCards());
 				
 				//update game log
 				String logSource = user.getName();
@@ -1511,6 +1512,10 @@ public class ServerFacade {
 				MessageLine logEntry = new MessageLine(logMessage, logSource);
 				modelFacade.addToGameLog(logEntry);
 			}
+			else{
+			throw new ServerInvalidRequestException();
+			}
+		}
 			else{
 				//trade not accepted
 				//update game log
@@ -1524,11 +1529,6 @@ public class ServerFacade {
 			modelFacade.getModel().setTradeOffer(null);
 			
 			updateModelVersion(gameId);
-		}
-		else{
-			throw new ServerInvalidRequestException();
-		}
-		
 		return getModel(0, gameId);
 	}
 	
@@ -1641,8 +1641,9 @@ public class ServerFacade {
 		ModelFacade modelFacade = game.getModelFacade();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
-		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
-		
+//		ArrayList<ResourceCard> resources = (ArrayList<ResourceCard>) resourcesToDiscard.getAllResourceCards();
+		ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>(resourcesToDiscard.getAllResourceCards());
+		System.out.println("discard resources---------------------------------------\n" + resources.toString());
 		if(modelFacade.canDiscardCards(turnManager, user, resources)) {
 			//subtract the resources in the given resource card deck from the player
 			for(ResourceCard card : resources) {
@@ -1661,7 +1662,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot discard cards at this time");
 		}
 		
 		//need to return a new model?
