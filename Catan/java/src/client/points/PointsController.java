@@ -80,11 +80,12 @@ public class PointsController extends Controller implements IPointsController, O
 			////////////////////
 			System.out.println("has winner");
 			//int winnerIndex = cm.getModelFacade().getWinnerIndex();
-			int winnerId = cm.getModelFacade().getWinnerIndex();
+			int winnerId = cm.getModelFacade().score().getWinner();
 			//boolean isLocalPlayer = (winnerIndex == currPlayerIndex);
 			boolean isLocalPlayer = (winnerId == currPlayerId);
 			
 			//String winnerName = cm.getModelFacade().turnManager().getUserFromIndex(winnerIndex).getName();
+//			String winnerName = cm.getModelFacade().turnManager().getUserFromID(winnerId).getName();
 			String winnerName = cm.getModelFacade().turnManager().getUserFromID(winnerId).getName();
 			System.out.println("winner: " + winnerName + " local player?? " + isLocalPlayer);
 			getFinishedView().setWinner(winnerName, isLocalPlayer);
