@@ -1350,6 +1350,7 @@ public class ServerFacade {
 			
 			Vertex newVertex = new Vertex(vertexLocation);
 			Building settlement = new Building();
+			settlement.setType(PieceType.SETTLEMENT);
 			settlement.setVertex(newVertex);
 			newVertex.setBuilding(settlement);
 			
@@ -1446,6 +1447,7 @@ public class ServerFacade {
 			
 			Vertex newVertex = new Vertex(vertexLocation);
 			Building city = new Building();
+			city.setType(PieceType.CITY);
 			city.setVertex(newVertex);
 			//Remove Settlement from vertex
 			facade.getModel().getMap().removeSettlement(currSettlement);
