@@ -34,6 +34,7 @@ import shared.locations.HexLocation;
 import shared.locations.VertexLocation;
 import shared.model.Model;
 import shared.model.board.Edge;
+import shared.model.board.Map;
 import shared.model.board.Port;
 import shared.model.board.piece.Road;
 import shared.model.cards.DevCard;
@@ -1383,6 +1384,14 @@ public class ServerFacade {
 			
 			//Checks for port
 			for (Port port : facade.getModel().getMap().getPortsOnMap()){
+				if(port.getLocations()==null){
+					ArrayList<VertexLocation> vl = Map.getAdjacentVertices(port.getEdgeLocation());
+					ArrayList<Vertex> l = new ArrayList<Vertex>();
+					for(VertexLocation v : vl){
+						l.add(new Vertex(v));
+					}
+					port.setLocations(l);
+				}
 				for (Vertex vert : port.getLocations()){
 					if (vert.getLocation().equals(newVertex.getLocation())){
 						curUser.addPort(port);
