@@ -33,6 +33,7 @@
 	<property name="java.dist" location="${java.dir}/dist"/>
 	<property name="java.lib" location="${java.dir}/lib"/>
 	<property name="java.test" location="test"/>
+	<property name="java.docs" location="docs"/>
 
 	<!-- CLASSPATHS -->
 	<!-- ********** -->
@@ -129,6 +130,12 @@
 		<mkdir dir="${java.dist}/images"/>
 		<copy todir="${java.dist}/images">
 			<fileset dir="${java.images}">
+				<include name="**"/>
+			</fileset>
+		</copy>
+		<mkdir dir="${java.dist}/docs"/>
+		<copy todir="${java.dist}/docs">
+			<fileset dir="${java.docs}">
 				<include name="**"/>
 			</fileset>
 		</copy>
