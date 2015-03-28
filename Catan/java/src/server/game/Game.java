@@ -171,6 +171,9 @@ public class Game {
 						longestRoad = temp;
 						index = user.getPlayerInfo().getPlayerIndex();
 					}
+					else if (temp == longestRoad && user.getPlayerInfo().getPlayerIndex()==longestRoadIndex){
+						index = user.getPlayerInfo().getPlayerIndex(); //breaks ties based on who got there first
+					}
 				}
 			} catch(Exception e){
 				e.printStackTrace();
