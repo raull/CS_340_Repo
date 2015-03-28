@@ -209,14 +209,15 @@ public class Game {
 		List<Integer> permutations = new ArrayList<Integer>();
 		for(Edge edge : edges){
 			//this checks whether the given edge is connected to our vertex of interest, if so, uses that edge as the next recursive call
-			if(edge.getLocation().getAdjacentVertices()[0].equals(v)){
+			VertexLocation[] adjacentVertices = edge.getLocation().getAdjacentVertices();
+			if(adjacentVertices[0].equals(v)){
 				permutations.add(1 + rGetLongestRoad(edge.getLocation().getAdjacentVertices()[1], this.excludeEdge(edges, edge)));
 			}
-			else if(edge.getLocation().getAdjacentVertices()[1].equals(v)){
+			else if(adjacentVertices[1].equals(v)){
 				permutations.add(1 + rGetLongestRoad(edge.getLocation().getAdjacentVertices()[0], this.excludeEdge(edges, edge)));
 			}
 			else{
-				permutations.add(0); //avoids null pointer exception
+				permutations.add(1); //avoids null pointer exception
 			}
 		}
 		
@@ -224,7 +225,7 @@ public class Game {
 		int output = 0;
 		for(int i : permutations){
 			if(i>output)
-				output = 0;
+				output = i;
 		}
 		return output;
 	}
