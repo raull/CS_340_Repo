@@ -126,6 +126,13 @@ public class Game {
 	 * @return
 	 */
 	public void calcLongestRoadPlayer(){
+		boolean useTrentsAlgorithm = true;
+		if(useTrentsAlgorithm){
+			//System.out.println("Using the new algorithm");
+			longestRoadIndex = getLongestRoadIndex();
+			//System.out.println("Assignment comes back as: " + longestRoadIndex);
+			return;
+		}
 		List<User> users = modelFacade.turnManager().getUsers();
 		User longestRoadUser = null;
 		int allRoads = 15; // all users start off with 15 roads
@@ -155,13 +162,17 @@ public class Game {
 		int index = -1;
 		int longestRoad = 0;
 		
+		//System.out.println("I'm in the algorithm");
 		//finds longest road of each player
 		for(User user: users){
+			//System.out.println("For user: " + user.getName());
 			if(user.getOccupiedEdges().size()<5){
+				//System.out.println("\tIgnored " + user.getName() + " because they have too few roads to qualify");
 				continue; //don't even bother unless the player has 5+ roads
 			}
 			//checks for longest road beginning at each road
 			try{
+				//System.out.println("\t" + user.getName() + " has enough edges to merit checking");
 				for(Edge e : user.getOccupiedEdges()){
 					List<Edge> edges = excludeEdge(user.getOccupiedEdges(),e);
 					//This is the tricky part - checks for adjacency to a vertex of a given road, but removes that road before checking
@@ -170,6 +181,9 @@ public class Game {
 					if(temp > longestRoad){
 						longestRoad = temp;
 						index = user.getPlayerInfo().getPlayerIndex();
+					}
+					else if (temp == longestRoad && user.getPlayerInfo().getPlayerIndex()==longestRoadIndex){
+						index = user.getPlayerInfo().getPlayerIndex(); //breaks ties based on who got there first
 					}
 				}
 			} catch(Exception e){
@@ -195,14 +209,15 @@ public class Game {
 		List<Integer> permutations = new ArrayList<Integer>();
 		for(Edge edge : edges){
 			//this checks whether the given edge is connected to our vertex of interest, if so, uses that edge as the next recursive call
-			if(edge.getLocation().getAdjacentVertices()[0].equals(v)){
+			VertexLocation[] adjacentVertices = edge.getLocation().getAdjacentVertices();
+			if(adjacentVertices[0].equals(v)){
 				permutations.add(1 + rGetLongestRoad(edge.getLocation().getAdjacentVertices()[1], this.excludeEdge(edges, edge)));
 			}
-			else if(edge.getLocation().getAdjacentVertices()[1].equals(v)){
+			else if(adjacentVertices[1].equals(v)){
 				permutations.add(1 + rGetLongestRoad(edge.getLocation().getAdjacentVertices()[0], this.excludeEdge(edges, edge)));
 			}
 			else{
-				permutations.add(0); //avoids null pointer exception
+				permutations.add(1); //avoids null pointer exception
 			}
 		}
 		
@@ -210,7 +225,7 @@ public class Game {
 		int output = 0;
 		for(int i : permutations){
 			if(i>output)
-				output = 0;
+				output = i;
 		}
 		return output;
 	}
