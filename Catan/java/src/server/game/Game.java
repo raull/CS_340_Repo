@@ -126,6 +126,11 @@ public class Game {
 	 * @return
 	 */
 	public void calcLongestRoadPlayer(){
+		boolean useTrentsAlgorithm = true;
+		if(useTrentsAlgorithm){
+			longestRoadIndex = getLongestRoadIndex();
+			return;
+		}
 		List<User> users = modelFacade.turnManager().getUsers();
 		User longestRoadUser = null;
 		int allRoads = 15; // all users start off with 15 roads
