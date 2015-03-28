@@ -128,9 +128,9 @@ public class Game {
 	public void calcLongestRoadPlayer(){
 		boolean useTrentsAlgorithm = true;
 		if(useTrentsAlgorithm){
-			System.out.println("Using the new algorithm");
+			//System.out.println("Using the new algorithm");
 			longestRoadIndex = getLongestRoadIndex();
-			System.out.println("Assignment comes back as: " + longestRoadIndex);
+			//System.out.println("Assignment comes back as: " + longestRoadIndex);
 			return;
 		}
 		List<User> users = modelFacade.turnManager().getUsers();
@@ -162,17 +162,17 @@ public class Game {
 		int index = -1;
 		int longestRoad = 0;
 		
-		System.out.println("I'm in the algorithm");
+		//System.out.println("I'm in the algorithm");
 		//finds longest road of each player
 		for(User user: users){
-			System.out.println("For user: " + user.getName());
+			//System.out.println("For user: " + user.getName());
 			if(user.getOccupiedEdges().size()<5){
-				System.out.println("\tIgnored " + user.getName() + " because they have too few roads to qualify");
+				//System.out.println("\tIgnored " + user.getName() + " because they have too few roads to qualify");
 				continue; //don't even bother unless the player has 5+ roads
 			}
 			//checks for longest road beginning at each road
 			try{
-				System.out.println("\t" + user.getName() + " has enough edges to merit checking");
+				//System.out.println("\t" + user.getName() + " has enough edges to merit checking");
 				for(Edge e : user.getOccupiedEdges()){
 					List<Edge> edges = excludeEdge(user.getOccupiedEdges(),e);
 					//This is the tricky part - checks for adjacency to a vertex of a given road, but removes that road before checking
