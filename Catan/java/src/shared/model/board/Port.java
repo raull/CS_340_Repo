@@ -31,7 +31,7 @@ public class Port {
 	/**
 	 * array of 2 vertices of port locations
 	 */
-	private ArrayList<Vertex> locations = new ArrayList<Vertex>();
+	private ArrayList<Vertex> locations;
 	
 	//Constructors
 	/**
