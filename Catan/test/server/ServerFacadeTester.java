@@ -142,6 +142,7 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 		}
 	}
 	
+	@Test
 	public void rollNumber() {
 		//incorrect turn phase
 		try {
@@ -205,7 +206,11 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 		
 	}
 	
-
+	@Test
+	public void reset(){
+		
+	}
+	@Test
 	public void robPlayer() {
 		//incorrect turn phase
 		//not user's turn
