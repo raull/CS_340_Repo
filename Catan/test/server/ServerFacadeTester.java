@@ -3,14 +3,20 @@ package server;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 import org.junit.*;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
@@ -32,7 +38,7 @@ public class ServerFacadeTester {
 		
 	}
 	
-public void setGame(String fileName) throws ServerInvalidRequestException {
+	public void setGame(String fileName) throws ServerInvalidRequestException {
 		
 		if (fileName == null)
 		{
@@ -41,8 +47,9 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 		
 		String jsonStr = "";
 		JsonObject jsonModel = null;
+		String path = "test/jsons/";
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("test/" + fileName + ".txt"));
+			BufferedReader reader = new BufferedReader(new FileReader(path + fileName + ".txt"));
 			
 			String currLine = "";
 			
@@ -64,6 +71,7 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 		Game nuGame = gameManager.getGameById(0);
 		nuGame.getModelFacade().updateModel(jsonModel);
 	}
+	
 
 	@Test
 	public void createGame(){
@@ -146,19 +154,21 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 	public void rollNumber() {
 		//incorrect turn phase
 		try {
+			setGame("discardPhase");
 			facade.rollNumber(0, 0, 6);
-			//failed, no error caught
+			fail("Exception not thrown");
 			
 		} catch (ServerInvalidRequestException e) {
-			// TODO Auto-generated catch block
+			// ok
 			e.printStackTrace();
 		}
 		//not user's turn
 		try {
+			setGame("testPlayer2Turn");
 			facade.rollNumber(0, 0, 6);
-			//failed, no error caught
+			fail("Exception not thrown");
 		} catch (ServerInvalidRequestException e) {
-			// TODO Auto-generated catch block
+			// ok
 			e.printStackTrace();
 		}
 		
@@ -167,7 +177,7 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 			facade.rollNumber(0, 0, 6);
 			//assert equals that new model is as expected
 		} catch (ServerInvalidRequestException e) {
-			//fail, shouldn't have an exception
+			fail("should have passed");
 			e.printStackTrace();
 
 		}
