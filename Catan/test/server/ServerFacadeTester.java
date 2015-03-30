@@ -57,4 +57,47 @@ public class ServerFacadeTester {
 		
 		//color already chosen
 	}
+	
+	
+	@Test
+	public void buildSettlement() {
+		
+	}
+	
+	@Test
+	public void buildCity() {
+		
+	}
+	
+	@Test
+	public void offerTrade() {
+		
+	}
+	
+	@Test
+	public void acceptTrade() {
+		
+	}
+	
+	@Test
+	public void maritimeTrade() {
+		//wrong turn phase
+		//not user's turn
+		//no necessary resources
+		//bank doesn't have card wanted
+		//regular maritime trade
+		//user gives 3, but doesn't have 3 port
+		//user gives 2, but doesn't have 2 port
+		//user has 3 port
+		//user has 2 port
+	}
+	
+	@Test
+	public void discardCards() {
+		//incorrect turn phase
+		//user doesn't have more than 7 cards
+		//user has more than 7 cards
+			//trying to discard cards they don't have
+			//ok test case
+	}
 }
