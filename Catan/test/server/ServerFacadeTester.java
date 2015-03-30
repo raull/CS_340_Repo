@@ -38,8 +38,7 @@ public class ServerFacadeTester {
 		
 	}
 	
-	public void setGame(String fileName) throws ServerInvalidRequestException {
-		
+	public JsonElement extractJson(String fileName) throws ServerInvalidRequestException {
 		if (fileName == null)
 		{
 			throw new ServerInvalidRequestException("Missing fileName field");
@@ -66,6 +65,13 @@ public class ServerFacadeTester {
 			e.printStackTrace();
 			throw new ServerInvalidRequestException("Unable to load file");
 		}
+		
+		return jsonModel;
+	}
+	
+	public void setGame(String fileName) throws ServerInvalidRequestException {
+		
+		JsonObject jsonModel = extractJson(fileName).getAsJsonObject();
 		
 		GameManager gameManager = facade.getGameManager();
 		Game nuGame = gameManager.getGameById(0);
@@ -173,10 +179,14 @@ public class ServerFacadeTester {
 		
 		//ok test case, turnphase updated, players with buildings on number hex gain resources
 		try {
+			setGame("samCanRoll");
 			facade.rollNumber(0, 0, 6);
 			//assert equals that new model is as expected
+			String expectedJsonStr = extractJson("samCanRollResult").getAsString();
+			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsString();
+			assertTrue(expectedJsonStr.equals(actualJsonStr));
 		} catch (ServerInvalidRequestException e) {
-			fail("should have passed");
+			fail("roll number: should have passed");
 			e.printStackTrace();
 
 		}
