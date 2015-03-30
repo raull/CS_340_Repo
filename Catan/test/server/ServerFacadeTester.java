@@ -114,6 +114,67 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 		}
 	}
 	
+	@Test
+	public void list(){
+		try {
+			facade.gameList();
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+	}
+			
+	@Test
+	public void getModel(){
+		//Correct ID
+		try{
+			facade.getModel(0, 0);
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+		// Bad ID
+		try{
+			facade.getModel(0, 68);
+			fail();
+		}
+		catch (ServerInvalidRequestException e){
+		}
+	}
+	
+	@Test
+	public void SaveNLoad(){
+		//Valid
+		try{
+			facade.gameSave(0, "saveTest");
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+		//Valid
+		try{
+			facade.gameLoad("saveTest");
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+		//Invalid
+		try{
+			facade.gameSave(68, "saveTestfail");
+			fail();
+		}
+		catch (ServerInvalidRequestException e){
+		}
+		//Invalid
+		try{
+			facade.gameLoad("savvvveTest");
+			fail();
+		}
+		catch (ServerInvalidRequestException e){
+		}
+		
+	}
+	
 	
 	@Test
 	public void buildSettlement() {
