@@ -98,6 +98,44 @@ public class ServerFacadeTester {
 	}
 	
 	@Test
+	public void register(){
+		//Valid
+		try{
+			facade.register("Kent", "12345");
+		}
+		catch (ServerInvalidRequestException e) {
+			fail();
+		}
+		
+		//Invalid - username too short
+		try{
+			facade.register("Uh", "12345");
+			fail();
+		}
+		catch (ServerInvalidRequestException e) {
+		}
+		
+		//Invalid - password too short
+		try{
+			facade.register("Greg", "123");
+			fail();
+		}
+		catch (ServerInvalidRequestException e) {
+		}
+	}
+	
+	@Test
+	public void login(){
+		try{
+			facade.login("Sam", "sam");
+		}
+		catch (ServerInvalidRequestException e) {
+			fail();
+		}
+	}
+	
+	
+	@Test
 	public void joinGame(){
 		//log in, valid request
 		try {
