@@ -2,12 +2,23 @@ package server;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.junit.*;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.sun.net.httpserver.HttpExchange;
 
 import server.command.ServerCommand;
 import server.command.game.*;
 import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
+import server.game.Game;
+import server.game.GameManager;
 
 public class ServerFacadeTester {
 	private ServerFacade facade;
@@ -21,6 +32,39 @@ public class ServerFacadeTester {
 		
 	}
 	
+public void setGame(String fileName) throws ServerInvalidRequestException {
+		
+		if (fileName == null)
+		{
+			throw new ServerInvalidRequestException("Missing fileName field");
+		}
+		
+		String jsonStr = "";
+		JsonObject jsonModel = null;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
+			
+			String currLine = "";
+			
+			while((currLine = reader.readLine()) != null) {
+				jsonStr += currLine;
+			}
+			
+			reader.close();
+			
+			jsonModel = new JsonParser().parse(jsonStr).getAsJsonObject();
+			
+		} catch (IOException e) {
+
+			e.printStackTrace();
+			throw new ServerInvalidRequestException("Unable to load file");
+		}
+		
+		GameManager gameManager = facade.getGameManager();
+		Game nuGame = gameManager.getGameById(0);
+		nuGame.getModelFacade().updateModel(jsonModel);
+	}
+
 	@Test
 	public void createGame(){
 		//valid request
@@ -47,13 +91,27 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void joinGame(){
-		//without logging in first
-		
 		//log in, valid request
+		try {
+			facade.joinGame(0, "blue", 1);
+		} catch (ServerInvalidRequestException e) {
+			fail();
+		}
 		
 		//nonexistent game
-		
+		try {
+			facade.joinGame(5, "blue", 1);
+			fail();
+		} catch (ServerInvalidRequestException e) {
+			
+		}
 		//color already chosen
+		try {
+			facade.joinGame(0, "blue", 2);
+			fail();
+		} catch (ServerInvalidRequestException e) {
+			
+		}
 	}
 	
 	@Test

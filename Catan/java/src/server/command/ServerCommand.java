@@ -118,5 +118,7 @@ public abstract class ServerCommand{
 		return output;
 	}
 	
-
+	public void setGameID (int gameId){
+		this.gameId = gameId;
+	}
 }
