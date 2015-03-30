@@ -123,6 +123,33 @@ public class ServerFacadeTester {
 	}
 	
 	@Test
+	public void list(){
+		try {
+			facade.gameList();
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+	}
+			
+	@Test
+	public void getModel(){
+		//Correct ID
+		try{
+			facade.getModel(0, 0);
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+		// Bad ID
+		try{
+			facade.getModel(0, 68);
+			fail();
+		}
+		catch (ServerInvalidRequestException e){
+		}
+	}
+	
 	public void rollNumber() {
 		//incorrect turn phase
 		try {
@@ -151,10 +178,44 @@ public class ServerFacadeTester {
 		} catch (ServerInvalidRequestException e) {
 			fail("should have passed");
 			e.printStackTrace();
+
 		}
 	}
 	
 	@Test
+	public void SaveNLoad(){
+		//Valid
+		try{
+			facade.gameSave(0, "saveTest");
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+		//Valid
+		try{
+			facade.gameLoad("saveTest");
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
+		//Invalid
+		try{
+			facade.gameSave(68, "saveTestfail");
+			fail();
+		}
+		catch (ServerInvalidRequestException e){
+		}
+		//Invalid
+		try{
+			facade.gameLoad("savvvveTest");
+			fail();
+		}
+		catch (ServerInvalidRequestException e){
+		}
+		
+	}
+	
+
 	public void robPlayer() {
 		//incorrect turn phase
 		//not user's turn
@@ -228,6 +289,7 @@ public class ServerFacadeTester {
 		//not linked to another settlement or road owned by same user
 		//ok test case, user now has road
 	}
+
 	
 	@Test
 	public void buildSettlement() {
