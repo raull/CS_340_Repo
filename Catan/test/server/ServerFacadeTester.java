@@ -42,7 +42,7 @@ public void setGame(String fileName) throws ServerInvalidRequestException {
 		String jsonStr = "";
 		JsonObject jsonModel = null;
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader("saves/" + fileName + ".txt"));
+			BufferedReader reader = new BufferedReader(new FileReader("test/" + fileName + ".txt"));
 			
 			String currLine = "";
 			
