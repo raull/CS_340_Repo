@@ -219,6 +219,12 @@ public class JoinGameController extends Controller implements IJoinGameControlle
 	public void createNewGame() {
 		//gets new game's info from the view
 		String title = getNewGameView().getTitle();
+		if(title.equals("")){
+			getMessageView().setTitle("Error");
+			getMessageView().setMessage("You cannot create a game with a blank title");
+			getMessageView().showModal();
+			return;
+		}
 		boolean randomHexes = getNewGameView().getRandomlyPlaceHexes();
 		boolean randomNumbers = getNewGameView().getRandomlyPlaceNumbers();
 		boolean randomPorts = getNewGameView().getUseRandomPorts();
