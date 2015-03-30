@@ -1,9 +1,12 @@
 package client;
 import static org.junit.Assert.*;
 
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import server.Server;
 import shared.definitions.ResourceType;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
@@ -42,6 +45,13 @@ public class ProxyTester
 	private String port = "8081";
 	private ServerProxy testProxy = new ServerProxy(host, port);
 
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		String[] args = {"8081", "true"};
+		Server.main(args);
+	}
+	
+	
 	@Before
 	public void setUp()
 	{
