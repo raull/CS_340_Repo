@@ -304,14 +304,59 @@ public class ModelFacade extends Observable{
 			edgeLoc4 = new EdgeLocation(location.getHexLoc().getNeighborLoc(EdgeDirection.NorthWest), EdgeDirection.NorthEast);		
 		}
 		if(user.occupiesEdge(edgeLoc1) || user.occupiesEdge(edgeLoc2) || user.occupiesEdge(edgeLoc3) || user.occupiesEdge(edgeLoc4)){
+			//verifies user is not building through another user's settlement
+			if(user.occupiesEdge(edgeLoc1)){
+				if(buildsThroughSettlement(user, edgeLoc1, location)){
+					return false;
+				}
+			}
+			if(user.occupiesEdge(edgeLoc2)){
+				if(buildsThroughSettlement(user, edgeLoc2, location)){
+					return false;
+				}
+			}
+			if(user.occupiesEdge(edgeLoc3)){
+				if(buildsThroughSettlement(user, edgeLoc3, location)){
+					return false;
+				}
+			}
+			if(user.occupiesEdge(edgeLoc4)){
+				if(buildsThroughSettlement(user, edgeLoc4, location)){
+					return false;
+				}
+			}
 			return true;
 		}
-		
-		
-		
-		return false;
+		else{
+			return false;
+		}
 	}
 	
+	private boolean buildsThroughSettlement(User user, EdgeLocation edgeLoc1,
+			EdgeLocation edgeLoc2) {
+		//gets common vertex of the newly built road
+		VertexLocation commonVertex = null;
+		VertexLocation[] vertices1 = edgeLoc1.getAdjacentVertices();
+		VertexLocation[] vertices2 = edgeLoc2.getAdjacentVertices();
+		if(vertices1[0].equals(vertices2[0])||vertices1[0].equals(vertices2[1])){
+			commonVertex = vertices1[0];
+		}
+		else if(vertices1[1].equals(vertices2[0])||vertices1[1].equals(vertices2[1])){
+			commonVertex = vertices1[1];
+		}
+		else{
+			assert false;
+			System.out.println("Bad call to ModelFacade.buildsThroughSettlement()!!!");
+		}
+		
+		for(User u : turnManager.getUsers()){
+			if(!u.equals(user)&&u.occupiesVertex(commonVertex)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Does basic adjacency checks
 	 * @param location
