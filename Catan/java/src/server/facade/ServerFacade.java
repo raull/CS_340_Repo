@@ -859,7 +859,7 @@ public class ServerFacade {
 			facade.addToGameLog(logEntry);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("cannot finish turn right now");
 		}
 		return getModel(0, gameId);
 	}

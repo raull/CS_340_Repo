@@ -343,6 +343,7 @@ public class ServerFacadeTester {
 			HexTile tile = mfacade.getModel().getMap().getHexTileByLocation(loc);
 			assertTrue(tile.hasRobber());
 		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
 			fail();
 		}
 	}
@@ -357,7 +358,8 @@ public class ServerFacadeTester {
 			assertTrue(mfacade.turnManager().currentTurnPhase() == TurnPhase.ROLLING);
 		}
 		catch (ServerInvalidRequestException e) {
-				fail();
+			e.printStackTrace();
+			fail();
 		}
 	}
 	
@@ -423,8 +425,8 @@ public class ServerFacadeTester {
 			Road road2 = roadsOnMap.get(roadsOnMap.size() - 1);
 			assertTrue(road2.getOwner() == 0 && road2.getEdge().equals(new Edge(location2)));
 		} catch (ServerInvalidRequestException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			fail("road build: shouldn't throw exception");
 		}
 	}
 	
@@ -475,7 +477,6 @@ public class ServerFacadeTester {
 			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.MONOPOLY) == initMonopoly - 1);
 			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == initBrick + user0Brick + user2Brick + user3Brick);
 			
-			System.out.println("user 0 brick count? " + user0.getResourceCards().getCountByType(ResourceType.BRICK));
 			assertTrue(user0.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
 			assertTrue(user2.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
 			assertTrue(user3.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
@@ -597,12 +598,12 @@ public class ServerFacadeTester {
 		//tradeOffer should exist in model after trade is offered
 		try {
 			setGame("offerTrade");
-			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
 			ResourceCardDeck sendDeck = new ResourceCardDeck();
 			sendDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
 			ResourceCardDeck receiverDeck = new ResourceCardDeck();
 			receiverDeck.addResourceCard(new ResourceCard(ResourceType.SHEEP));
-			facade.offerTrade(0, 2, 0, sendDeck, receiverDeck);
+			//swapped receive deck and send deck? for some reason it's comparing receive deck with offering user so..
+			facade.offerTrade(0, 2, 0, receiverDeck, sendDeck);
 			assertTrue(facade.getGameManager().getGameById(0).getModelFacade().getModel().getTradeOffer() != null);
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
