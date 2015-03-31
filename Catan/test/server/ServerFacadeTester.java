@@ -28,8 +28,10 @@ import server.game.Game;
 import server.game.GameManager;
 
 import shared.definitions.ResourceType;
+import shared.model.Model;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.TurnPhase;
 import shared.model.game.User;
 
 import shared.locations.EdgeDirection;
@@ -232,10 +234,17 @@ public class ServerFacadeTester {
 		try {
 			setGame("samCanRoll");
 			facade.rollNumber(0, 0, 6);
-			//assert equals that new model is as expected
-			String expectedJsonStr = extractJson("samCanRollResult").getAsJsonObject().toString();
-			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
-			assertEquals(expectedJsonStr, actualJsonStr);
+			//model should now be in discarding, robbing, or playing
+			Model currModel = facade.getGameManager().getGameById(0).getModelFacade().getModel();
+			assertTrue(currModel.getTurnManager().currentTurnPhase() == TurnPhase.PLAYING || 
+					currModel.getTurnManager().currentTurnPhase() == TurnPhase.ROBBING ||
+					currModel.getTurnManager().currentTurnPhase() == TurnPhase.DISCARDING);
+			//players got their resources
+			//sam got an ore
+			assertTrue(currModel.getTurnManager().getUserFromIndex(0).getResourceCards().getCountByType(ResourceType.ORE) == 1);
+			//mark got a wood
+			assertTrue(currModel.getTurnManager().getUserFromIndex(1).getResourceCards().getCountByType(ResourceType.WOOD) == 2);
+			
 		} catch (ServerInvalidRequestException e) {
 			fail("roll number: should have passed");
 			e.printStackTrace();
@@ -444,10 +453,19 @@ public class ServerFacadeTester {
 		//has 2 port
 		try {
 			setGame("maritime");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(1);
+			ResourceCardDeck bankResources = facade.getGameManager().getGameById(0).getModelFacade().bank().getResourceDeck();
+			int initWood = user.getResourceCards().getCountByType(ResourceType.WOOD);
+			int initSheep = user.getResourceCards().getCountByType(ResourceType.SHEEP);
+			int initBankSheep = bankResources.getCountByType(ResourceType.SHEEP);
+			int initBankWood = bankResources.getCountByType(ResourceType.WOOD);
 			facade.maritimeTrade(0, 1, 2, ResourceType.WOOD, ResourceType.SHEEP);
-			String expectedJsonStr = extractJson("maritime2Result").getAsJsonObject().toString();
-			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
-			assertEquals(expectedJsonStr, actualJsonStr);
+			//user resources updated
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WOOD) == initWood-2);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.SHEEP) == initSheep + 1);
+			//bank resources updated
+			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
+			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 2);
 		} catch (ServerInvalidRequestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -480,6 +498,7 @@ public class ServerFacadeTester {
 		
 		//trying to discard cards they don't have
 		try {
+			setGame("discardPhase");
 			ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>();
 			resources.add(new ResourceCard(ResourceType.BRICK));
 			resources.add(new ResourceCard(ResourceType.BRICK));
@@ -494,6 +513,7 @@ public class ServerFacadeTester {
 		}
 		//ok test case, user loses their discarded cards
 		try {
+			setGame("discardPhase");
 			ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>();
 			resources.add(new ResourceCard(ResourceType.BRICK));
 			resources.add(new ResourceCard(ResourceType.ORE));
@@ -501,9 +521,14 @@ public class ServerFacadeTester {
 			resources.add(new ResourceCard(ResourceType.ORE));
 			ResourceCardDeck resourcesToDiscard = new ResourceCardDeck(resources);
 			facade.discardCards(0, 0, resourcesToDiscard);
-			String expectedJsonStr = extractJson("samDiscardedResult").getAsJsonObject().toString();
-			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
-			assertEquals(expectedJsonStr, actualJsonStr);
+//			String expectedJsonStr = extractJson("samDiscardedResult").getAsJsonObject().toString();
+//			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
+//			assertEquals(expectedJsonStr, actualJsonStr);
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(0);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.ORE) == 0);
+			assertTrue(user.getHasDiscarded() == true);
+			//status changes to robbing if last one to discard...
 		} catch (ServerInvalidRequestException e) {
 			fail("discard: shouldn't have failed");
 			e.printStackTrace();
