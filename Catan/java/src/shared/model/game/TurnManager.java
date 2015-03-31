@@ -131,7 +131,7 @@ public class TurnManager {
 	 * @return A {@link User} object that currently hold the turn of the game
 	 */
 	public User currentUser() {
-		return this.users.get(this.currentTurn);
+		return getUserFromIndex(this.currentTurn);
 	}
 	
 	

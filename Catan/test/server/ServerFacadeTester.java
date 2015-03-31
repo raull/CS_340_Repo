@@ -26,12 +26,11 @@ import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
 import server.game.Game;
 import server.game.GameManager;
-
 import shared.definitions.ResourceType;
 import shared.model.cards.ResourceCard;
 import shared.model.cards.ResourceCardDeck;
+import shared.model.game.TurnPhase;
 import shared.model.game.User;
-
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
@@ -294,7 +293,7 @@ public class ServerFacadeTester {
 			facade.resetGame(newID);
 			//Checks to make sure there are no roads on map
 			ModelFacade mfacade = facade.getGameManager().getGameById(newID).getModelFacade();
-			assertTrue(mfacade.getModel().getMap().getRoadsOnMap() == null);
+			assertTrue(mfacade.getModel().getMap().getRoadsOnMap().size() == 0);
 		}
 		catch (ServerInvalidRequestException e){
 			fail();
@@ -335,9 +334,16 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void finishTurn() {
-		//incorrect turn phase
-		//not user's turn
 		//ok test case, player index is updated
+		try{
+			setGame("EndTurn");
+			facade.finishTurn(0, 1);
+			ModelFacade mfacade = facade.getGameManager().getGameById(0).getModelFacade();
+			assertTrue(mfacade.turnManager().currentTurnPhase() == TurnPhase.ROLLING);
+		}
+		catch (ServerInvalidRequestException e) {
+				fail();
+		}
 	}
 	
 	@Test
