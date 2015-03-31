@@ -547,7 +547,7 @@ public class ServerFacadeTester {
 			int initSettlements = user.getUnusedSettlements();
 			
 			VertexLocation vertexLocation = new VertexLocation(new HexLocation(1, 2), VertexDirection.NorthEast);
-			facade.buildSettlement(0, 1, vertexLocation, false);
+			facade.buildSettlement(0, 2, vertexLocation, false);
 			
 			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == initBrick - 1);
 			assertTrue(user.getResourceCards().getCountByType(ResourceType.SHEEP) == initSheep - 1);
