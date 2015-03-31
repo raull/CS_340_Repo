@@ -38,7 +38,10 @@ import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
 import shared.locations.VertexDirection;
 import shared.locations.VertexLocation;
+import shared.model.board.Edge;
 import shared.model.board.HexTile;
+import shared.model.board.piece.Building;
+import shared.model.board.piece.Road;
 import shared.model.facade.ModelFacade;
 
 public class ServerFacadeTester {
@@ -429,22 +432,58 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void buildRoad() {
-		//incorrect turn phase
-		//not user's turn
-		//not enough resources for road
-		//not linked to another settlement or road owned by same user
-		//ok test case, user now has road
+		try {
+			setGame("buildRoad");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			int initBrick = user.getBrickCards();
+			int initWood = user.getWoodCards();
+			int initRoads = user.getUnusedRoads();
+			
+			EdgeLocation roadLocation = new EdgeLocation(new HexLocation(2, 1), EdgeDirection.NorthWest);
+			facade.buildRoad(0, 2, roadLocation, false);
+			
+			assertTrue(user.getBrickCards() == initBrick - 1);
+			assertTrue(user.getWoodCards() == initWood - 1);
+			assertTrue(user.getUnusedRoads() == initRoads - 1);
+			
+			ArrayList<Road> roadsOnMap = facade.getGameManager().getGameById(0).getModelFacade().map().getRoadsOnMap();
+			Road road = roadsOnMap.get(roadsOnMap.size() - 1);
+			assertTrue(road.getOwner() == 2 && road.getEdge().equals(new Edge(roadLocation)));
+			
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("build road: shouldn't have failed");
+		}
 	}
 
 	
 	@Test
 	public void buildSettlement() {
-		//incorrect turn phase
-		//not user's turn
-		//not enough resources for settlement
-		//not linked to roads 
-		//invalid build location (next to some other player's settlement)
-		//ok test case, user now has settlement
+		try {
+			setGame("buildSettlement");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			int initBrick = user.getBrickCards();
+			int initSheep = user.getSheepCards();
+			int initWheat = user.getWheatCards();
+			int initWood = user.getWoodCards();
+			int initSettlements = user.getUnusedSettlements();
+			
+			VertexLocation vertexLocation = new VertexLocation(new HexLocation(1, 2), VertexDirection.NorthEast);
+			facade.buildSettlement(0, 1, vertexLocation, false);
+			
+			assertTrue(user.getBrickCards() == initBrick - 1);
+			assertTrue(user.getSheepCards() == initSheep - 1);
+			assertTrue(user.getWheatCards() == initWheat - 1);
+			assertTrue(user.getWoodCards() == initWood - 1);
+			assertTrue(user.getUnusedSettlements() == initSettlements - 1);
+			
+			Building building = facade.getGameManager().getGameById(0).getModelFacade().map().getBuildingAtVertex(vertexLocation);
+			assertTrue(building != null && building.getType() == PieceType.SETTLEMENT && building.getOwner() == 2);
+			
+		} catch (ServerInvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -464,7 +503,9 @@ public class ServerFacadeTester {
 			assertTrue(user.getWheatCards() == initWheat - 2);
 			assertTrue(user.getUnusedCities() == initCities - 1);
 			assertTrue(user.getUnusedSettlements() == initSettlements + 1);
-			assertTrue(facade.getGameManager().getGameById(0).getModelFacade().map().getBuildingAtVertex(vertexLocation).getType() == PieceType.CITY);
+			
+			Building building = facade.getGameManager().getGameById(0).getModelFacade().map().getBuildingAtVertex(vertexLocation);
+			assertTrue(building != null && building.getType() == PieceType.CITY && building.getOwner() == 1);
 			
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
