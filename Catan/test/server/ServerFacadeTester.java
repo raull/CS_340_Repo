@@ -28,6 +28,7 @@ import server.game.GameManager;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
+import shared.model.board.HexTile;
 import shared.model.facade.ModelFacade;
 
 public class ServerFacadeTester {
@@ -286,7 +287,7 @@ public class ServerFacadeTester {
 			facade.resetGame(newID);
 			//Checks to make sure there are no roads on map
 			ModelFacade mfacade = facade.getGameManager().getGameById(newID).getModelFacade();
-			assert (mfacade.getModel().getMap().getRoadsOnMap() == null);
+			assertTrue(mfacade.getModel().getMap().getRoadsOnMap() == null);
 		}
 		catch (ServerInvalidRequestException e){
 			fail();
@@ -297,10 +298,32 @@ public class ServerFacadeTester {
 	@Test
 	public void robPlayer() {
 		//incorrect turn phase
+		try{
+			setGame("discardPhase");
+			facade.robPlayer(0, 1, 2, new HexLocation(0, -1), false);
+			fail();
+		}
+		catch (ServerInvalidRequestException e) {}
+		
 		//not user's turn
-		//robber is in same place
-		//player being robbed has no resource cards
+		try{
+			setGame("RobTest");
+			facade.robPlayer(0, 0, 2, new HexLocation(0, -1), false);
+			fail();
+		}
+		
+		catch (ServerInvalidRequestException e) {}
 		//ok test case - robber is moved, player robbed has given up resource
+		try {
+			setGame("RobTest");
+			HexLocation loc = new HexLocation(0, -1);
+			facade.robPlayer(0, 1, 2, loc, false);
+			ModelFacade mfacade = facade.getGameManager().getGameById(0).getModelFacade();
+			HexTile tile = mfacade.getModel().getMap().getHexTileByLocation(loc);
+			assertTrue(tile.hasRobber());
+		} catch (ServerInvalidRequestException e) {
+			fail();
+		}
 	}
 	
 	@Test
