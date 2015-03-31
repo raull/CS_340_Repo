@@ -25,6 +25,10 @@ import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
 import server.game.Game;
 import server.game.GameManager;
+import shared.locations.EdgeDirection;
+import shared.locations.EdgeLocation;
+import shared.locations.HexLocation;
+import shared.model.facade.ModelFacade;
 
 public class ServerFacadeTester {
 	private ServerFacade facade;
@@ -256,8 +260,30 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void reset(){
-		
+		try{
+			
+			//Places a road
+			int newID = facade.getGameManager().getNextId();
+			facade.createNewGame("resetTest", false, false, false);
+			facade.joinGame(newID, "blue", 1);
+			facade.joinGame(newID, "red", 2);
+			facade.joinGame(newID, "green", 3);
+			facade.joinGame(newID, "blue", 4);
+			facade.buildRoad(newID, 0, new EdgeLocation(new HexLocation(2, -1), 
+					EdgeDirection.NorthWest), true);
+			
+			//resets
+			facade.resetGame(newID);
+			//Checks to make sure there are no roads on map
+			ModelFacade mfacade = facade.getGameManager().getGameById(newID).getModelFacade();
+			assert (mfacade.getModel().getMap().getRoadsOnMap() == null);
+		}
+		catch (ServerInvalidRequestException e){
+			fail();
+		}
 	}
+	
+	
 	@Test
 	public void robPlayer() {
 		//incorrect turn phase
