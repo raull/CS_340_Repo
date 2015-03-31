@@ -268,7 +268,7 @@ public class ServerFacadeTester {
 			facade.joinGame(newID, "blue", 1);
 			facade.joinGame(newID, "red", 2);
 			facade.joinGame(newID, "green", 3);
-			facade.joinGame(newID, "blue", 4);
+			facade.joinGame(newID, "orange", 4);
 			facade.buildRoad(newID, 0, new EdgeLocation(new HexLocation(2, -1), 
 					EdgeDirection.NorthWest), true);
 			
