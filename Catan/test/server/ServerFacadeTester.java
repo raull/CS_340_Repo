@@ -246,9 +246,9 @@ public class ServerFacadeTester {
 					currModel.getTurnManager().currentTurnPhase() == TurnPhase.DISCARDING);
 			//players got their resources
 			//sam got an ore
-			assertTrue(currModel.getTurnManager().getUserFromIndex(0).getOreCards() == 1);
+			assertTrue(currModel.getTurnManager().getUserFromIndex(0).getResourceCards().getCountByType(ResourceType.ORE) == 1);
 			//mark got a wood
-			assertTrue(currModel.getTurnManager().getUserFromIndex(1).getWoodCards() == 2);
+			assertTrue(currModel.getTurnManager().getUserFromIndex(1).getResourceCards().getCountByType(ResourceType.WOOD) == 2);
 			
 		} catch (ServerInvalidRequestException e) {
 			fail("roll number: should have passed");
@@ -401,18 +401,57 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void roadBuild() {
-		//incorrect turn phase
-		//not user's turn
-		//user doesn't have that card
-		//ok test case, user uses the card and builds two roads
+		//user uses the card and builds two roads
+		try {
+			setGame("roadBuild");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(0);
+			int initRoadBuild = user.getUsableDevCardDeck().getCountByType(DevCardType.ROAD_BUILD);
+			int initRoads = user.getUnusedRoads();
+			
+			EdgeLocation location1 = new EdgeLocation(new HexLocation(-1, 1), EdgeDirection.NorthEast);
+			EdgeLocation location2 = new EdgeLocation(new HexLocation(0, 0), EdgeDirection.NorthWest);
+			
+			facade.playRoadBuilding(0, 0, location1, location2);
+			
+			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.ROAD_BUILD) == initRoadBuild - 1);
+			assertTrue(user.getUnusedRoads() == initRoads - 2);
+			
+			ArrayList<Road> roadsOnMap = facade.getGameManager().getGameById(0).getModelFacade().map().getRoadsOnMap();
+			Road road1 = roadsOnMap.get(roadsOnMap.size() - 2);
+			assertTrue(road1.getOwner() == 0 && road1.getEdge().equals(new Edge(location1)));
+			Road road2 = roadsOnMap.get(roadsOnMap.size() - 1);
+			assertTrue(road2.getOwner() == 0 && road2.getEdge().equals(new Edge(location2)));
+		} catch (ServerInvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	public void soldier() {
-		//incorrect turn phase
-		//not user's turn
-		//user doesn't have that card
-		//ok test case, user moves the robber and robs someone, if available
+		//user moves the robber and robs someone, if available
+		try {
+			setGame("soldier");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(0);
+			User victim = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			int initSoldiers = user.getUsableDevCardDeck().getCountByType(DevCardType.SOLDIER);
+			int userResources = user.getResourceCards().getAllResourceCards().size();
+			int victimResources = victim.getResourceCards().getAllResourceCards().size();
+			
+			facade.robPlayer(0, 0, 2, new HexLocation(0, -1), true);
+			
+			HexTile hex = facade.getGameManager().getGameById(0).getModelFacade().map().getHexTileByLocation(new HexLocation(0, -1));
+			assertTrue(hex.hasRobber());
+			assertTrue(user.getResourceCards().getAllResourceCards().size() == userResources + 1);
+			assertTrue(victim.getResourceCards().getAllResourceCards().size() == victimResources - 1);
+			
+			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.SOLDIER) == initSoldiers - 1);
+			
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("soldier: shouldn't have thrown exception");
+		}
+		
 	}
 	
 	@Test
@@ -433,10 +472,10 @@ public class ServerFacadeTester {
 			
 			facade.playMonopoly(0, 1, ResourceType.BRICK);
 			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.MONOPOLY) == initMonopoly - 1);
-			assertTrue(user.getBrickCards() == initBrick + user0Brick + user2Brick + user3Brick);
-			assertTrue(user0.getBrickCards() == 0);
-			assertTrue(user2.getBrickCards() == 0);
-			assertTrue(user3.getBrickCards() == 0);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == initBrick + user0Brick + user2Brick + user3Brick);
+			assertTrue(user0.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
+			assertTrue(user2.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
+			assertTrue(user3.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
 			assertTrue(user.getHasPlayedDevCard() == true);
 			
 		} catch (ServerInvalidRequestException e) {
@@ -478,8 +517,8 @@ public class ServerFacadeTester {
 			EdgeLocation roadLocation = new EdgeLocation(new HexLocation(2, 1), EdgeDirection.NorthWest);
 			facade.buildRoad(0, 2, roadLocation, false);
 			
-			assertTrue(user.getBrickCards() == initBrick - 1);
-			assertTrue(user.getWoodCards() == initWood - 1);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == initBrick - 1);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WOOD) == initWood - 1);
 			assertTrue(user.getUnusedRoads() == initRoads - 1);
 			
 			ArrayList<Road> roadsOnMap = facade.getGameManager().getGameById(0).getModelFacade().map().getRoadsOnMap();
@@ -535,8 +574,8 @@ public class ServerFacadeTester {
 			VertexLocation vertexLocation = new VertexLocation(new HexLocation(-1, 0), VertexDirection.NorthWest);
 			facade.buildCity(0, 1, vertexLocation);
 			
-			assertTrue(user.getOreCards() == initOre - 3);
-			assertTrue(user.getWheatCards() == initWheat - 2);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.ORE) == initOre - 3);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WHEAT) == initWheat - 2);
 			assertTrue(user.getUnusedCities() == initCities - 1);
 			assertTrue(user.getUnusedSettlements() == initSettlements + 1);
 			
