@@ -463,10 +463,48 @@ public class ServerFacadeTester {
 	public void maritimeTrade() {
 		
 		//regular maritime trade
-		//has 3 port
-		//has 2 port
 		try {
 			setGame("maritime");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			ResourceCardDeck bankResources = facade.getGameManager().getGameById(0).getModelFacade().bank().getResourceDeck();
+			int initWood = user.getResourceCards().getCountByType(ResourceType.WOOD);
+			int initSheep = user.getResourceCards().getCountByType(ResourceType.SHEEP);
+			int initBankSheep = bankResources.getCountByType(ResourceType.SHEEP);
+			int initBankWood = bankResources.getCountByType(ResourceType.WOOD);
+			facade.maritimeTrade(0, 2, 4, ResourceType.WOOD, ResourceType.SHEEP);
+			//user resources updated
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WOOD) == initWood-4);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.SHEEP) == initSheep + 1);
+			//bank resources updated
+			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
+			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 4);
+		} catch (ServerInvalidRequestException e2) {
+			fail("maritime, should've passed");
+			e2.printStackTrace();
+		}
+		//has 3 port
+		try {
+			setGame("maritime3");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(0);
+			ResourceCardDeck bankResources = facade.getGameManager().getGameById(0).getModelFacade().bank().getResourceDeck();
+			int initWood = user.getResourceCards().getCountByType(ResourceType.WOOD);
+			int initSheep = user.getResourceCards().getCountByType(ResourceType.SHEEP);
+			int initBankSheep = bankResources.getCountByType(ResourceType.SHEEP);
+			int initBankWood = bankResources.getCountByType(ResourceType.WOOD);
+			facade.maritimeTrade(0, 0, 3, ResourceType.WOOD, ResourceType.SHEEP);
+			//user resources updated
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WOOD) == initWood-3);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.SHEEP) == initSheep + 1);
+			//bank resources updated
+			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
+			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 3);
+		} catch (ServerInvalidRequestException e1) {
+			fail("maritime, should've passed"); 
+			e1.printStackTrace();
+		}
+		//has 2 port
+		try {
+			setGame("maritime2");
 			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(1);
 			ResourceCardDeck bankResources = facade.getGameManager().getGameById(0).getModelFacade().bank().getResourceDeck();
 			int initWood = user.getResourceCards().getCountByType(ResourceType.WOOD);
@@ -481,7 +519,7 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 2);
 		} catch (ServerInvalidRequestException e) {
-			// TODO Auto-generated catch block
+			fail("maritime, should've passed");
 			e.printStackTrace();
 		}
 		
