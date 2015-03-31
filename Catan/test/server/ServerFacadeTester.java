@@ -435,19 +435,51 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void offerTrade() {
-		//incorrect turn phase
-		//not user's turn
-		//don't have resources offering
-		//ok test case, model now has trade offer
-		
+		//tradeOffer should exist in model after trade is offered
+		try {
+			setGame("offerTrade");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			ResourceCardDeck sendDeck = new ResourceCardDeck();
+			sendDeck.addResourceCard(new ResourceCard(ResourceType.ORE));
+			ResourceCardDeck receiverDeck = new ResourceCardDeck();
+			receiverDeck.addResourceCard(new ResourceCard(ResourceType.SHEEP));
+			facade.offerTrade(0, 2, 0, sendDeck, receiverDeck);
+			assertTrue(facade.getGameManager().getGameById(0).getModelFacade().getModel().getTradeOffer() != null);
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("offer trade: shouldn't have failed");
+		}
 	}
 	
 	@Test
 	public void acceptTrade() {
-		//user not offered a trade
-		//if there is no trade offer
-		//user doesn't have required resources to accept
 		//user accepts the trade, resources for both players should be updated, trade offer removed
+		try {
+			setGame("acceptTrade");
+			User offerer = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			User receiver = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(0);
+			facade.acceptTrade(0, 0, true);
+			
+			assertTrue(offerer.getResourceCards().getCountByType(ResourceType.ORE) == 1);
+			assertTrue(offerer.getResourceCards().getCountByType(ResourceType.SHEEP) == 2);
+			assertTrue(receiver.getResourceCards().getCountByType(ResourceType.ORE) == 1);
+			assertTrue(receiver.getResourceCards().getCountByType(ResourceType.SHEEP) == 0);
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("acceptTrade: should've passed");
+		}
+		//user doesn't accept the trade, trade offer removed
+		try {
+			setGame("acceptTrade");
+			facade.acceptTrade(0, 0, false);
+			
+			assertTrue(facade.getGameManager().getGameById(0).getModelFacade().getModel().getTradeOffer() == null);
+			
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("acceptTrade: should've passed");
+		}
+		
 	}
 	
 	@Test
@@ -470,8 +502,8 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 4);
 		} catch (ServerInvalidRequestException e2) {
-			fail("maritime, should've passed");
 			e2.printStackTrace();
+			fail("maritime, should've passed");
 		}
 		//has 3 port
 		try {
@@ -490,8 +522,8 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 3);
 		} catch (ServerInvalidRequestException e1) {
-			fail("maritime, should've passed"); 
 			e1.printStackTrace();
+			fail("maritime, should've passed"); 
 		}
 		//has 2 port
 		try {
@@ -510,8 +542,8 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.SHEEP) == initBankSheep - 1);
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 2);
 		} catch (ServerInvalidRequestException e) {
-			fail("maritime, should've passed");
 			e.printStackTrace();
+			fail("maritime, should've passed");
 		}
 		
 	}
@@ -573,8 +605,8 @@ public class ServerFacadeTester {
 			assertTrue(user.getHasDiscarded() == true);
 			//status changes to robbing if last one to discard...
 		} catch (ServerInvalidRequestException e) {
-			fail("discard: shouldn't have failed");
 			e.printStackTrace();
+			fail("discard: shouldn't have failed");
 		}
 	}
 }
