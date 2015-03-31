@@ -1160,7 +1160,8 @@ public class ServerFacade {
 			if(user.getTurnIndex() == userIndex) {
 				continue;
 			}
-			for(int i = 0; i < user.getResourceCards().getCountByType(resource); i++) {
+			int resourceCount = user.getResourceCards().getCountByType(resource);
+			for(int i = 0; i < resourceCount; i++) {
 				user.getResourceCards().removeResourceCard(new ResourceCard(resource));
 			}
 		}

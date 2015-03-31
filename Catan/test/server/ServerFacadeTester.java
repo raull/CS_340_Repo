@@ -375,7 +375,8 @@ public class ServerFacadeTester {
 			assertTrue(user.getResourceCards().getAllResourceCards().size() == resourceSize-3);
 		}
 		catch (ServerInvalidRequestException e) {
-			fail();
+			e.printStackTrace();
+			fail("buy dev card: shouldn't throw exception");
 		}
 	}
 	
@@ -473,6 +474,8 @@ public class ServerFacadeTester {
 			facade.playMonopoly(0, 1, ResourceType.BRICK);
 			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.MONOPOLY) == initMonopoly - 1);
 			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == initBrick + user0Brick + user2Brick + user3Brick);
+			
+			System.out.println("user 0 brick count? " + user0.getResourceCards().getCountByType(ResourceType.BRICK));
 			assertTrue(user0.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
 			assertTrue(user2.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
 			assertTrue(user3.getResourceCards().getCountByType(ResourceType.BRICK) == 0);
