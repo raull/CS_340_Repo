@@ -546,10 +546,10 @@ public class ServerFacadeTester {
 			VertexLocation vertexLocation = new VertexLocation(new HexLocation(1, 2), VertexDirection.NorthEast);
 			facade.buildSettlement(0, 1, vertexLocation, false);
 			
-			assertTrue(user.getBrickCards() == initBrick - 1);
-			assertTrue(user.getSheepCards() == initSheep - 1);
-			assertTrue(user.getWheatCards() == initWheat - 1);
-			assertTrue(user.getWoodCards() == initWood - 1);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.BRICK) == initBrick - 1);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.SHEEP) == initSheep - 1);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WHEAT) == initWheat - 1);
+			assertTrue(user.getResourceCards().getCountByType(ResourceType.WOOD) == initWood - 1);
 			assertTrue(user.getUnusedSettlements() == initSettlements - 1);
 			
 			Building building = facade.getGameManager().getGameById(0).getModelFacade().map().getBuildingAtVertex(vertexLocation);
