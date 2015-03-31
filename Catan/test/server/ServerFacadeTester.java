@@ -26,6 +26,7 @@ import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
 import server.game.Game;
 import server.game.GameManager;
+import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.Model;
 import shared.model.cards.ResourceCard;
@@ -35,6 +36,8 @@ import shared.model.game.User;
 import shared.locations.EdgeDirection;
 import shared.locations.EdgeLocation;
 import shared.locations.HexLocation;
+import shared.locations.VertexDirection;
+import shared.locations.VertexLocation;
 import shared.model.board.HexTile;
 import shared.model.facade.ModelFacade;
 
@@ -446,11 +449,28 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void buildCity() {
-		//incorrect turn phase
-		//not user's turn
-		//doesn't have enough resources for a city
-		//doesn't have a settlement in the place of a city
-		//ok test case, user now has a city
+		//user loses resources, gains a city, get a settlement back
+		try {
+			setGame("buildCity");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(1);
+			int initOre = user.getOreCards();
+			int initWheat = user.getWheatCards();
+			int initCities = user.getUnusedCities();
+			int initSettlements = user.getUnusedSettlements();
+			VertexLocation vertexLocation = new VertexLocation(new HexLocation(-1, 0), VertexDirection.NorthWest);
+			facade.buildCity(0, 1, vertexLocation);
+			
+			assertTrue(user.getOreCards() == initOre - 3);
+			assertTrue(user.getWheatCards() == initWheat - 2);
+			assertTrue(user.getUnusedCities() == initCities - 1);
+			assertTrue(user.getUnusedSettlements() == initSettlements + 1);
+			assertTrue(facade.getGameManager().getGameById(0).getModelFacade().map().getBuildingAtVertex(vertexLocation).getType() == PieceType.CITY);
+			
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("build city: shouldn't have failed");
+		}
+		
 	}
 	
 	@Test
