@@ -26,6 +26,7 @@ import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
 import server.game.Game;
 import server.game.GameManager;
+import shared.definitions.DevCardType;
 import shared.definitions.PieceType;
 import shared.definitions.ResourceType;
 import shared.model.Model;
@@ -245,9 +246,9 @@ public class ServerFacadeTester {
 					currModel.getTurnManager().currentTurnPhase() == TurnPhase.DISCARDING);
 			//players got their resources
 			//sam got an ore
-			assertTrue(currModel.getTurnManager().getUserFromIndex(0).getResourceCards().getCountByType(ResourceType.ORE) == 1);
+			assertTrue(currModel.getTurnManager().getUserFromIndex(0).getOreCards() == 1);
 			//mark got a wood
-			assertTrue(currModel.getTurnManager().getUserFromIndex(1).getResourceCards().getCountByType(ResourceType.WOOD) == 2);
+			assertTrue(currModel.getTurnManager().getUserFromIndex(1).getWoodCards() == 2);
 			
 		} catch (ServerInvalidRequestException e) {
 			fail("roll number: should have passed");
@@ -416,23 +417,58 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void monopoly() {
-		//incorrect turn phase
-		//not user's turn
-		//user doesn't have that card
-		//ok test case, user gains all resources from other players of resource type
+		//user gains all resources from other players of resource type
+		try {
+			setGame("monopoly");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(1);
+			User user0 = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(0);
+			User user2 = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
+			User user3 = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(3);
+			
+			int initMonopoly = user.getUsableDevCardDeck().getCountByType(DevCardType.MONOPOLY);
+			int initBrick = user.getBrickCards();
+			int user0Brick = user0.getBrickCards();
+			int user2Brick = user2.getBrickCards();
+			int user3Brick = user3.getBrickCards();
+			
+			facade.playMonopoly(0, 1, ResourceType.BRICK);
+			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.MONOPOLY) == initMonopoly - 1);
+			assertTrue(user.getBrickCards() == initBrick + user0Brick + user2Brick + user3Brick);
+			assertTrue(user0.getBrickCards() == 0);
+			assertTrue(user2.getBrickCards() == 0);
+			assertTrue(user3.getBrickCards() == 0);
+			assertTrue(user.getHasPlayedDevCard() == true);
+			
+		} catch (ServerInvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Test
 	public void monument() {
-		//incorrect turn phase
-		//not user's turn
-		//user doesn't have that card
-		//ok test case, user gains a point and uses the card
+		try {
+			//lose the monument card and gain a victory point
+			setGame("monument");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(1);
+			int initMonument = user.getUsableDevCardDeck().getCountByType(DevCardType.MONUMENT);
+			int points = user.getVictoryPoints();
+			
+			facade.playMonument(0, 1);
+			
+			assertTrue(user.getUsableDevCardDeck().getCountByType(DevCardType.MONUMENT) == initMonument - 1);
+			assertTrue(user.getVictoryPoints() == points + 1);
+		} catch (ServerInvalidRequestException e) {
+			e.printStackTrace();
+			fail("monument: shouldn't throw exception");
+		}
 	}
 	
 	@Test
 	public void buildRoad() {
 		try {
+			//build road, lose resources (brick, wood, road), road is now on map
 			setGame("buildRoad");
 			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(2);
 			int initBrick = user.getBrickCards();
@@ -452,7 +488,7 @@ public class ServerFacadeTester {
 			
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("build road: shouldn't have failed");
+			fail("build road: shouldn't throw exception");
 		}
 	}
 
@@ -481,8 +517,8 @@ public class ServerFacadeTester {
 			assertTrue(building != null && building.getType() == PieceType.SETTLEMENT && building.getOwner() == 2);
 			
 		} catch (ServerInvalidRequestException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			fail("build settlement: shouldn't throw exception");
 		}
 	}
 	
@@ -509,7 +545,7 @@ public class ServerFacadeTester {
 			
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("build city: shouldn't have failed");
+			fail("build city: shouldn't throw exception");
 		}
 		
 	}
@@ -528,7 +564,7 @@ public class ServerFacadeTester {
 			assertTrue(facade.getGameManager().getGameById(0).getModelFacade().getModel().getTradeOffer() != null);
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("offer trade: shouldn't have failed");
+			fail("offer trade: shouldn't throw exception");
 		}
 	}
 	
@@ -547,7 +583,7 @@ public class ServerFacadeTester {
 			assertTrue(receiver.getResourceCards().getCountByType(ResourceType.SHEEP) == 0);
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("acceptTrade: should've passed");
+			fail("acceptTrade: shouldn't throw exception");
 		}
 		//user doesn't accept the trade, trade offer removed
 		try {
@@ -558,7 +594,7 @@ public class ServerFacadeTester {
 			
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("acceptTrade: should've passed");
+			fail("acceptTrade: shouldn't throw exception");
 		}
 		
 	}
@@ -584,7 +620,7 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 4);
 		} catch (ServerInvalidRequestException e2) {
 			e2.printStackTrace();
-			fail("maritime, should've passed");
+			fail("maritime: shouldn't throw exception");
 		}
 		//has 3 port
 		try {
@@ -604,7 +640,7 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 3);
 		} catch (ServerInvalidRequestException e1) {
 			e1.printStackTrace();
-			fail("maritime, should've passed"); 
+			fail("maritime: shouldn't throw exception"); 
 		}
 		//has 2 port
 		try {
@@ -624,7 +660,7 @@ public class ServerFacadeTester {
 			assertTrue(bankResources.getCountByType(ResourceType.WOOD) == initBankWood + 2);
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("maritime, should've passed");
+			fail("maritime: shouldn't throw exception");
 		}
 		
 	}
@@ -687,7 +723,7 @@ public class ServerFacadeTester {
 			//status changes to robbing if last one to discard...
 		} catch (ServerInvalidRequestException e) {
 			e.printStackTrace();
-			fail("discard: shouldn't have failed");
+			fail("discard: shouldn't throw exception");
 		}
 	}
 }
