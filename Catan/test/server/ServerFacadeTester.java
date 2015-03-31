@@ -356,11 +356,20 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void buyDevCard() {
-		//incorrect turn phase
-		//not user's turn
-		//user doesn't have resources
-		//bank out of dev cards
 		//ok test case, user gains a dev card in newDevCards and loses resources
+		try{
+			setGame("EndTurn");
+			ModelFacade mfacade = facade.getGameManager().getGameById(0).getModelFacade();
+			User user = mfacade.turnManager().getUserFromIndex(1);
+			int resourceSize = user.getResourceCards().getAllResourceCards().size();
+			facade.buyDevCard(0, 1);
+			
+			assertTrue(user.getNewDevCards().size() == 1);
+			assertTrue(user.getResourceCards().getAllResourceCards().size() == resourceSize-3);
+		}
+		catch (ServerInvalidRequestException e) {
+			fail();
+		}
 	}
 	
 	@Test
