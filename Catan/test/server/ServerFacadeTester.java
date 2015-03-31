@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.junit.*;
 
@@ -25,6 +26,10 @@ import server.exception.ServerInvalidRequestException;
 import server.facade.ServerFacade;
 import server.game.Game;
 import server.game.GameManager;
+import shared.definitions.ResourceType;
+import shared.model.cards.ResourceCard;
+import shared.model.cards.ResourceCardDeck;
+import shared.model.game.User;
 
 public class ServerFacadeTester {
 	private ServerFacade facade;
@@ -200,7 +205,7 @@ public class ServerFacadeTester {
 		try {
 			setGame("discardPhase");
 			facade.rollNumber(0, 0, 6);
-			fail("Exception not thrown");
+			fail("rollNumber: Exception not thrown, incorrect phase");
 			
 		} catch (ServerInvalidRequestException e) {
 			// ok
@@ -210,7 +215,7 @@ public class ServerFacadeTester {
 		try {
 			setGame("testPlayer2Turn");
 			facade.rollNumber(0, 0, 6);
-			fail("Exception not thrown");
+			fail("rollNumber: Exception not thrown, incorrect player");
 		} catch (ServerInvalidRequestException e) {
 			// ok
 			e.printStackTrace();
@@ -396,9 +401,55 @@ public class ServerFacadeTester {
 	@Test
 	public void discardCards() {
 		//incorrect turn phase
+		try {
+			setGame("samCanRoll");
+			facade.discardCards(0, 0, new ResourceCardDeck(new ArrayList<ResourceCard>()));
+			fail("discard: should've thrown exception, incorrect phase");
+		} catch (ServerInvalidRequestException e) {
+			//ok
+			e.printStackTrace();
+		}
 		//user doesn't have more than 7 cards
+		try {
+			setGame("discardPhase");
+			User user = facade.getGameManager().getGameById(0).getModelFacade().turnManager().getUserFromIndex(1);
+			facade.discardCards(0, 1, user.getResourceCards());
+			fail("discard: should've thrown exception, user doesn't have enough resources");
+		} catch (ServerInvalidRequestException e) {
+			// ok
+			e.printStackTrace();
+		}
 		//user has more than 7 cards
-			//trying to discard cards they don't have
-			//ok test case, user loses their discarded cards
+		
+		//trying to discard cards they don't have
+		try {
+			ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>();
+			resources.add(new ResourceCard(ResourceType.BRICK));
+			resources.add(new ResourceCard(ResourceType.BRICK));
+			resources.add(new ResourceCard(ResourceType.WHEAT));
+			resources.add(new ResourceCard(ResourceType.ORE));
+			ResourceCardDeck resourcesToDiscard = new ResourceCardDeck(resources);
+			facade.discardCards(0, 0, resourcesToDiscard);
+			fail("discard: should've thrown exception, discarding cards user doesn't have");
+		} catch (ServerInvalidRequestException e) {
+			// ok
+			e.printStackTrace();
+		}
+		//ok test case, user loses their discarded cards
+		try {
+			ArrayList<ResourceCard> resources = new ArrayList<ResourceCard>();
+			resources.add(new ResourceCard(ResourceType.BRICK));
+			resources.add(new ResourceCard(ResourceType.ORE));
+			resources.add(new ResourceCard(ResourceType.ORE));
+			resources.add(new ResourceCard(ResourceType.ORE));
+			ResourceCardDeck resourcesToDiscard = new ResourceCardDeck(resources);
+			facade.discardCards(0, 0, resourcesToDiscard);
+			String expectedJsonStr = extractJson("samDiscardedResult").getAsString();
+			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsString();
+			assertTrue(expectedJsonStr.equals(actualJsonStr));
+		} catch (ServerInvalidRequestException e) {
+			fail("discard: shouldn't have failed");
+			e.printStackTrace();
+		}
 	}
 }
