@@ -232,9 +232,9 @@ public class ServerFacadeTester {
 			setGame("samCanRoll");
 			facade.rollNumber(0, 0, 6);
 			//assert equals that new model is as expected
-			String expectedJsonStr = extractJson("samCanRollResult").getAsString();
-			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsString();
-			assertTrue(expectedJsonStr.equals(actualJsonStr));
+			String expectedJsonStr = extractJson("samCanRollResult").getAsJsonObject().toString();
+			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
+			assertEquals(expectedJsonStr, actualJsonStr);
 		} catch (ServerInvalidRequestException e) {
 			fail("roll number: should have passed");
 			e.printStackTrace();
@@ -415,15 +415,21 @@ public class ServerFacadeTester {
 	
 	@Test
 	public void maritimeTrade() {
-		//wrong turn phase
-		//not user's turn
-		//no necessary resources
-		//bank doesn't have card wanted
-		//regular maritime trade, trade goes through, resources updated
-		//user gives 3, but doesn't have 3 port
-		//user gives 2, but doesn't have 2 port
-		//user has 3 port, trade goes through, resources updated
-		//user has 2 port, trade goes through, resources updated
+		
+		//regular maritime trade
+		//has 3 port
+		//has 2 port
+		try {
+			setGame("maritime");
+			facade.maritimeTrade(0, 1, 2, ResourceType.WOOD, ResourceType.SHEEP);
+			String expectedJsonStr = extractJson("maritime2Result").getAsJsonObject().toString();
+			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
+			assertEquals(expectedJsonStr, actualJsonStr);
+		} catch (ServerInvalidRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Test
@@ -472,9 +478,9 @@ public class ServerFacadeTester {
 			resources.add(new ResourceCard(ResourceType.ORE));
 			ResourceCardDeck resourcesToDiscard = new ResourceCardDeck(resources);
 			facade.discardCards(0, 0, resourcesToDiscard);
-			String expectedJsonStr = extractJson("samDiscardedResult").getAsString();
-			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsString();
-			assertTrue(expectedJsonStr.equals(actualJsonStr));
+			String expectedJsonStr = extractJson("samDiscardedResult").getAsJsonObject().toString();
+			String actualJsonStr = facade.getGameManager().getGameById(0).getModelFacade().getModel().serialize().getAsJsonObject().toString();
+			assertEquals(expectedJsonStr, actualJsonStr);
 		} catch (ServerInvalidRequestException e) {
 			fail("discard: shouldn't have failed");
 			e.printStackTrace();
