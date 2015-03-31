@@ -49,9 +49,16 @@ public class Server {
 
 	
 	private HttpServer server;
+	private Handler serverHandler;
 	
 	private Server() {
+		serverHandler = new Handler(false);
 		return;
+	}
+	
+	private Server(boolean testing)
+	{
+		serverHandler = new Handler(testing);
 	}
 	
 	/**
@@ -82,7 +89,7 @@ public class Server {
 		server.start();
 	}
 
-	private Handler serverHandler = new Handler(false);
+	
 
 	
 	public static void main(String[] args) {
@@ -92,7 +99,13 @@ public class Server {
 		else{
 			SERVER_PORT_NUMBER = 8081;
 		}
-		new Server().run();
+		
+		boolean testing = false;
+		if (args.length == 2)
+		{
+			testing = Boolean.parseBoolean(args[1]);
+		}
+		new Server(testing).run();
 		logger.info("Server running on port: " + SERVER_PORT_NUMBER);
 	}
 

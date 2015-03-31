@@ -7,12 +7,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -142,19 +140,17 @@ public class ServerFacade {
 		
 		for (int i = 0; i < password.length(); i++){
 			Character ch = password.charAt(i);
-			boolean isGood = false;
 			if (Character.isAlphabetic(ch) || Character.isDigit(ch) || ch.equals('_') || ch.equals('-'))
-				isGood = true;
+				continue;
 			else{
-				isGood = false;
 				throw new ServerInvalidRequestException("Register Failed: Password contains invalid characters");
 			}
 		}
 		
-			User newUser = userManager.addNewUser(username, password);
-			JsonObject response = new JsonObject();
-			response.addProperty("id", newUser.getPlayerID());
-			return response;
+		User newUser = userManager.addNewUser(username, password);
+		JsonObject response = new JsonObject();
+		response.addProperty("id", newUser.getPlayerID());
+		return response;
 		
 					
 	}
@@ -606,7 +602,6 @@ public class ServerFacade {
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
-		Model model = modelFacade.getModel();
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
@@ -675,14 +670,12 @@ public class ServerFacade {
 		TurnManager turnManager = modelFacade.turnManager();
 		User user = turnManager.getUserFromIndex(playerIndex);
 		
+
 		if (playerIndex < 0 || playerIndex > 3) {
 			throw new ServerInvalidRequestException("Invalid player index");
 		}
 		if (victimIndex < -1 || victimIndex > 3) {
 			throw new ServerInvalidRequestException("Invalid victim index");
-		}
-		if (location == null) {
-			throw new ServerInvalidRequestException("Missing hex location");
 		}
 		if (!location.isValid(modelFacade.getPossibleHexLocations())) {
 			throw new ServerInvalidRequestException("Hex location out of bounds");
@@ -1090,11 +1083,6 @@ public class ServerFacade {
 		if (playerIndex < 0 || playerIndex > 3)
 		{
 			throw new ServerInvalidRequestException("Invalid player index");
-		}
-		
-		if (resource == null)
-		{
-			throw new ServerInvalidRequestException("Missing fields");
 		}
 		
 		ModelFacade modelFacade = game.getModelFacade();
