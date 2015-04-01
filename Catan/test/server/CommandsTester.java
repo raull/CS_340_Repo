@@ -31,20 +31,5 @@ public class CommandsTester {
 		testProxy.login(new Credentials("Mark", "mark"));
 		testProxy.join(new JoinGameRequest(0, "green"));
 	}
-	
-	@Test
-	public void badRequests(){
-		
-	}
-	
-	@Test
-	public void malformedJSON(){
-		
-	}
-	
-	@Test
-	public void validRequests(){
-		
-	}
 
 }
