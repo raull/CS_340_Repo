@@ -55,7 +55,6 @@ public class TradeManager {
 		for (ResourceType resourceType : ResourceType.values()) {
 			int offerResourceCount = compareDeck.getCountByType(resourceType);
 			int sendingResourceCount = buyerDeck.getCountByType(resourceType);
-			
 			if (sendingResourceCount < offerResourceCount) {
 				return false;
 			}

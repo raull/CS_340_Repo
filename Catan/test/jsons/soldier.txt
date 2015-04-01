@@ -1,0 +1,1190 @@
+{
+  "bank": {
+    "brick": 13,
+    "ore": 12,
+    "sheep": 17,
+    "wheat": 11,
+    "wood": 8
+  },
+  "deck": {
+    "monopoly": 2,
+    "monument": 4,
+    "roadBuilding": 1,
+    "soldier": 11,
+    "yearOfPlenty": 2
+  },
+  "chat": {
+    "lines": []
+  },
+  "log": {
+    "lines": [{
+      "message": "Sam built a road",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a settlement",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark built a road",
+      "source": "Mark"
+    }, {
+      "message": "Mark built a settlement",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete built a road",
+      "source": "Pete"
+    }, {
+      "message": "Pete built a settlement",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke built a road",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke built a settlement",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke built a road",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke built a settlement",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Pete built a road",
+      "source": "Pete"
+    }, {
+      "message": "Pete built a settlement",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Mark built a road",
+      "source": "Mark"
+    }, {
+      "message": "Mark built a settlement",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Sam built a road",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a settlement",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Sam rolled a 4.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 3.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 9.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 5.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 6.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 9.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 8.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 9.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 5.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 6.",
+      "source": "Mark"
+    }, {
+      "message": "Mark did a maritime trade.",
+      "source": "Mark"
+    }, {
+      "message": "Mark built a road",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 10.",
+      "source": "Pete"
+    }, {
+      "message": "Pete built a road",
+      "source": "Pete"
+    }, {
+      "message": "Pete built a road",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 7.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke moved the robber and robbed, but couldn't rob anyone",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 12.",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a road",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 7.",
+      "source": "Mark"
+    }, {
+      "message": "Mark moved the robber and robbed Pete",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 10.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 7.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke moved the robber and robbed, but couldn't rob anyone",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke built a road",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 6.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 7.",
+      "source": "Mark"
+    }, {
+      "message": "Mark moved the robber and robbed, but couldn't rob anyone",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 5.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 7.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke moved the robber and robbed Mark",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke built a road",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 5.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 11.",
+      "source": "Mark"
+    }, {
+      "message": "Mark did a maritime trade.",
+      "source": "Mark"
+    }, {
+      "message": "Mark built a road",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 10.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 4.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke built a road",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 3.",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a road",
+      "source": "Sam"
+    }, {
+      "message": "Sam played road building and built two roads.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 8.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 6.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 11.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 7.",
+      "source": "Sam"
+    }, {
+      "message": "Sam moved the robber and robbed Pete",
+      "source": "Sam"
+    }, {
+      "message": "Sam bought a development card.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 7.",
+      "source": "Mark"
+    }, {
+      "message": "Mark moved the robber and robbed, but couldn't rob anyone",
+      "source": "Mark"
+    }, {
+      "message": "Mark offered a trade to Sam.",
+      "source": "Mark"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 7.",
+      "source": "Pete"
+    }, {
+      "message": "Pete moved the robber and robbed, but couldn't rob anyone",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 7.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke moved the robber and robbed, but couldn't rob anyone",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 8.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 8.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 6.",
+      "source": "Pete"
+    }, {
+      "message": "Pete built a road",
+      "source": "Pete"
+    }, {
+      "message": "Pete did a maritime trade.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 4.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 6.",
+      "source": "Sam"
+    }, {
+      "message": "Sam offered a trade to Brooke.",
+      "source": "Sam"
+    }, {
+      "message": "Brooke rejected the trade.",
+      "source": "Brooke"
+    }, {
+      "message": "Sam offered a trade to Brooke.",
+      "source": "Sam"
+    }, {
+      "message": "Brooke accepted the trade.",
+      "source": "Brooke"
+    }, {
+      "message": "Sam offered a trade to Pete.",
+      "source": "Sam"
+    }, {
+      "message": "Pete accepted the trade.",
+      "source": "Pete"
+    }, {
+      "message": "Sam built a settlement",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 6.",
+      "source": "Mark"
+    }, {
+      "message": "Mark offered a trade to Sam.",
+      "source": "Mark"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 10.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 8.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 4.",
+      "source": "Sam"
+    }, {
+      "message": "Sam offered a trade to Pete.",
+      "source": "Sam"
+    }, {
+      "message": "Pete accepted the trade.",
+      "source": "Pete"
+    }, {
+      "message": "Sam offered a trade to Mark.",
+      "source": "Sam"
+    }, {
+      "message": "Mark accepted the trade.",
+      "source": "Mark"
+    }, {
+      "message": "Sam built a city",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 5.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 7.",
+      "source": "Pete"
+    }, {
+      "message": "Pete moved the robber and robbed, but couldn't rob anyone",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 3.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke offered a trade to Sam.",
+      "source": "Brooke"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 8.",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a road",
+      "source": "Sam"
+    }, {
+      "message": "Sam offered a trade to Mark.",
+      "source": "Sam"
+    }, {
+      "message": "Mark accepted the trade.",
+      "source": "Mark"
+    }, {
+      "message": "Sam built a settlement",
+      "source": "Sam"
+    }, {
+      "message": "Sam played a soldier card",
+      "source": "Sam"
+    }, {
+      "message": "Sam moved the robber and robbed Brooke",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 8.",
+      "source": "Mark"
+    }, {
+      "message": "Mark offered a trade to Sam.",
+      "source": "Mark"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 4.",
+      "source": "Pete"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 8.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke offered a trade to Sam.",
+      "source": "Brooke"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 6.",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a city",
+      "source": "Sam"
+    }, {
+      "message": "Sam built a road",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 8.",
+      "source": "Mark"
+    }, {
+      "message": "Mark did a maritime trade.",
+      "source": "Mark"
+    }, {
+      "message": "Mark did a maritime trade.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 11.",
+      "source": "Pete"
+    }, {
+      "message": "Pete offered a trade to Sam.",
+      "source": "Pete"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Pete finished their turn",
+      "source": "Pete"
+    }, {
+      "message": "Brooke rolled a 9.",
+      "source": "Brooke"
+    }, {
+      "message": "Brooke offered a trade to Sam.",
+      "source": "Brooke"
+    }, {
+      "message": "Sam accepted the trade.",
+      "source": "Sam"
+    }, {
+      "message": "Brooke finished their turn",
+      "source": "Brooke"
+    }, {
+      "message": "Sam rolled a 9.",
+      "source": "Sam"
+    }, {
+      "message": "Sam bought a development card.",
+      "source": "Sam"
+    }, {
+      "message": "Sam bought a development card.",
+      "source": "Sam"
+    }, {
+      "message": "Sam finished their turn",
+      "source": "Sam"
+    }, {
+      "message": "Mark rolled a 11.",
+      "source": "Mark"
+    }, {
+      "message": "Mark finished their turn",
+      "source": "Mark"
+    }, {
+      "message": "Pete rolled a 5.",
+      "source": "Pete"
+    }]
+  },
+  "map": {
+    "hexes": [{
+      "location": {
+        "x": 0,
+        "y": -2
+      }
+    }, {
+      "location": {
+        "x": 0,
+        "y": -1
+      },
+      "resource": "wood",
+      "number": 3
+    }, {
+      "location": {
+        "x": 2,
+        "y": -2
+      },
+      "resource": "wood",
+      "number": 11
+    }, {
+      "location": {
+        "x": -2,
+        "y": 2
+      },
+      "resource": "wood",
+      "number": 6
+    }, {
+      "location": {
+        "x": 0,
+        "y": 1
+      },
+      "resource": "wood",
+      "number": 4
+    }, {
+      "location": {
+        "x": -1,
+        "y": -1
+      },
+      "resource": "brick",
+      "number": 8
+    }, {
+      "location": {
+        "x": 1,
+        "y": -2
+      },
+      "resource": "brick",
+      "number": 4
+    }, {
+      "location": {
+        "x": 1,
+        "y": 0
+      },
+      "resource": "brick",
+      "number": 5
+    }, {
+      "location": {
+        "x": -2,
+        "y": 1
+      },
+      "resource": "wheat",
+      "number": 2
+    }, {
+      "location": {
+        "x": 0,
+        "y": 0
+      },
+      "resource": "wheat",
+      "number": 11
+    }, {
+      "location": {
+        "x": 2,
+        "y": 0
+      },
+      "resource": "wheat",
+      "number": 9
+    }, {
+      "location": {
+        "x": 0,
+        "y": 2
+      },
+      "resource": "wheat",
+      "number": 8
+    }, {
+      "location": {
+        "x": -1,
+        "y": 0
+      },
+      "resource": "sheep",
+      "number": 10
+    }, {
+      "location": {
+        "x": -1,
+        "y": 1
+      },
+      "resource": "sheep",
+      "number": 9
+    }, {
+      "location": {
+        "x": 2,
+        "y": -1
+      },
+      "resource": "sheep",
+      "number": 12
+    }, {
+      "location": {
+        "x": 1,
+        "y": 1
+      },
+      "resource": "sheep",
+      "number": 10
+    }, {
+      "location": {
+        "x": -2,
+        "y": 0
+      },
+      "resource": "ore",
+      "number": 5
+    }, {
+      "location": {
+        "x": -1,
+        "y": 2
+      },
+      "resource": "ore",
+      "number": 3
+    }, {
+      "location": {
+        "x": 1,
+        "y": -1
+      },
+      "resource": "ore",
+      "number": 6
+    }],
+    "ports": [{
+      "resource": "ore",
+      "location": {
+        "x": 1,
+        "y": -3
+      },
+      "direction": "S",
+      "ratio": 2
+    }, {
+      "location": {
+        "x": 3,
+        "y": -3
+      },
+      "direction": "SW",
+      "ratio": 3
+    }, {
+      "resource": "sheep",
+      "location": {
+        "x": 3,
+        "y": -1
+      },
+      "direction": "NW",
+      "ratio": 2
+    }, {
+      "location": {
+        "x": 2,
+        "y": 1
+      },
+      "direction": "NW",
+      "ratio": 3
+    }, {
+      "location": {
+        "x": 0,
+        "y": 3
+      },
+      "direction": "N",
+      "ratio": 3
+    }, {
+      "resource": "brick",
+      "location": {
+        "x": -2,
+        "y": 3
+      },
+      "direction": "NE",
+      "ratio": 2
+    }, {
+      "resource": "wood",
+      "location": {
+        "x": -3,
+        "y": 2
+      },
+      "direction": "NE",
+      "ratio": 2
+    }, {
+      "location": {
+        "x": -3,
+        "y": 0
+      },
+      "direction": "SE",
+      "ratio": 3
+    }, {
+      "resource": "wheat",
+      "location": {
+        "x": -1,
+        "y": -2
+      },
+      "direction": "S",
+      "ratio": 2
+    }],
+    "roads": [{
+      "owner": 0,
+      "location": {
+        "x": 2,
+        "y": -1,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 1,
+      "location": {
+        "x": -1,
+        "y": 2,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 1,
+        "y": -1,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 1,
+        "y": 1,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 1,
+        "y": 1,
+        "direction": "N"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 1,
+        "y": -1,
+        "direction": "N"
+      }
+    }, {
+      "owner": 1,
+      "location": {
+        "x": -2,
+        "y": 2,
+        "direction": "N"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 0,
+        "y": 1,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 1,
+      "location": {
+        "x": -1,
+        "y": 1,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 0,
+        "y": -1,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 0,
+        "y": -1,
+        "direction": "N"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 0,
+        "y": 1,
+        "direction": "N"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 0,
+        "y": 2,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 2,
+        "y": 0,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 1,
+      "location": {
+        "x": -1,
+        "y": 1,
+        "direction": "N"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 2,
+        "y": 0,
+        "direction": "N"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 1,
+        "y": 0,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 1,
+        "y": 0,
+        "direction": "N"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 2,
+        "y": -1,
+        "direction": "N"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 1,
+        "y": -2,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 3,
+        "y": -2,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": -1,
+        "y": 2,
+        "direction": "NE"
+      }
+    }],
+    "settlements": [{
+      "owner": 1,
+      "location": {
+        "x": -2,
+        "y": 3,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 0,
+        "y": 0,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 0,
+        "y": 2,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 3,
+      "location": {
+        "x": 1,
+        "y": 1,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 2,
+      "location": {
+        "x": 1,
+        "y": -1,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 1,
+      "location": {
+        "x": -2,
+        "y": 2,
+        "direction": "NW"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 0,
+        "y": 1,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": 3,
+        "y": -2,
+        "direction": "NW"
+      }
+    }],
+    "cities": [{
+      "owner": 0,
+      "location": {
+        "x": 1,
+        "y": 0,
+        "direction": "NE"
+      }
+    }, {
+      "owner": 0,
+      "location": {
+        "x": -1,
+        "y": 2,
+        "direction": "NE"
+      }
+    }],
+    "robber": {
+      "x": 1,
+      "y": 1
+    }
+  },
+  "players": [{
+    "cities": 2,
+    "color": "orange",
+    "discarded": false,
+    "monuments": 0,
+    "name": "Sam",
+    "newDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "oldDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 2,
+      "yearOfPlenty": 0
+    },
+    "playerIndex": 0,
+    "playedDevCard": false,
+    "playerID": 1,
+    "resources": {
+      "brick": 2,
+      "ore": 0,
+      "sheep": 1,
+      "wheat": 2,
+      "wood": 3
+    },
+    "roads": 7,
+    "settlements": 3,
+    "soldiers": 1,
+    "victoryPoints": 8
+  }, {
+    "cities": 4,
+    "color": "green",
+    "discarded": false,
+    "monuments": 0,
+    "name": "Mark",
+    "newDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "oldDevCards": {
+      "monopoly": 0,
+      "monument": 1,
+      "roadBuilding": 1,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "playerIndex": 1,
+    "playedDevCard": false,
+    "playerID": 4,
+    "resources": {
+      "brick": 0,
+      "ore": 2,
+      "sheep": 1,
+      "wheat": 1,
+      "wood": 2
+    },
+    "roads": 11,
+    "settlements": 3,
+    "soldiers": 0,
+    "victoryPoints": 2
+  }, {
+    "cities": 4,
+    "color": "purple",
+    "discarded": false,
+    "monuments": 0,
+    "name": "Pete",
+    "newDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "oldDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "playerIndex": 2,
+    "playedDevCard": false,
+    "playerID": 2,
+    "resources": {
+      "brick": 2,
+      "ore": 2,
+      "sheep": 0,
+      "wheat": 3,
+      "wood": 5
+    },
+    "roads": 10,
+    "settlements": 3,
+    "soldiers": 0,
+    "victoryPoints": 2
+  }, {
+    "cities": 4,
+    "color": "yellow",
+    "discarded": false,
+    "monuments": 0,
+    "name": "Brooke",
+    "newDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "oldDevCards": {
+      "monopoly": 0,
+      "monument": 0,
+      "roadBuilding": 0,
+      "soldier": 0,
+      "yearOfPlenty": 0
+    },
+    "playerIndex": 3,
+    "playedDevCard": false,
+    "playerID": 3,
+    "resources": {
+      "brick": 2,
+      "ore": 3,
+      "sheep": 0,
+      "wheat": 2,
+      "wood": 1
+    },
+    "roads": 10,
+    "settlements": 3,
+    "soldiers": 0,
+    "victoryPoints": 2
+  }],
+  "turnTracker": {
+    "currentTurn": 0,
+    "status": "Playing",
+    "longestRoad": 0,
+    "largestArmy": -1
+  },
+  "version": 191,
+  "winner": -1
+}
+

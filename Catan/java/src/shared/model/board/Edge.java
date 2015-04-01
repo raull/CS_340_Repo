@@ -77,5 +77,37 @@ public class Edge {
 	public boolean hasAdjoiningPiece(User user){
 		return false; //need to think more about this
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((direction == null) ? 0 : direction.hashCode());
+		result = prime * result
+				+ ((location == null) ? 0 : location.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Edge other = (Edge) obj;
+		if (direction != other.direction)
+			return false;
+		if (location == null) {
+			if (other.location != null)
+				return false;
+		} else if (!location.equals(other.location))
+			return false;
+		return true;
+	}
 	
 }

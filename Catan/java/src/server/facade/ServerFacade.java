@@ -852,7 +852,7 @@ public class ServerFacade {
 			facade.addToGameLog(logEntry);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("cannot finish turn right now");
 		}
 		return getModel(0, gameId);
 	}
@@ -1148,7 +1148,8 @@ public class ServerFacade {
 			if(user.getTurnIndex() == userIndex) {
 				continue;
 			}
-			for(int i = 0; i < user.getResourceCards().getCountByType(resource); i++) {
+			int resourceCount = user.getResourceCards().getCountByType(resource);
+			for(int i = 0; i < resourceCount; i++) {
 				user.getResourceCards().removeResourceCard(new ResourceCard(resource));
 			}
 		}
