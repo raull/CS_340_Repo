@@ -722,7 +722,7 @@ public class ServerFacade {
 			}
 		}
 		modelFacade.updateTurnPhase(TurnPhase.PLAYING);
-		
+		this.updateModelVersion(gameId);
 		return getModel(0, gameId);
 	}
 	
