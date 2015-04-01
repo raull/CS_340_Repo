@@ -634,7 +634,7 @@ public class ServerFacade {
 		}
 		else
 		{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("cannot roll dice at this time");
 		}
 		
 		return getModel(0, gameId);
@@ -1479,7 +1479,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{	
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot build city right now");
 		}
 			
 		
@@ -1539,7 +1539,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot offer trade right now");
 		}
 		return getModel(0, gameId);
 	}
@@ -1599,7 +1599,7 @@ public class ServerFacade {
 				modelFacade.addToGameLog(logEntry);
 			}
 			else{
-			throw new ServerInvalidRequestException();
+				throw new ServerInvalidRequestException("cannot accept trade");
 			}
 		}
 			else{
@@ -1678,7 +1678,7 @@ public class ServerFacade {
 			updateModelVersion(gameId);
 		}
 		else{
-			throw new ServerInvalidRequestException();
+			throw new ServerInvalidRequestException("Cannot maritime trade");
 		}
 		return getModel(0, gameId);
 	}
