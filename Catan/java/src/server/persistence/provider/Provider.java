@@ -1,4 +1,4 @@
-package server.provider;
+package server.persistence.provider;
 
 /**
  * Provider parent class for setting up the database

@@ -1,4 +1,4 @@
-package server.provider;
+package server.persistence.provider;
 
 /**
  * Mock Provider for testing purposes
