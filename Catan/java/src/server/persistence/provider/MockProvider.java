@@ -14,13 +14,13 @@ public class MockProvider implements Provider {
 	}
 
 	@Override
-	public void endTranscation(boolean commit) {
+	public void transact(String transaction) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void transact(String transaction) {
+	public void endTransaction(boolean commit) {
 		// TODO Auto-generated method stub
 		
 	}
