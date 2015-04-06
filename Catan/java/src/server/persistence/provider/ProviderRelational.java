@@ -22,7 +22,7 @@ public class ProviderRelational implements Provider {
 	}
 
 	@Override
-	public void endTranscation(boolean commit) {
+	public void endTransaction(boolean commit) {
 		// TODO Auto-generated method stub
 		
 	}

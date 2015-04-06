@@ -18,7 +18,7 @@ public interface Provider {
 	 * End the current persistence transaction
 	 * @param commit Whether or no the transaction will persist or roll back.
 	 */
-	public void endTranscation(boolean commit);
+	public void endTransaction(boolean commit);
 	
 	public void transact(String transaction);
 	
