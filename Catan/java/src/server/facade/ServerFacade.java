@@ -22,6 +22,7 @@ import com.google.gson.JsonPrimitive;
 import server.exception.ServerInvalidRequestException;
 import server.game.Game;
 import server.game.GameManager;
+import server.persistence.provider.Provider;
 import server.user.UserManager;
 import shared.definitions.CatanColor;
 import shared.definitions.DevCardType;
@@ -1784,4 +1785,22 @@ public class ServerFacade {
 	public UserManager getUserManager() {
 		return userManager;
 	}
+	
+	//for data persistence
+	
+	/**
+	 * load existing server state 
+	 */
+	public void load() {
+		
+	}
+	
+	/**
+	 * starts saving the server's state
+	 * @param provider the provider plug in to be used
+	 */
+	public void persist(Provider provider) {
+		
+	}
+	
 }
