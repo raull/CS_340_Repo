@@ -1,6 +1,6 @@
 package server.persistence.dao;
 
-public abstract class DAOInterface {
+public interface DAOInterface {
 	
 	/**
 	 * Resets the contents of the database to some initial state. Destroys all other table contents. 
