@@ -1,5 +1,7 @@
 package server.persistence.provider;
 
+import server.persistence.factory.DAOFactory;
+
 /**
  * Provider parent class for setting up the database
  * @author raulvillalpando

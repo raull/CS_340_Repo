@@ -1,5 +1,8 @@
 package server.persistence.provider;
 
+import server.persistence.factory.DAOFactory;
+import server.persistence.factory.NonrelationalDAOFactory;
+
 
 /**
  * Provider for non-Relational Database
@@ -8,6 +11,10 @@ package server.persistence.provider;
  */
 public class ProviderNonRelational implements Provider {
 
+	DAOFactory factory;
+	public ProviderNonRelational(){
+		factory = new NonrelationalDAOFactory();
+	}
 	@Override
 	public void startTransaction() {
 		// TODO Auto-generated method stub
