@@ -6,6 +6,24 @@ package server.provider;
  * @author raulvillalpando
  *
  */
-public class ProviderNonRelational extends Provider {
+public class ProviderNonRelational implements Provider {
+
+	@Override
+	public void startTransaction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endTranscation(boolean commit) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void transact(String transaction) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
