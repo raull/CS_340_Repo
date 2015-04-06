@@ -10,22 +10,22 @@ public class PersistenceStore {
 	ServerFacade serverFacade = ServerFacade.instance();
 	
 	/**
-	 * constructor for persistence store
-	 * load is called only in constructor
+	 * Constructor for persistence store
+	 * load is called only once in constructor
 	 */
 	public PersistenceStore() {
-		serverFacade.load();
+		serverFacade.load(this.provider);
 	}
 	
 	/**
-	 * call persist
+	 * Call persist and calls the serverFacade to persist all of the games and users
 	 */
 	public void persist() {
 		serverFacade.persist(this.provider);
 	}
 	
 	/**
-	 * set the provider of the persistence store
+	 * Set the provider of the persistence store
 	 * @param provider
 	 */
 	public void setProvider(Provider provider) {
@@ -33,14 +33,14 @@ public class PersistenceStore {
 	}
 	
 	/**
-	 * increase the command ticks
+	 * Increase the command ticks for persistence frequency
 	 */
 	public void increaseTick() {
 		this.commandTicks++;
 	}
 	
 	/**
-	 * get how many ticks the server is now at
+	 * Get how many ticks the server is now at
 	 * @return
 	 */
 	public int getTicks() {
