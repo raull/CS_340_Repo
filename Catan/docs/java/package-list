@@ -30,6 +30,11 @@ server.facade
 server.game
 server.handler
 server.handler.factory
+server.persistence
+server.persistence.dao
+server.persistence.factory
+server.persistence.provider
+server.persistence.provider.exception
 server.user
 shared.definitions
 shared.locations
@@ -46,3 +51,4 @@ shared.proxy.games
 shared.proxy.moves
 shared.proxy.user
 shared.proxy.util
+shared.utils
