@@ -1791,7 +1791,7 @@ public class ServerFacade {
 	/**
 	 * load existing server state 
 	 */
-	public void load() {
+	public void load(Provider provider) {
 		
 	}
 	
